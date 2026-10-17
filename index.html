@@ -13,6 +13,7 @@
   --tram: #b0307a; --rail: #3d4a8f; --metro: #c02a2a; --accent: #256abf; --sel: #f0b400;
   --m3: #0fa85a; --m4: #d4a000;   /* planowane metro: M3 zielona (#19e17d), M4 żółta — ciemniej dla kontrastu na jasnym tle */
   --good: #0f8a3c; --warn: #c98500; --crit: #d03b3b; --bus: #d9631e; --top: #c2255c; --park: #3f9a4f;
+  --h1: #fff1c1; --h2: #fdc46a; --h3: #f78c3b; --h4: #dc4a2c; --h5: #9c1b26;   /* heatmapa wykluczenia: niskie → wysokie */
   --s1: #e3eefb; --s2: #b7d3f6; --s3: #6da7ec; --s4: #2a78d6; --s5: #184f95;
   --p1: #eeeafc; --p2: #cbc0f3; --p3: #9d8be6; --p4: #6b53cf; --p5: #44309b;
   --t1: #e1f4ee; --t2: #a9e0cf; --t3: #5fc0a6; --t4: #1f9a7b; --t5: #0f6a54;
@@ -27,6 +28,7 @@
   --tram: #e163a8; --rail: #8f9cf0; --metro: #ff6b6b; --accent: #6da7ec; --sel: #f5c22b;
   --m3: #19e17d; --m4: #ffd21f;
   --good: #3fc16b; --warn: #f0b429; --crit: #f06464; --bus: #ff9a4d; --top: #f06595; --park: #58b86a;
+  --h1: #3a2f17; --h2: #7a4b16; --h3: #c2621c; --h4: #f0913a; --h5: #ffd36b;
   --s1: #1a2a3d; --s2: #1f4677; --s3: #2a6bb8; --s4: #5a9bea; --s5: #a7cbf6;
   --p1: #231d3a; --p2: #3c2f70; --p3: #5e48b6; --p4: #9483ec; --p5: #cdc1fa;
   --t1: #13271f; --t2: #1b4a3c; --t3: #237a62; --t4: #43b392; --t5: #a0e4ce;
@@ -39,6 +41,7 @@
   --tram: #e163a8; --rail: #8f9cf0; --metro: #ff6b6b; --accent: #6da7ec; --sel: #f5c22b;
   --m3: #19e17d; --m4: #ffd21f;
   --good: #3fc16b; --warn: #f0b429; --crit: #f06464; --bus: #ff9a4d; --top: #f06595; --park: #58b86a;
+  --h1: #3a2f17; --h2: #7a4b16; --h3: #c2621c; --h4: #f0913a; --h5: #ffd36b;
   --s1: #1a2a3d; --s2: #1f4677; --s3: #2a6bb8; --s4: #5a9bea; --s5: #a7cbf6;
   --p1: #231d3a; --p2: #3c2f70; --p3: #5e48b6; --p4: #9483ec; --p5: #cdc1fa;
   --t1: #13271f; --t2: #1b4a3c; --t3: #237a62; --t4: #43b392; --t5: #a0e4ce;
@@ -80,6 +83,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
 .tool svg { width: 18px; height: 18px; }
 .tool[aria-pressed="true"] { border-color: var(--accent); background: var(--paper); color: var(--accent); }
 .btn { font: 500 13px/1 var(--f-body); color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 8px 10px; cursor: pointer; }
+.btn[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 .btn:hover { background: var(--chip); }
 .btn.danger { color: var(--crit); }
 .check { display: flex; align-items: center; gap: 9px; font-size: 14px; cursor: pointer; }
@@ -211,6 +215,12 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       <label class="check" for="top-on"><input type="checkbox" id="top-on" checked>Pokaż 30 klastrów, gdzie komunikacja jest najbardziej potrzebna</label>
       <div class="muted" id="top-note" style="margin-top:6px"></div>
       <ul class="list toplist" id="top-list" style="max-height:290px;overflow-y:auto"></ul>
+      <button class="btn" id="heat-btn" type="button" aria-pressed="false" style="margin-top:12px">Pokaż heatmapę wykluczenia</button>
+      <div id="heat-legend" hidden style="margin-top:10px">
+        <div class="ramp"><i style="background:var(--h1)"></i><i style="background:var(--h2)"></i><i style="background:var(--h3)"></i><i style="background:var(--h4)"></i><i style="background:var(--h5)"></i></div>
+        <div class="ramp-l"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div>
+        <div class="muted" id="heat-note">Prawdopodobieństwo wykluczenia komunikacyjnego klastra wg modelu ML.</div>
+      </div>
     </section>
 
     <section>
@@ -932,6 +942,8 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     }
     const tp = by((id) => id === "top-fill" || id === "top-pt");
     if (tp.length) { const t = TOP.byRank.get(tp[0].properties.rank); groups.push(`<div class="k">Priorytet ML · #${t.rank}</div><b>${esc(t.dzielnica)}</b> · prawdopodobieństwo wykluczenia komunikacyjnego <b>${Math.round(t.pred * 100)}%</b>`); }
+    const ht = by((id) => id === "heat");
+    if (ht.length) { const p = ht[0].properties; groups.push(`<div class="k">Wykluczenie komunikacyjne · model ML</div><b>${esc(p.d)}</b> · prawdopodobieństwo <b>${Math.round(p.p * 100)}%</b> · miejsce ${p.rank} z ${HEAT.n}`); }
     const hx = by((id) => id === "hex");
     if (hx.length && mode === "view") { const h = D.hexes[hx[0].properties.i]; groups.push(`<div class="k">Klaster · ${esc(h.d)}</div>${fmt.format(hexPop(h))} mieszkańców w ${year} (${hexPop(h) - h.pop[0] >= 0 ? "+" : ""}${fmt.format(hexPop(h) - h.pop[0])} vs 2025)`); }
     return groups.map((g) => `<div class="g">${g}</div>`).join("");
@@ -939,7 +951,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
 
   function wireMap() {
     const tip = $("tip");
-    const HIT = ["top-pt", "top-fill", "sim", "load", "live", "infra", "parks", "nstops", "pmetro-st", "pmetro-open", "pmetro-future", "stations-metro", "stations-kolej", "planned", "ztm-sel", "ztm", "nb", "routes-bus", "routes-tram", "hex"];
+    const HIT = ["top-pt", "top-fill", "sim", "load", "live", "infra", "parks", "nstops", "pmetro-st", "pmetro-open", "pmetro-future", "stations-metro", "stations-kolej", "planned", "ztm-sel", "ztm", "nb", "routes-bus", "routes-tram", "heat", "hex"];
     map.on("mousemove", (e) => {
       const r = 6, layers = HIT.filter((l) => map.getLayoutProperty(l, "visibility") !== "none");
       const fs = map.queryRenderedFeatures([[e.point.x - r, e.point.y - r], [e.point.x + r, e.point.y + r]], { layers });
@@ -1030,6 +1042,34 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     g.fillText(String(n), S / 2, S / 2 + 1);
     return g.getImageData(0, 0, S, S);
   }
+  // ---------- heatmapa wykluczenia (dane/heatmapa_wykluczenia.geojson, model ML) ----------
+  // Plik (~0,5 MB) wczytywany dopiero przy pierwszym włączeniu; włączona heatmapa zastępuje kolory klastrów.
+  const HEAT = { on: false, loaded: false, n: 0 };
+  const heatColor = () => ["interpolate", ["linear"], ["get", "p"], 0, css("--h1"), 0.25, css("--h2"), 0.5, css("--h3"), 0.75, css("--h4"), 1, css("--h5")];
+  async function loadHeat() {
+    const g = await fetch("dane/heatmapa_wykluczenia.geojson", { cache: "no-cache" }).then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); });
+    const feats = g.features.filter((f) => f.geometry && Number.isFinite(+f.properties.pred))
+      .map((f) => ({ type: "Feature", properties: { p: +f.properties.pred, rank: +f.properties.rank, d: f.properties.dzielnica }, geometry: f.geometry }));
+    map.addSource("heat", { type: "geojson", data: fc(feats) });
+    map.addLayer({ id: "heat", type: "fill", source: "heat", layout: { visibility: "none" }, paint: { "fill-color": heatColor(), "fill-opacity": 0.75 } }, "parks");
+    HEAT.loaded = true; HEAT.n = feats.length;
+  }
+  async function toggleHeat() {
+    const b = $("heat-btn");
+    if (!map?.getLayer("hex")) return;
+    if (!HEAT.loaded) {
+      b.disabled = true; b.textContent = "Wczytywanie heatmapy…";
+      try { await loadHeat(); }
+      catch (e) { console.warn(e); return flash("Nie udało się wczytać dane/heatmapa_wykluczenia.geojson."); }
+      finally { b.disabled = false; b.textContent = "Pokaż heatmapę wykluczenia"; }
+    }
+    HEAT.on = !HEAT.on;
+    b.setAttribute("aria-pressed", HEAT.on);
+    b.textContent = HEAT.on ? "Ukryj heatmapę wykluczenia" : "Pokaż heatmapę wykluczenia";
+    $("heat-legend").hidden = !HEAT.on;
+    applyLayers();
+  }
+
   function applyTop() {
     const on = $("top-on").checked && TOP.rows.length > 0;
     if (map?.getLayer("top-fill")) for (const id of ["top-fill", "top-line", "top-pt"]) map.setLayoutProperty(id, "visibility", on ? "visible" : "none");
@@ -1272,6 +1312,10 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     if (!map?.getLayer("hex")) return;
     const sel = lineFilter(), vis = (on) => (on ? "visible" : "none");
     for (const [k, ids] of Object.entries(LAYERS)) for (const id of ids) map.setLayoutProperty(id, "visibility", vis($(`lay-${k}`).checked));
+    if (map.getLayer("heat")) {
+      map.setLayoutProperty("heat", "visibility", vis(HEAT.on));
+      if (HEAT.on) map.setLayoutProperty("hex", "visibility", "none");
+    }
     const groups = Object.keys(INFRA).filter((k) => $(`inf-${k}`)?.checked);
     map.setFilter("infra", ["in", ["get", "g"], ["literal", groups]]);
     for (const id of ["parks", "parks-line"]) map.setLayoutProperty(id, "visibility", vis(groups.includes("park")));
@@ -1491,6 +1535,7 @@ ${JSON.stringify(describe(r), null, 1)}`;
     $("live").onchange = (e) => setLive(e.target.checked);
     $("live-kind").onchange = renderLive;
     $("top-on").onchange = applyTop;
+    $("heat-btn").onclick = toggleHeat;
     $("sim-play").onclick = simToggle;
     $("sim-time").oninput = async (e) => { SIM.t = +e.target.value; $("sim-clock").textContent = fmtClock(SIM.t); if (!SIM.data) { await simLoad(); simExtraTrips(); } simFrame(); };
     $("sim-speed").querySelectorAll("button").forEach((b) => (b.onclick = () => { SIM.speed = +b.dataset.v; $("sim-speed").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x === b)); }));
@@ -1523,6 +1568,7 @@ ${JSON.stringify(describe(r), null, 1)}`;
     set("pmetro-casing", "line-color", css("--paper")); set("pmetro-st", "circle-stroke-color", ["case", ["==", ["get", "ex"], 1], css("--ink"), pmColor()]);
     applyPlannedMetro();
     set("top-fill", "fill-color", css("--top")); set("top-line", "line-color", css("--top"));
+    if (map.getLayer("heat")) set("heat", "fill-color", heatColor());
     set("parks", "fill-color", css("--park")); set("parks-line", "line-color", css("--park"));
     set("routes-bus", "line-color", css("--bus")); set("routes-tram", "line-color", css("--tram")); set("mask", "fill-color", css("--ground"));
     set("ztm-sel", "circle-color", css("--paper")); set("ztm-sel", "circle-stroke-color", ["case", ["get", "t"], css("--tram"), css("--bus")]);
