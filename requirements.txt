@@ -1,0 +1,12 @@
+folium
+geopandas
+h3
+mapclassify
+matplotlib
+nbconvert
+nbformat
+osmium>=4.0
+osmnx>=2.0
+pyarrow
+rasterio
+requests

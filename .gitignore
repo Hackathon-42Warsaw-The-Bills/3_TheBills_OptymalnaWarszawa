@@ -218,3 +218,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Dane robocze (pobierane i generowane skryptami z mapping/)
+data/
