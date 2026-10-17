@@ -41,6 +41,7 @@ DATA_DIR = ROOT / "data"
 GUS2011_DIR = DATA_DIR / "gus2011"
 HEX_PATH = ROOT / "dane" / "kontury_400m" / "warszawa_h3_400m_pelna.geojson"
 OUT = ROOT / "dane" / "historia_ludnosci.csv"
+OUT_DISTRICTS = ROOT / "dane" / "historia_dzielnice.csv"   # spisy wg prawdziwych granic dzielnic
 EXTERNAL_DIR = Path(os.environ.get("DANE_WARSZAWA", Path.home() / "Downloads" / "dane_warszawa"))
 
 GUS2011_TILES = {  # kafelki 100 km (N) × 1000 km (E) z usługi ATOM GUS, PD.GRID.2011
@@ -136,7 +137,12 @@ def main() -> None:
         share = np.where(tot_w > 0, w / tot_w.replace(0, 1), 1 / n_px)
         px[f"gus_{year}"] = pop.reindex(key).fillna(0).values * share
 
-    city = px[px["in_city"]]
+    city = px[px["in_city"]].copy()
+    # Sumy dzielnic z pikseli w granicach dzielnic (dokładniej niż suma klastrów wg etykiety).
+    districts = gpd.read_file(EXTERNAL_DIR / "warszawa_dzielnice.geojson").to_crs("EPSG:4326")[["dzielnica", "geometry"]]
+    city_pts = gpd.GeoDataFrame(geometry=gpd.points_from_xy(city["lon"], city["lat"]), crs="EPSG:4326", index=city.index)
+    city["dzielnica"] = gpd.sjoin(city_pts, districts, predicate="within")["dzielnica"].groupby(level=0).first()
+    city.groupby("dzielnica")[[f"gus_{y}" for y in census]].sum().round(0).astype(int).to_csv(OUT_DISTRICTS, encoding="utf-8-sig")
     cols = [f"gus_{y}" for y in census] + [f"ghsl_{y}" for y in GHSL_EPOCHS]
     agg = city.groupby("h3")[cols].sum().reindex(hexes["h3"]).fillna(0)
     out = agg.round(0).astype(int)

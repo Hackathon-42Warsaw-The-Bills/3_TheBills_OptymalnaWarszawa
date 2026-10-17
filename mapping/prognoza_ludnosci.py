@@ -9,8 +9,8 @@ Model dla klastra h w dzielnicy d, rok t:
 Kalibracja (calibrate) na spisach NSP 2011 → 2021, czyli na faktycznych mieszkańcach:
     zmiana_d = a · mieszkania_oddane_d(2011–2021) + b · ludność_d(2011)     (18 dzielnic)
   a = osoby na nowe mieszkanie, b = spadek ludności zabudowy istniejącej (mniejsze
-  gospodarstwa, przeprowadzki do nowych mieszkań). Dryf dzielnicy = reszta modelu,
-  ściągnięta w 3/4 do średniej miasta (DRIFT_SHRINK) — pojedyncze dzielnice są zaszumione.
+  gospodarstwa, przeprowadzki do nowych mieszkań). Dryf dzielnicy = reszta modelu (75% własna,
+  25% średnia miasta, w zakresie DRIFT_RANGE) — dzielnice domów mają dryf dodatni, blokowe ujemny.
   Realizacja = mieszkania oddane / mieszkania z pozwoleniami sprzed REALIZATION_LAG lat (GUS).
 
 Dlaczego spisy, a nie roczne dane GUS: roczna ludność GUS opiera się na meldunkach —
@@ -50,7 +50,8 @@ OCCUPANCY_LAG = {2: 0.25, 3: 0.50, 4: 0.25}   # lata od pozwolenia -> udział za
 REALIZATION_LAG = 3
 TREND_YEARS = range(2022, 2026)                 # pełne, kompletne lata rejestru
 TREND_DECAY = 0.90                              # kontynuacja słabnie o 10% rocznie
-DRIFT_SHRINK = 0.25                             # waga dryfu dzielnicy vs średnia miasta (LOO R² dzielnic niskie)
+DRIFT_SHRINK = 0.75                             # waga własnego dryfu dzielnicy (reszta: średnia miasta)
+DRIFT_RANGE = (-0.03, 0.01)                     # rocznie; dzielnice domów rosną, centrum i bloki tracą
 SCENARIOS = {                                    # mnożniki parametrów z kalibracji
     "niski": {"realizacja": 0.85, "os_na_mieszkanie": 0.85},
     "bazowy": {"realizacja": 1.00, "os_na_mieszkanie": 1.00},
@@ -60,7 +61,7 @@ SCENARIOS = {                                    # mnożniki parametrów z kalib
 BDL = "https://bdl.stat.gov.pl/api/v1"
 WARSAW_UNIT = "071412865000"
 WARSAW_TOTAL = "M.st.Warszawa od 2002"
-BDL_PERMIT_VARS = [747635, 747636, 747638, 747639]   # P3816: mieszkania z pozwoleniami (nieindywidualne)
+BDL_PERMIT_VARS = [747634, 747635, 747636, 747638, 747639]   # P3816: mieszkania z pozwoleniami, wszystkie formy
 BDL_COMPLETED_VAR = 748601                            # P3824: mieszkania oddane do użytkowania, ogółem
 BDL_PROJECTION_SUBJECT = "P4359"                      # prognoza ludności 2023–2060 (NSP 2021)
 HEADERS = {"User-Agent": "optymalna-warszawa-hackathon/1.0"}
@@ -147,7 +148,9 @@ def load_inputs() -> dict:
 
 def census_table(inputs: dict) -> pd.DataFrame:
     """Dzielnice: ludność NSP 2011 i 2021 (z klastrów) i mieszkania oddane między spisami."""
-    c = inputs["hexes"].groupby("dzielnica")[["gus_2011", "gus_2021"]].sum()
+    path = ROOT / "dane" / "historia_dzielnice.csv"   # spisy wg prawdziwych granic (historia_ludnosci.py)
+    c = (pd.read_csv(path, encoding="utf-8-sig").set_index("dzielnica") if path.exists()
+         else inputs["hexes"].groupby("dzielnica")[["gus_2011", "gus_2021"]].sum())
     o = inputs["completed"]
     # Spisy na 31 marca: 3/4 roku 2011, lata 2012–2020, 1/4 roku 2021.
     c["oddane"] = o.loc[c.index, range(2012, 2021)].sum(axis=1) + 0.75 * o.loc[c.index, 2011] + 0.25 * o.loc[c.index, 2021]
@@ -171,7 +174,11 @@ def calibrate(inputs: dict) -> dict:
     ss = ((c["zmiana"] - c["zmiana"].mean()) ** 2).sum()
     city_drift = (1 + b) ** 0.1 - 1
     resid = ((c["zmiana"] - a * c["oddane"]) / c["gus_2011"] + 1) ** 0.1 - 1
-    drift = DRIFT_SHRINK * resid + (1 - DRIFT_SHRINK) * city_drift
+    # Dryf jest systematyczny (domy i nowe osiedla na obrzeżach: +, centrum i bloki: −), więc dzielnica
+    # zachowuje większość własnego tempa; średnia miasta tylko je łagodzi.
+    # Dryf poniżej średniej miasta to głównie efekt małych mieszkań inwestycyjnych w nowych blokach
+    # (Wola, Włochy, Żoliborz) — nie spadek w starej zabudowie — więc nie schodzimy niżej niż miasto.
+    drift = (DRIFT_SHRINK * resid + (1 - DRIFT_SHRINK) * city_drift).clip(lower=city_drift, upper=DRIFT_RANGE[1])
 
     o = inputs["completed"].loc[WARSAW_TOTAL]
     yrs = [y for y in range(2014, 2026) if y + REALIZATION_LAG in o.index and y in inputs["gus_permits"].index]

@@ -9,8 +9,8 @@ Wynik: data/gunb_permits.parquet — GeoDataFrame EPSG:4326, jeden wiersz na poz
 (punkt = środek ciężkości działek inwestycji), kolumna n_flats = szacowana liczba mieszkań.
 
 Metoda:
-  1. Filtr: terc 1465xxx (m.st. Warszawa), kategoria XIII (budynki mieszkalne
-     wielorodzinne), rodzaj zamierzenia „budowa nowego/nowych obiektów”, data decyzji
+  1. Filtr: terc 1465xxx (m.st. Warszawa), kategorie XIII (budynki mieszkalne wielorodzinne) i I (jednorodzinne:
+     domy, bliźniaki, szeregowce), rodzaj zamierzenia „budowa nowego/nowych obiektów”, data decyzji
      od YEAR_FROM (2016 — potrzebne do kalibracji prognozy ludności na latach 2011–2021).
      Odrzucamy decyzje zmieniające / projekty zamienne (duplikowałyby mieszkania
      z pierwotnego pozwolenia) i obiekty pomocnicze (instalacje gazowe, altany, oranżerie…).
@@ -66,9 +66,14 @@ ULDK_URL = "https://uldk.gugik.gov.pl/"
 UUG_URL = "https://services.gugik.gov.pl/uug/"
 BDL_URL = "https://bdl.stat.gov.pl/api/v1/data/by-unit/071412865000"
 # GUS BDL P3816 „styczeń-grudzień”: spółdzielcze, sprzedaż/wynajem, komunalne, społeczne czynszowe.
-BDL_VARS = [747635, 747636, 747638, 747639]
+BDL_VARS = [747634, 747635, 747636, 747638, 747639]   # P3816: wszystkie formy, z indywidualnym (747634)
 
 YEAR_FROM = 2016
+# XIII = budynki wielorodzinne, I = jednorodzinne (domy, bliźniaki, szeregowce — także deweloperskie;
+# bez nich dzielnice domów, np. Wawer i Wesoła, wychodziły w prognozie na wyludniające się).
+CATEGORIES = {"XIII", "I"}
+HOUSE_M3 = 650                      # typowa kubatura domu jednorodzinnego
+HOUSE_KUB_RANGE = (150, 40_000)
 CALIB_YEARS = range(2022, 2026)   # lata, w których RWDZ jest już kompletny (patrz raport kalibracji)
 KUB_MIN, KUB_MAX = 300, 600_000    # m3, poza tym kubatura uznana za błędną
 MAX_WORKERS = 4
@@ -103,7 +108,7 @@ def load_permits(csv: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
     df = pd.read_csv(csv, sep=";", dtype=str, encoding="utf-8-sig")
     df = df[
         df["terc"].str.startswith("1465", na=False)
-        & (df["kategoria"] == "XIII")
+        & df["kategoria"].isin(CATEGORIES)
         & df["nazwa_zamierzenia_bud"].str.startswith("budowa nowego", na=False)
     ].copy()
     desc = df["nazwa_zam_budowlanego"].fillna("").str.strip()
@@ -121,7 +126,7 @@ def load_permits(csv: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
     first["inwestor"] = first["nazwa_inwestor"].fillna("")
     first["organ"] = first["nazwa_organu"]
     first["kubatura"] = pd.to_numeric(first["kubatura"], errors="coerce")
-    permits = first[["permit_id", "data_decyzji", "rok", "adres", "opis", "inwestor", "organ",
+    permits = first[["permit_id", "data_decyzji", "rok", "kategoria", "adres", "opis", "inwestor", "organ",
                      "numer_decyzji_urzedu", "kubatura", "ulica", "nr_domu"]]
 
     parcels = df[df["permit_id"].isin(permits["permit_id"])][
@@ -132,7 +137,7 @@ def load_permits(csv: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
 
 
 def gus_permitted_flats() -> pd.Series:
-    """Mieszkania (formy nieindywidualne), na które wydano pozwolenia — Warszawa, rocznie."""
+    """Mieszkania (wszystkie formy budownictwa), na które wydano pozwolenia — Warszawa, rocznie."""
     q = "&".join(f"var-id={v}" for v in BDL_VARS)
     r = requests.get(f"{BDL_URL}?{q}&format=json", timeout=60)
     r.raise_for_status()
@@ -255,15 +260,22 @@ def permit_points(permits: pd.DataFrame, parcels: pd.DataFrame) -> pd.DataFrame:
 
 
 def estimate_flats(p: pd.DataFrame, gus: pd.Series) -> tuple[pd.DataFrame, float]:
-    """n_flats = kubatura / M3_PER_FLAT, M3_PER_FLAT skalibrowane do GUS za CALIB_YEARS."""
+    """Bloki (XIII): n_flats = kubatura / M3_PER_FLAT, skalibrowane do GUS za CALIB_YEARS.
+    Domy (I): n_flats = kubatura / HOUSE_M3 (dom ~650 m3; bliźniak -> 2, szeregowiec -> kilka)."""
     p = p.copy()
-    valid = p["kubatura"].between(KUB_MIN, KUB_MAX)
+    multi = p["kategoria"] == "XIII"
+    valid = np.where(multi, p["kubatura"].between(KUB_MIN, KUB_MAX), p["kubatura"].between(*HOUSE_KUB_RANGE))
     p["kubatura_ok"] = valid
-    p["kubatura_est"] = p["kubatura"].where(valid, p.loc[valid, "kubatura"].median())
-    calib = p[p["rok"].isin(CALIB_YEARS)]
+    med = {k: p.loc[(p["kategoria"] == k) & valid, "kubatura"].median() for k in CATEGORIES}
+    p["kubatura_est"] = p["kubatura"].where(valid, p["kategoria"].map(med))
     years = [y for y in CALIB_YEARS if y in gus.index]
-    m3_per_flat = calib.loc[calib["rok"].isin(years), "kubatura_est"].sum() / gus.loc[years].sum()
-    p["n_flats"] = np.maximum(1, np.round(p["kubatura_est"] / m3_per_flat)).astype(int)
+    # Bloki dostają tyle mieszkań, ile według GUS zostaje po odjęciu domów z rejestru (domy liczymy z kubatury).
+    houses = np.maximum(1, np.round(p["kubatura_est"] / HOUSE_M3))
+    house_flats = houses[~multi & p["rok"].isin(years)].sum()
+    calib = p[multi & p["rok"].isin(years)]
+    m3_per_flat = calib["kubatura_est"].sum() / (gus.loc[years].sum() - house_flats)
+    per_flat = np.where(multi, m3_per_flat, HOUSE_M3)
+    p["n_flats"] = np.maximum(1, np.round(p["kubatura_est"] / per_flat)).astype(int)
     p["n_flats_source"] = "estimate"
     return p, m3_per_flat
 
@@ -274,7 +286,8 @@ def main() -> None:
     gus = gus_permitted_flats()
     all_permits, m3_per_flat = estimate_flats(all_permits, gus)
 
-    rep = all_permits.groupby("rok").agg(pozwolenia=("permit_id", "size"), szac=("n_flats", "sum"))
+    print(all_permits.groupby(["rok", "kategoria"])["n_flats"].sum().unstack().to_string())
+    rep = all_permits[all_permits["kategoria"] == "XIII"].groupby("rok").agg(pozwolenia=("permit_id", "size"), szac=("n_flats", "sum"))
     rep["gus"] = gus.reindex(rep.index)
     rep["szac/gus"] = (rep["szac"] / rep["gus"]).round(2)
     print(f"M3_PER_FLAT (kalibracja {CALIB_YEARS.start}-{CALIB_YEARS.stop - 1}) = {m3_per_flat:.0f} m3/mieszkanie")
@@ -294,7 +307,7 @@ def main() -> None:
     organ_d = gdf["organ"].str.extract(r"Warszawa - (.+)$")[0].replace(DISTRICT_FROM_ORGAN)
     gdf["dzielnica_organ"] = organ_d
 
-    cols = ["permit_id", "data_decyzji", "rok", "adres", "opis", "inwestor", "organ",
+    cols = ["permit_id", "data_decyzji", "rok", "kategoria", "adres", "opis", "inwestor", "organ",
             "numer_decyzji_urzedu", "dzielnica", "dzielnica_organ", "kubatura", "kubatura_ok",
             "n_flats", "n_flats_source", "n_parcels", "n_parcels_found", "area_m2", "geo_source", "geometry"]
     out = gdf.loc[~outside, cols].to_crs("EPSG:4326").reset_index(drop=True)
@@ -307,7 +320,7 @@ def main() -> None:
           f"obręb {(out.geo_source == 'uldk_obreb').sum()}, poza miastem {outside.sum()}, brak {n - len(gdf)}")
     print(f"Mieszkania (szac.) w pliku: {out['n_flats'].sum():,} z {permits['n_flats'].sum():,}")
     print(out.groupby("rok")["n_flats"].agg(["size", "sum"]).to_string())
-    print(out.groupby("dzielnica")["n_flats"].sum().sort_values(ascending=False).head(10).to_string())
+    print(out.groupby(["dzielnica", "kategoria"])["n_flats"].sum().unstack().fillna(0).astype(int).sort_values("I", ascending=False).to_string())
     print(f"Zapisano {OUT_PATH}")
 
 

@@ -11,6 +11,7 @@ Wynik: viz/symulator_dane.json
   rail    — linie metra/SKM/KM/WKD do wyświetlenia
   routes  — trasy linii autobusowych i tramwajowych ZTM (dane/warszawa_linie_trasy.geojson) z liczbą kursów
   boundary— granica miasta (do maski „poza Warszawą”)
+  infra   — cele podróży z dane/warszawa_infrastruktura.geojson (szpitale, szkoły, handel, kultura, parki…)
   Wszystko przycięte do granic Warszawy.
   params  — parametry modelu (osoby/mieszkanie, dryf, lata)
 
@@ -262,6 +263,33 @@ def export_routes(boundary) -> list:
     return out
 
 
+# Kategorie z dane/warszawa_infrastruktura.* -> grupy pokazywane w aplikacji.
+INFRA_GROUPS = {"szpital": "szpital", "szkola": "szkola", "centrum_handlowe": "handel", "park": "park",
+                "kino": "kultura", "teatr": "kultura", "muzeum": "kultura", "urzad_dzielnicy": "urzad",
+                "targowisko": "targowisko", "miejsce_kultu": "kult"}
+
+
+def export_infra(boundary) -> dict:
+    """Cele podróży: punkty (środek obiektu) wszystkich kategorii + obrysy parków."""
+    path = DANE / "warszawa_infrastruktura.geojson"
+    if not path.exists():
+        return {"points": [], "parks": []}
+    g = gpd.read_file(path).to_crs("EPSG:4326")
+    g = g[g.geometry.representative_point().within(boundary)]
+    g["grupa"] = g["kategoria"].map(INFRA_GROUPS).fillna("inne")
+    pts = g.geometry.representative_point()
+    points = [[R5(pt.x), R5(pt.y), r.grupa, r.nazwa if isinstance(r.nazwa, str) else "", r.kategoria,
+               round(float(r.pow_ha), 1) if r.pow_ha == r.pow_ha else 0]
+              for r, pt in zip(g.itertuples(), pts)]
+    parks = []
+    for r in g[(g["kategoria"] == "park") & g.geom_type.isin(["Polygon", "MultiPolygon"])].itertuples():
+        geom = r.geometry.simplify(0.00005)
+        polys = [[[[R5(x), R5(y)] for x, y in poly.exterior.coords]] for poly in getattr(geom, "geoms", [geom])]
+        parks.append({"nazwa": r.nazwa if isinstance(r.nazwa, str) else "park", "ha": round(float(r.pow_ha), 1), "polys": polys})
+    print(f"   infrastruktura: {len(points)} obiektów ({g['grupa'].value_counts().to_dict()}), parki-obszary: {len(parks)}")
+    return {"points": points, "parks": parks}
+
+
 def export_boundary(boundary) -> list:
     g = boundary.simplify(0.0002)
     return [[[R5(x), R5(y)] for x, y in p.exterior.coords] for p in getattr(g, "geoms", [g])]
@@ -278,7 +306,7 @@ def main() -> None:
     print("== linie, przystanki, granica")
     data = {"params": params, "hexes": export_hexes(hexes), "graph": graph, "people": people,
             "newbuild": newbuild, "stops": export_stops(boundary), "rail": export_rail_lines(boundary),
-            "routes": export_routes(boundary), "boundary": export_boundary(boundary)}
+            "routes": export_routes(boundary), "boundary": export_boundary(boundary), "infra": export_infra(boundary)}
     OUT.write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")))
     print(f"== {OUT.relative_to(ROOT)}: {OUT.stat().st_size / 1e6:.1f} MB")
 
