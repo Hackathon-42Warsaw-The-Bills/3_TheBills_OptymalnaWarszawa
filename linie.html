@@ -1,0 +1,262 @@
+<meta charset="utf-8">
+<title>Ranking linii ZTM</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: nagłówek z nawigacją, zakładki rankingów, tabela linii po lewej i karta wybranej linii (mapka obciążenia) po prawej; na telefonie karta pod tabelą. */
+:root {
+  --paper: #fbfcfb; --ground: #eceeed; --ink: #15201b; --ink-2: #46534d; --ink-3: #6f7b76;
+  --rule: #d8dddb; --chip: #e5e9e7; --water: #bcd6e8; --accent: #256abf;
+  --bus: #d9631e; --tram: #b0307a; --metro: #c02a2a; --rail: #3d4a8f;
+  --good: #0f8a3c; --warn: #c98500; --hot: #e0620d; --crit: #d03b3b;
+  --f-display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+  --f-body: "Barlow", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #161b19; --ground: #0f1312; --ink: #e6ebe8; --ink-2: #a9b4af; --ink-3: #7d8984;
+  --rule: #2b3330; --chip: #222a27; --water: #1d3546; --accent: #6da7ec;
+  --bus: #ff9a4d; --tram: #e163a8; --metro: #ff6b6b; --rail: #8f9cf0;
+  --good: #3fc16b; --warn: #f0b429; --hot: #ff8c42; --crit: #f06464;
+  color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --paper: #161b19; --ground: #0f1312; --ink: #e6ebe8; --ink-2: #a9b4af; --ink-3: #7d8984;
+  --rule: #2b3330; --chip: #222a27; --water: #1d3546; --accent: #6da7ec;
+  --bus: #ff9a4d; --tram: #e163a8; --metro: #ff6b6b; --rail: #8f9cf0;
+  --good: #3fc16b; --warn: #f0b429; --hot: #ff8c42; --crit: #f06464;
+  color-scheme: dark;
+}
+html, body { margin: 0; }
+[hidden] { display: none !important; }
+body { background: var(--paper); color: var(--ink); font: 15px/1.45 var(--f-body); }
+.wrap { max-width: 1320px; margin: 0 auto; padding-block: 18px 40px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; gap: 18px; }
+header { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
+h1 { font: 600 32px/1.05 var(--f-display); margin: 0; text-wrap: balance; }
+.sub { color: var(--ink-3); font-size: 13.5px; margin-top: 6px; max-width: 70ch; }
+a { color: var(--accent); }
+.nav { display: flex; gap: 8px; }
+.nav a { font: 500 13.5px var(--f-body); text-decoration: none; color: var(--ink); background: var(--chip); padding: 8px 12px; border-radius: 6px; }
+.nav a[aria-current="page"] { background: var(--ink); color: var(--paper); }
+.nav a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+.tabs button { font: 500 14px var(--f-body); color: var(--ink-2); background: var(--chip); border: 1px solid transparent; border-radius: 99px; padding: 8px 14px; cursor: pointer; }
+.tabs button[aria-pressed="true"] { background: var(--paper); color: var(--ink); border-color: var(--ink); }
+.tabs .bad[aria-pressed="true"] { border-color: var(--crit); color: var(--crit); }
+.tabnote { color: var(--ink-2); font-size: 14px; }
+.tools { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.tools input[type="search"] { font: inherit; color: var(--ink); background: var(--chip); border: 1px solid transparent; border-radius: 6px; padding: 8px 10px; min-width: 220px; }
+.seg { display: inline-grid; grid-auto-flow: column; background: var(--chip); border-radius: 7px; padding: 3px; gap: 3px; }
+.seg button { font: 500 13px var(--f-body); color: var(--ink-2); background: transparent; border: 0; border-radius: 5px; padding: 6px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--paper); color: var(--ink); box-shadow: 0 1px 2px rgb(0 0 0 / 0.12); }
+.muted { color: var(--ink-3); font-size: 12.5px; }
+
+.main { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 22px; align-items: start; }
+.main > * { min-width: 0; }
+.tablewrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 8px; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; font-variant-numeric: tabular-nums; }
+th { position: sticky; top: 0; background: var(--paper); text-align: right; font: 600 12px/1.2 var(--f-display); text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-2); padding: 10px 8px; border-bottom: 1px solid var(--rule); white-space: nowrap; cursor: pointer; user-select: none; }
+th.l, td.l { text-align: left; }
+th[aria-sort] { color: var(--ink); }
+th[aria-sort="descending"]::after { content: " ↓"; } th[aria-sort="ascending"]::after { content: " ↑"; }
+td { padding: 8px; border-bottom: 1px solid var(--rule); text-align: right; white-space: nowrap; }
+td.route { white-space: normal; min-width: 180px; max-width: 320px; color: var(--ink-2); font-size: 13px; }
+tbody tr { cursor: pointer; }
+tbody tr:hover { background: var(--chip); }
+tbody tr[aria-selected="true"] { background: color-mix(in srgb, var(--accent) 12%, var(--paper)); }
+td.sortcol { font-weight: 600; }
+.badge { display: inline-block; min-width: 38px; text-align: center; font: 600 14px/1 var(--f-display); color: #fff; border-radius: 4px; padding: 5px 6px; }
+.bar { display: inline-block; vertical-align: middle; height: 6px; border-radius: 3px; margin-left: 6px; background: var(--rule); width: 46px; position: relative; overflow: hidden; }
+.bar i { position: absolute; inset: 0 auto 0 0; border-radius: 3px; }
+.pct-good { color: var(--good); } .pct-warn { color: var(--warn); } .pct-hot { color: var(--hot); } .pct-crit { color: var(--crit); font-weight: 600; }
+.more { margin-top: 8px; }
+.btn { font: 500 13px var(--f-body); color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 8px 12px; cursor: pointer; }
+
+.card { position: sticky; top: 12px; border: 1px solid var(--rule); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.card h2 { margin: 0; font: 600 26px/1 var(--f-display); display: flex; align-items: center; gap: 10px; }
+.card .name { color: var(--ink-2); font-size: 13.5px; }
+.card svg { width: 100%; height: auto; display: block; background: var(--ground); border-radius: 8px; }
+.kv { display: grid; grid-template-columns: 1fr auto; gap: 5px 12px; font-size: 14px; font-variant-numeric: tabular-nums; }
+.kv dt { color: var(--ink-3); } .kv dd { margin: 0; text-align: right; }
+.legend { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
+.legend i { height: 6px; border-radius: 2px; }
+.legend-l { display: grid; grid-template-columns: repeat(4, 1fr); font: 11px var(--f-mono); color: var(--ink-3); }
+.score { font: 600 40px/1 var(--f-display); }
+footer { color: var(--ink-3); font-size: 12.5px; max-width: 90ch; }
+
+@media (max-width: 980px) { .main { grid-template-columns: minmax(0, 1fr); } .card { position: static; } .tools input[type="search"] { min-width: 0; flex: 1 1 200px; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Ranking linii ZTM</h1>
+      <div class="sub">Które linie autobusowe, tramwajowe, metra i SKM działają najlepiej, a które najgorzej: przepełnienie w porannym szczycie, wypełnienie, prędkość, korki i to, jak zmieni się obciążenie do 2036 r.</div>
+    </div>
+    <nav class="nav"><a href="index.html">Symulator</a><a href="linie.html" aria-current="page">Ranking linii</a></nav>
+  </header>
+
+  <div class="tabs" id="tabs" role="tablist"></div>
+  <div class="tabnote" id="tabnote"></div>
+  <div class="tools">
+    <input type="search" id="q" placeholder="Szukaj linii lub przystanku końcowego…" aria-label="Szukaj linii">
+    <div class="seg" id="mode">
+      <button data-m="" aria-pressed="true">Wszystkie</button>
+      <button data-m="autobus" aria-pressed="false">Autobusy</button>
+      <button data-m="tramwaj" aria-pressed="false">Tramwaje</button>
+      <button data-m="szyna" aria-pressed="false">Metro i SKM</button>
+    </div>
+    <span class="muted" id="count"></span>
+  </div>
+
+  <div class="main">
+    <div>
+      <div class="tablewrap"><table id="t"><thead><tr id="thead"></tr></thead><tbody id="tbody"></tbody></table></div>
+      <div class="more"><button class="btn" id="more" hidden>Pokaż wszystkie</button></div>
+    </div>
+    <aside class="card" id="card">
+      <div class="muted">Kliknij linię w tabeli, żeby zobaczyć jej trasę i obciążenie.</div>
+    </aside>
+  </div>
+
+  <footer>
+    Źródła: rozkład ZTM (GTFS, dzień roboczy) — kursy, długość, prędkość w szczycie 7–9 i wieczorem 20–22; model pasażerów (podróże z domu w porannym szczycie, przypisane najszybszą trasą) — wypełnienie i przepełnienie, 2036 z prognozowaną ludnością i nowym metrem M2 zachód i M3. Liczby pasażerów są orientacyjne (metro niedoszacowane), więc wypełnienie w wyniku łącznym liczone jest względem innych linii. <span id="weights"></span>
+  </footer>
+</div>
+
+<script>
+(() => {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const fmt = new Intl.NumberFormat("pl-PL"), fmt1 = new Intl.NumberFormat("pl-PL", { maximumFractionDigits: 1 });
+  const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const TYP = { autobus: ["Autobus", "--bus"], tramwaj: ["Tramwaj", "--tram"], metro: ["Metro", "--metro"], kolej: ["SKM", "--rail"] };
+  const pct = (v) => (v == null ? "–" : `${Math.round(v * 100)}%`);
+  const loadClass = (u) => (u == null ? "" : u > 1 ? "pct-crit" : u > 0.8 ? "pct-hot" : u > 0.5 ? "pct-warn" : "pct-good");
+  const loadVar = (u) => (u > 1 ? "--crit" : u > 0.8 ? "--hot" : u > 0.5 ? "--warn" : "--good");
+
+  // Zakładki: każda to sortowanie + filtr + opis.
+  const TABS = [
+    { id: "best", label: "Najlepsze ogólnie", key: "wynik", dir: -1, note: "Wynik 0–100: wypełnienie (względem innych linii), brak przepełnienia, prędkość i brak korków (względem linii tego samego rodzaju).", filter: (r) => r.wynik != null },
+    { id: "worst", label: "Najgorsze ogólnie", key: "wynik", dir: 1, bad: true, note: "Ten sam wynik 0–100, od najniższego.", filter: (r) => r.wynik != null },
+    { id: "over", label: "Przepełnione", key: "max_wyk_2025", dir: -1, bad: true, note: "Największe wykorzystanie pojemności na najbardziej obciążonym odcinku w godzinie szczytu (dziś). > 100% = pasażerów więcej niż miejsc.", filter: (r) => r.max_wyk_2025 != null },
+    { id: "empty", label: "Puste", key: "wypelnienie_2025", dir: 1, bad: true, note: "Najniższe średnie wypełnienie (pasażerokilometry / miejscokilometry) przy co najmniej 2 kursach na godzinę — kandydaci do zmniejszenia częstotliwości lub zmiany trasy. Model wysyła każdą podróż najszybszą trasą, więc linie równoległe do szybszych mogą wyjść zaniżone — wyniki warto zweryfikować; linie z zerowym wypełnieniem pominięto.", filter: (r) => r.wypelnienie_2025 > 0 && r.kursy_h_szczyt >= 2 },
+    { id: "jam", label: "W korkach", key: "korki", dir: -1, bad: true, note: "O ile wolniej linia jedzie w porannym szczycie niż wieczorem (rozkład ZTM). Kandydaci do buspasów i priorytetu na światłach.", filter: (r) => r.korki != null && r.typ !== "metro" },
+    { id: "worse", label: "Pogorszenie do 2036", key: "zmiana_max_wyk", dir: -1, bad: true, note: "Wzrost maksymalnego wykorzystania 2025 → 2036 (nowi mieszkańcy, nowe metro; sieć autobusowa jak dziś). Te linie trzeba będzie wzmocnić pierwsze.", filter: (r) => r.zmiana_max_wyk != null },
+  ];
+  const COLS = [
+    { key: "rank", label: "#", fmt: (r, i) => i + 1, nosort: true },
+    { key: "linia", label: "Linia", cls: "l", fmt: (r) => `<span class="badge" style="background:var(${TYP[r.typ][1]})">${esc(r.linia)}</span>` },
+    { key: "nazwa", label: "Trasa", cls: "l route", fmt: (r) => esc(r.nazwa) },
+    { key: "kursy_h_szczyt", label: "Kursy/h", fmt: (r) => fmt1.format(r.kursy_h_szczyt ?? 0) },
+    { key: "v_szczyt_kmh", label: "Prędkość", fmt: (r) => (r.v_szczyt_kmh == null ? "–" : `${fmt1.format(r.v_szczyt_kmh)} km/h`) },
+    { key: "korki", label: "Korki", fmt: (r) => (r.korki == null ? "–" : `${Math.round(r.korki * 100)}%`) },
+    { key: "wypelnienie_2025", label: "Wypełnienie", fmt: (r) => pct(r.wypelnienie_2025) },
+    { key: "max_wyk_2025", label: "Max 2025", fmt: (r) => `<span class="${loadClass(r.max_wyk_2025)}">${pct(r.max_wyk_2025)}</span>` },
+    { key: "max_wyk_2036", label: "Max 2036", fmt: (r) => `<span class="${loadClass(r.max_wyk_2036)}">${pct(r.max_wyk_2036)}</span>` },
+    { key: "wynik", label: "Wynik", fmt: (r) => (r.wynik == null ? "–" : `${fmt1.format(r.wynik)}<span class="bar"><i style="width:${r.wynik}%;background:var(${r.wynik >= 70 ? "--good" : r.wynik >= 50 ? "--warn" : "--crit"})"></i></span>`) },
+  ];
+
+  let D, rows = [], tab = TABS[0], sortKey = tab.key, sortDir = tab.dir, mode = "", q = "", showAll = false, selected = null, cardYear = 2036;
+
+  function renderTabs() {
+    $("tabs").innerHTML = TABS.map((t) => `<button role="tab" class="${t.bad ? "bad" : ""}" data-t="${t.id}" aria-pressed="${t === tab}">${t.label}</button>`).join("");
+    $("tabs").querySelectorAll("button").forEach((b) => (b.onclick = () => { tab = TABS.find((t) => t.id === b.dataset.t); sortKey = tab.key; sortDir = tab.dir; showAll = false; selected = null; renderTabs(); render(); }));
+    $("tabnote").textContent = tab.note;
+  }
+
+  function visible() {
+    const qq = q.trim().toLowerCase();
+    return rows.filter(tab.filter)
+      .filter((r) => !mode || (mode === "szyna" ? ["metro", "kolej"].includes(r.typ) : r.typ === mode))
+      .filter((r) => !qq || r.linia.toLowerCase() === qq || r.linia.toLowerCase().startsWith(qq) || (r.nazwa || "").toLowerCase().includes(qq))
+      .sort((a, b) => {
+        const x = a[sortKey], y = b[sortKey];
+        if (x == null) return 1; if (y == null) return -1;
+        return (typeof x === "string" ? x.localeCompare(y, "pl", { numeric: true }) : x - y) * sortDir;
+      });
+  }
+
+  function render() {
+    const list = visible(), shown = showAll ? list : list.slice(0, 25);
+    $("count").textContent = `${fmt.format(list.length)} linii`;
+    $("thead").innerHTML = COLS.map((c) => `<th class="${c.cls || ""}" data-k="${c.key}" ${c.key === sortKey ? `aria-sort="${sortDir < 0 ? "descending" : "ascending"}"` : ""}>${c.label}</th>`).join("");
+    $("thead").querySelectorAll("th").forEach((th) => (th.onclick = () => {
+      const c = COLS.find((x) => x.key === th.dataset.k); if (c.nosort) return;
+      if (sortKey === c.key) sortDir = -sortDir; else { sortKey = c.key; sortDir = ["linia", "nazwa"].includes(c.key) ? 1 : -1; }
+      render();
+    }));
+    $("tbody").innerHTML = shown.map((r, i) => `<tr data-l="${esc(r.linia)}" aria-selected="${r.linia === selected}">${COLS.map((c) => `<td class="${c.cls || ""} ${c.key === sortKey ? "sortcol" : ""}">${c.fmt(r, i)}</td>`).join("")}</tr>`).join("");
+    $("tbody").querySelectorAll("tr").forEach((tr) => (tr.onclick = () => select(tr.dataset.l)));
+    $("more").hidden = showAll || list.length <= 25;
+    if (!selected && shown.length) select(shown[0].linia);
+  }
+
+  // Mapka linii w SVG: granica miasta, Wisła i odcinki linii pokolorowane obciążeniem.
+  function lineMap(ref) {
+    const W = 360, H = 300, segs = D.odcinki[ref] || [];
+    const all = D.granica.flat(), xs = all.map((p) => p[0]), ys = all.map((p) => p[1]);
+    const [x0, x1, y0, y1] = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)];
+    const k = Math.cos((52.23 * Math.PI) / 180), sx = (W - 16) / ((x1 - x0) * k), sy = (H - 16) / (y1 - y0), s = Math.min(sx, sy);
+    const P = ([x, y]) => [8 + (x - x0) * k * s + ((W - 16) - (x1 - x0) * k * s) / 2, 8 + (y1 - y) * s + ((H - 16) - (y1 - y0) * s) / 2];
+    const path = (pts) => pts.map((p, i) => `${i ? "L" : "M"}${P(p).map((v) => v.toFixed(1)).join(",")}`).join("");
+    const yi = cardYear === 2025 ? 4 : 5;
+    const lines = segs.filter((g) => g[6] === "0" || !segs.some((h) => h[6] === "0")).concat(segs.filter((g) => g[6] !== "0" && segs.some((h) => h[6] === "0")))
+      .sort((a, b) => (a[yi] ?? 0) - (b[yi] ?? 0))
+      .map((g) => { const u = g[yi] ?? 0, [a, b] = [P([g[0], g[1]]), P([g[2], g[3]])];
+        return `<line x1="${a[0].toFixed(1)}" y1="${a[1].toFixed(1)}" x2="${b[0].toFixed(1)}" y2="${b[1].toFixed(1)}" stroke="var(${loadVar(u)})" stroke-width="${(2 + Math.min(u, 2) * 2.5).toFixed(1)}" stroke-linecap="round"/>`; }).join("");
+    return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Trasa linii ${esc(ref)} z obciążeniem odcinków">
+      ${D.granica.map((r) => `<path d="${path(r)}Z" fill="var(--paper)" stroke="var(--rule)" stroke-width="1"/>`).join("")}
+      ${D.wisla.map((r) => `<path d="${path(r)}" fill="none" stroke="var(--water)" stroke-width="5" stroke-linecap="round"/>`).join("")}
+      ${lines}</svg>`;
+  }
+
+  function select(ref) {
+    selected = ref;
+    const r = rows.find((x) => x.linia === ref); if (!r) return;
+    $("tbody").querySelectorAll("tr").forEach((tr) => tr.setAttribute("aria-selected", tr.dataset.l === ref));
+    const has = !!(D.odcinki[ref] || []).length;
+    $("card").innerHTML = `
+      <h2><span class="badge" style="background:var(${TYP[r.typ][1]});font-size:20px">${esc(r.linia)}</span>${TYP[r.typ][0]}</h2>
+      <div class="name">${esc(r.nazwa)}</div>
+      ${r.wynik != null ? `<div><span class="score">${fmt1.format(r.wynik)}</span> <span class="muted">/ 100 · miejsce ${rows.filter((x) => x.wynik != null && x.wynik > r.wynik).length + 1} z ${rows.filter((x) => x.wynik != null).length}</span></div>` : ""}
+      ${has ? `<div class="seg" id="cy"><button data-y="2025" aria-pressed="${cardYear === 2025}">Obciążenie 2025</button><button data-y="2036" aria-pressed="${cardYear === 2036}">2036</button></div>
+        ${lineMap(ref)}
+        <div class="legend"><i style="background:var(--good)"></i><i style="background:var(--warn)"></i><i style="background:var(--hot)"></i><i style="background:var(--crit)"></i></div>
+        <div class="legend-l"><span>&lt; 50%</span><span>50–80%</span><span>80–100%</span><span>&gt; 100%</span></div>` : `<div class="muted">Linia nie kursuje w porannym szczycie (np. nocna) — brak danych o obciążeniu.</div>`}
+      <dl class="kv">
+        <dt>Kursy dziennie / w szczycie</dt><dd>${fmt.format(r.kursy_dzien)} / ${fmt1.format(r.kursy_h_szczyt)} na h</dd>
+        <dt>Długość · przystanki</dt><dd>${fmt1.format(r.dlugosc_km)} km · ${r.przystanki}</dd>
+        <dt>Prędkość szczyt / wieczór</dt><dd>${r.v_szczyt_kmh == null ? "–" : fmt1.format(r.v_szczyt_kmh)} / ${r.v_wieczor_kmh == null ? "–" : fmt1.format(r.v_wieczor_kmh)} km/h</dd>
+        <dt>Spowolnienie w szczycie</dt><dd>${r.korki == null ? "–" : Math.round(r.korki * 100) + "%"}</dd>
+        <dt>Średnie wypełnienie 2025 → 2036</dt><dd>${pct(r.wypelnienie_2025)} → ${pct(r.wypelnienie_2036)}</dd>
+        <dt>Max wykorzystanie 2025 → 2036</dt><dd><span class="${loadClass(r.max_wyk_2025)}">${pct(r.max_wyk_2025)}</span> → <span class="${loadClass(r.max_wyk_2036)}">${pct(r.max_wyk_2036)}</span></dd>
+        <dt>Przepełnione odcinki 2025 / 2036</dt><dd>${r.przepelnione_odcinki_2025 ?? 0} / ${r.przepelnione_odcinki_2036 ?? 0}</dd>
+        ${r.najgorszy_odcinek ? `<dt>Najgorszy odcinek 2036</dt><dd style="white-space:normal">${esc(r.najgorszy_odcinek)}</dd>` : ""}
+      </dl>
+      <a href="index.html#linia-${encodeURIComponent(r.linia)}">Pokaż linię ${esc(r.linia)} w symulatorze →</a>`;
+    $("cy")?.querySelectorAll("button").forEach((b) => (b.onclick = () => { cardYear = +b.dataset.y; select(ref); }));
+  }
+
+  function wire() {
+    $("q").oninput = (e) => { q = e.target.value; showAll = false; selected = null; render(); };
+    $("mode").querySelectorAll("button").forEach((b) => (b.onclick = () => { mode = b.dataset.m; $("mode").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x === b)); selected = null; render(); }));
+    $("more").onclick = () => { showAll = true; render(); };
+  }
+
+  fetch("frontend/ranking_linii.json", { cache: "no-cache" }).then((r) => r.json()).then((d) => {
+    D = d;
+    rows = d.linie.map((v) => Object.fromEntries(d.fields.map((f, i) => [f, v[i]])));
+    const w = d.wagi;
+    $("weights").textContent = `Wagi wyniku: wypełnienie ${w.wypelnienie * 100}%, brak przepełnienia ${w.bez_przepelnienia * 100}% (kara od ${Math.round(d.przepelnienie_od * 100)}% pojemności, pełna przy ${Math.round(d.przepelnienie_max * 100)}%), prędkość ${w.predkosc * 100}%, brak korków ${w.bez_korkow * 100}%.`;
+    const want = decodeURIComponent((location.hash.match(/^#linia-(.+)$/) || [])[1] || "");
+    renderTabs(); wire(); render();
+    if (want && rows.some((r) => r.linia === want)) select(want);
+  }).catch((e) => { console.error(e); $("tabnote").textContent = "Nie udało się wczytać frontend/ranking_linii.json. Uruchom: .venv/bin/python mapping/ranking_linii.py"; });
+})();
+</script>
