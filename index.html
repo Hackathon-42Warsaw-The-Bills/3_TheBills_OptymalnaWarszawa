@@ -170,6 +170,31 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
 .dpick li small { color: var(--ink-3); font-size: 12px; white-space: nowrap; }
 .dpick li[aria-selected="true"] { background: var(--chip); }
 .dpick li.empty { color: var(--ink-3); cursor: default; }
+/* Panel statystyk klastra: prawy dolny róg mapy, pod przyciskami powiększania. */
+.cpanel { position: absolute; right: max(12px, env(safe-area-inset-right, 0px)); bottom: max(12px, env(safe-area-inset-bottom, 0px)); width: min(360px, calc(100% - 24px)); max-height: calc(100% - 170px); display: flex; flex-direction: column; background: var(--paper); border: 1px solid var(--rule); border-radius: 9px; box-shadow: 0 6px 22px rgb(0 0 0 / 0.18); z-index: 2; overflow: hidden; }
+.cpanel[hidden] { display: none; }
+.cp-head { display: flex; align-items: flex-start; gap: 8px; padding: 12px 10px 10px 14px; border-bottom: 1px solid var(--rule); }
+.cp-head h3 { font: 600 21px/1.1 var(--f-display); margin: 0; }
+.cp-id { font: 11px var(--f-mono); color: var(--ink-3); margin-top: 3px; }
+.cp-badges { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 7px; }
+.cp-badge { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--chip); color: var(--ink-2); }
+.cp-badge.top { background: var(--top); color: var(--paper); }
+.cp-close { margin-left: auto; flex: none; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 6px; background: transparent; color: var(--ink-2); font-size: 22px; line-height: 1; cursor: pointer; display: grid; place-items: center; }
+.cp-close:hover { background: var(--chip); color: var(--ink); }
+.cp-body { overflow-y: auto; padding: 0 14px 12px; overscroll-behavior: contain; }
+.cp-sec { padding-top: 10px; }
+.cp-sec + .cp-sec { border-top: 1px solid var(--rule); margin-top: 10px; }
+.cp-sec h4 { font: 600 12px/1 var(--f-display); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 6px; }
+.cp-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 13px; padding: 2px 0; }
+.cp-row > span { color: var(--ink-2); min-width: 0; }
+.cp-row > b { font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+.cp-row .pos { color: var(--good); }
+.cp-row .neg { color: var(--crit); }
+.cp-chips { display: flex; flex-wrap: wrap; gap: 3px; margin: 4px 0 2px; }
+.cp-chips i { font: 500 11px var(--f-mono); font-style: normal; padding: 1px 5px; border-radius: 4px; background: var(--chip); color: var(--ink-2); }
+.cp-note { font-size: 12px; color: var(--ink-3); margin-top: 4px; }
+.cp-spark { display: block; width: 100%; height: 64px; margin: 6px 0 2px; overflow: visible; }
+.cp-spark text { font: 10px var(--f-mono); fill: var(--ink-3); }
 
 .maplibregl-map { overflow: hidden; position: relative; -webkit-tap-highlight-color: transparent; }
 .maplibregl-canvas { position: absolute; left: 0; top: 0; }
@@ -410,6 +435,13 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       <button id="zout" aria-label="Oddal">−</button>
       <button id="zall" class="all" aria-label="Pokaż całą Warszawę">Całość</button>
     </div>
+    <section class="cpanel" id="cpanel" aria-labelledby="cp-title" hidden>
+      <div class="cp-head">
+        <div><h3 id="cp-title"></h3><div class="cp-id" id="cp-id"></div><div class="cp-badges" id="cp-badges"></div></div>
+        <button class="cp-close" id="cp-close" type="button" aria-label="Zamknij statystyki klastra">×</button>
+      </div>
+      <div class="cp-body" id="cp-body"></div>
+    </section>
     <div class="tip" id="tip" hidden></div>
   </div>
 </div>
@@ -816,6 +848,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       map.addSource("river", { type: "geojson", data: fc(B.river.map((c) => line(decode(c, S)))) });
       map.addSource("districts", { type: "geojson", data: fc(B.districts.flatMap((d) => d.rings.map((c) => line(decode(c, S))))) });
       map.addSource("district-sel", { type: "geojson", data: fc([]) });
+      map.addSource("hex-sel", { type: "geojson", data: fc([]) });
       map.addSource("roads", { type: "geojson", data: fc(B.roads.edges.map((e) => ({ type: "Feature", properties: { c: e[0] }, geometry: { type: "LineString", coordinates: decode(e[7], S) } }))), tolerance: 0.4 });
       // Ulice dostępne dla autobusu (graf trasowania), jedna linia na oba kierunki — podświetlane przy rysowaniu.
       const seenPair = new Set();
@@ -850,6 +883,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       map.addLayer({ id: "busnet", type: "line", source: "busnet", layout: { "line-cap": "round", "line-join": "round", visibility: "none" }, paint: { "line-color": css("--accent"), "line-opacity": 0.45, "line-width": ["interpolate", ["linear"], ["zoom"], 10, 0.8, 16, 3.5] } });
       map.addLayer({ id: "districts", type: "line", source: "districts", paint: { "line-color": css("--district"), "line-width": 1, "line-dasharray": [3, 2] } });
       map.addLayer({ id: "district-sel", type: "line", source: "district-sel", layout: { "line-join": "round" }, paint: { "line-color": css("--ink"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 2, 15, 4] } });
+      map.addLayer({ id: "hex-sel", type: "line", source: "hex-sel", layout: { "line-join": "round" }, paint: { "line-color": css("--ink"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 2.5, 15, 4.5] } });
       map.addLayer({ id: "trams", type: "line", source: "trams", paint: { "line-color": css("--tram"), "line-opacity": 0.6, "line-width": ["interpolate", ["linear"], ["zoom"], 10, 0.8, 16, 2.5] } });
       map.addLayer({ id: "routes-bus", type: "line", source: "routes", filter: ["==", ["get", "typ"], "autobus"], layout: { "line-cap": "round", "line-join": "round", visibility: "none" }, paint: { "line-color": css("--bus"), "line-opacity": 0.55, "line-width": routeWidth(1) } });
       map.addLayer({ id: "routes-tram", type: "line", source: "routes", filter: ["==", ["get", "typ"], "tram"], layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": css("--tram"), "line-opacity": 0.75, "line-width": routeWidth(1) } });
@@ -985,6 +1019,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       const [x, y] = toXY(e.lngLat.lng, e.lngLat.lat);
       if (mode === "route") addWaypoint(x, y);
       else if (mode === "stop") addStop(x, y);
+      else openCluster(hexAt(e.lngLat.lng, e.lngLat.lat));   // przeglądanie: statystyki klikniętego klastra
     });
     $("zin").onclick = () => map.zoomIn();
     $("zout").onclick = () => map.zoomOut();
@@ -1014,13 +1049,13 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
   function yearChanged() {
     if (TOP.rows.length) renderTopList();
     $("year-label").textContent = year;
-    renderLegend(); updateYearLayers(); renderEval();
+    renderLegend(); updateYearLayers(); renderEval(); renderCluster();
   }
 
   // Resetuj: usuwa linię i przywraca domyślny rok, scenariusz, warstwę, parametry i widok mapy.
   const DEFAULTS = { headway: 10, vehicle: 150, dwell: 25, layover: 6, trips: 2.0, share: 45 };
   function resetAll() {
-    clearAll();
+    clearAll(); closeCluster(); clearDistrict();
     year = 2036; $("year").value = 2036; scenario = "base"; metric = "growth";
     $("scenario").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x.dataset.s === "base"));
     $("metric").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x.dataset.m === "growth"));
@@ -1066,8 +1101,13 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
   // Plik (~0,5 MB) wczytywany dopiero przy pierwszym włączeniu; włączona heatmapa zastępuje kolory klastrów.
   const HEAT = { on: false, loaded: false, n: 0 };
   const heatColor = () => ["interpolate", ["linear"], ["get", "p"], 0, css("--h1"), 0.25, css("--h2"), 0.5, css("--h3"), 0.75, css("--h4"), 1, css("--h5")];
+  // Jedno pobranie pliku dla heatmapy i panelu klastra (po błędzie można spróbować ponownie).
+  let heatJSON = null;
+  const fetchHeat = () => heatJSON || (heatJSON = fetch("dane/heatmapa_wykluczenia.geojson", { cache: "no-cache" })
+    .then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+    .catch((e) => { heatJSON = null; throw e; }));
   async function loadHeat() {
-    const g = await fetch("dane/heatmapa_wykluczenia.geojson", { cache: "no-cache" }).then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); });
+    const g = await fetchHeat();
     const feats = g.features.filter((f) => f.geometry && Number.isFinite(+f.properties.pred))
       .map((f) => ({ type: "Feature", properties: { p: +f.properties.pred, rank: +f.properties.rank, d: f.properties.dzielnica }, geometry: f.geometry }));
     map.addSource("heat", { type: "geojson", data: fc(feats) });
@@ -1107,6 +1147,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       const t = TOP.byRank.get(+b.dataset.r); if (!map) return;
       const bb = new maplibregl.LngLatBounds(); (t.hex ? t.hex.rings.flat() : [[t.lon, t.lat]]).forEach((c) => bb.extend(c));
       map.fitBounds(bb, { padding: 120, maxZoom: 15, duration: 600 });
+      if (t.hex) openCluster(D.hexes.indexOf(t.hex));
     }));
   }
 
@@ -1548,7 +1589,7 @@ ${JSON.stringify(describe(r), null, 1)}`;
 
   function wireUI() {
     $("year").oninput = (e) => { year = +e.target.value; yearChanged(); };
-    $("scenario").querySelectorAll("button").forEach((b) => (b.onclick = () => { scenario = b.dataset.s; $("scenario").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x === b)); updateYearLayers(); renderEval(); }));
+    $("scenario").querySelectorAll("button").forEach((b) => (b.onclick = () => { scenario = b.dataset.s; $("scenario").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x === b)); updateYearLayers(); renderEval(); renderCluster(); }));
     $("metric").querySelectorAll("button").forEach((b) => (b.onclick = () => { metric = b.dataset.m; $("metric").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x === b)); renderLegend(); if (map?.getLayer("hex")) { map.setPaintProperty("hex", "fill-color", hexColorExpr()); updateYearLayers(); } }));
     $("tools").querySelectorAll("button").forEach((b) => (b.onclick = () => setMode(b.dataset.mode)));
     $("undo").onclick = undo; $("clear").onclick = clearAll; $("reset").onclick = resetAll;
@@ -1565,7 +1606,7 @@ ${JSON.stringify(describe(r), null, 1)}`;
     $("line-filter").onchange = () => { applyLayers(); fitToFilter(); };
     $("layers").querySelectorAll("input").forEach((i) => (i.onchange = applyLayers));
     $("sample-line").onclick = () => { loadProposal(SAMPLE); };
-    ["headway", "vehicle", "dwell", "layover", "trips", "share"].forEach((id) => ($(id).oninput = () => { renderEval(); if (metric === "trips" && (id === "trips" || id === "share")) updateYearLayers(); }));
+    ["headway", "vehicle", "dwell", "layover", "trips", "share"].forEach((id) => ($(id).oninput = () => { renderEval(); if (id === "trips" || id === "share") { renderCluster(); if (metric === "trips") updateYearLayers(); } }));
     $("ai-btn").onclick = askAI;
     $("ai-stop").onclick = () => aiCtl?.abort();
     $("json-load").onclick = () => { try { const n = loadProposal(JSON.parse($("json").value)); $("json-msg").textContent = n ? `Wczytano; pominięto ${n} punktów za daleko od ulic lub przystanków poza trasą linii.` : "Wczytano propozycję."; } catch (e) { $("json-msg").textContent = `Nie udało się wczytać: ${e.message}`; } };
@@ -1574,14 +1615,14 @@ ${JSON.stringify(describe(r), null, 1)}`;
       const txt = JSON.stringify(currentProposal()); $("json").value = txt;
       try { await navigator.clipboard.writeText(txt); $("json-msg").textContent = "Skopiowano do schowka."; } catch { $("json").select(); $("json-msg").textContent = "Zaznaczono tekst w polu — skopiuj go ręcznie."; }
     };
-    window.addEventListener("keydown", (e) => { if ((e.metaKey || e.ctrlKey) && e.key === "z") { e.preventDefault(); undo(); } if (e.key === "Escape") setMode("view"); });
+    window.addEventListener("keydown", (e) => { if ((e.metaKey || e.ctrlKey) && e.key === "z") { e.preventDefault(); undo(); } if (e.key === "Escape") { if (mode === "view" && CL.i >= 0) closeCluster(); else setMode("view"); } });
   }
 
   function applyTheme() {
     if (!map?.getLayer("hex")) return;
     const set = (l, p, v) => map.setPaintProperty(l, p, v);
     set("bg", "background-color", css("--ground")); set("river", "line-color", css("--water")); set("roads", "line-color", css("--road"));
-    set("districts", "line-color", css("--district")); set("district-sel", "line-color", css("--ink")); set("trams", "line-color", css("--tram")); set("hex", "fill-color", hexColorExpr());
+    set("districts", "line-color", css("--district")); set("district-sel", "line-color", css("--ink")); set("hex-sel", "line-color", css("--ink")); set("trams", "line-color", css("--tram")); set("hex", "fill-color", hexColorExpr());
     set("busnet", "line-color", css("--accent"));
     set("rail-metro", "line-color", css("--metro")); set("rail-kolej", "line-color", css("--rail"));
     for (const l of ["pmetro-open", "pmetro-future"]) set(l, "line-color", pmColor());
@@ -1605,6 +1646,177 @@ ${JSON.stringify(describe(r), null, 1)}`;
     set("sim", "circle-color", simColorExpr()); set("sim", "circle-stroke-color", css("--ink")); set("load", "line-color", loadColorExpr()); renderLoadKey();
     set("live", "circle-color", css("--ink")); set("live", "circle-stroke-color", ["case", ["==", ["get", "typ"], 2], css("--tram"), css("--bus")]);
   }
+
+  // ---------- panel statystyk klastra (prawy dolny róg mapy) ----------
+  // Dane szczegółowe wczytywane raz, przy pierwszym kliknięciu klastra; brak pliku = brak tej sekcji.
+  const CL = { i: -1, data: null, loading: null, bbox: null, pts: null };
+  const SCEN_NAME = { lo: "niski", base: "bazowy", hi: "wysoki" };
+  function parseCSV(txt) {
+    const rows = []; let row = [], f = "", q = false;
+    txt = txt.replace(/^﻿/, "");
+    for (let k = 0; k < txt.length; k++) {
+      const c = txt[k];
+      if (q) { if (c !== '"') f += c; else if (txt[k + 1] === '"') { f += '"'; k++; } else q = false; }
+      else if (c === '"') q = true;
+      else if (c === ",") { row.push(f); f = ""; }
+      else if (c === "\n") { row.push(f.replace(/\r$/, "")); rows.push(row); row = []; f = ""; }
+      else f += c;
+    }
+    if (f || row.length) { row.push(f.replace(/\r$/, "")); rows.push(row); }
+    const [head, ...body] = rows;
+    return new Map(head ? body.filter((r) => r.length > 1).map((r) => { const o = Object.fromEntries(head.map((h, k) => [h, r[k] ?? ""])); return [o.h3, o]; }) : []);
+  }
+  function loadClusterData() {
+    if (CL.loading) return CL.loading;
+    const csv = (p) => fetch(p, { cache: "no-cache" }).then((r) => (r.ok ? r.text() : "")).then(parseCSV).catch(() => new Map());
+    const ml = fetchHeat().then((g) => new Map(g.features.map((f) => [f.properties.h3, f.properties]))).catch(() => new Map());
+    CL.loading = Promise.all([csv("dane/cechy_klastrow.csv"), csv("dane/potrzeba_komunikacji.csv"), csv("dane/symulacja/klastry_podroze.csv"),
+                              csv("dane/historia_ludnosci.csv"), csv("dane/kolej/klastry_kolej.csv"), ml])
+      .then(([cechy, potrzeba, podroze, historia, kolej, ml]) => (CL.data = { cechy, potrzeba, podroze, historia, kolej, ml }));
+    return CL.loading;
+  }
+  const inRings = (lon, lat, rings) => rings.some((ring) => {
+    let inside = false;
+    for (let a = 0, b = ring.length - 1; a < ring.length; b = a++) {
+      const [xa, ya] = ring[a], [xb, yb] = ring[b];
+      if ((ya > lat) !== (yb > lat) && lon < ((xb - xa) * (lat - ya)) / (yb - ya) + xa) inside = !inside;
+    }
+    return inside;
+  });
+  function hexAt(lon, lat) {
+    CL.bbox ||= D.hexes.map((h) => { const c = h.rings.flat(); return [Math.min(...c.map((p) => p[0])), Math.min(...c.map((p) => p[1])), Math.max(...c.map((p) => p[0])), Math.max(...c.map((p) => p[1]))]; });
+    return CL.bbox.findIndex(([x0, y0, x1, y1], i) => lon >= x0 && lon <= x1 && lat >= y0 && lat <= y1 && inRings(lon, lat, D.hexes[i].rings));
+  }
+  function openCluster(i) {
+    if (i < 0) return;
+    CL.i = i; $("cpanel").hidden = false;
+    map?.getSource("hex-sel")?.setData(fc([{ type: "Feature", properties: {}, geometry: { type: "MultiLineString", coordinates: D.hexes[i].rings } }]));
+    renderCluster();
+    loadClusterData().then(() => { if (CL.i === i) renderCluster(); });
+  }
+  function closeCluster() {
+    CL.i = -1; $("cpanel").hidden = true;
+    map?.getSource("hex-sel")?.setData(fc([]));
+  }
+  function sparkline(h) {
+    const W = 320, H = 64, P = 4, ys = D.params.years, lo = h.pop_lo, hi = h.pop_hi, mid = h.pop;
+    // Zakres osi z danych, ale nie węższy niż ±10% wartości — drobne zmiany nie wyglądają na skoki.
+    const top = Math.max(...hi, ...mid), bot = Math.min(...lo, ...mid), pad = Math.max((top - bot) * 0.15, top * 0.1, 1);
+    const max = top + pad, min = Math.max(0, bot - pad);
+    const X = (k) => P + (k / (ys.length - 1)) * (W - 2 * P), Y = (v) => H - 14 - ((v - min) / (max - min || 1)) * (H - 22);
+    const line = (a) => a.map((v, k) => `${X(k).toFixed(1)},${Y(v).toFixed(1)}`).join(" ");
+    const band = `${line(hi)} ${hi.map((_, k) => `${X(lo.length - 1 - k).toFixed(1)},${Y(lo[lo.length - 1 - k]).toFixed(1)}`).join(" ")}`;
+    const k = yi(), cur = hexPop(h);
+    return `<svg class="cp-spark" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Ludność ${ys[0]}–${ys.at(-1)}: scenariusz niski, bazowy i wysoki">
+      <polygon points="${band}" fill="var(--accent)" fill-opacity="0.14"/>
+      <polyline points="${line(mid)}" fill="none" stroke="var(--accent)" stroke-width="2" vector-effect="non-scaling-stroke"/>
+      <circle cx="${X(k)}" cy="${Y(cur)}" r="3.5" fill="var(--ink)"/>
+      <text x="${P}" y="${H - 1}">${ys[0]}</text><text x="${W - P}" y="${H - 1}" text-anchor="end">${ys.at(-1)}</text></svg>`;
+  }
+  function renderCluster() {
+    if (CL.i < 0 || !D) return;
+    const i = CL.i, h = D.hexes[i], id = h.h3, d = CL.data;
+    const c = d?.cechy.get(id), pt = d?.potrzeba.get(id), sim = d?.podroze.get(id), hist = d?.historia.get(id), kol = d?.kolej.get(id), ml = d?.ml.get(id);
+    const v = (o, k) => { const x = o?.[k]; return x === undefined || x === "" || x === null ? null : Number.isFinite(+x) ? +x : x; };
+    const n = (x) => fmt.format(Math.round(x)), pct = (x, dig = 0) => `${(x * 100).toFixed(dig).replace(".", ",")}%`;
+    const sgn = (x) => `${x > 0 ? "+" : x < 0 ? "−" : ""}${n(Math.abs(x))}`;
+    const row = (label, value, cls = "") => value == null ? "" : `<div class="cp-row"><span>${label}</span><b class="${cls}">${value}</b></div>`;
+    const sec = (title, body) => body.trim() ? `<div class="cp-sec"><h4>${title}</h4>${body}</div>` : "";
+    const arrow = (a, b, f = n) => a == null || b == null ? null : f(a) === f(b) ? f(a) : `${f(a)} → ${f(b)}`;
+    const loading = !d ? `<div class="cp-note">Wczytywanie szczegółów…</div>` : "";
+
+    // Nagłówek
+    const top = TOP.rows.find((t) => t.h3 === id), pred = v(ml, "pred"), planYear = v(kol, "metro_plan_rok");
+    $("cp-title").textContent = `Klaster · ${h.d}`;
+    $("cp-id").textContent = `H3 ${id}`;
+    $("cp-badges").innerHTML = [top && `<span class="cp-badge top">Top 30 · #${top.rank}</span>`,
+      pred != null && `<span class="cp-badge">Wykluczenie ${pct(pred)}</span>`,
+      v(ml, "zrodlo") === "dodany" && `<span class="cp-badge">dodany do siatki</span>`,
+      planYear && `<span class="cp-badge">metro w klastrze od ${planYear}</span>`].filter(Boolean).join("");
+
+    // Ludność
+    const now = hexPop(h), d25 = now - h.pop[0], last = h.pop.length - 1;
+    const pts = (CL.pts ||= P.pts.reduce((a, p) => ((a[p.h] ||= []).push(p), a), []))[i] || [];
+    const popPts = pts.reduce((a, p) => a + ptPop(p), 0);
+    const share = (pred2) => popPts > 0 ? pts.filter(pred2).reduce((a, p) => a + ptPop(p), 0) / popPts : null;
+    let html = sec("Ludność",
+      row("Mieszkańcy 2025", n(h.pop[0])) +
+      row(`Mieszkańcy ${year} · scen. ${SCEN_NAME[scenario]}`, year === D.params.years[0] ? n(now) : `${n(now)} (${sgn(d25)})`, d25 > 0 ? "pos" : d25 < 0 ? "neg" : "") +
+      sparkline(h) +
+      row(`${D.params.years[last]}: niski · bazowy · wysoki`, `${n(h.pop_lo[last])} · ${n(h.pop[last])} · ${n(h.pop_hi[last])}`) +
+      row("Spis NSP 2011 → 2021", arrow(v(hist, "gus_2011"), v(hist, "gus_2021"))) +
+      row("Kontur 2023 (przed kalibracją)", v(ml, "population_kontur") != null ? n(v(ml, "population_kontur")) : null) +
+      row("GHSL 2000 → 2020 → 2030", v(hist, "ghsl_2000") != null ? `${n(v(hist, "ghsl_2000"))} → ${n(v(hist, "ghsl_2020"))} → ${n(v(hist, "ghsl_2030"))}` : null) +
+      row("Gęstość zaludnienia", v(c, "gestosc_os_km2") != null ? `${n(v(c, "gestosc_os_km2"))} os./km²` : null) +
+      row("Powierzchnia w granicach miasta", v(c, "pow_km2") != null ? `${v(c, "pow_km2").toFixed(2).replace(".", ",")} km²` : null) +
+      row("Dzieci 0–14 · seniorzy 65+", v(c, "udzial_0_14") != null ? `${pct(v(c, "udzial_0_14"))} · ${pct(v(c, "udzial_65_"))}` : null) +
+      row("Zmiana w istniejącej zabudowie", D.params.drift?.[i] != null ? `${(D.params.drift[i] * 100).toFixed(2).replace(".", ",").replace("-", "−")}% rocznie` : null));
+
+    // Nowa zabudowa
+    const nbs = P.nb.filter((b) => b.h === i).map((b) => ({ b, v: nbPop(b) })).sort((a, b) => b.v - a.v);
+    html += sec("Nowa zabudowa",
+      row("Mieszkania w budowie (pozwolenia GUNB)", v(c, "mieszkania_w_budowie") != null ? n(v(c, "mieszkania_w_budowie")) : null) +
+      row(`Nowe osiedla · mieszkańcy w ${year}`, nbs.length ? `${nbs.length} · ${n(nbs.reduce((a, x) => a + x.v, 0))}` : "brak") +
+      nbs.slice(0, 3).map(({ b, v: p }) => `<div class="cp-note">${esc(b.adres || "pozwolenie GUNB")} (${b.rok}) · ${n(b.mieszkania)} mieszk. · ${n(p)} os.</div>`).join(""));
+
+    // Wykluczenie i potrzeba komunikacji
+    const roz = v(pt, "roznica_dzis"), def31 = v(pt, "deficyt_2031"), def36 = v(pt, "deficyt_2036");
+    const defCls = (x) => x > 0 ? "neg" : x < 0 ? "pos" : "";
+    html += sec("Wykluczenie i potrzeba komunikacji · model ML",
+      row("Prawdopodobieństwo wykluczenia", pred != null ? `${pct(pred)} · miejsce ${n(v(ml, "rank"))} z ${n(D.hexes.length)}` : null, pred >= 0.5 ? "neg" : "") +
+      row("Kursy ZTM dziś (autobus + tramwaj, doba)", v(pt, "kursy_dzis") != null ? n(v(pt, "kursy_dzis")) : null) +
+      row("Typowa obsługa takiego klastra", v(pt, "potrzeba_dzis") != null ? n(v(pt, "potrzeba_dzis")) : null) +
+      row("Obsługa względem typowej", roz != null ? `${sgn(roz)} kursów` : null, roz < 0 ? "neg" : roz > 0 ? "pos" : "") +
+      row("Prognoza potrzeby: dziś · 2031 · 2036", v(pt, "potrzeba_model_dzis") != null ? `${n(v(pt, "potrzeba_model_dzis"))} · ${n(v(pt, "potrzeba_2031"))} · ${n(v(pt, "potrzeba_2036"))}` : null) +
+      row("Kursy do dołożenia do 2031", def31 != null ? sgn(def31) : null, defCls(def31)) +
+      row("Kursy do dołożenia do 2036", def36 != null ? sgn(def36) : null, defCls(def36)) +
+      (v(pt, "metro_nowe_2036") === "True" ? `<div class="cp-note">Do 2036 r. w pobliżu otworzy się stacja metra — model zakłada mniejszą potrzebę autobusów.</div>` : ""));
+
+    // Komunikacja dziś
+    const lines = new Set(), stopNames = new Set();
+    for (const [lon, lat, name, , ls, nr] of D.stops.ztm) if (inRings(lon, lat, h.rings)) { stopNames.add(`${name} ${nr}`); (ls || "").split(",").filter(Boolean).forEach((l) => lines.add(l)); }
+    const isNight = (l) => /^N\d/.test(l);
+    const lineList = [...lines].sort((a, b) => isNight(a) - isNight(b) || a.localeCompare(b, "pl", { numeric: true }));
+    const nNight = lineList.filter(isNight).length;
+    const kursy = ["autobus", "tramwaj", "metro", "kolej"].map((k) => [k, v(c, `kursy_dzien_${k}`)]).filter(([, x]) => x);
+    const zShare = share((p) => p.ztm), rShare = share((p) => p.railFrom <= year);
+    const metro = v(kol, "ma_metro") === "True" ? `${esc(v(kol, "stacje_metro"))}` : v(kol, "dist_metro_m") != null ? `najbliższa ${n(v(kol, "dist_metro_m"))} m` : null;
+    const rail = v(kol, "ma_kolej") === "True" ? `${esc(v(kol, "stacje_kolej"))}` : v(kol, "dist_kolej_m") != null ? `najbliższa ${n(v(kol, "dist_kolej_m"))} m` : null;
+    html += sec("Komunikacja dziś",
+      row("Przystanki ZTM · linie (dzień roboczy)", v(c, "przystanki_ztm") != null ? `${n(v(c, "przystanki_ztm"))} · ${n(v(c, "linie_ztm"))}` : `${n(stopNames.size)} · ${n(lineList.length - nNight)}`) +
+      (lineList.length ? `<div class="cp-note">Linie na przystankach klastra: ${n(lineList.length)}${nNight ? `, w tym ${n(nNight)} nocne` : ""}</div><div class="cp-chips">${lineList.slice(0, 48).map((l) => `<i>${esc(l)}</i>`).join("")}${lineList.length > 48 ? `<i>+${lineList.length - 48}</i>` : ""}</div>` : "") +
+      (kursy.length ? row("Kursy na dobę", kursy.map(([k, x]) => `${k} ${n(x)}`).join(" · ")) : row("Kursy na dobę", d ? "brak" : null)) +
+      row("Kursy w szczycie 7–9 (autobus + tramwaj)", v(c, "kursy_szczyt_bus_tram") != null ? `${n(v(c, "kursy_szczyt_bus_tram"))} / h` : null) +
+      row("Prędkość autobusów w szczycie", v(c, "v_autobus_szczyt_kmh") != null ? `${String(v(c, "v_autobus_szczyt_kmh")).replace(".", ",")} km/h · wolniej o ${pct(v(c, "korek") || 0)}` : null) +
+      row("Mieszkańcy ≤ 400 m od przystanku ZTM", zShare != null ? pct(zShare) : null, zShare != null && zShare < 0.5 ? "neg" : "") +
+      row(`Mieszkańcy ≤ 800 m od stacji (w ${year})`, rShare != null ? pct(rShare) : null) +
+      row("Metro", metro) +
+      row("Kolej (SKM / KM / WKD)", rail) +
+      row("Linie kolejowe i metra w klastrze", v(kol, "linie") ? esc(v(kol, "linie")) : null));
+
+    // Podróże — symulacja porannego szczytu
+    const tc = (x) => (x == null || !Number.isFinite(+x) ? "brak połączenia" : `${n(x)} min`);
+    const t25 = v(sim, "czas_do_centrum_min_2025"), t36 = v(sim, "czas_do_centrum_min_2036");
+    html += sec("Podróże · symulacja szczytu 7–9",
+      row("Wyjazdy z klastra / h · 2025 → 2036", arrow(v(sim, "podroze_wyjazd_h_2025"), v(sim, "podroze_wyjazd_h_2036"))) +
+      row("Przyjazdy do klastra / h · 2025 → 2036", arrow(v(sim, "podroze_przyjazd_h_2025"), v(sim, "podroze_przyjazd_h_2036"))) +
+      row("Czas do centrum komunikacją", sim ? (tc(t25) === tc(t36) ? tc(t25) : `${tc(t25)} → ${tc(t36)}`) : null) +
+      row("Cele podróży w 45 min (punkty)", arrow(v(sim, "cele_w_45min_2025"), v(sim, "cele_w_45min_2036"))) +
+      row(`Podróże ZTM dziennie (start w klastrze, ${year})`, n(now * (+$("trips").value || 2) * (+$("share").value || 45) / 100)));
+
+    // Cele podróży i miejsca pracy
+    const infra = Object.entries(INFRA).map(([g, [label]]) => [label, v(c, `infra_${g}`)]).filter(([, x]) => x > 0);
+    const m2 = (x) => x == null ? null : `${n(x)} m²`;
+    html += sec("Cele podróży i miejsca pracy",
+      row("Odległość od centrum (PKiN)", v(c, "odl_centrum_km") != null ? `${String(v(c, "odl_centrum_km")).replace(".", ",")} km` : null) +
+      row("Biura, handel, usługi", m2(v(c, "praca_biura_uslugi_m2"))) +
+      row("Przemysł i magazyny", m2(v(c, "praca_przemysl_m2"))) +
+      row("Sklepy i punkty usługowe", v(c, "punkty_uslug") != null ? n(v(c, "punkty_uslug")) : null) +
+      (c ? (infra.length ? infra.map(([label, x]) => row(label, n(x))).join("") : row("Szkoły, szpitale, urzędy…", "brak w klastrze")) : ""));
+
+    $("cp-body").innerHTML = loading + html;
+  }
+  $("cp-close").onclick = closeCluster;
 
   // ---------- lista dzielnic (prawy górny róg mapy): filtrowanie po wpisanych literach, wybór przybliża mapę ----------
   const fold = (s) => s.toLocaleLowerCase("pl").replace(/ł/g, "l").normalize("NFD").replace(/\p{M}/gu, "");
