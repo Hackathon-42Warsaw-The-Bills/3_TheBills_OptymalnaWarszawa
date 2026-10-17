@@ -12,6 +12,8 @@
   --tram: #b0307a; --rail: #3d4a8f; --metro: #c02a2a; --accent: #256abf; --sel: #f0b400;
   --good: #0f8a3c; --warn: #c98500; --crit: #d03b3b; --bus: #d9631e;
   --s1: #e3eefb; --s2: #b7d3f6; --s3: #6da7ec; --s4: #2a78d6; --s5: #184f95;
+  --p1: #eeeafc; --p2: #cbc0f3; --p3: #9d8be6; --p4: #6b53cf; --p5: #44309b;
+  --t1: #e1f4ee; --t2: #a9e0cf; --t3: #5fc0a6; --t4: #1f9a7b; --t5: #0f6a54;
   --dneg2: #c22f2f; --dneg1: #f0a9a7; --dmid: #e8e9e6; --dpos1: #9ec5f4; --dpos2: #3987e5; --dpos3: #184f95;
   --f-display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
   --f-body: "Barlow", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -23,6 +25,8 @@
   --tram: #e163a8; --rail: #8f9cf0; --metro: #ff6b6b; --accent: #6da7ec; --sel: #f5c22b;
   --good: #3fc16b; --warn: #f0b429; --crit: #f06464; --bus: #ff9a4d;
   --s1: #1a2a3d; --s2: #1f4677; --s3: #2a6bb8; --s4: #5a9bea; --s5: #a7cbf6;
+  --p1: #231d3a; --p2: #3c2f70; --p3: #5e48b6; --p4: #9483ec; --p5: #cdc1fa;
+  --t1: #13271f; --t2: #1b4a3c; --t3: #237a62; --t4: #43b392; --t5: #a0e4ce;
   --dneg2: #f06464; --dneg1: #7a2f2f; --dmid: #2a302d; --dpos1: #1f4677; --dpos2: #3987e5; --dpos3: #a7cbf6;
   color-scheme: dark;
 } }
@@ -32,6 +36,8 @@
   --tram: #e163a8; --rail: #8f9cf0; --metro: #ff6b6b; --accent: #6da7ec; --sel: #f5c22b;
   --good: #3fc16b; --warn: #f0b429; --crit: #f06464; --bus: #ff9a4d;
   --s1: #1a2a3d; --s2: #1f4677; --s3: #2a6bb8; --s4: #5a9bea; --s5: #a7cbf6;
+  --p1: #231d3a; --p2: #3c2f70; --p3: #5e48b6; --p4: #9483ec; --p5: #cdc1fa;
+  --t1: #13271f; --t2: #1b4a3c; --t3: #237a62; --t4: #43b392; --t5: #a0e4ce;
   --dneg2: #f06464; --dneg1: #7a2f2f; --dmid: #2a302d; --dpos1: #1f4677; --dpos2: #3987e5; --dpos3: #a7cbf6;
   color-scheme: dark;
 }
@@ -46,7 +52,7 @@ body { background: var(--paper); color: var(--ink); font: 15px/1.45 var(--f-body
   display: flex; flex-direction: column; gap: 20px; min-width: 0;
 }
 .panel > * { flex-shrink: 0; }
-.mapwrap { position: relative; min-width: 0; background: var(--ground); }
+.mapwrap { position: relative; min-width: 0; background: var(--ground); overflow: hidden; }
 #map { position: absolute; inset: 0; }
 
 h1 { font: 600 28px/1.05 var(--f-display); margin: 0; text-wrap: balance; }
@@ -117,7 +123,10 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
 .zoom button { font: 500 18px/1 var(--f-body); width: 38px; height: 36px; border: 0; background: transparent; color: var(--ink); cursor: pointer; }
 .zoom button + button { border-top: 1px solid var(--rule); }
 .zoom .all { font-size: 11px; font-family: var(--f-display); letter-spacing: 0.05em; text-transform: uppercase; }
-.tip { position: absolute; pointer-events: none; z-index: 3; background: var(--ink); color: var(--paper); font-size: 13px; padding: 5px 8px; border-radius: 5px; white-space: nowrap; transform: translate(12px, 12px); }
+.tip { position: absolute; left: 0; top: 0; pointer-events: none; z-index: 3; background: var(--ink); color: var(--paper); font-size: 13px; line-height: 1.4; padding: 7px 10px; border-radius: 6px; max-width: min(340px, calc(100% - 24px)); box-shadow: 0 2px 10px rgb(0 0 0 / 0.18); }
+.tip b { font-weight: 600; }
+.tip .g + .g { margin-top: 5px; padding-top: 5px; border-top: 1px solid color-mix(in srgb, var(--paper) 25%, transparent); }
+.tip .k { opacity: 0.7; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
 .loading { position: absolute; inset: 0; display: grid; place-items: center; color: var(--ink-3); font-size: 14px; z-index: 1; }
 .modebar { position: absolute; left: 12px; top: calc(12px + env(safe-area-inset-top, 0px)); z-index: 2; background: var(--paper); border: 1px solid var(--rule); border-radius: 7px; padding: 7px 10px; font-size: 13px; color: var(--ink-2); max-width: min(420px, calc(100% - 90px)); }
 
@@ -582,11 +591,11 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
   // ---------- mapa ----------
   function decode(a, S) { const o = []; let x = 0, y = 0; for (let i = 0; i < a.length; i += 2) { x += a[i]; y += a[i + 1]; o.push([x / S, y / S]); } return o; }
   const METRICS = {
-    pop: { steps: [500, 2000, 4000, 7000, 10000], note: "mieszkańców klastra", value: (h) => hexPop(h), div: false },
+    pop: { ramp: "p", steps: [500, 2000, 4000, 7000, 10000], note: "mieszkańców klastra", value: (h) => hexPop(h), div: false },
     growth: { steps: [-1000, -250, 250, 1000, 3000], note: "zmiana liczby mieszkańców od 2025", value: (h) => hexPop(h) - h.pop[0], div: true },
-    trips: { steps: [500, 2000, 4000, 7000, 10000], note: "podróży komunikacją miejską dziennie (start w klastrze)", value: (h) => hexPop(h) * (+$("trips").value || 2) * (+$("share").value || 45) / 100, div: false },
+    trips: { ramp: "t", steps: [500, 2000, 4000, 7000, 10000], note: "podróży komunikacją miejską dziennie (start w klastrze)", value: (h) => hexPop(h) * (+$("trips").value || 2) * (+$("share").value || 45) / 100, div: false },
   };
-  const rampColors = (m) => m.div ? ["--dneg2", "--dneg1", "--dmid", "--dpos1", "--dpos2", "--dpos3"] : ["--s1", "--s2", "--s3", "--s4", "--s5"];
+  const rampColors = (m) => m.div ? ["--dneg2", "--dneg1", "--dmid", "--dpos1", "--dpos2", "--dpos3"] : [1, 2, 3, 4, 5].map((i) => `--${m.ramp}${i}`);
   function hexColorExpr() {
     const m = METRICS[metric], c = rampColors(m).map(css);
     if (m.div) return ["step", ["get", "v"], c[0], m.steps[0], c[1], m.steps[1], c[2], m.steps[2], c[3], m.steps[3], c[4], m.steps[4], c[5]];
@@ -644,7 +653,9 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       // Maska: wszystko poza granicą Warszawy przykryte kolorem tła.
       map.addSource("mask", { type: "geojson", data: { type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [[[19, 51], [23, 51], [23, 53.5], [19, 53.5], [19, 51]], ...(D.boundary || [])] } } });
       map.addSource("hex", { type: "geojson", data: fc(hexFeatures()) });
-      map.addSource("nb", { type: "geojson", data: fc(nbFeatures()) });
+      // Nachodzące na siebie nowe osiedla łączą się w jedno kółko z sumą mieszkańców (rozdzielają się po przybliżeniu).
+      map.addSource("nb", { type: "geojson", data: fc(nbFeatures()), cluster: true, clusterRadius: 22, clusterMaxZoom: 15,
+                            clusterProperties: { sum: ["+", ["get", "v"]] } });
       for (const s of ["route", "wps", "nstops", "catch", "live"]) map.addSource(s, { type: "geojson", data: fc([]) });
 
       map.addLayer({ id: "river", type: "line", source: "river", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": css("--water"), "line-width": ["interpolate", ["exponential", 2], ["zoom"], 9, 4, 12, 22, 15, 140, 18, 1100] } });
@@ -658,7 +669,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       map.addLayer({ id: "rail-metro", type: "line", source: "rail", filter: ["get", "m"], paint: { "line-color": css("--metro"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 2.6, 16, 5] } });
       map.addLayer({ id: "ztm", type: "circle", source: "ztm", minzoom: 13.5, paint: { "circle-radius": 2.5, "circle-color": css("--paper"), "circle-stroke-width": 1, "circle-stroke-color": css("--ink-3") } });
       map.addLayer({ id: "ztm-sel", type: "circle", source: "ztm", filter: ["==", ["get", "l"], "-"], layout: { visibility: "none" }, paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 3, 15, 5.5], "circle-color": css("--paper"), "circle-stroke-width": 2, "circle-stroke-color": ["case", ["get", "t"], css("--tram"), css("--bus")] } });
-      map.addLayer({ id: "nb", type: "circle", source: "nb", paint: { "circle-radius": ["interpolate", ["linear"], ["get", "v"], 30, 2.5, 1000, 6, 4000, 11], "circle-color": css("--sel"), "circle-opacity": 0.85, "circle-stroke-width": 1, "circle-stroke-color": css("--paper") } });
+      map.addLayer({ id: "nb", type: "circle", source: "nb", paint: { "circle-radius": ["interpolate", ["linear"], ["coalesce", ["get", "sum"], ["get", "v"]], 30, 2.5, 1000, 6, 4000, 11, 15000, 17], "circle-color": css("--sel"), "circle-opacity": 0.85, "circle-stroke-width": 1, "circle-stroke-color": css("--paper") } });
       map.addLayer({ id: "stations-kolej", type: "circle", source: "stations", filter: ["!", ["get", "m"]], paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 3, 15, 6], "circle-color": css("--paper"), "circle-stroke-width": 2, "circle-stroke-color": css("--rail") } });
       map.addLayer({ id: "stations-metro", type: "circle", source: "stations", filter: ["get", "m"], paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 3, 15, 6], "circle-color": css("--paper"), "circle-stroke-width": 2, "circle-stroke-color": css("--metro") } });
       map.addLayer({ id: "planned-future", type: "circle", source: "plannedsrc", filter: [">", ["get", "y"], year], paint: { "circle-radius": ["case", ["get", "tram"], 2.5, 5], "circle-color": "rgba(0,0,0,0)", "circle-stroke-width": 1.5, "circle-stroke-color": ["case", ["get", "tram"], css("--tram"), css("--metro")], "circle-stroke-opacity": 0.6 } });
@@ -680,21 +691,58 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     });
   }
 
+  // Podpowiedź po prawej-dole kursora; gdy się nie mieści — po lewej / u góry, zawsze w granicach mapy.
+  function placeTip(tip, pt) {
+    const W = $("mapwrap").clientWidth, H = $("mapwrap").clientHeight, w = tip.offsetWidth, h = tip.offsetHeight, gap = 14;
+    let x = pt.x + gap, y = pt.y + gap;
+    if (x + w > W - 8) x = pt.x - gap - w;
+    if (y + h > H - 8) y = pt.y - gap - h;
+    tip.style.transform = `translate(${Math.max(8, Math.min(x, W - w - 8))}px, ${Math.max(8, Math.min(y, H - h - 8))}px)`;
+  }
+  // Wszystko pod kursorem, pogrupowane: linie na odcinku, przystanki, stacje, pojazdy, osiedla, klaster.
+  function tooltipHTML(fs) {
+    const by = (pred) => fs.filter((f) => pred(f.layer.id));
+    const groups = [], uniq = (arr, key) => [...new Map(arr.map((f) => [key(f), f])).values()];
+    const live = uniq(by((id) => id === "live"), (f) => f.properties.nr);
+    if (live.length) groups.push(`<div class="k">Na żywo</div>` + live.slice(0, 6).map((f) => `${f.properties.typ === 2 ? "Tramwaj" : "Autobus"} <b>${esc(f.properties.linia)}</b> · bryg. ${esc(f.properties.bryg)} · ${f.properties.age} s temu`).join("<br>") + (live.length > 6 ? `<br>…i ${live.length - 6} więcej` : ""));
+    const ns = by((id) => id === "nstops");
+    if (ns.length) groups.push(`<div class="k">Nowy przystanek</div>${esc(ns[0].properties.street || "ulica bez nazwy")}`);
+    const st = uniq(by((id) => id.startsWith("stations") || id === "planned"), (f) => f.properties.name);
+    if (st.length) groups.push(`<div class="k">Stacje</div>` + st.map((f) => f.layer.id === "planned" ? `<b>${esc(f.properties.name)}</b> · planowana, ${f.properties.y}` : `<b>${esc(f.properties.name)}</b> · ${esc(f.properties.sys)}`).join("<br>"));
+    const zs = uniq(by((id) => id.startsWith("ztm")), (f) => f.properties.name + f.properties.nr);
+    if (zs.length) groups.push(`<div class="k">Przystanki ZTM</div>` + zs.slice(0, 4).map((f) => `<b>${esc(f.properties.name)} ${esc(f.properties.nr)}</b> · ${esc(f.properties.lines.split(",").join(", "))}`).join("<br>") + (zs.length > 4 ? `<br>…i ${zs.length - 4} więcej` : ""));
+    const rs = uniq(by((id) => id.startsWith("routes")), (f) => f.properties.ref);
+    if (rs.length) {
+      const sortRef = (a, b) => a.properties.ref.localeCompare(b.properties.ref, "pl", { numeric: true });
+      const bus = rs.filter((f) => f.properties.typ !== "tram").sort(sortRef), tram = rs.filter((f) => f.properties.typ === "tram").sort(sortRef);
+      const kursy = rs.reduce((a, f) => a + f.properties.kursy, 0);
+      let h = `<div class="k">Linie na tym odcinku (${rs.length})</div>`;
+      if (rs.length <= 3) h += rs.sort(sortRef).map((f) => `${f.properties.typ === "tram" ? "Tramwaj" : "Autobus"} <b>${esc(f.properties.ref)}</b> · ${esc(f.properties.nazwa)} · ${f.properties.kursy} kursów/dzień`).join("<br>");
+      else h += (bus.length ? `Autobusy: <b>${bus.map((f) => esc(f.properties.ref)).join(", ")}</b>` : "") + (bus.length && tram.length ? "<br>" : "") + (tram.length ? `Tramwaje: <b>${tram.map((f) => esc(f.properties.ref)).join(", ")}</b>` : "");
+      if (rs.length > 1) h += `<br>Razem ~${fmt.format(kursy)} kursów dziennie w kierunku`;
+      groups.push(h);
+    }
+    const nb = by((id) => id === "nb");
+    if (nb.length) {
+      const f = nb[0];
+      if (f.properties.cluster) groups.push(`<div class="k">Nowe osiedla</div>${f.properties.point_count} inwestycji · <b>+${fmt.format(Math.round(f.properties.sum))} os.</b> w ${year} (przybliż, aby rozdzielić)`);
+      else { const b = P.nb[f.properties.i]; groups.push(`<div class="k">Nowe osiedle</div><b>${esc(b.adres || "pozwolenie GUNB")}</b> (pozwolenie ${b.rok}) · +${fmt.format(Math.round(nbPop(b)))} os. w ${year}`); }
+    }
+    const hx = by((id) => id === "hex");
+    if (hx.length && mode === "view") { const h = D.hexes[hx[0].properties.i]; groups.push(`<div class="k">Klaster · ${esc(h.d)}</div>${fmt.format(hexPop(h))} mieszkańców w ${year} (${hexPop(h) - h.pop[0] >= 0 ? "+" : ""}${fmt.format(hexPop(h) - h.pop[0])} vs 2025)`); }
+    return groups.map((g) => `<div class="g">${g}</div>`).join("");
+  }
+
   function wireMap() {
     const tip = $("tip");
+    const HIT = ["live", "nstops", "stations-metro", "stations-kolej", "planned", "ztm-sel", "ztm", "nb", "routes-bus", "routes-tram", "hex"];
     map.on("mousemove", (e) => {
-      const f = map.queryRenderedFeatures([[e.point.x - 4, e.point.y - 4], [e.point.x + 4, e.point.y + 4]], { layers: ["live", "nstops", "stations-metro", "stations-kolej", "planned", "ztm-sel", "ztm", "nb", "routes-bus", "routes-tram", "hex"].filter((l) => map.getLayoutProperty(l, "visibility") !== "none") })[0];
-      if (!f || mode !== "view" && f.layer.id === "hex") { tip.hidden = true; return; }
-      let t = "";
-      if (f.layer.id === "live") t = `${f.properties.typ === 2 ? "Tramwaj" : "Autobus"} ${f.properties.linia} · brygada ${f.properties.bryg} · nr ${f.properties.nr} · ${f.properties.age} s temu`;
-      else if (f.layer.id === "nstops") t = `Nowy przystanek · ${f.properties.street || "ulica bez nazwy"}`;
-      else if (f.layer.id.startsWith("stations")) t = `${f.properties.name} · ${f.properties.sys}`;
-      else if (f.layer.id.startsWith("ztm")) t = `${f.properties.name} ${f.properties.nr} · linie: ${f.properties.lines.split(",").join(", ")}`;
-      else if (f.layer.id.startsWith("routes")) t = `${f.properties.typ === "tram" ? "Tramwaj" : "Autobus"} ${f.properties.ref} · ${f.properties.nazwa} · ${f.properties.kursy} kursów dziennie w kierunku`;
-      else if (f.layer.id === "planned") t = `${f.properties.name} · planowana, ${f.properties.y}`;
-      else if (f.layer.id === "nb") { const b = P.nb[f.properties.i]; t = `${b.adres || "Pozwolenie"} (${b.rok}) · +${fmt.format(Math.round(nbPop(b)))} os. w ${year}`; }
-      else { const h = D.hexes[f.properties.i]; t = `${h.d} · ${fmt.format(hexPop(h))} mieszkańców w ${year} (${fmt.format(hexPop(h) - h.pop[0])} vs 2025)`; }
-      tip.textContent = t; tip.hidden = false; tip.style.left = e.point.x + "px"; tip.style.top = e.point.y + "px";
+      const r = 6, layers = HIT.filter((l) => map.getLayoutProperty(l, "visibility") !== "none");
+      const fs = map.queryRenderedFeatures([[e.point.x - r, e.point.y - r], [e.point.x + r, e.point.y + r]], { layers });
+      const html = tooltipHTML(fs);
+      if (!html) { tip.hidden = true; return; }
+      tip.innerHTML = html; tip.hidden = false;
+      placeTip(tip, e.point);
     });
     map.on("mouseout", () => (tip.hidden = true));
     map.on("click", (e) => {
@@ -996,7 +1044,7 @@ ${JSON.stringify(describe(r), null, 1)}`;
   }
 
   // API dla algorytmu zespołu i testów: window.symulator.wczytaj({...}), .propozycja(), .ocena()
-  window.symulator = { wczytaj: loadProposal, propozycja: currentProposal, ocena: () => lastEval, _G: () => G, _route: () => route };
+  window.symulator = { wczytaj: loadProposal, propozycja: currentProposal, ocena: () => lastEval, _G: () => G, _route: () => route, _map: () => map };
 
   wireUI(); setMode("view"); renderLegend();
   load().then(() => {
