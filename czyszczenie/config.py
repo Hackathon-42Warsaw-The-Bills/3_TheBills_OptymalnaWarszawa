@@ -3,7 +3,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 INPUT_DIR = ROOT / "dane" / "kontury_400m"
 OUTPUT_DIR = ROOT / "dane" / "kontury_400m_clean"
-FILE_NAME = "warszawa_h3_400m_kontur2023"
+FILE_NAME = "warszawa_h3_400m_pelna"
 
 H3_RESOLUTION = 8
 CRS_GPS = "EPSG:4326"
@@ -11,7 +11,9 @@ CRS_METERS = "EPSG:2180"
 DECIMALS = 6
 CLIPPED_BELOW = 0.98
 FEW_PEOPLE = 10
-WARSAW_BOX = (20.85, 52.09, 21.28, 52.37)
+WARSAW_BOX = (20.84, 52.08, 21.30, 52.38)
+SOURCES = {"kontur", "dodany"}
+POPULATION_COLUMNS = ["population", "population_2021", "population_kontur"]
 
 DISTRICTS = {
     "Bemowo": "146502",
@@ -37,8 +39,12 @@ DISTRICTS = {
 COLUMN_NAMES = {
     "h3": "h3_index",
     "population": "population",
+    "population_2021": "population_2021",
+    "population_kontur": "population_kontur",
     "gestosc_os_km2": "density_src_per_km2",
+    "pow_km2": "area_src_km2",
     "dzielnica": "district",
+    "zrodlo": "source",
     "lon": "lon",
     "lat": "lat",
 }
@@ -48,9 +54,13 @@ OUTPUT_COLUMNS = [
     "district",
     "district_slug",
     "district_teryt",
+    "source",
     "population",
+    "population_2021",
+    "population_kontur",
     "population_share_district",
     "area_km2",
+    "area_src_km2",
     "hex_area_km2",
     "coverage_ratio",
     "is_clipped",

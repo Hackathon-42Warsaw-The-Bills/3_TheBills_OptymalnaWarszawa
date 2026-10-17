@@ -21,6 +21,8 @@ from config import (
     INPUT_DIR,
     OUTPUT_COLUMNS,
     OUTPUT_DIR,
+    POPULATION_COLUMNS,
+    SOURCES,
     WARSAW_BOX,
 )
 
@@ -49,7 +51,8 @@ def clean_values(table, report):
     table = table.copy()
     table["h3_index"] = table["h3_index"].str.strip().str.lower()
     table["district"] = table["district"].map(utils.tidy_text).map(utils.official_district_name)
-    for column in ["population", "density_src_per_km2", "lon", "lat"]:
+    table["source"] = table["source"].map(utils.tidy_text).str.lower()
+    for column in POPULATION_COLUMNS + ["density_src_per_km2", "area_src_km2", "lon", "lat"]:
         table[column] = utils.to_number(table[column])
 
     is_valid_h3 = table["h3_index"].map(lambda x: isinstance(x, str) and h3.is_valid_cell(x))
@@ -64,6 +67,10 @@ def clean_values(table, report):
     report.add("usunięte: nieznana dzielnica", is_unknown_district.sum())
     table = table[~is_unknown_district]
 
+    is_unknown_source = ~table["source"].isin(SOURCES)
+    report.add("usunięte: nieznane źródło", is_unknown_source.sum())
+    table = table[~is_unknown_source]
+
     is_bad_population = table["population"].isna() | (table["population"] < 0)
     report.add("usunięte: brak lub ujemna liczba mieszkańców", is_bad_population.sum())
     table = table[~is_bad_population]
@@ -72,7 +79,9 @@ def clean_values(table, report):
     report.add("usunięte: powtórzony heksagon", is_duplicate.sum())
     table = table[~is_duplicate]
 
-    table["population"] = table["population"].round().astype("int64")
+    for column in POPULATION_COLUMNS:
+        table[column] = table[column].clip(lower=0).round().astype("Int64")
+    table["population"] = table["population"].astype("int64")
     return table
 
 
@@ -124,9 +133,11 @@ def fix_coordinates(data, report):
 def add_density(data, report):
     data["density_per_km2"] = data["population"] / data["area_km2"]
 
-    expected_src = data["population"] / data["hex_area_km2"]
-    differs = (data["density_src_per_km2"] - expected_src).abs() > expected_src * 0.1 + 1
+    differs = (data["density_src_per_km2"] - data["density_per_km2"]).abs() > data["density_per_km2"] * 0.1 + 1
     report.add("uwaga: gęstość ze źródła różni się o >10%", differs.sum())
+
+    area_differs = (data["area_src_km2"] - data["area_km2"]).abs() > data["area_km2"] * 0.02
+    report.add("uwaga: powierzchnia ze źródła różni się o >2%", area_differs.sum())
     return data
 
 
@@ -147,14 +158,15 @@ def add_district_info(data):
     data["district_slug"] = data["district"].map(utils.without_polish_chars)
     district_total = data.groupby("district")["population"].transform("sum")
     data["population_share_district"] = data["population"] / district_total
-    data["density_quintile"] = pd.qcut(data["density_per_km2"], 5, labels=[1, 2, 3, 4, 5]).astype("int8")
+    density_rank = data["density_per_km2"].rank(method="first")
+    data["density_quintile"] = pd.qcut(density_rank, 5, labels=[1, 2, 3, 4, 5]).astype("int8")
     return data
 
 
 def tidy_output(data):
     data = data.round({
         "lon": DECIMALS, "lat": DECIMALS, "hex_lon": DECIMALS, "hex_lat": DECIMALS,
-        "area_km2": 4, "hex_area_km2": 4, "coverage_ratio": 4,
+        "area_km2": 4, "area_src_km2": 4, "hex_area_km2": 4, "coverage_ratio": 4,
         "density_per_km2": 1, "density_src_per_km2": 1,
         "population_share_district": 6,
     })
