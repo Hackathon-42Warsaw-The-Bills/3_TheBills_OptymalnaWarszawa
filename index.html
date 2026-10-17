@@ -525,26 +525,25 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     pushWaypoints([G.edges[pick].v], [[...pathTo(prev, last, G.edges[pick].u), pick]]);
   }
 
-  // Przystanek: najbliższy punkt na trasie (≤ 80 m) albo na dowolnej ulicy dopuszczonej do przystanków.
+  // Przystanek tylko na trasie linii: najbliższy punkt narysowanej trasy, nie dalej niż STOP_SNAP_M.
+  const STOP_SNAP_M = 80;
   function snapStop(x, y) {
     let best = null;
-    const consider = (ei) => {
+    for (const ei of new Set(routeEdges())) {
       const e = G.edges[ei];
       for (let k = 0; k < e.xy.length - 1; k++) {
         const q = segProject(x, y, e.xy[k][0], e.xy[k][1], e.xy[k + 1][0], e.xy[k + 1][1]);
         if (!best || q.d < best.d) best = { ...q, ei, k };
       }
-    };
-    const onRoute = routeEdges();
-    if (onRoute.length) { onRoute.forEach(consider); if (best && best.d <= 80) return best; best = null; }
-    for (const ei of new Set(G.edgeGrid.near(x, y, 150))) consider(ei);
-    return best && best.d <= 150 ? best : null;
+    }
+    return best && best.d <= STOP_SNAP_M ? best : null;
   }
   function addStop(x, y) {
     const hit = stops.findIndex((s) => Math.hypot(s.x - x, s.y - y) < 40);
     if (hit >= 0) { history.push({ t: "rmstop", s: stops[hit], i: hit }); stops.splice(hit, 1); return changed(); }
+    if (!routeEdges().length) return flash("Najpierw narysuj trasę — przystanki stawiamy tylko na linii.");
     const q = snapStop(x, y);
-    if (!q) return flash("Brak ulicy dla autobusu w promieniu 150 m.");
+    if (!q) return flash(`Przystanek musi stać przy trasie linii (do ${STOP_SNAP_M} m od niej).`);
     const e = G.edges[q.ei];
     if (!e.stopOk) return flash(`Tu nie postawimy przystanku: ${e.name || "odcinek"} to wiadukt, tunel, łącznica lub droga ekspresowa.`);
     // Przesunięcie na prawą stronę jezdni (ruch prawostronny) — 4 m od osi.
@@ -886,7 +885,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
   const HINTS = {
     view: "Najedź na klaster, żeby zobaczyć prognozę. Wybierz „Rysuj trasę” albo „Przystanki”, żeby testować pomysł.",
     route: "Klikaj kolejne ulice na mapie — trasa przejedzie przez kliknięty odcinek (np. wybraną łącznicę węzła). Niebieskie są ulice, którymi może jechać autobus (wysokość, szerokość, kierunek ruchu); klik przy skrzyżowaniu wybiera skrzyżowanie.",
-    stop: "Kliknij przy trasie lub ulicy, żeby postawić przystanek (po prawej stronie jezdni). Kliknij istniejący nowy przystanek, żeby go usunąć.",
+    stop: "Kliknij przy narysowanej trasie (do 80 m od niej), żeby postawić przystanek po prawej stronie jezdni. Poza trasą linii przystanku nie postawisz. Kliknij istniejący nowy przystanek, żeby go usunąć.",
   };
   function setMode(m) {
     mode = m;
@@ -894,7 +893,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     $("hint").textContent = HINTS[m];
     $("mapwrap").classList.toggle("drawing", m !== "view");
     $("modebar").hidden = m === "view";
-    if (map?.getLayer("busnet")) map.setLayoutProperty("busnet", "visibility", m === "view" ? "none" : "visible");
+    if (map?.getLayer("busnet")) map.setLayoutProperty("busnet", "visibility", m === "route" ? "visible" : "none");
     $("modebar").textContent = m === "route" ? "Rysowanie trasy — klikaj kolejne punkty" : "Stawianie przystanków — klik dodaje, klik na przystanku usuwa";
   }
   let flashT;
@@ -1234,7 +1233,7 @@ ${JSON.stringify(describe(r), null, 1)}`;
     ["headway", "vehicle", "dwell", "layover", "trips", "share"].forEach((id) => ($(id).oninput = () => { renderEval(); if (metric === "trips" && (id === "trips" || id === "share")) updateYearLayers(); }));
     $("ai-btn").onclick = askAI;
     $("ai-stop").onclick = () => aiCtl?.abort();
-    $("json-load").onclick = () => { try { const n = loadProposal(JSON.parse($("json").value)); $("json-msg").textContent = n ? `Wczytano; pominięto ${n} punktów za daleko od ulic.` : "Wczytano propozycję."; } catch (e) { $("json-msg").textContent = `Nie udało się wczytać: ${e.message}`; } };
+    $("json-load").onclick = () => { try { const n = loadProposal(JSON.parse($("json").value)); $("json-msg").textContent = n ? `Wczytano; pominięto ${n} punktów za daleko od ulic lub przystanków poza trasą linii.` : "Wczytano propozycję."; } catch (e) { $("json-msg").textContent = `Nie udało się wczytać: ${e.message}`; } };
     $("json-file").onchange = (e) => { const f = e.target.files[0]; if (!f) return; const rd = new FileReader(); rd.onload = () => { $("json").value = rd.result; $("json-load").click(); }; rd.readAsText(f); };
     $("json-copy").onclick = async () => {
       const txt = JSON.stringify(currentProposal()); $("json").value = txt;
