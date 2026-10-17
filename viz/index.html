@@ -1,0 +1,644 @@
+<title>Graf ulic Warszawy</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: aplikacja jednoekranowa — panel operatora po lewej, mapa grafu po prawej; na telefonie mapa nad panelem. */
+:root {
+  --paper: #fbfcfb; --ground: #eceeed; --ink: #15201b; --ink-2: #46534d; --ink-3: #6f7b76;
+  --rule: #d8dddb; --chip: #e5e9e7; --sel: #f0b400; --closed: #d03b3b; --tram: #b0307a;
+  --water: #bcd6e8; --district: #97a39e; --missing: #c9cfcc; --stop: #ffffff;
+  --r0: #0d366b; --r1: #184f95; --r2: #256abf; --r3: #3987e5; --r4: #6da7ec; --r5: #86b6ef;
+  --f-display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+  --f-body: "Barlow", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #161b19; --ground: #0f1312; --ink: #e6ebe8; --ink-2: #a9b4af; --ink-3: #7d8984;
+  --rule: #2b3330; --chip: #222a27; --sel: #f5c22b; --closed: #e05555; --tram: #e163a8;
+  --water: #1d3546; --district: #56615c; --missing: #3a423e; --stop: #0f1312;
+  --r0: #cde2fb; --r1: #9ec5f4; --r2: #6da7ec; --r3: #3987e5; --r4: #256abf; --r5: #184f95;
+  color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --paper: #161b19; --ground: #0f1312; --ink: #e6ebe8; --ink-2: #a9b4af; --ink-3: #7d8984;
+  --rule: #2b3330; --chip: #222a27; --sel: #f5c22b; --closed: #e05555; --tram: #e163a8;
+  --water: #1d3546; --district: #56615c; --missing: #3a423e; --stop: #0f1312;
+  --r0: #cde2fb; --r1: #9ec5f4; --r2: #6da7ec; --r3: #3987e5; --r4: #256abf; --r5: #184f95;
+  color-scheme: dark;
+}
+
+html, body { height: 100%; }
+body { background: var(--paper); color: var(--ink); font: 15px/1.45 var(--f-body); }
+.app { display: grid; grid-template-columns: 372px 1fr; height: 100%; }
+.panel {
+  overflow-y: auto; border-right: 1px solid var(--rule); background: var(--paper);
+  padding-block: 20px 28px; padding-left: max(18px, env(safe-area-inset-left, 0px)); padding-right: 18px;
+  display: flex; flex-direction: column; gap: 22px; min-width: 0;
+}
+.mapwrap { position: relative; min-width: 0; background: var(--ground); }
+#map { position: absolute; inset: 0; }
+
+h1 { font: 600 30px/1 var(--f-display); letter-spacing: 0.005em; margin: 0; text-wrap: balance; }
+.sub { color: var(--ink-3); font-size: 13px; margin-top: 6px; }
+h2 {
+  font: 600 13px/1 var(--f-display); text-transform: uppercase; letter-spacing: 0.09em;
+  color: var(--ink-2); margin: 0 0 10px;
+}
+section { min-width: 0; }
+
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; }
+.stat { background: var(--paper); padding: 10px 12px; }
+.stat b { display: block; font: 600 24px/1.1 var(--f-display); font-variant-numeric: tabular-nums; }
+.stat span { font-size: 12.5px; color: var(--ink-3); }
+
+.search { position: relative; }
+input[type="search"] {
+  width: 100%; box-sizing: border-box; font: inherit; color: var(--ink); background: var(--chip);
+  border: 1px solid transparent; border-radius: 6px; padding: 9px 11px;
+}
+input[type="search"]:focus { outline: none; border-color: var(--r2); background: var(--paper); }
+.results { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-direction: column; }
+.results button {
+  all: unset; box-sizing: border-box; width: 100%; cursor: pointer; display: flex; justify-content: space-between; gap: 10px;
+  padding: 7px 8px; border-radius: 5px;
+}
+.results button:hover, .results button:focus-visible { background: var(--chip); }
+.results small { color: var(--ink-3); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.seg { display: grid; grid-template-columns: repeat(3, 1fr); background: var(--chip); border-radius: 7px; padding: 3px; gap: 3px; }
+.seg button {
+  font: 500 13.5px/1 var(--f-body); color: var(--ink-2); background: transparent; border: 0; border-radius: 5px;
+  padding: 8px 4px; cursor: pointer;
+}
+.seg button[aria-pressed="true"] { background: var(--paper); color: var(--ink); box-shadow: 0 1px 2px rgb(0 0 0 / 0.12); }
+.seg button:focus-visible, .btn:focus-visible, .zoom button:focus-visible { outline: 2px solid var(--r2); outline-offset: 1px; }
+.legend { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+.legend li { display: flex; align-items: center; gap: 10px; font-size: 13.5px; }
+.legend i { flex: none; width: 30px; border-radius: 3px; }
+
+.layers { display: flex; flex-direction: column; gap: 7px; }
+.layers label { display: flex; align-items: center; gap: 9px; cursor: pointer; font-size: 14px; }
+.layers input { accent-color: var(--r2); margin: 0; }
+.swatch { width: 18px; height: 4px; border-radius: 2px; flex: none; }
+.swatch.dot { width: 9px; height: 9px; border-radius: 50%; margin: 0 4.5px; box-sizing: border-box; border: 2px solid var(--ink-2); background: var(--stop); }
+.layers small { color: var(--ink-3); margin-left: auto; font-variant-numeric: tabular-nums; }
+
+.card { border: 1px solid var(--rule); border-radius: 8px; padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+.card .kind { font: 600 12px/1 var(--f-display); text-transform: uppercase; letter-spacing: 0.09em; color: var(--ink-3); }
+.card h3 { font: 600 22px/1.1 var(--f-display); margin: 4px 0 0; text-wrap: balance; }
+dl { display: grid; grid-template-columns: auto 1fr; gap: 5px 14px; margin: 0; font-size: 14px; }
+dt { color: var(--ink-3); }
+dd { margin: 0; font-variant-numeric: tabular-nums; min-width: 0; }
+.ids { font: 12px/1.5 var(--f-mono); color: var(--ink-2); word-break: break-all; display: flex; flex-direction: column; gap: 2px; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn {
+  font: 500 13.5px/1 var(--f-body); border-radius: 6px; padding: 9px 12px; cursor: pointer;
+  border: 1px solid var(--rule); background: var(--paper); color: var(--ink);
+}
+.btn:hover { background: var(--chip); }
+.btn.danger { background: var(--closed); border-color: var(--closed); color: #fff; }
+.btn.danger:hover { filter: brightness(1.08); }
+.empty { color: var(--ink-3); font-size: 13.5px; margin: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.chip { font: 500 13px/1 var(--f-mono); padding: 5px 7px; border-radius: 4px; background: var(--chip); }
+.chip.tram { background: var(--tram); color: #fff; }
+.closed-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; max-height: 180px; overflow-y: auto; }
+.closed-list li { display: flex; align-items: center; gap: 8px; font-size: 13.5px; padding: 4px 0; border-bottom: 1px solid var(--rule); }
+.closed-list li span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.closed-list small { color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.closed-list button { all: unset; cursor: pointer; color: var(--ink-3); padding: 0 4px; font-size: 16px; line-height: 1; }
+.closed-list button:hover, .closed-list button:focus-visible { color: var(--closed); }
+.hazard { display: inline-block; width: 22px; height: 0; border-top: 3px dashed var(--closed); vertical-align: middle; margin-right: 6px; }
+footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
+
+.zoom {
+  position: absolute; top: calc(12px + env(safe-area-inset-top, 0px)); right: max(12px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; background: var(--paper); border: 1px solid var(--rule); border-radius: 7px; overflow: hidden; z-index: 2;
+}
+.zoom button { font: 500 18px/1 var(--f-body); width: 38px; height: 36px; border: 0; background: transparent; color: var(--ink); cursor: pointer; }
+.zoom button + button { border-top: 1px solid var(--rule); }
+.zoom button:hover { background: var(--chip); }
+.zoom .all { font-size: 11px; font-family: var(--f-display); letter-spacing: 0.05em; text-transform: uppercase; }
+.tip {
+  position: absolute; pointer-events: none; z-index: 3; background: var(--ink); color: var(--paper);
+  font-size: 13px; padding: 5px 8px; border-radius: 5px; white-space: nowrap; transform: translate(12px, 12px);
+}
+.loading { position: absolute; inset: 0; display: grid; place-items: center; color: var(--ink-3); font-size: 14px; z-index: 1; }
+.district-label {
+  font: 600 13px/1 var(--f-display); text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-3);
+  pointer-events: none; text-shadow: 0 0 3px var(--ground), 0 0 3px var(--ground);
+  white-space: nowrap;
+}
+.scalebar { position: absolute; left: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); font: 11px var(--f-mono); color: var(--ink-3); z-index: 2; }
+
+/* Minimalny CSS MapLibre (arkusze z CDN są blokowane, więc tylko to, czego używamy). */
+.maplibregl-map { overflow: hidden; position: relative; -webkit-tap-highlight-color: transparent; }
+.maplibregl-canvas { position: absolute; left: 0; top: 0; }
+.maplibregl-canvas-container.maplibregl-interactive { cursor: grab; }
+.maplibregl-canvas-container.maplibregl-interactive:active { cursor: grabbing; }
+.maplibregl-marker { position: absolute; top: 0; left: 0; will-change: transform; }
+.maplibregl-ctrl-attrib, .maplibregl-ctrl-logo { display: none; }
+
+@media (max-width: 760px) {
+  html, body { height: auto; }
+  .app { grid-template-columns: 1fr; grid-template-rows: 58vh auto; height: auto; }
+  .mapwrap { order: -1; height: 58vh; }
+  .panel { border-right: 0; overflow: visible; padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-left: max(16px, env(safe-area-inset-left, 0px)); }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+
+<div class="app">
+  <aside class="panel">
+    <header>
+      <h1>Graf ulic Warszawy</h1>
+      <div class="sub">Snapshot OpenStreetMap z 16.10.2026. Każdy odcinek między skrzyżowaniami ma własne <span style="font-family:var(--f-mono)">edge_id</span>, do którego przypniemy wagi.</div>
+    </header>
+
+    <div class="stats" id="stats">
+      <div class="stat"><b>–</b><span>odcinków ulic</span></div>
+      <div class="stat"><b>–</b><span>km ulic</span></div>
+      <div class="stat"><b>–</b><span>km torowisk</span></div>
+      <div class="stat"><b>–</b><span>słupków ZTM</span></div>
+    </div>
+
+    <section class="search">
+      <h2><label for="q">Szukaj ulicy</label></h2>
+      <input id="q" type="search" placeholder="np. Marszałkowska, Puławska…" autocomplete="off">
+      <ul class="results" id="results"></ul>
+    </section>
+
+    <section id="detail-wrap" hidden>
+      <div class="card" id="detail"></div>
+    </section>
+
+    <section>
+      <h2>Kolorowanie ulic</h2>
+      <div class="seg" role="group" aria-label="Kolorowanie ulic">
+        <button id="mode-class" aria-pressed="true" data-mode="class">Klasa drogi</button>
+        <button id="mode-speed" aria-pressed="false" data-mode="speed">Prędkość</button>
+        <button id="mode-lanes" aria-pressed="false" data-mode="lanes">Pasy</button>
+      </div>
+      <ul class="legend" id="legend"></ul>
+    </section>
+
+    <section>
+      <h2>Warstwy</h2>
+      <div class="layers">
+        <label><input type="checkbox" id="l-roads" checked> <span class="swatch" style="background:var(--r2)"></span> Ulice <small id="n-roads"></small></label>
+        <label><input type="checkbox" id="l-trams" checked> <span class="swatch" style="background:var(--tram)"></span> Torowiska tramwajowe <small id="n-trams"></small></label>
+        <label><input type="checkbox" id="l-stops" checked> <span class="swatch dot"></span> Słupki ZTM <small>od zoomu 13</small></label>
+        <label><input type="checkbox" id="l-districts" checked> <span class="swatch" style="background:var(--district)"></span> Dzielnice</label>
+        <label><input type="checkbox" id="l-river" checked> <span class="swatch" style="background:var(--water)"></span> Wisła</label>
+      </div>
+    </section>
+
+    <section>
+      <h2><span class="hazard"></span>Wyłączone z ruchu</h2>
+      <div id="closed"></div>
+    </section>
+
+    <footer>Dane: OpenStreetMap (ODbL) przez Geofabrik · przystanki: dane.um.warszawa.pl · ludność: GUS BDL 2025. Szkic roboczy, nie do użytku operacyjnego.</footer>
+  </aside>
+
+  <div class="mapwrap">
+    <div id="map"></div>
+    <div class="loading" id="loading">Wczytywanie grafu Warszawy…</div>
+    <div class="zoom">
+      <button id="zin" aria-label="Przybliż">+</button>
+      <button id="zout" aria-label="Oddal">−</button>
+      <button id="zall" class="all" aria-label="Pokaż całą Warszawę">Całość</button>
+    </div>
+    <div class="tip" id="tip" hidden></div>
+    <div class="scalebar" id="scalebar"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.js"></script>
+<script>
+(() => {
+  const CLASS_LABELS = ["Ekspresowa / autostrada", "Główna", "Zbiorcza", "Lokalna (tertiary)", "Osiedlowa", "Serwisowa / pętla"];
+  const CLASS_SHORT = ["ekspresowa", "główna", "zbiorcza", "lokalna", "osiedlowa", "serwisowa"];
+  const WARSAW = [[20.85, 52.095], [21.275, 52.37]];
+  const STOP_RADIUS_M = 40;
+  const fmt = new Intl.NumberFormat("pl-PL");
+  const $ = (id) => document.getElementById(id);
+
+  let D, map, mode = "class";
+  let roads = [], trams = [], stops = [];
+  let selection = null;           // {type:'road'|'tram'|'stop'|'street', ...}
+  const closed = new Map();       // klucz "r:i" / "t:i" -> {type, i}
+
+  const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  const ramp = () => [0, 1, 2, 3, 4, 5].map((i) => css(`--r${i}`));
+
+  function decode(a, S) {
+    const out = []; let x = 0, y = 0;
+    for (let i = 0; i < a.length; i += 2) { x += a[i]; y += a[i + 1]; out.push([x / S, y / S]); }
+    return out;
+  }
+  const fc = (features) => ({ type: "FeatureCollection", features });
+
+  // ---------- wyrażenia kolorów ----------
+  function colorExpr() {
+    const r = ramp(), miss = css("--missing");
+    if (mode === "class") return ["match", ["get", "c"], 0, r[0], 1, r[1], 2, r[2], 3, r[3], 4, r[4], r[5]];
+    if (mode === "speed") return ["case", ["==", ["get", "s"], 0], miss,
+      ["step", ["get", "s"], r[5], 30, r[4], 40, r[3], 50, r[2], 60, r[1], 80, r[0]]];
+    return ["case", ["==", ["get", "l"], 0], miss, ["step", ["get", "l"], r[4], 2, r[3], 3, r[1], 4, r[0]]];
+  }
+  function legendItems() {
+    const r = ramp(), miss = css("--missing");
+    if (mode === "class") return CLASS_LABELS.map((t, i) => [r[i], t, [5, 4, 3.5, 3, 2, 1.5][i]]);
+    if (mode === "speed") return [[r[0], "80 km/h i więcej"], [r[1], "60–70 km/h"], [r[2], "50 km/h"], [r[3], "40 km/h"],
+      [r[4], "30 km/h"], [r[5], "poniżej 30 km/h"], [miss, "brak danych w OSM"]];
+    return [[r[0], "4 pasy i więcej"], [r[1], "3 pasy"], [r[3], "2 pasy"], [r[4], "1 pas"], [miss, "brak danych w OSM"]];
+  }
+  function renderLegend() {
+    $("legend").innerHTML = legendItems()
+      .map(([c, t, h]) => `<li><i style="background:${c};height:${h || 4}px"></i>${t}</li>`).join("");
+  }
+  const widthExpr = (k) => ["interpolate", ["exponential", 1.6], ["zoom"],
+    10, ["*", k, ["match", ["get", "c"], 0, 2.2, 1, 1.7, 2, 1.3, 3, 0.9, 4, 0.45, 0.3]],
+    16, ["*", k, ["match", ["get", "c"], 0, 10, 1, 8, 2, 6.5, 3, 5, 4, 3, 2]]];
+
+  function applyTheme() {
+    if (!map || !map.getLayer("roads")) return;
+    map.setPaintProperty("bg", "background-color", css("--ground"));
+    map.setPaintProperty("river", "line-color", css("--water"));
+    map.setPaintProperty("districts", "line-color", css("--district"));
+    map.setPaintProperty("roads", "line-color", colorExpr());
+    map.setPaintProperty("trams", "line-color", css("--tram"));
+    map.setPaintProperty("closed", "line-color", css("--closed"));
+    map.setPaintProperty("sel-casing", "line-color", css("--ink"));
+    map.setPaintProperty("sel", "line-color", css("--sel"));
+    map.setPaintProperty("stops", "circle-color", ["case", ["get", "t"], css("--tram"), css("--stop")]);
+    map.setPaintProperty("stops", "circle-stroke-color", css("--ink-2"));
+    renderLegend();
+  }
+
+  // ---------- dane ----------
+  async function load() {
+    D = await (await fetch("warszawa.json")).json();
+    const S = D.scale, R = D.roads;
+    roads = R.edges.map((e, i) => ({
+      i, c: e[0], name: R.names[e[1]], nameIdx: e[1], len: e[2], lanes: e[3], speed: e[4], flags: e[5],
+      ids: e[6].split(";"), coords: decode(e[7], S),
+    }));
+    trams = D.trams.edges.map((e, i) => ({ i, len: e[0], ids: e[1].split(";"), coords: decode(e[2], S) }));
+    stops = D.stops.map((s, i) => ({ i, lon: s[0] / S, lat: s[1] / S, name: s[2], id: s[3], lines: s[4] ? s[4].split(",") : [] }));
+
+    const st = $("stats").querySelectorAll("b");
+    st[0].textContent = fmt.format(roads.length);
+    st[1].textContent = fmt.format(R.stats.km);
+    st[2].textContent = fmt.format(D.trams.km);
+    st[3].textContent = fmt.format(stops.length);
+    $("stats").querySelectorAll("span")[0].textContent = `odcinków ulic (${fmt.format(R.stats.directed_edges)} skierowanych)`;
+    $("n-roads").textContent = fmt.format(roads.length);
+    $("n-trams").textContent = fmt.format(trams.length);
+  }
+
+  function roadFeature(r) {
+    return { type: "Feature", id: r.i, properties: { c: r.c, s: r.speed, l: r.lanes }, geometry: { type: "LineString", coordinates: r.coords } };
+  }
+  function tramFeature(t) {
+    return { type: "Feature", id: t.i, properties: {}, geometry: { type: "LineString", coordinates: t.coords } };
+  }
+
+  function buildMap() {
+    map = new maplibregl.Map({
+      container: "map", bounds: WARSAW, fitBoundsOptions: { padding: 24 }, attributionControl: false,
+      maxZoom: 19, minZoom: 9, dragRotate: false, pitchWithRotate: false,
+      style: { version: 8, sources: {}, layers: [{ id: "bg", type: "background", paint: { "background-color": css("--ground") } }] },
+    });
+    map.touchZoomRotate.disableRotation();
+
+    map.on("load", () => {
+      const S = D.scale;
+      map.addSource("river", { type: "geojson", data: fc(D.river.map((c) => ({ type: "Feature", properties: {}, geometry: { type: "LineString", coordinates: decode(c, S) } }))) });
+      map.addSource("districts", { type: "geojson", data: fc(D.districts.flatMap((d) => d.rings.map((c) => ({ type: "Feature", properties: {}, geometry: { type: "LineString", coordinates: decode(c, S) } })))) });
+      map.addSource("roads", { type: "geojson", data: fc(roads.map(roadFeature)), tolerance: 0.3 });
+      map.addSource("trams", { type: "geojson", data: fc(trams.map(tramFeature)) });
+      map.addSource("stops", { type: "geojson", data: fc(stops.map((s) => ({ type: "Feature", id: s.i, properties: { t: s.lines.length > 0 }, geometry: { type: "Point", coordinates: [s.lon, s.lat] } }))) });
+      map.addSource("closed", { type: "geojson", data: fc([]) });
+      map.addSource("sel", { type: "geojson", data: fc([]) });
+
+      map.addLayer({ id: "river", type: "line", source: "river", layout: { "line-cap": "round", "line-join": "round" },
+        paint: { "line-color": css("--water"), "line-width": ["interpolate", ["exponential", 2], ["zoom"], 9, 4, 12, 22, 15, 140, 18, 1100] } });
+      map.addLayer({ id: "districts", type: "line", source: "districts",
+        paint: { "line-color": css("--district"), "line-width": 1, "line-dasharray": [3, 2] } });
+      map.addLayer({ id: "roads", type: "line", source: "roads", layout: { "line-cap": "round", "line-join": "round", "line-sort-key": ["-", 10, ["get", "c"]] },
+        paint: { "line-color": colorExpr(), "line-width": widthExpr(1) } });
+      map.addLayer({ id: "trams", type: "line", source: "trams", layout: { "line-cap": "round" },
+        paint: { "line-color": css("--tram"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 1.1, 16, 3] } });
+      map.addLayer({ id: "closed", type: "line", source: "closed", layout: { "line-cap": "butt" },
+        paint: { "line-color": css("--closed"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 3, 16, 9], "line-dasharray": [1.4, 0.8] } });
+      map.addLayer({ id: "sel-casing", type: "line", source: "sel", layout: { "line-cap": "round", "line-join": "round" },
+        paint: { "line-color": css("--ink"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 5, 16, 13] } });
+      map.addLayer({ id: "sel", type: "line", source: "sel", layout: { "line-cap": "round", "line-join": "round" },
+        paint: { "line-color": css("--sel"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 3, 16, 9] } });
+      map.addLayer({ id: "stops", type: "circle", source: "stops", minzoom: 13,
+        paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 13, 2.5, 17, 6], "circle-color": ["case", ["get", "t"], css("--tram"), css("--stop")],
+          "circle-stroke-width": 1.5, "circle-stroke-color": css("--ink-2") } });
+      // Szerokie, niewidoczne warstwy do trafiania kursorem/palcem.
+      map.addLayer({ id: "roads-hit", type: "line", source: "roads", paint: { "line-color": "#000", "line-opacity": 0, "line-width": 12 } });
+      map.addLayer({ id: "trams-hit", type: "line", source: "trams", paint: { "line-color": "#000", "line-opacity": 0, "line-width": 10 } });
+
+      addDistrictLabels();
+      wireMap();
+      $("loading").hidden = true;
+      // Stan startowy: zaznaczona Marszałkowska, żeby panel od razu pokazywał, co jest w danych.
+      const idx = R().names.indexOf("Marszałkowska");
+      if (idx > 0) selectStreet(idx, false);
+      updateScale();
+    });
+  }
+  const R = () => D.roads;
+
+  function addDistrictLabels() {
+    const markers = D.districts.map((d) => {
+      const el = document.createElement("div");
+      el.className = "district-label";
+      el.textContent = d.name;
+      return new maplibregl.Marker({ element: el }).setLngLat([d.label[0] / D.scale, d.label[1] / D.scale]).addTo(map);
+    });
+    const toggle = () => {
+      const show = $("l-districts").checked && map.getZoom() < 13.5;
+      markers.forEach((m) => { m.getElement().style.visibility = show ? "visible" : "hidden"; });
+    };
+    map.on("zoom", toggle);
+    $("l-districts").addEventListener("change", toggle);
+    toggle();
+  }
+
+  function updateScale() {
+    const y = map.getContainer().clientHeight / 2;
+    const a = map.unproject([0, y]), b = map.unproject([100, y]);
+    const m = a.distanceTo(b);
+    const nice = [10, 20, 50, 100, 200, 500, 1000, 2000, 5000].find((n) => n >= m * 0.6) || 5000;
+    const px = Math.round(100 * nice / m);
+    $("scalebar").innerHTML = `<div style="width:${px}px;border:1px solid var(--ink-3);border-top:0;height:5px"></div>${nice >= 1000 ? nice / 1000 + " km" : nice + " m"}`;
+  }
+
+  // ---------- interakcja z mapą ----------
+  function wireMap() {
+    const tip = $("tip");
+    const hitLayers = () => ["stops", "trams-hit", "roads-hit"].filter((l) => map.getLayoutProperty(l, "visibility") !== "none" && (l !== "stops" || map.getZoom() >= 13));
+    const pick = (pt) => {
+      const box = [[pt.x - 4, pt.y - 4], [pt.x + 4, pt.y + 4]];
+      const f = map.queryRenderedFeatures(box, { layers: hitLayers() });
+      return f.find((x) => x.layer.id === "stops") || f.find((x) => x.layer.id === "trams-hit") || f[0];
+    };
+    const label = (f) => {
+      if (f.layer.id === "stops") { const s = stops[f.id]; return `${s.name} ${s.id.split("-")[1]}${s.lines.length ? " · tram " + s.lines.join(", ") : ""}`; }
+      if (f.layer.id === "trams-hit") return `Torowisko · ${fmt.format(trams[f.id].len)} m`;
+      const r = roads[f.id]; return `${r.name || "bez nazwy"} · ${CLASS_SHORT[r.c]} · ${fmt.format(r.len)} m`;
+    };
+    map.on("mousemove", (e) => {
+      const f = pick(e.point);
+      map.getCanvas().style.cursor = f ? "pointer" : "";
+      if (!f) { tip.hidden = true; return; }
+      tip.hidden = false; tip.textContent = label(f);
+      tip.style.left = e.point.x + "px"; tip.style.top = e.point.y + "px";
+    });
+    map.on("mouseout", () => { tip.hidden = true; });
+    map.on("click", (e) => {
+      const f = pick(e.point);
+      if (!f) { setSelection(null); return; }
+      if (f.layer.id === "stops") setSelection({ type: "stop", i: f.id });
+      else if (f.layer.id === "trams-hit") setSelection({ type: "tram", i: f.id });
+      else setSelection({ type: "road", i: f.id });
+    });
+    map.on("moveend", updateScale);
+    map.on("resize", updateScale);
+  }
+
+  // ---------- zaznaczenie ----------
+  function featuresOf(sel) {
+    if (!sel) return [];
+    if (sel.type === "road") return [roadFeature(roads[sel.i])];
+    if (sel.type === "tram") return [tramFeature(trams[sel.i])];
+    if (sel.type === "street") return sel.items.map((i) => roadFeature(roads[i]));
+    return [];
+  }
+  function setSelection(sel) {
+    selection = sel;
+    map.getSource("sel").setData(fc(featuresOf(sel)));
+    renderDetail();
+  }
+  function selectStreet(nameIdx, fly = true) {
+    const items = roads.filter((r) => r.nameIdx === nameIdx).map((r) => r.i);
+    setSelection({ type: "street", nameIdx, items });
+    if (fly) fitTo(items.flatMap((i) => roads[i].coords));
+  }
+  function fitTo(coords) {
+    const b = coords.reduce((bb, c) => bb.extend(c), new maplibregl.LngLatBounds(coords[0], coords[0]));
+    map.fitBounds(b, { padding: 60, maxZoom: 17, duration: matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 700 });
+  }
+
+  const yes = (v) => (v ? "tak" : "nie");
+  function closeBtn(key) {
+    return closed.has(key)
+      ? `<button class="btn" data-act="open" data-key="${key}">Przywróć ruch</button>`
+      : `<button class="btn danger" data-act="close" data-key="${key}">Oznacz jako wyłączony</button>`;
+  }
+  function renderDetail() {
+    const wrap = $("detail-wrap"), el = $("detail"), s = selection;
+    if (!s) { wrap.hidden = true; return; }
+    wrap.hidden = false;
+    if (s.type === "road") {
+      const r = roads[s.i], key = "r:" + s.i;
+      el.innerHTML = `<div><div class="kind">Odcinek ulicy</div><h3>${esc(r.name || "Bez nazwy")}</h3></div>
+        <dl>
+          <dt>Klasa</dt><dd>${CLASS_LABELS[r.c]}</dd>
+          <dt>Długość</dt><dd>${fmt.format(r.len)} m</dd>
+          <dt>Pasy</dt><dd>${r.lanes || "brak danych"}</dd>
+          <dt>Prędkość</dt><dd>${r.speed ? r.speed + " km/h" : "brak danych"}</dd>
+          <dt>Kierunek</dt><dd>${r.flags & 1 ? "jednokierunkowa" : "dwukierunkowa"}</dd>
+          <dt>Buspas</dt><dd>${yes(r.flags & 2)}</dd>
+          ${r.flags & 4 ? "<dt>Obiekt</dt><dd>most / wiadukt</dd>" : ""}${r.flags & 8 ? "<dt>Obiekt</dt><dd>tunel</dd>" : ""}
+          <dt>edge_id</dt><dd class="ids">${r.ids.map((x) => `<span>${x}</span>`).join("")}</dd>
+        </dl>
+        <div class="row">${closeBtn(key)}<button class="btn" data-act="copy">Kopiuj edge_id</button>
+          ${r.nameIdx ? `<button class="btn" data-act="street" data-name="${r.nameIdx}">Cała ulica</button>` : ""}</div>`;
+    } else if (s.type === "tram") {
+      const t = trams[s.i], key = "t:" + s.i, lines = linesNear([t.coords]);
+      el.innerHTML = `<div><div class="kind">Odcinek torowiska</div><h3>Tory tramwajowe</h3></div>
+        <dl>
+          <dt>Długość</dt><dd>${fmt.format(t.len)} m</dd>
+          <dt>Linie w pobliżu</dt><dd>${lines.length ? lines.join(", ") : "brak przystanku w zasięgu " + STOP_RADIUS_M + " m"}</dd>
+          <dt>edge_id</dt><dd class="ids">${t.ids.map((x) => `<span>${x}</span>`).join("")}</dd>
+        </dl>
+        <div class="row">${closeBtn(key)}<button class="btn" data-act="copy">Kopiuj edge_id</button></div>`;
+    } else if (s.type === "stop") {
+      const st = stops[s.i];
+      el.innerHTML = `<div><div class="kind">Słupek ZTM ${st.id}</div><h3>${esc(st.name)}</h3></div>
+        <dl>
+          <dt>Linie tram.</dt><dd>${st.lines.length ? `<span class="chips">${st.lines.map((l) => `<span class="chip tram">${l}</span>`).join("")}</span>` : "brak (linie autobusowe nie są jeszcze w danych)"}</dd>
+          <dt>Pozycja</dt><dd>${st.lat.toFixed(5)}, ${st.lon.toFixed(5)}</dd>
+        </dl>`;
+    } else {
+      const items = s.items.map((i) => roads[i]);
+      const km = items.reduce((a, r) => a + r.len, 0) / 1000;
+      const allClosed = items.every((r) => closed.has("r:" + r.i));
+      const classes = [...new Set(items.map((r) => r.c))].sort().map((c) => CLASS_SHORT[c]).join(", ");
+      el.innerHTML = `<div><div class="kind">Ulica</div><h3>${esc(R().names[s.nameIdx])}</h3></div>
+        <dl>
+          <dt>Odcinki</dt><dd>${fmt.format(items.length)}</dd>
+          <dt>Długość</dt><dd>${km.toLocaleString("pl-PL", { maximumFractionDigits: 2 })} km</dd>
+          <dt>Klasy</dt><dd>${classes}</dd>
+        </dl>
+        <div class="row">${allClosed
+          ? `<button class="btn" data-act="open-street">Przywróć całą ulicę</button>`
+          : `<button class="btn danger" data-act="close-street">Wyłącz całą ulicę</button>`}
+          <button class="btn" data-act="fit">Pokaż na mapie</button></div>
+        <p class="empty">Kliknij pojedynczy odcinek na mapie, aby wyłączyć tylko jego fragment.</p>`;
+    }
+  }
+  const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+
+  $("detail").addEventListener("click", async (e) => {
+    const b = e.target.closest("button"); if (!b) return;
+    const act = b.dataset.act, s = selection;
+    if (act === "close") { setClosed(b.dataset.key, true); }
+    else if (act === "open") { setClosed(b.dataset.key, false); }
+    else if (act === "close-street") { s.items.forEach((i) => closed.set("r:" + i, { type: "r", i })); renderClosed(); }
+    else if (act === "open-street") { s.items.forEach((i) => closed.delete("r:" + i)); renderClosed(); }
+    else if (act === "street") { selectStreet(+b.dataset.name); return; }
+    else if (act === "fit") { fitTo(s.items.flatMap((i) => roads[i].coords)); return; }
+    else if (act === "copy") {
+      const ids = (s.type === "road" ? roads[s.i] : trams[s.i]).ids.join("\n");
+      try { await navigator.clipboard.writeText(ids); b.textContent = "Skopiowano"; }
+      catch { const r = document.createRange(); r.selectNodeContents($("detail").querySelector(".ids")); getSelection().removeAllRanges(); getSelection().addRange(r); b.textContent = "Zaznaczono, użyj Ctrl+C"; }
+      return;
+    }
+    renderDetail();
+  });
+
+  // ---------- wyłączenia ----------
+  function setClosed(key, on) {
+    const [type, i] = key.split(":");
+    if (on) closed.set(key, { type, i: +i }); else closed.delete(key);
+    renderClosed();
+  }
+  const geomOf = (c) => (c.type === "r" ? roads[c.i].coords : trams[c.i].coords);
+
+  // Odległość punkt–łamana w metrach (rzut równoodległościowy, wystarczający w skali miasta).
+  const KX = 111320 * Math.cos(52.23 * Math.PI / 180), KY = 110540;
+  function distToLine(p, line) {
+    let best = Infinity;
+    for (let k = 1; k < line.length; k++) {
+      const ax = (line[k - 1][0] - p[0]) * KX, ay = (line[k - 1][1] - p[1]) * KY;
+      const bx = (line[k][0] - p[0]) * KX, by = (line[k][1] - p[1]) * KY;
+      const dx = bx - ax, dy = by - ay, L = dx * dx + dy * dy;
+      const t = L ? Math.max(0, Math.min(1, -(ax * dx + ay * dy) / L)) : 0;
+      best = Math.min(best, Math.hypot(ax + t * dx, ay + t * dy));
+    }
+    return best;
+  }
+  function stopsNear(lines) {
+    const pad = 0.001;
+    return stops.filter((s) => lines.some((line) => {
+      let minx = 1e9, miny = 1e9, maxx = -1e9, maxy = -1e9;
+      for (const [x, y] of line) { minx = Math.min(minx, x); maxx = Math.max(maxx, x); miny = Math.min(miny, y); maxy = Math.max(maxy, y); }
+      if (s.lon < minx - pad || s.lon > maxx + pad || s.lat < miny - pad || s.lat > maxy + pad) return false;
+      return distToLine([s.lon, s.lat], line) <= STOP_RADIUS_M;
+    }));
+  }
+  const sortLines = (a) => [...new Set(a)].sort((x, y) => (parseInt(x) || 999) - (parseInt(y) || 999) || x.localeCompare(y));
+  const linesNear = (lines) => sortLines(stopsNear(lines).flatMap((s) => s.lines));
+
+  function renderClosed() {
+    const items = [...closed.values()];
+    map.getSource("closed").setData(fc(items.map((c) => ({ type: "Feature", properties: {}, geometry: { type: "LineString", coordinates: geomOf(c) } }))));
+    const el = $("closed");
+    if (!items.length) {
+      el.innerHTML = `<p class="empty">Nic nie jest wyłączone. Kliknij odcinek ulicy lub torowiska i wybierz „Oznacz jako wyłączony”, albo wyszukaj ulicę i wyłącz ją w całości. Zobaczysz słupki ZTM w promieniu ${STOP_RADIUS_M} m i linie tramwajowe, których to dotyczy.</p>`;
+      return;
+    }
+    const km = items.reduce((a, c) => a + (c.type === "r" ? roads[c.i].len : trams[c.i].len), 0) / 1000;
+    const near = stopsNear(items.map(geomOf));
+    const tramLines = linesNear(items.filter((c) => c.type === "t").map(geomOf));
+    const groups = new Map();
+    for (const [key, c] of closed) {
+      const name = c.type === "r" ? (roads[c.i].name || "Bez nazwy") : "Torowisko";
+      const g = groups.get(name) || { keys: [], len: 0 };
+      g.keys.push(key); g.len += c.type === "r" ? roads[c.i].len : trams[c.i].len; groups.set(name, g);
+    }
+    el.innerHTML = `<div class="card">
+      <dl>
+        <dt>Odcinki</dt><dd>${fmt.format(items.length)} · ${km.toLocaleString("pl-PL", { maximumFractionDigits: 2 })} km</dd>
+        <dt>Słupki ZTM</dt><dd>${fmt.format(near.length)} w promieniu ${STOP_RADIUS_M} m</dd>
+        <dt>Linie tram.</dt><dd>${tramLines.length ? `<span class="chips">${tramLines.map((l) => `<span class="chip tram">${l}</span>`).join("")}</span>` : "żadne torowisko nie jest wyłączone"}</dd>
+      </dl>
+      <ul class="closed-list">${[...groups].map(([n, g]) => `<li><span>${esc(n)}</span><small>${g.keys.length} odc. · ${fmt.format(g.len)} m</small><button aria-label="Przywróć ${esc(n)}" data-keys="${g.keys.join(",")}">×</button></li>`).join("")}</ul>
+      <div class="row"><button class="btn" id="clear-closed">Przywróć wszystko</button></div>
+      <p class="empty">Linie autobusowe pojawią się po dołączeniu rozkładu GTFS.</p>
+    </div>`;
+  }
+  $("closed").addEventListener("click", (e) => {
+    const b = e.target.closest("button"); if (!b) return;
+    if (b.id === "clear-closed") closed.clear();
+    else if (b.dataset.keys) b.dataset.keys.split(",").forEach((k) => closed.delete(k));
+    renderClosed(); renderDetail();
+  });
+
+  // ---------- wyszukiwarka ----------
+  let streetIndex = null;
+  function buildStreetIndex() {
+    const m = new Map();
+    for (const r of roads) {
+      if (!r.nameIdx) continue;
+      const s = m.get(r.nameIdx) || { idx: r.nameIdx, name: r.name, n: 0, len: 0, c: 9 };
+      s.n++; s.len += r.len; s.c = Math.min(s.c, r.c); m.set(r.nameIdx, s);
+    }
+    streetIndex = [...m.values()].map((s) => ({ ...s, key: norm(s.name) }));
+  }
+  const norm = (t) => t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/ł/g, "l");
+  $("q").addEventListener("input", (e) => {
+    const q = norm(e.target.value.trim());
+    const out = $("results");
+    if (q.length < 2) { out.innerHTML = ""; return; }
+    const hits = streetIndex.filter((s) => s.key.includes(q))
+      .sort((a, b) => (b.key.startsWith(q) - a.key.startsWith(q)) || a.c - b.c || b.len - a.len).slice(0, 8);
+    out.innerHTML = hits.length
+      ? hits.map((s) => `<li><button data-idx="${s.idx}"><span>${esc(s.name)}</span><small>${(s.len / 1000).toLocaleString("pl-PL", { maximumFractionDigits: 1 })} km · ${s.n} odc.</small></button></li>`).join("")
+      : `<li class="empty" style="padding:7px 8px">Brak ulicy o tej nazwie w grafie.</li>`;
+  });
+  $("results").addEventListener("click", (e) => {
+    const b = e.target.closest("button[data-idx]"); if (!b) return;
+    selectStreet(+b.dataset.idx);
+    $("results").innerHTML = ""; $("q").value = R().names[+b.dataset.idx];
+  });
+
+  // ---------- kontrolki ----------
+  document.querySelectorAll(".seg button").forEach((b) => b.addEventListener("click", () => {
+    mode = b.dataset.mode;
+    document.querySelectorAll(".seg button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    map.setPaintProperty("roads", "line-color", colorExpr());
+    renderLegend();
+  }));
+  const LAYERS = { "l-roads": ["roads", "roads-hit"], "l-trams": ["trams", "trams-hit"], "l-stops": ["stops"], "l-districts": ["districts"], "l-river": ["river"] };
+  for (const [id, layers] of Object.entries(LAYERS)) {
+    $(id).addEventListener("change", (e) => layers.forEach((l) => map.setLayoutProperty(l, "visibility", e.target.checked ? "visible" : "none")));
+  }
+  $("zin").addEventListener("click", () => map.zoomIn());
+  $("zout").addEventListener("click", () => map.zoomOut());
+  $("zall").addEventListener("click", () => map.fitBounds(WARSAW, { padding: 24 }));
+
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applyTheme);
+  new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+  renderLegend();
+  load().then(() => {
+    buildStreetIndex();
+    buildMap();
+    map.once("load", renderClosed);
+  }).catch((err) => {
+    $("loading").textContent = "Nie udało się wczytać danych mapy (warszawa.json). Odśwież stronę.";
+    console.error(err);
+  });
+})();
+</script>

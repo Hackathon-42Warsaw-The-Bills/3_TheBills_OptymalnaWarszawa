@@ -1,0 +1,8 @@
+osmnx>=2.0
+osmium>=4.0
+geopandas
+pyarrow
+folium
+matplotlib
+mapclassify
+requests

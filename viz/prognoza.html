@@ -1,0 +1,403 @@
+<meta charset="utf-8">
+<title>Prognoza deficytu transportu</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: panel z suwakiem lat i listą rekomendowanych linii po lewej, mapa deficytu po prawej; na telefonie mapa nad panelem. */
+:root {
+  --paper: #fbfcfb; --ground: #eceeed; --ink: #15201b; --ink-2: #46534d; --ink-3: #6f7b76;
+  --rule: #d8dddb; --chip: #e5e9e7; --sel: #f0b400; --tram: #b0307a; --road: #d3d8d6;
+  --water: #bcd6e8; --district: #97a39e; --line: #0b7a55; --line-soft: #8fb9a8; --new: #5b3fd1;
+  --h1: #fbe3c4; --h2: #f6bd84; --h3: #ee9150; --h4: #d6622c; --h5: #a33a1a;
+  --f-display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+  --f-body: "Barlow", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #161b19; --ground: #0f1312; --ink: #e6ebe8; --ink-2: #a9b4af; --ink-3: #7d8984;
+  --rule: #2b3330; --chip: #222a27; --sel: #f5c22b; --tram: #e163a8; --road: #252c29;
+  --water: #1d3546; --district: #56615c; --line: #3fd39b; --line-soft: #2d5a49; --new: #a08cff;
+  --h1: #3b2416; --h2: #6b3618; --h3: #a8501f; --h4: #e0783a; --h5: #ffb36b;
+  color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --paper: #161b19; --ground: #0f1312; --ink: #e6ebe8; --ink-2: #a9b4af; --ink-3: #7d8984;
+  --rule: #2b3330; --chip: #222a27; --sel: #f5c22b; --tram: #e163a8; --road: #252c29;
+  --water: #1d3546; --district: #56615c; --line: #3fd39b; --line-soft: #2d5a49; --new: #a08cff;
+  --h1: #3b2416; --h2: #6b3618; --h3: #a8501f; --h4: #e0783a; --h5: #ffb36b;
+  color-scheme: dark;
+}
+
+html, body { height: 100%; margin: 0; }
+[hidden] { display: none !important; }
+body { background: var(--paper); color: var(--ink); font: 15px/1.45 var(--f-body); }
+.app { display: grid; grid-template-columns: 400px 1fr; height: 100%; }
+.panel {
+  overflow-y: auto; border-right: 1px solid var(--rule); background: var(--paper);
+  padding-block: 20px 28px; padding-left: max(18px, env(safe-area-inset-left, 0px)); padding-right: 18px;
+  display: flex; flex-direction: column; gap: 20px; min-width: 0;
+}
+.mapwrap { position: relative; min-width: 0; background: var(--ground); }
+#map { position: absolute; inset: 0; }
+
+h1 { font: 600 30px/1 var(--f-display); margin: 0; text-wrap: balance; }
+.sub { color: var(--ink-3); font-size: 13px; margin-top: 6px; }
+h2 { font: 600 13px/1 var(--f-display); text-transform: uppercase; letter-spacing: 0.09em; color: var(--ink-2); margin: 0 0 10px; }
+section { min-width: 0; }
+
+.years { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; background: var(--chip); border-radius: 7px; padding: 3px; gap: 3px; }
+.years button {
+  font: 600 16px/1 var(--f-display); color: var(--ink-2); background: transparent; border: 0; border-radius: 5px;
+  padding: 9px 2px; cursor: pointer; font-variant-numeric: tabular-nums;
+}
+.years button[aria-pressed="true"] { background: var(--paper); color: var(--ink); box-shadow: 0 1px 2px rgb(0 0 0 / 0.12); }
+.years button:focus-visible, .lines button:focus-visible, .zoom button:focus-visible { outline: 2px solid var(--line); outline-offset: 1px; }
+
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; }
+.stat { background: var(--paper); padding: 10px 12px; }
+.stat b { display: block; font: 600 24px/1.1 var(--f-display); font-variant-numeric: tabular-nums; }
+.stat span { font-size: 12.5px; color: var(--ink-3); }
+
+.legend { display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
+.scale { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; }
+.scale i { height: 10px; border-radius: 2px; }
+.scale-labels { display: grid; grid-template-columns: repeat(5, 1fr); font: 11px var(--f-mono); color: var(--ink-3); }
+.key { display: flex; align-items: center; gap: 9px; color: var(--ink-2); }
+.key i { flex: none; width: 26px; display: inline-block; }
+.key .ln { height: 0; border-top: 3px solid var(--line); }
+.key .ln.soft { border-top: 2px dashed var(--line-soft); }
+.key .dot { width: 10px; height: 10px; border-radius: 50%; margin-inline: 8px; }
+
+.lines { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.lines button {
+  all: unset; box-sizing: border-box; width: 100%; cursor: pointer; display: grid; grid-template-columns: 46px 1fr auto; gap: 10px; align-items: center;
+  padding: 8px; border-radius: 6px; border: 1px solid transparent;
+}
+.lines button:hover { background: var(--chip); }
+.lines button[aria-pressed="true"] { border-color: var(--sel); background: var(--chip); }
+.lines li.future button { opacity: 0.5; }
+.badge { font: 600 15px/1 var(--f-display); color: var(--paper); background: var(--line); border-radius: 4px; padding: 5px 0; text-align: center; }
+.badge.stop { background: var(--ink-3); }
+.lines .t { min-width: 0; }
+.lines .t b { display: block; font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lines .t small { display: block; color: var(--ink-3); font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lines .n { text-align: right; font: 600 17px/1 var(--f-display); font-variant-numeric: tabular-nums; }
+.lines .n small { display: block; font: 11px var(--f-body); color: var(--ink-3); margin-top: 3px; }
+
+.detail { border: 1px solid var(--rule); border-radius: 8px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+.detail h3 { margin: 0; font: 600 22px/1.05 var(--f-display); }
+.detail p { margin: 0; font-size: 14px; color: var(--ink-2); }
+.kv { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: 13.5px; }
+.kv dt { color: var(--ink-3); } .kv dd { margin: 0; font-variant-numeric: tabular-nums; }
+.spark { display: flex; align-items: flex-end; gap: 4px; height: 48px; }
+.spark div { flex: 1; background: var(--h3); border-radius: 2px 2px 0 0; position: relative; }
+.spark div.on { background: var(--h5); }
+.spark-l { display: flex; gap: 4px; font: 10.5px var(--f-mono); color: var(--ink-3); }
+.spark-l span { flex: 1; text-align: center; }
+ol.stoplist { margin: 0; padding-left: 20px; font-size: 13.5px; color: var(--ink-2); }
+.muted { color: var(--ink-3); font-size: 13px; }
+footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
+
+.zoom {
+  position: absolute; top: calc(12px + env(safe-area-inset-top, 0px)); right: max(12px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; background: var(--paper); border: 1px solid var(--rule); border-radius: 7px; overflow: hidden; z-index: 2;
+}
+.zoom button { font: 500 18px/1 var(--f-body); width: 38px; height: 36px; border: 0; background: transparent; color: var(--ink); cursor: pointer; }
+.zoom button + button { border-top: 1px solid var(--rule); }
+.zoom button:hover { background: var(--chip); }
+.zoom .all { font-size: 11px; font-family: var(--f-display); letter-spacing: 0.05em; text-transform: uppercase; }
+.tip {
+  position: absolute; pointer-events: none; z-index: 3; background: var(--ink); color: var(--paper);
+  font-size: 13px; padding: 5px 8px; border-radius: 5px; white-space: nowrap; transform: translate(12px, 12px);
+}
+.loading { position: absolute; inset: 0; display: grid; place-items: center; color: var(--ink-3); font-size: 14px; z-index: 1; }
+.yearbig {
+  position: absolute; left: 16px; top: calc(10px + env(safe-area-inset-top, 0px)); z-index: 2; pointer-events: none;
+  font: 600 56px/1 var(--f-display); color: var(--ink); opacity: 0.85; font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 6px var(--ground), 0 0 6px var(--ground);
+}
+
+.maplibregl-map { overflow: hidden; position: relative; -webkit-tap-highlight-color: transparent; }
+.maplibregl-canvas { position: absolute; left: 0; top: 0; }
+.maplibregl-canvas-container.maplibregl-interactive { cursor: grab; }
+.maplibregl-canvas-container.maplibregl-interactive:active { cursor: grabbing; }
+.maplibregl-ctrl-attrib, .maplibregl-ctrl-logo { display: none; }
+
+@media (max-width: 760px) {
+  html, body { height: auto; }
+  .app { grid-template-columns: 1fr; grid-template-rows: 58vh auto; height: auto; }
+  .mapwrap { order: -1; height: 58vh; }
+  .panel { border-right: 0; overflow: visible; padding-inline: max(16px, env(safe-area-inset-left, 0px)); }
+  .yearbig { font-size: 40px; }
+}
+</style>
+
+<div class="app">
+  <aside class="panel">
+    <header>
+      <h1>Gdzie zabraknie autobusu za 10 lat</h1>
+      <div class="sub">Deficyt dostępu do komunikacji: nowa zabudowa (pozwolenia GUNB) kontra planowane metro i tramwaje.</div>
+    </header>
+
+    <section>
+      <h2>Horyzont</h2>
+      <div class="years" id="years"></div>
+    </section>
+
+    <section>
+      <div class="stats" id="stats">
+        <div class="stat"><b>–</b><span>osób z deficytem dostępu</span></div>
+        <div class="stat"><b>–</b><span>nowych mieszkańców od 2025</span></div>
+        <div class="stat"><b>–</b><span>nowych węzłów szynowych</span></div>
+        <div class="stat"><b>–</b><span>potrzebnych linii / przystanków</span></div>
+      </div>
+    </section>
+
+    <section class="legend">
+      <h2>Legenda</h2>
+      <div class="scale" id="scale"></div>
+      <div class="scale-labels"><span>20</span><span>100</span><span>300</span><span>700</span><span>1500+</span></div>
+      <div class="muted">osób z deficytem na heksagon (~0,1 km²)</div>
+      <div class="key"><i class="ln"></i> Linia potrzebna w tym roku</div>
+      <div class="key"><i class="ln soft"></i> Linia potrzebna później</div>
+      <div class="key"><i class="dot" style="background:var(--new)"></i> Nowa stacja metra / kolei (otwarta)</div>
+      <div class="key"><i class="dot" style="border:2px solid var(--new);box-sizing:border-box"></i> Stacja jeszcze w budowie / planie</div>
+      <div class="key"><i class="dot" style="background:var(--tram)"></i> Nowy tramwaj (przystanki)</div>
+    </section>
+
+    <section id="detail-wrap" hidden>
+      <h2>Rekomendacja</h2>
+      <div class="detail" id="detail"></div>
+    </section>
+
+    <section>
+      <h2>Rekomendowane linie dowozowe</h2>
+      <ul class="lines" id="lines"></ul>
+    </section>
+
+    <footer>Dane: GUNB RWDZ (pozwolenia 2021–2026, mieszkania szacowane z kubatury), GUS NSP 2021 i BDL 2025, Kontur, OpenStreetMap (ODbL), ZTM. Lata otwarcia inwestycji to założenia scenariusza. Prototyp hackathonowy.</footer>
+  </aside>
+
+  <div class="mapwrap">
+    <div id="map"></div>
+    <div class="yearbig" id="yearbig"></div>
+    <div class="loading" id="loading">Wczytywanie prognozy…</div>
+    <div class="zoom">
+      <button id="zin" aria-label="Przybliż">+</button>
+      <button id="zout" aria-label="Oddal">−</button>
+      <button id="zall" class="all" aria-label="Pokaż całą Warszawę">Całość</button>
+    </div>
+    <div class="tip" id="tip" hidden></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.js"></script>
+<script>
+(() => {
+  const WARSAW = [[20.85, 52.095], [21.275, 52.37]];
+  const fmt = new Intl.NumberFormat("pl-PL");
+  const $ = (id) => document.getElementById(id);
+  const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const fc = (features) => ({ type: "FeatureCollection", features });
+  const STEPS = [20, 100, 300, 700, 1500];
+
+  let B, R, map, year, selected = null;
+
+  function decode(a, S) {
+    const out = []; let x = 0, y = 0;
+    for (let i = 0; i < a.length; i += 2) { x += a[i]; y += a[i + 1]; out.push([x / S, y / S]); }
+    return out;
+  }
+  const hexColor = () => ["step", ["get", "v"], "rgba(0,0,0,0)", STEPS[0], css("--h1"), STEPS[1], css("--h2"), STEPS[2], css("--h3"), STEPS[3], css("--h4"), STEPS[4], css("--h5")];
+
+  async function load() {
+    [B, R] = await Promise.all([fetch("warszawa.json").then((r) => r.json()), fetch("recommendations.json").then((r) => r.json())]);
+    year = R.years[R.years.length - 1];
+    R.lines.sort((a, b) => a.needed_from - b.needed_from || b.served_deficit - a.served_deficit);
+  }
+
+  function hexFeatures() {
+    return R.hexes.map((h, i) => ({ type: "Feature", id: i, properties: { v: h["def" + year] || 0, i }, geometry: { type: "Polygon", coordinates: [h.ring] } }));
+  }
+  function lineFeatures() {
+    return R.lines.map((l, i) => ({ type: "Feature", id: i, properties: { on: l.needed_from <= year, i }, geometry: { type: "LineString", coordinates: l.coords } }));
+  }
+  function stopFeatures() {
+    const on = new Set(R.lines.filter((l) => l.needed_from <= year).map((l) => l.line_id));
+    return R.stops.map((s) => ({ type: "Feature", properties: { on: on.has(s.line), line: s.line, street: s.street, d: s.deficit }, geometry: { type: "Point", coordinates: s.xy } }));
+  }
+  function hubFeatures() {
+    return R.hubs.filter((h) => h.status !== "istniejący").map((h) => ({
+      type: "Feature", properties: { open: h.open <= year, tram: h.mode === "tram", name: h.name, project: h.project, y: h.open },
+      geometry: { type: "Point", coordinates: h.xy } }));
+  }
+
+  function buildMap() {
+    map = new maplibregl.Map({
+      container: "map", bounds: WARSAW, fitBoundsOptions: { padding: 24 }, attributionControl: false,
+      maxZoom: 18, minZoom: 9, dragRotate: false, pitchWithRotate: false,
+      style: { version: 8, sources: {}, layers: [{ id: "bg", type: "background", paint: { "background-color": css("--ground") } }] },
+    });
+    map.touchZoomRotate.disableRotation();
+    map.on("load", () => {
+      const S = B.scale;
+      map.addSource("river", { type: "geojson", data: fc(B.river.map((c) => ({ type: "Feature", properties: {}, geometry: { type: "LineString", coordinates: decode(c, S) } }))) });
+      map.addSource("districts", { type: "geojson", data: fc(B.districts.flatMap((d) => d.rings.map((c) => ({ type: "Feature", properties: {}, geometry: { type: "LineString", coordinates: decode(c, S) } })))) });
+      map.addSource("roads", { type: "geojson", data: fc(B.roads.edges.filter((e) => e[0] <= 4).map((e) => ({ type: "Feature", properties: { c: e[0] }, geometry: { type: "LineString", coordinates: decode(e[7], S) } }))), tolerance: 0.4 });
+      map.addSource("trams", { type: "geojson", data: fc(B.trams.edges.map((e) => ({ type: "Feature", properties: {}, geometry: { type: "LineString", coordinates: decode(e[2], S) } }))) });
+      map.addSource("hex", { type: "geojson", data: fc(hexFeatures()) });
+      map.addSource("lines", { type: "geojson", data: fc(lineFeatures()) });
+      map.addSource("rstops", { type: "geojson", data: fc(stopFeatures()) });
+      map.addSource("hubs", { type: "geojson", data: fc(hubFeatures()) });
+      map.addSource("sel", { type: "geojson", data: fc([]) });
+
+      map.addLayer({ id: "river", type: "line", source: "river", layout: { "line-cap": "round", "line-join": "round" },
+        paint: { "line-color": css("--water"), "line-width": ["interpolate", ["exponential", 2], ["zoom"], 9, 4, 12, 22, 15, 140, 18, 1100] } });
+      map.addLayer({ id: "roads", type: "line", source: "roads", layout: { "line-cap": "round", "line-join": "round" },
+        paint: { "line-color": css("--road"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, ["match", ["get", "c"], 0, 1.6, 1, 1.4, 2, 1.1, 3, 0.8, 0.4], 16, ["match", ["get", "c"], 0, 8, 1, 7, 2, 5, 3, 4, 2.5]] } });
+      map.addLayer({ id: "hex", type: "fill", source: "hex", paint: { "fill-color": hexColor(), "fill-opacity": 0.85 } });
+      map.addLayer({ id: "districts", type: "line", source: "districts", paint: { "line-color": css("--district"), "line-width": 1, "line-dasharray": [3, 2] } });
+      map.addLayer({ id: "trams", type: "line", source: "trams", paint: { "line-color": css("--tram"), "line-opacity": 0.55, "line-width": ["interpolate", ["linear"], ["zoom"], 10, 1, 16, 2.5] } });
+      map.addLayer({ id: "lines-future", type: "line", source: "lines", filter: ["!", ["get", "on"]], layout: { "line-cap": "round", "line-join": "round" },
+        paint: { "line-color": css("--line-soft"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 1.8, 15, 4], "line-dasharray": [2, 1.5] } });
+      map.addLayer({ id: "sel-casing", type: "line", source: "sel", layout: { "line-cap": "round", "line-join": "round" },
+        paint: { "line-color": css("--sel"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 8, 15, 14] } });
+      map.addLayer({ id: "lines", type: "line", source: "lines", filter: ["get", "on"], layout: { "line-cap": "round", "line-join": "round" },
+        paint: { "line-color": css("--line"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 3, 15, 6] } });
+      map.addLayer({ id: "hubs", type: "circle", source: "hubs",
+        paint: { "circle-radius": ["case", ["get", "tram"], ["interpolate", ["linear"], ["zoom"], 10, 2, 15, 4], ["interpolate", ["linear"], ["zoom"], 10, 5, 15, 9]],
+          "circle-color": ["case", ["!", ["get", "open"]], "rgba(0,0,0,0)", ["get", "tram"], css("--tram"), css("--new")],
+          "circle-stroke-color": ["case", ["get", "tram"], css("--tram"), css("--new")], "circle-stroke-width": ["case", ["get", "open"], 1, 2],
+          "circle-opacity": 1, "circle-stroke-opacity": ["case", ["get", "open"], 1, 0.7] } });
+      map.addLayer({ id: "rstops", type: "circle", source: "rstops", filter: ["get", "on"],
+        paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 3, 15, 6], "circle-color": css("--paper"), "circle-stroke-color": css("--line"), "circle-stroke-width": 2 } });
+      map.addLayer({ id: "lines-hit", type: "line", source: "lines", paint: { "line-color": "#000", "line-opacity": 0, "line-width": 14 } });
+      wire();
+      $("loading").hidden = true;
+      render();
+    });
+  }
+
+  function wire() {
+    const tip = $("tip");
+    const hit = ["lines-hit", "hubs", "rstops", "hex"];
+    map.on("mousemove", (e) => {
+      const f = map.queryRenderedFeatures(e.point, { layers: hit })[0];
+      map.getCanvas().style.cursor = f && f.layer.id === "lines-hit" ? "pointer" : "";
+      if (!f) { tip.hidden = true; return; }
+      let t = "";
+      if (f.layer.id === "lines-hit") { const l = R.lines[f.properties.i]; t = `${l.line_id} → ${l.hub} · ${fmt.format(l.served_deficit)} os.`; }
+      else if (f.layer.id === "hubs") t = `${f.properties.name} · ${f.properties.project} · ${f.properties.y}`;
+      else if (f.layer.id === "rstops") t = `Przystanek ${f.properties.line}: ${f.properties.street || "bez nazwy"}`;
+      else { const h = R.hexes[f.properties.i]; t = `${h.d}: deficyt ${fmt.format(h["def" + year])} os. · mieszkańcy ${fmt.format(h.pop)} → ${fmt.format(h["pop" + year])}`; }
+      tip.textContent = t; tip.hidden = false; tip.style.left = e.point.x + "px"; tip.style.top = e.point.y + "px";
+    });
+    map.on("mouseout", () => (tip.hidden = true));
+    map.on("click", (e) => {
+      const f = map.queryRenderedFeatures([[e.point.x - 6, e.point.y - 6], [e.point.x + 6, e.point.y + 6]], { layers: ["lines-hit"] })[0];
+      select(f ? f.properties.i : null, false);
+    });
+    $("zin").onclick = () => map.zoomIn();
+    $("zout").onclick = () => map.zoomOut();
+    $("zall").onclick = () => map.fitBounds(WARSAW, { padding: 24 });
+  }
+
+  function select(i, fly = true) {
+    selected = i;
+    const l = i == null ? null : R.lines[i];
+    map.getSource("sel").setData(fc(l ? [{ type: "Feature", properties: {}, geometry: { type: "LineString", coordinates: l.coords } }] : []));
+    if (l && fly) {
+      const b = l.coords.reduce((b, c) => b.extend(c), new maplibregl.LngLatBounds(l.coords[0], l.coords[0]));
+      map.fitBounds(b, { padding: 80, maxZoom: 15, duration: 600 });
+    }
+    renderDetail(); renderList();
+  }
+
+  function renderDetail() {
+    const wrap = $("detail-wrap");
+    if (selected == null) { wrap.hidden = true; return; }
+    const l = R.lines[selected];
+    const stops = R.stops.filter((s) => s.line === l.line_id).sort((a, b) => a.seq - b.seq);
+    const max = Math.max(...R.years.map((y) => l["deficit_" + y]), 1);
+    $("detail").innerHTML = `
+      <h3>${l.line_id} → ${esc(l.hub)}</h3>
+      <p>${esc(l.justification)}</p>
+      <dl class="kv">
+        <dt>Typ</dt><dd>${esc(l.kind)}</dd>
+        <dt>Potrzebna od</dt><dd>${l.needed_from}</dd>
+        <dt>Długość</dt><dd>${(l.length_m / 1000).toFixed(1).replace(".", ",")} km · ${l.n_stops} przyst.</dd>
+        <dt>Dzielnice</dt><dd>${esc(l.districts)}</dd>
+        <dt>Węzeł</dt><dd>${esc(l.hub_kind)}${l.hub_open_year > 2025 ? ", otwarcie " + l.hub_open_year : ""}</dd>
+      </dl>
+      <div>
+        <div class="muted" style="margin-bottom:6px">Deficyt w zasięgu linii (os.)</div>
+        <div class="spark">${R.years.map((y) => `<div class="${y === year ? "on" : ""}" style="height:${Math.max(4, (100 * l["deficit_" + y]) / max)}%" title="${y}: ${fmt.format(l["deficit_" + y])}"></div>`).join("")}</div>
+        <div class="spark-l">${R.years.map((y) => `<span>${y}</span>`).join("")}</div>
+      </div>
+      <div><div class="muted" style="margin-bottom:4px">Przystanki (od końca do węzła)</div>
+        <ol class="stoplist">${stops.map((s) => `<li>${esc(s.street || "ulica bez nazwy")} <span class="muted">· ${fmt.format(s.deficit)} os.</span></li>`).join("")}</ol></div>
+      ${l.streets ? `<div class="muted">Trasa: ${esc(l.streets)}</div>` : ""}`;
+    wrap.hidden = false;
+  }
+  const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+
+  function renderList() {
+    $("lines").innerHTML = R.lines.map((l, i) => `
+      <li class="${l.needed_from > year ? "future" : ""}"><button aria-pressed="${i === selected}" data-i="${i}">
+        <span class="badge ${l.n_stops > 1 ? "" : "stop"}">${l.line_id}</span>
+        <span class="t"><b>→ ${esc(l.hub)}</b><small>${esc(l.districts)} · od ${l.needed_from} · ${l.n_stops} przyst.</small></span>
+        <span class="n">${fmt.format(l["deficit_" + year])}<small>os.</small></span>
+      </button></li>`).join("");
+    $("lines").querySelectorAll("button").forEach((b) => (b.onclick = () => select(+b.dataset.i)));
+  }
+
+  function render() {
+    $("years").querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", +b.dataset.y === year));
+    $("yearbig").textContent = year;
+    map.getSource("hex").setData(fc(hexFeatures()));
+    map.getSource("lines").setData(fc(lineFeatures()));
+    map.getSource("rstops").setData(fc(stopFeatures()));
+    map.getSource("hubs").setData(fc(hubFeatures()));
+    const def = R.summary[year].deficit, grow = R.summary[year].growth;
+    const hubs = R.hubs.filter((h) => h.status !== "istniejący" && h.mode === "rail" && h.open <= year).length;
+    const act = R.lines.filter((l) => l.needed_from <= year);
+    const b = $("stats").querySelectorAll("b");
+    b[0].textContent = fmt.format(Math.round(def));
+    b[1].textContent = fmt.format(Math.round(grow));
+    b[2].textContent = fmt.format(hubs);
+    b[3].textContent = `${act.filter((l) => l.n_stops > 1).length} / ${act.filter((l) => l.n_stops === 1).length}`;
+    renderDetail(); renderList();
+  }
+
+  function applyTheme() {
+    if (!map || !map.getLayer("hex")) return;
+    map.setPaintProperty("bg", "background-color", css("--ground"));
+    map.setPaintProperty("river", "line-color", css("--water"));
+    map.setPaintProperty("roads", "line-color", css("--road"));
+    map.setPaintProperty("hex", "fill-color", hexColor());
+    map.setPaintProperty("districts", "line-color", css("--district"));
+    map.setPaintProperty("trams", "line-color", css("--tram"));
+    map.setPaintProperty("lines", "line-color", css("--line"));
+    map.setPaintProperty("lines-future", "line-color", css("--line-soft"));
+    map.setPaintProperty("sel-casing", "line-color", css("--sel"));
+    map.setPaintProperty("rstops", "circle-color", css("--paper"));
+    map.setPaintProperty("rstops", "circle-stroke-color", css("--line"));
+    const hubs = ["case", ["get", "tram"], css("--tram"), css("--new")];
+    map.setPaintProperty("hubs", "circle-stroke-color", hubs);
+    map.setPaintProperty("hubs", "circle-color", ["case", ["!", ["get", "open"]], "rgba(0,0,0,0)", ["get", "tram"], css("--tram"), css("--new")]);
+    renderScale();
+  }
+  function renderScale() { $("scale").innerHTML = [1, 2, 3, 4, 5].map((i) => `<i style="background:var(--h${i})"></i>`).join(""); }
+
+  load().then(() => {
+    $("years").innerHTML = R.years.map((y) => `<button data-y="${y}" aria-pressed="false">${y}</button>`).join("");
+    $("years").querySelectorAll("button").forEach((b) => (b.onclick = () => { year = +b.dataset.y; render(); }));
+    renderScale();
+    buildMap();
+    matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applyTheme);
+    new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  }).catch(() => { $("loading").textContent = "Nie udało się wczytać danych (warszawa.json / recommendations.json). Uruchom serwer w katalogu viz/."; });
+})();
+</script>
