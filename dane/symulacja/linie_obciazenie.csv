@@ -1,0 +1,281 @@
+linia,typ,max_wykorzystanie_2025,max_wykorzystanie_2036,paskm_h_2025,paskm_h_2036,najgorszy_odcinek_2036
+S1,kolej,1.744,1.989,41423.363,40988.826,Warszawa Włochy → Warszawa Zachodnia
+213,autobus,1.0,1.678,1109.933,1678.697,Sęczkowa → Kadetów
+319,autobus,1.117,1.656,4878.853,6217.094,Powsinek → Vogla
+523,autobus,1.852,1.547,32184.786,28047.187,Rozbrat → Pl. Na Rozdrożu
+146,autobus,1.425,1.519,6215.39,7225.434,Most Siekierkowski → Fieldorfa
+262,autobus,1.185,1.478,884.351,1039.819,Krzesiwa → Koszalińska
+108,autobus,0.333,1.443,365.503,1633.289,Ku Wiśle → Budexpo
+736,autobus,0.9,1.422,683.365,1001.751,Zakłady Zbożowe → Zaplecze
+132,autobus,1.281,1.42,9325.873,11190.363,PKP Toruńska → Toruńska
+178,autobus,1.27,1.309,3386.962,3713.967,Armatnia → Rondo Zesłańców Syberyjskich
+208,autobus,1.425,1.283,1578.076,1431.223,Przy Parku → Maszynowa
+739,autobus,1.326,1.24,7752.956,7468.476,Poleczki → Wyścigi
+177,autobus,1.009,1.231,6072.482,7381.318,Rozłogi → Raginisa
+186,autobus,1.144,1.229,16872.227,17377.215,Lasek na Kole → PKP Koło
+130,autobus,0.75,1.154,824.575,1316.603,Gołkowska → Idzikowskiego
+164,autobus,0.84,1.151,3279.014,4754.546,Os. Arbuzowa → Patkowskiego
+S40,kolej,0.882,1.08,20730.271,25871.771,Warszawa Aleje Jerozolimskie → Warszawa Zachodnia (Peron 9)
+517,autobus,0.976,1.048,13158.706,14357.772,PKP WKD Al. Jerozolimskie → Berestecka
+525,autobus,1.542,1.014,15533.255,13052.254,Saska → Rozbrat
+S3,kolej,0.6,1.003,7483.546,10997.492,Warszawa Praga → Warszawa Targówek
+249,autobus,0.311,0.98,1037.239,986.496,Jana Heweliusza → Szeligowska - Szkoła
+402,autobus,0.88,0.98,12889.095,14116.047,Siekierki - Sanktuarium → Al. Witosa
+527,autobus,0.676,0.971,4383.002,6260.8,Jesiennych Liści → CH Targówek
+817,autobus,0.827,0.967,1269.323,1520.825,Salomea → Łopuszańska
+730,autobus,0.911,0.956,597.875,624.162,Wierzchowskiego → Kajki
+147,autobus,0.68,0.947,4684.561,5216.403,Kadetów → Narodowa
+228,autobus,0.811,0.944,1634.012,1862.625,Urząd Statystyczny → Wyględowska
+134,autobus,0.707,0.942,3176.287,4063.465,Krzemienna → Współczesna
+S2,kolej,0.892,0.885,16997.407,16834.374,Warszawa Rembertów → Warszawa Wschodnia
+356,autobus,0.333,0.872,656.552,1239.542,Bukowiecka → Rzeczna
+735,autobus,0.66,0.867,1199.494,1514.168,Cementownia → Wartka
+188,autobus,0.922,0.866,5955.413,5456.888,Pomnik Lotnika → Banacha - Szpital
+185,autobus,0.72,0.859,7106.153,7294.58,Most Poniatowskiego → Metro Centrum Nauki Kopernik
+184,autobus,0.904,0.859,7953.421,7403.182,Dalibora → Brożka
+116,autobus,0.987,0.859,3742.581,3541.31,Bielany - Ratusz → Perzyńskiego
+503,autobus,0.766,0.846,7662.018,7946.363,Spacerowa → Pl. Na Rozdrożu
+204,autobus,0.476,0.843,1512.501,2484.166,Danusi → Szlachecka
+163,autobus,0.564,0.825,2826.716,3764.296,Sarmacka → Miasteczko Wilanów
+194,autobus,0.482,0.822,1595.867,2084.899,Nowe Włochy → Szuberta
+103,autobus,0.847,0.802,1676.209,1601.277,Pl. Pole Elekcyjne → Grenady
+197,autobus,0.861,0.793,3688.829,3385.327,Księcia Bolesława → Koło
+211,autobus,0.527,0.784,1537.441,2186.994,Dorodna → Portowa
+165,autobus,0.356,0.783,1326.996,2323.036,Taborowa → Bokserska
+518,autobus,0.584,0.779,2996.718,3950.531,Konwaliowa → Os. Potok
+16,tramwaj,0.642,0.772,21051.16,23722.926,Kostrzewskiego → Dolna
+521,autobus,0.683,0.751,10034.586,12736.284,Solidna → PKP Wawer
+411,autobus,1.007,0.736,5411.445,3993.379,Afrykańska → Saska
+502,autobus,0.628,0.732,7657.344,8045.135,Objazdowa → Kajki
+239,autobus,0.317,0.725,288.797,723.499,Rosochata → Czekoladowa
+401,autobus,0.581,0.71,18548.797,20761.634,Hynka → Sasanki
+203,autobus,0.797,0.706,817.405,728.126,Maszewska → Głowackiego
+9,tramwaj,0.892,0.698,31218.136,27530.585,Most Poniatowskiego → Muzeum Narodowe
+702,autobus,0.511,0.678,297.469,357.737,Wędkarska → Strzygłowska
+E-2,autobus,0.652,0.659,4382.865,4458.754,Mangalia → Kostrzewskiego
+509,autobus,0.569,0.658,16888.709,17760.321,EC Żerań → Żerań FSO
+190,autobus,0.751,0.654,9038.023,8276.773,Antka Rozpylacza → Redutowa
+220,autobus,0.464,0.654,3265.815,3786.175,Walerego Sławka → Szancera
+229,autobus,0.425,0.636,2789.348,3872.165,Brodnicka → Szafirowa
+119,autobus,0.526,0.633,1745.885,2091.42,Most Siekierkowski → Siekierki - Sanktuarium
+112,autobus,0.668,0.621,7336.952,7269.676,Os. Potok → Żerań FSO
+305,autobus,0.583,0.617,178.546,189.963,Spadowa → Trakt Lubelski
+314,autobus,0.367,0.617,542.003,963.838,Przydrożna → Przykoszarowa
+326,autobus,0.463,0.593,1856.943,2292.815,Juranda ze Spychowa → Krzemienna
+161,autobus,0.414,0.581,342.082,506.101,Czołgistów → Jontka
+815,autobus,0.583,0.567,384.957,379.494,Sójki → Żołny
+183,autobus,0.569,0.567,1176.441,1187.211,Niedziałkowskiego → Klasztorna
+189,autobus,0.535,0.565,11588.523,12649.012,Wałowicka → PKP Włochy
+11,tramwaj,0.551,0.564,15622.802,15774.051,PKP Wola (Kasprzaka) → Szpital Wolski
+504,autobus,0.578,0.559,6972.136,6937.524,Rakowiec → Uniwersytet Medyczny
+511,autobus,0.471,0.551,5619.107,6235.85,Klasyków → Białołęka - Ratusz
+173,autobus,0.536,0.551,2453.682,2307.255,Rezedowa → Okularowa
+26,tramwaj,0.546,0.544,15238.144,13004.855,Elekcyjna → PKP Wola (Wolska)
+152,autobus,0.41,0.535,2113.638,3358.11,Sadkowska → PKP Płudy
+133,autobus,0.481,0.524,422.781,464.59,Orchowiecka → Czeremchowa
+156,autobus,0.239,0.522,212.512,567.181,Hutnicza → Chemiczna
+1,tramwaj,0.508,0.517,18888.645,19604.754,Powązkowska → Niska
+221,autobus,0.557,0.509,929.039,849.334,Pl. Grunwaldzki → Ks. Boguckiego
+520,autobus,0.631,0.501,6980.861,5812.185,PKP Gocławek → Płowiecka
+17,tramwaj,0.507,0.495,35866.398,36944.725,Metro Pole Mokotowskie → Kielecka
+28,tramwaj,0.558,0.494,7396.346,6744.884,Baseny Inflancka → Dw. Gdański
+245,autobus,0.257,0.493,804.59,1443.027,Ząbki Dzika → Ząbki Powstańców
+234,autobus,0.3,0.483,125.053,201.058,Augustówek → Zdziarska
+500,autobus,0.527,0.47,4635.377,4225.637,Rogowska → Rondo Żaba
+136,autobus,0.469,0.466,5395.354,5087.996,Wyścigi → Koncertowa
+168,autobus,0.415,0.457,2599.356,2820.634,Grupy AK „Północ” → Sielce
+191,autobus,0.407,0.444,3190.851,3452.146,Stawy → Mikołajska
+142,autobus,0.397,0.433,1723.136,2126.442,Klimontowska → Dzielnicowa
+M2,metro,0.347,0.432,170910.031,196524.871,Stadion Narodowy → Centrum Nauki Kopernik
+519,autobus,0.189,0.422,369.294,599.87,Powsinek → Vogla
+19,tramwaj,0.399,0.419,6914.599,6755.28,Mokotów - Ratusz → Metro Pole Mokotowskie
+153,autobus,0.428,0.418,589.188,603.831,Szafarzy → Zawodowa
+219,autobus,0.408,0.417,492.083,577.966,Kadetów - Kościół → Lucerny
+217,autobus,0.355,0.41,890.492,990.982,Św. U. Ledóchowskiej → Płaskowickiej
+710,autobus,0.23,0.398,518.115,789.259,Stare Kabaty → Rosnowskiego
+167,autobus,0.554,0.396,3076.816,2813.88,Budexpo → Bartycka
+179,autobus,0.421,0.395,1160.871,1153.662,Makolągwy → CH Ursynów
+150,autobus,0.402,0.394,874.273,840.72,Dzierżoniowska → Park Młociński
+226,autobus,0.14,0.393,401.995,1134.241,Fajna → Przejezdna
+176,autobus,0.306,0.385,797.469,886.35,Bazyliańska → Św. Hieronima
+182,autobus,0.424,0.383,5161.063,4855.508,Pomnik Lotnika → Al. Wielkopolski
+M1,metro,0.388,0.375,264950.297,255625.098,Świętokrzyska → Centrum
+317,autobus,0.347,0.358,1567.781,1715.637,Metro Służew → Al. Lotników
+141,autobus,0.325,0.356,4529.56,4773.548,Odyńca → Tagore'a
+145,autobus,0.387,0.351,4098.559,3850.391,Rondo Granzowa → Gwarków
+7,tramwaj,0.353,0.345,1917.915,1751.085,Kawęczyńska - Bazylika → Wojnicka
+331,autobus,0.352,0.34,1499.141,1424.663,Tango → Poloneza
+162,autobus,0.316,0.336,2949.822,3236.374,PKP Powiśle → Książęca
+110,autobus,0.336,0.333,1214.421,1178.601,Tytułowa → Popiela
+114,autobus,0.37,0.327,4681.574,4786.919,Bogusławskiego → Tołstoja
+180,autobus,0.362,0.323,4721.625,4627.505,Obrońców Tobruku → Gen. Maczka
+414,autobus,0.328,0.318,3653.336,3731.594,Park Olszyna → Park Kaskada
+159,autobus,0.356,0.316,719.601,716.409,Białobrzeska → Niemcewicza
+18,tramwaj,0.133,0.313,2158.365,4212.238,Golędzinów → Rondo Starzyńskiego
+E-1,autobus,0.529,0.308,3387.017,1758.872,Kryniczna → Metro Stadion Narodowy
+128,autobus,0.343,0.308,880.52,786.676,Pomnik Lotnika → Raszyńska
+157,autobus,0.347,0.301,1459.929,1288.944,Rokosowska → Hala Kopińska
+105,autobus,0.335,0.296,942.55,836.219,Tkaczy → Ciepłownia Wola
+117,autobus,0.328,0.292,421.835,382.27,Pl. Przymierza → Francuska
+124,autobus,0.258,0.288,518.759,524.733,Stoicka → Szyszkowa
+170,autobus,0.156,0.286,337.74,513.874,Bukowiecka → Rzeczna
+172,autobus,0.324,0.28,1999.98,1814.467,Rakowiec → Do Fortu
+122,autobus,0.33,0.279,1333.055,1108.14,Marymont-Potok → Bohomolca
+104,autobus,0.2,0.274,156.543,214.811,Ojca Aniceta → Gryfitów
+131,autobus,0.266,0.27,1484.94,1527.724,Limanowskiego → Pl. Bernardyński
+187,autobus,0.286,0.267,2608.109,2547.643,Rozbrat → Pl. Na Rozdrożu
+6,tramwaj,0.637,0.26,5939.705,3176.966,Bliska → Lubelska
+2,tramwaj,0.244,0.256,9531.615,9969.523,Świderska → Zajezdnia Żoliborz
+338,autobus,0.261,0.253,511.942,472.726,Wołomińska → Naczelnikowska
+15,tramwaj,0.249,0.252,1799.683,1812.976,Raszyńska → NIK
+L44,autobus,0.25,0.25,59.954,62.131,Cmentarz Marki → Marki Hoovera
+207,autobus,0.183,0.244,243.364,450.199,PKP Ursus → Gierdziejewskiego
+151,autobus,0.326,0.243,1917.602,1597.771,Torwar → Rozbrat
+13,tramwaj,0.243,0.242,2354.931,2031.623,Dw. Wschodni (Kijowska) → Kijowska
+22,tramwaj,0.263,0.24,3241.563,2895.857,Pl. Grunwaldzki → Rondo „Radosława”
+143,autobus,0.238,0.236,2648.46,2675.997,Rekrucka → Okularowa
+129,autobus,0.267,0.233,366.223,350.379,Strąkowa → Batalionu Miotła
+115,autobus,0.211,0.228,622.841,726.595,Cm. Ofiar Wojny → Rolnicza
+514,autobus,0.227,0.227,1230.91,1169.84,PKP Rembertów → Okularowa
+154,autobus,0.219,0.225,261.143,255.768,Urząd Statystyczny → Novotel
+127,autobus,0.23,0.223,940.616,897.119,Płużańska → Techników
+332,autobus,0.1,0.222,37.661,74.45,Kamykowa → Juranda ze Spychowa
+166,autobus,0.211,0.222,1062.53,1122.939,Pl. Na Rozdrożu → Piękna
+250,autobus,0.237,0.222,334.541,306.385,Tytułowa → Rokokowa
+33,tramwaj,0.23,0.219,1984.737,1884.909,Aspekt → Al. Reymonta
+24,tramwaj,0.236,0.214,4481.795,3168.311,Długosza → Młynarska
+507,autobus,0.284,0.213,2681.918,2083.191,Afrykańska → Saska
+M3,metro,,0.213,0.0,30031.404,Dworzec Wschodni → Stadion Narodowy
+516,autobus,0.172,0.211,395.934,477.165,Kamińskiego → Ćmielowska
+148,autobus,0.205,0.195,2477.778,2439.433,Herbsta → Poleczki
+20,tramwaj,0.203,0.193,4095.097,4227.739,Pl. Hallera → Ratuszowa - Zoo
+251,autobus,0.15,0.189,280.897,441.783,Vogla → Powsinek
+210,autobus,0.213,0.187,685.325,631.892,Tytułowa → Popiela
+731,autobus,0.153,0.18,491.023,593.707,Białołęka - Ratusz → Braci Zawadzkich
+212,autobus,0.178,0.175,211.958,213.807,Cm. Bródnowski (Balkonowa) → Chodecka
+14,tramwaj,0.146,0.171,2399.416,2628.159,Goworka → Pl. Unii Lubelskiej
+201,autobus,0.187,0.17,146.93,134.291,Księcia Bolesława → Os. Leśne
+L16,autobus,0.183,0.167,41.479,36.591,Konstancin-Jeziorna Głowackiego → Konstancin-Jeziorna Dolna
+263,autobus,0.089,0.167,30.332,52.956,Powsinek → Vogla
+120,autobus,0.105,0.162,750.728,1088.531,Sieczna → Podwójna
+106,autobus,0.172,0.161,267.833,270.405,Wola - Ratusz → Chłodna
+L46,autobus,0.125,0.158,146.149,182.603,Zielonka Bankowa → Zielonka Os. Wituś
+138,autobus,0.177,0.157,1453.461,1324.929,Pl. Na Rozdrożu → Rozbrat
+149,autobus,0.175,0.157,533.671,484.056,Kocjana - Bocznica → Kocjana - Sądy
+111,autobus,0.248,0.155,969.03,549.966,Foksal → Ordynacka
+118,autobus,0.161,0.153,285.658,266.391,Piękna → Pl. Trzech Krzyży
+107,autobus,0.129,0.15,321.274,355.248,Warneńska → Tor Stegny
+L43,autobus,0.15,0.15,69.613,68.854,Karczunkowska → Dąbrówka
+27,tramwaj,0.158,0.147,1796.036,1694.013,Niska → Cm. Żydowski
+4,tramwaj,0.154,0.145,2947.607,2786.972,Metro Wilanowska → Niedźwiedzia
+193,autobus,0.155,0.144,279.161,355.531,Noskowskiego → Wróbla
+716,autobus,0.164,0.14,510.687,480.032,Leszczyńskiego → Krańcowa
+175,autobus,0.119,0.136,470.828,484.526,Pl. Zawiszy → Raszyńska
+340,autobus,0.133,0.134,543.113,532.258,Metro Trocka → Bieżuńska
+139,autobus,0.142,0.133,130.551,153.267,Wąwozowa → Rosnowskiego
+192,autobus,0.12,0.127,154.975,154.272,Lanciego → Migdałowa
+198,autobus,0.148,0.124,551.118,455.345,Narutowicza → Rejtana
+125,autobus,0.207,0.12,1341.171,673.223,Trawiasta → Trakt Lubelski
+S4,kolej,0.114,0.119,799.462,883.185,Warszawa Koło → Warszawa Powązki
+225,autobus,0.113,0.113,185.59,186.887,Kordiana → Żołnierska
+737,autobus,0.119,0.111,218.03,210.507,Pozytywki → Karczunkowska
+3,tramwaj,0.124,0.111,2297.278,1514.459,Inżynierska → Dw. Wileński
+712,autobus,0.104,0.104,69.6,65.575,Mościska → Kampinoska
+199,autobus,0.101,0.103,708.32,708.896,Czwartaków → Ząbki Pułaskiego
+900,autobus,0.083,0.1,33.216,39.792,Chlubna → Przylesie
+23,tramwaj,0.109,0.096,920.739,831.21,Wola - Ratusz → Okopowa
+M2 zachód,metro,,0.091,0.0,5661.097,Lazurowa → Bemowo
+303,autobus,0.063,0.083,142.853,176.539,Muzealna → Prozy
+L49,autobus,0.067,0.083,29.041,34.997,Buków → Aluzyjna
+10,tramwaj,0.222,0.083,1354.86,881.354,Morskie Oko → Dworkowa
+135,autobus,0.217,0.081,479.896,107.51,Pl. Szembeka → Gdecka
+755,autobus,0.089,0.078,37.805,32.799,Dzierżoniowska → Muzealna
+743,autobus,0.067,0.073,32.216,22.92,Szeligowska - Szkoła → Szeligi Jesionowa
+121,autobus,0.071,0.071,73.927,70.949,Bogusławskiego → Bogusławskiego
+123,autobus,0.111,0.069,484.463,131.025,Os. Jantar → Abrahama
+320,autobus,0.067,0.067,19.985,19.591,Stare Bemowo → Fort Radiowo
+209,autobus,0.067,0.067,10.27,10.27,Pelikanów → Farbiarska
+715,autobus,0.067,0.067,99.331,93.128,PKP Jeziorki → Zgorzała
+174,autobus,0.061,0.066,242.894,351.036,Bokserska → Jadźwingów
+126,autobus,0.061,0.061,90.516,93.239,Płochocińska → Wartka
+171,autobus,0.053,0.049,32.703,30.234,Chomiczówka → Conrada - Szkoła
+714,autobus,0.047,0.047,112.349,113.662,Zagłoby → Groty
+181,autobus,0.043,0.047,101.689,113.798,Szpital Bielański → UKSW
+25,tramwaj,0.064,0.046,749.489,572.165,Al. Zieleniecka → Rondo Waszyngtona
+L-7,autobus,0.033,0.044,5.404,12.88,Poetów → Dąbrówka Szlachecka
+722,autobus,0.044,0.044,24.172,19.809,1. Praskiego Pułku → Fabryczna
+256,autobus,0.025,0.035,45.857,73.202,Sieczna → Okrągła
+218,autobus,0.027,0.032,40.945,42.134,Metro Wilanowska → Smoluchowskiego
+311,autobus,0.233,0.028,143.824,6.818,Szpital Grochowski → Międzyborska
+202,autobus,0.663,0.027,1067.434,92.9,Osiedle Młodych → Garwolińska
+512,autobus,0.022,0.027,89.522,132.193,Kijowska → Dw. Wileński
+L55,autobus,0.025,0.025,15.619,14.406,Konstancin-Jeziorna Śniadeckich → Chyliczki
+31,tramwaj,0.018,0.022,65.901,83.365,Bukowińska → Królikarnia
+717,autobus,0.018,0.022,48.083,64.404,Żywiecka → Salomea
+809,autobus,0.022,0.022,12.679,12.184,Pelikanów → Farbiarska
+102,autobus,0.067,0.02,149.824,55.87,Kamionek → Chodakowska
+723,autobus,0.017,0.02,27.457,58.971,Henryków → Żiżki
+240,autobus,0.009,0.016,10.81,16.549,Marki Nauczycielska → Marki Kościuszki
+140,autobus,0.01,0.014,43.401,61.206,Marki Szkolna → Marki Szpitalna
+L33,autobus,0.0,0.008,0.0,1.382,Trombity → Nawłocka
+158,autobus,0.028,0.008,122.926,32.944,Pl. Starynkiewicza → Pl. Zawiszy
+169,autobus,0.009,0.007,9.563,6.791,Inżynierska → Strzelecka
+713,autobus,0.004,0.002,5.901,3.93,Fort Wola → P+R Połczyńska
+709,autobus,0.001,0.001,4.776,4.087,Piaseczno Fabryczna → Piaseczno Kusocińskiego
+L37,autobus,0.0,0.0,0.0,0.0,Wołomin Szpital Powiatowy → Wołomin Sasina - Liceum
+L39,autobus,0.0,0.0,0.0,0.0,Piaseczno Szpital → Piaseczno Wrzosowa
+L38,autobus,0.0,0.0,0.0,0.0,Wołomin Szpital Powiatowy → Wołomin Sasina - Liceum
+728,autobus,0.0,0.0,0.0,0.0,Henryków-Urocze → Henryków-Urocze
+L34,autobus,0.0,0.0,0.0,0.0,PKP Legionowo → Legionowo Rynek
+L36,autobus,0.0,0.0,0.0,0.0,Lipinki → Lipinki Wiosenna
+L35,autobus,0.0,0.0,0.0,0.0,Wołomin Szpital Powiatowy → Wołomin Sasina - Liceum
+L41,autobus,0.0,0.0,0.0,0.0,PKP Legionowo → Legionowo Rynek
+L32,autobus,0.0,0.0,0.0,0.0,Piaseczno Zgoda → Piaseczno Urząd Miasta
+L31,autobus,0.0,0.0,0.0,0.0,Nieporęt Pl. Wolności → Nieporęt Urząd Gminy
+L40,autobus,0.0,0.0,0.0,0.0,CH Marki → Ząbki Wolności
+L54,autobus,0.0,0.0,0.0,0.0,Piaseczno Zgoda → Piaseczno Urząd Miasta
+720,autobus,0.0,0.0,0.0,0.0,Rzakta → Rzakta Popławska
+L45,autobus,0.0,0.0,0.0,0.0,CH Marki → Ząbki Wolności
+704,autobus,0.0,0.0,0.0,0.0,PKP Halinów → Hipolitów Bukowa
+L52,autobus,0.0,0.0,0.0,0.0,Piaseczno Zgoda → Piaseczno Urząd Miasta
+L53,autobus,0.0,0.0,0.0,0.0,Konstancin-Jeziorna Pańska → Konstancin-Jeziorna Jasna
+L27,autobus,0.0,0.0,0.0,0.0,Zielonka 11 Listopada → Zielonka Os. Wituś
+L85,autobus,0.0,0.0,0.0,0.0,Konstancin-Jeziorna Klarysew → Konstancin-Jeziorna Klarysew
+703,autobus,0.0,0.0,0.0,0.0,Kosów → Wólka Kosowska
+160,autobus,0.0,0.0,0.0,0.0,Grodzisk → Kąty Grodziskie
+719,autobus,0.0,0.0,0.0,0.0,Leszno → Leszno - GS
+349,autobus,0.0,0.0,0.0,0.0,Metro Bemowo → Czumy
+L28,autobus,0.0,0.0,0.0,0.0,Konstancin-Jeziorna Mirkowska → Konstancin-Jeziorna Mirkowska
+L19,autobus,0.0,0.0,0.0,0.0,Piaseczno Zgoda → Piaseczno Urząd Miasta
+L26,autobus,0.0,0.0,0.0,0.0,Kobyłka Kordeckiego → Kobyłka Przyjacielska
+L25,autobus,0.0,0.0,0.0,0.0,Piaseczno Zgoda → Piaseczno Urząd Miasta
+727,autobus,0.0,0.0,0.0,0.0,Władysławów → Robercin Orzechowa
+733,autobus,0.0,0.0,0.0,0.0,Młochów → Młochów Leśniczówka
+308,autobus,0.0,0.0,0.0,0.0,Wielicka → Królikarnia
+738,autobus,0.0,0.0,0.0,0.0,P+R Radzymin → P+R Radzymin
+742,autobus,0.0,0.0,0.0,0.0,Góra Kalwaria Rynek → Góra Kalwaria Pijarska
+711,autobus,0.0,0.0,0.0,0.0,P+R Nadarzyn → Nadarzyn Urząd Gminy
+750,autobus,0.0,0.0,0.0,0.0,Dębina → Czosnów - Stacja Paliw
+707,autobus,0.0,0.0,0.0,0.0,P+R Al. Krakowska → Szyszkowa
+706,autobus,0.0,0.0,0.0,0.0,Janki Pl. Szwedzki → Janki Pl. Szwedzki
+705,autobus,0.0,0.0,0.0,0.0,Nowe Załubice Opolska → Nowe Załubice Opolska
+L-1,autobus,0.0,0.0,0.0,0.0,PKP Piaseczno → PKP Piaseczno
+L-2,autobus,0.0,0.0,0.0,0.0,Piaseczno Zgoda → Piaseczno Urząd Miasta
+L-3,autobus,0.0,0.0,0.0,0.0,Jastrzębiec → Jastrzębiec Postępu
+L-4,autobus,0.0,0.0,0.0,0.0,Mysiadło → Nowa Iwiczna Okrąg
+L-5,autobus,0.0,0.0,0.0,0.0,Piaseczno Zgoda → Piaseczno Urząd Miasta
+L-8,autobus,0.0,0.0,0.0,0.0,PKP Legionowo → Legionowo Rynek
+L-9,autobus,0.0,0.0,0.0,0.0,PKP Legionowo → Legionowo Rynek
+L10,autobus,0.0,0.0,0.0,0.0,PKP Legionowo → Legionowo Rynek
+L11,autobus,0.0,0.0,0.0,0.0,PKP Legionowo → Legionowo Rynek
+L12,autobus,0.0,0.0,0.0,0.0,Piaseczno Zgoda → Piaseczno Urząd Miasta
+L13,autobus,0.0,0.0,0.0,0.0,Piaseczno Zgoda → Piaseczno Urząd Miasta
+721,autobus,0.0,0.0,0.0,0.0,Kosów → Wólka Kosowska
+L15,autobus,0.0,0.0,0.0,0.0,Bielawa - Pętla → Bielawa I
+L17,autobus,0.0,0.0,0.0,0.0,Piaseczno Zgoda → Piaseczno Urząd Miasta
+L18,autobus,0.0,0.0,0.0,0.0,Piaseczno Zgoda → Piaseczno Urząd Miasta
+729,autobus,0.0,0.0,0.0,0.0,Wólka → Mariew Wólczyńska
+L21,autobus,0.0,0.0,0.0,0.0,Konstancin-Jeziorna Mirkowska → Konstancin-Jeziorna Mirkowska
+L23,autobus,0.0,0.0,0.0,0.0,Piaseczno Zgoda → Piaseczno Urząd Miasta
+L24,autobus,0.0,0.0,0.0,0.0,Piaseczno Zgoda → Piaseczno Urząd Miasta
+L14,autobus,0.0,0.0,0.0,0.0,Gassy - Pętla → Gassy
