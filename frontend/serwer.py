@@ -1,4 +1,5 @@
-"""Serwer frontendu: pliki z frontend/ + pośrednik do API ZTM (autobusy i tramwaje na żywo).
+"""Serwer lokalny: aplikacja (index.html w katalogu repo, jak na GitHub Pages) + pośrednik do API ZTM
+(autobusy i tramwaje na żywo — tego GitHub Pages nie potrafi).
 
 API miasta nie pozwala na zapytania wprost z przeglądarki (brak CORS), a klucza nie wolno
 wkładać do kodu strony — dlatego zapytania idą przez ten serwer. Klucz w ZTM_API_KEY (.env):
@@ -6,7 +7,7 @@ wkładać do kodu strony — dlatego zapytania idą przez ten serwer. Klucz w ZT
   - albo klucz UUID ze starego api.um.warszawa.pl (busestrams_get) — rozpoznawany automatycznie.
 
 Uruchomienie:
-    .venv/bin/python frontend/serwer.py      # klucz z .env (ZTM_API_KEY=...) lub zmiennej środowiskowej
+    .venv/bin/python frontend/serwer.py      # http://localhost:8765/ ; klucz z .env (ZTM_API_KEY=...)
     .venv/bin/python frontend/serwer.py 9000                            # inny port; bez klucza
                                                                         # działa wszystko oprócz „na żywo”
 Endpointy:
@@ -27,7 +28,11 @@ from pathlib import Path
 
 import requests
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parent          # frontend/
+SITE = ROOT.parent                              # katalog repo — to samo co GitHub Pages
+# Czego serwer nie wydaje (sekrety i dane robocze): ścieżki z segmentem zaczynającym się od kropki
+# (.env, .git, .venv) oraz katalog data/.
+BLOCKED_TOP = {"data"}
 
 
 def load_dotenv() -> None:
@@ -108,6 +113,9 @@ class Handler(SimpleHTTPRequestHandler):
                         return self.send_json(502, json.dumps({"blad": str(e)}, ensure_ascii=False).encode())
                 body = _cache["body"]
             return self.send_json(200, body)
+        parts = [p for p in path.split("/") if p]
+        if any(p.startswith(".") for p in parts) or (parts and parts[0] in BLOCKED_TOP) or path.endswith(".py"):
+            return self.send_error(404, "File not found")
         return super().do_GET()
 
     def log_message(self, fmt, *args):
@@ -118,8 +126,8 @@ class Handler(SimpleHTTPRequestHandler):
 
 def main() -> None:
     port = int(sys.argv[1]) if len(sys.argv) > 1 else 8765
-    server = ThreadingHTTPServer(("127.0.0.1", port), partial(Handler, directory=str(ROOT)))
-    print(f"Frontend: http://localhost:{port}/symulator.html   (mapa ulic: /index.html)")
+    server = ThreadingHTTPServer(("127.0.0.1", port), partial(Handler, directory=str(SITE)))
+    print(f"Aplikacja: http://localhost:{port}/   (mapa ulic: /frontend/index.html)")
     print("Pojazdy na żywo: " + (("włączone (" + ("dane.um.warszawa.pl" if NEW_API else "api.um.warszawa.pl") + ")")
                                  if API_KEY else "wyłączone — ustaw ZTM_API_KEY w .env"))
     server.serve_forever()

@@ -353,7 +353,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
 
   // ---------- dane ----------
   async function load() {
-    [D, B] = await Promise.all([fetch("symulator_dane.json").then((r) => r.json()), fetch("warszawa.json").then((r) => r.json())]);
+    [D, B] = await Promise.all([fetch("frontend/symulator_dane.json").then((r) => r.json()), fetch("frontend/warszawa.json").then((r) => r.json())]);
     buildGraph(); buildPeople();
   }
 
@@ -749,7 +749,8 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     map?.fitBounds(WARSAW, { padding: 24 });
   }
 
-  // ---------- pojazdy na żywo (przez frontend/serwer.py — API ZTM nie pozwala na zapytania z przeglądarki) ----------
+  // ---------- pojazdy na żywo (przez frontend/serwer.py — API ZTM nie pozwala na zapytania z przeglądarki;
+  //            na GitHub Pages /api/ nie istnieje, więc warstwa pokazuje komunikat) ----------
   let liveTimer = 0, liveData = null, liveOn = false;
   async function liveAvailable() {
     try { const r = await fetch("api/status", { cache: "no-store" }); if (!r.ok) return null; return (await r.json()).live; } catch { return null; }
@@ -759,7 +760,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     $("live-opts").hidden = !on; $("live-key").hidden = !on;
     if (!on) { liveData = null; renderLive(); $("live-status").textContent = "Pozycje z API miasta (dane.um.warszawa.pl), odświeżane co 15 s. Filtr linii działa też tutaj."; return; }
     const ok = await liveAvailable();
-    if (ok === null) { $("live-status").textContent = "Ta wersja strony nie ma połączenia z API. Pojazdy na żywo działają po uruchomieniu: ZTM_API_KEY=… .venv/bin/python frontend/serwer.py"; $("live").checked = false; liveOn = false; $("live-opts").hidden = true; $("live-key").hidden = true; return; }
+    if (ok === null) { $("live-status").textContent = "Pojazdy na żywo działają tylko w wersji uruchomionej lokalnie (.venv/bin/python frontend/serwer.py z kluczem w .env) — strona statyczna (GitHub Pages) nie może łączyć się z API ZTM."; $("live").checked = false; liveOn = false; $("live-opts").hidden = true; $("live-key").hidden = true; return; }
     if (!ok) { $("live-status").textContent = "Serwer działa bez klucza API. Uruchom go z ZTM_API_KEY=twój-klucz (darmowa rejestracja na api.um.warszawa.pl)."; $("live").checked = false; liveOn = false; $("live-opts").hidden = true; $("live-key").hidden = true; return; }
     pollLive();
   }
@@ -1002,6 +1003,6 @@ ${JSON.stringify(describe(r), null, 1)}`;
     buildMap();
     matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applyTheme);
     new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-  }).catch((e) => { console.error(e); $("loading").textContent = "Nie udało się wczytać danych (symulator_dane.json, warszawa.json). Uruchom: .venv/bin/python frontend/serwer.py"; });
+  }).catch((e) => { console.error(e); $("loading").textContent = "Nie udało się wczytać danych (frontend/symulator_dane.json, frontend/warszawa.json). Lokalnie uruchom: .venv/bin/python frontend/serwer.py"; });
 })();
 </script>
