@@ -1,0 +1,1007 @@
+<meta charset="utf-8">
+<title>Symulator linii Warszawa 2036</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: pulpit planisty — panel decyzyjny po lewej (horyzont, narzędzia, ocena na żywo), mapa heksów i sieci po prawej; na telefonie mapa nad panelem. */
+:root {
+  --paper: #fbfcfb; --ground: #eceeed; --ink: #15201b; --ink-2: #46534d; --ink-3: #6f7b76;
+  --rule: #d8dddb; --chip: #e5e9e7; --road: #c9d0cd; --water: #bcd6e8; --district: #97a39e;
+  --tram: #b0307a; --rail: #3d4a8f; --metro: #c02a2a; --accent: #256abf; --sel: #f0b400;
+  --good: #0f8a3c; --warn: #c98500; --crit: #d03b3b; --bus: #d9631e;
+  --s1: #e3eefb; --s2: #b7d3f6; --s3: #6da7ec; --s4: #2a78d6; --s5: #184f95;
+  --dneg2: #c22f2f; --dneg1: #f0a9a7; --dmid: #e8e9e6; --dpos1: #9ec5f4; --dpos2: #3987e5; --dpos3: #184f95;
+  --f-display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+  --f-body: "Barlow", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #161b19; --ground: #0f1312; --ink: #e6ebe8; --ink-2: #a9b4af; --ink-3: #7d8984;
+  --rule: #2b3330; --chip: #222a27; --road: #2a322f; --water: #1d3546; --district: #56615c;
+  --tram: #e163a8; --rail: #8f9cf0; --metro: #ff6b6b; --accent: #6da7ec; --sel: #f5c22b;
+  --good: #3fc16b; --warn: #f0b429; --crit: #f06464; --bus: #ff9a4d;
+  --s1: #1a2a3d; --s2: #1f4677; --s3: #2a6bb8; --s4: #5a9bea; --s5: #a7cbf6;
+  --dneg2: #f06464; --dneg1: #7a2f2f; --dmid: #2a302d; --dpos1: #1f4677; --dpos2: #3987e5; --dpos3: #a7cbf6;
+  color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --paper: #161b19; --ground: #0f1312; --ink: #e6ebe8; --ink-2: #a9b4af; --ink-3: #7d8984;
+  --rule: #2b3330; --chip: #222a27; --road: #2a322f; --water: #1d3546; --district: #56615c;
+  --tram: #e163a8; --rail: #8f9cf0; --metro: #ff6b6b; --accent: #6da7ec; --sel: #f5c22b;
+  --good: #3fc16b; --warn: #f0b429; --crit: #f06464; --bus: #ff9a4d;
+  --s1: #1a2a3d; --s2: #1f4677; --s3: #2a6bb8; --s4: #5a9bea; --s5: #a7cbf6;
+  --dneg2: #f06464; --dneg1: #7a2f2f; --dmid: #2a302d; --dpos1: #1f4677; --dpos2: #3987e5; --dpos3: #a7cbf6;
+  color-scheme: dark;
+}
+
+html, body { height: 100%; margin: 0; }
+[hidden] { display: none !important; }
+body { background: var(--paper); color: var(--ink); font: 15px/1.45 var(--f-body); }
+.app { display: grid; grid-template-columns: 420px 1fr; height: 100%; }
+.panel {
+  overflow-y: auto; border-right: 1px solid var(--rule); background: var(--paper);
+  padding-block: 18px 28px; padding-left: max(18px, env(safe-area-inset-left, 0px)); padding-right: 18px;
+  display: flex; flex-direction: column; gap: 20px; min-width: 0;
+}
+.panel > * { flex-shrink: 0; }
+.mapwrap { position: relative; min-width: 0; background: var(--ground); }
+#map { position: absolute; inset: 0; }
+
+h1 { font: 600 28px/1.05 var(--f-display); margin: 0; text-wrap: balance; }
+.sub { color: var(--ink-3); font-size: 13px; margin-top: 6px; }
+h2 { font: 600 13px/1 var(--f-display); text-transform: uppercase; letter-spacing: 0.09em; color: var(--ink-2); margin: 0 0 10px; }
+section { min-width: 0; }
+.muted { color: var(--ink-3); font-size: 12.5px; }
+.row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+.seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; background: var(--chip); border-radius: 7px; padding: 3px; gap: 3px; }
+.seg button { font: 500 13.5px/1 var(--f-body); color: var(--ink-2); background: transparent; border: 0; border-radius: 5px; padding: 8px 4px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--paper); color: var(--ink); box-shadow: 0 1px 2px rgb(0 0 0 / 0.12); }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.year { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: center; }
+.year b { font: 600 34px/1 var(--f-display); font-variant-numeric: tabular-nums; min-width: 2.3em; }
+input[type="range"] { width: 100%; accent-color: var(--accent); }
+
+.tools { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.tool { font: 500 13.5px/1.1 var(--f-body); color: var(--ink); background: var(--chip); border: 1px solid transparent; border-radius: 7px; padding: 10px 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.tool svg { width: 18px; height: 18px; }
+.tool[aria-pressed="true"] { border-color: var(--accent); background: var(--paper); color: var(--accent); }
+.btn { font: 500 13px/1 var(--f-body); color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 8px 10px; cursor: pointer; }
+.btn:hover { background: var(--chip); }
+.btn.danger { color: var(--crit); }
+.check { display: flex; align-items: center; gap: 9px; font-size: 14px; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; width: 16px; height: 16px; }
+.live-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--good); margin-right: 6px; animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: 0.3; } }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--paper); }
+.btn:disabled { opacity: 0.45; cursor: default; }
+.hint { font-size: 13px; color: var(--ink-2); background: var(--chip); border-radius: 6px; padding: 8px 10px; }
+
+.params { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; }
+.params label { display: flex; flex-direction: column; gap: 4px; font-size: 12.5px; color: var(--ink-3); }
+.params input, .params select { font: 500 14px var(--f-body); color: var(--ink); background: var(--chip); border: 1px solid transparent; border-radius: 6px; padding: 7px 8px; width: 100%; box-sizing: border-box; font-variant-numeric: tabular-nums; }
+
+.score { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; }
+.score > div { background: var(--paper); padding: 10px 12px; min-width: 0; }
+.score b { display: block; font: 600 24px/1.1 var(--f-display); font-variant-numeric: tabular-nums; }
+.score span { font-size: 12.5px; color: var(--ink-3); }
+.score .wide { grid-column: 1 / -1; }
+.pill { display: inline-flex; align-items: center; gap: 6px; font: 600 12px/1 var(--f-body); text-transform: uppercase; letter-spacing: 0.06em; padding: 5px 8px; border-radius: 99px; border: 1.5px solid currentColor; }
+.pill.good { color: var(--good); } .pill.warn { color: var(--warn); } .pill.crit { color: var(--crit); } .pill.none { color: var(--ink-3); }
+.list { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-direction: column; gap: 4px; font-size: 13.5px; }
+.list li { display: flex; justify-content: space-between; gap: 10px; }
+.list li span:last-child { color: var(--ink-3); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.empty { border: 1px dashed var(--rule); border-radius: 8px; padding: 14px; color: var(--ink-3); font-size: 13.5px; }
+
+.ai { border: 1px solid var(--rule); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.ai-out { font-size: 14px; line-height: 1.5; color: var(--ink); white-space: pre-wrap; }
+textarea { width: 100%; box-sizing: border-box; min-height: 90px; font: 12px/1.4 var(--f-mono); color: var(--ink); background: var(--chip); border: 1px solid transparent; border-radius: 6px; padding: 8px; resize: vertical; }
+details summary { cursor: pointer; font-size: 13px; color: var(--ink-2); }
+code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; border-radius: 3px; }
+
+.layers { display: grid; grid-template-columns: 1fr 1fr; gap: 7px 10px; margin-top: 10px; }
+.layers .check { font-size: 13.5px; }
+.sw { display: inline-block; width: 16px; flex: none; }
+.legend { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+.ramp { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; }
+.ramp i { height: 10px; border-radius: 2px; }
+.ramp-l { display: grid; grid-template-columns: repeat(5, 1fr); font: 11px var(--f-mono); color: var(--ink-3); }
+.keys { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12.5px; color: var(--ink-2); }
+.keys i { display: inline-block; width: 18px; vertical-align: middle; margin-right: 5px; }
+footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
+
+.zoom { position: absolute; top: calc(12px + env(safe-area-inset-top, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; background: var(--paper); border: 1px solid var(--rule); border-radius: 7px; overflow: hidden; z-index: 2; }
+.zoom button { font: 500 18px/1 var(--f-body); width: 38px; height: 36px; border: 0; background: transparent; color: var(--ink); cursor: pointer; }
+.zoom button + button { border-top: 1px solid var(--rule); }
+.zoom .all { font-size: 11px; font-family: var(--f-display); letter-spacing: 0.05em; text-transform: uppercase; }
+.tip { position: absolute; pointer-events: none; z-index: 3; background: var(--ink); color: var(--paper); font-size: 13px; padding: 5px 8px; border-radius: 5px; white-space: nowrap; transform: translate(12px, 12px); }
+.loading { position: absolute; inset: 0; display: grid; place-items: center; color: var(--ink-3); font-size: 14px; z-index: 1; }
+.modebar { position: absolute; left: 12px; top: calc(12px + env(safe-area-inset-top, 0px)); z-index: 2; background: var(--paper); border: 1px solid var(--rule); border-radius: 7px; padding: 7px 10px; font-size: 13px; color: var(--ink-2); max-width: min(420px, calc(100% - 90px)); }
+
+.maplibregl-map { overflow: hidden; position: relative; -webkit-tap-highlight-color: transparent; }
+.maplibregl-canvas { position: absolute; left: 0; top: 0; }
+.maplibregl-canvas-container.maplibregl-interactive { cursor: grab; }
+.maplibregl-ctrl-attrib, .maplibregl-ctrl-logo { display: none; }
+.drawing .maplibregl-canvas-container.maplibregl-interactive { cursor: crosshair; }
+
+@media (max-width: 760px) {
+  html, body { height: auto; }
+  .app { grid-template-columns: 1fr; grid-template-rows: 60vh auto; height: auto; }
+  .mapwrap { order: -1; height: 60vh; }
+  .panel { border-right: 0; overflow: visible; padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-left: max(16px, env(safe-area-inset-left, 0px)); }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } .live-dot { animation: none; } }
+</style>
+
+<div class="app">
+  <aside class="panel">
+    <header>
+      <h1>Symulator linii Warszawa 2036</h1>
+      <div class="sub">Narysuj linię autobusową lub wczytaj propozycję algorytmu i zobacz, kogo obsłuży, gdzie utknie w korku i ile pojazdów potrzebuje.</div>
+    </header>
+
+    <section>
+      <h2>Horyzont prognozy</h2>
+      <div class="year"><b id="year-label">2036</b><input type="range" id="year" min="2025" max="2036" step="1" value="2036" aria-label="Rok prognozy"></div>
+      <div class="seg" id="scenario" style="margin-top:10px">
+        <button data-s="lo" aria-pressed="false">Niski</button>
+        <button data-s="base" aria-pressed="true">Bazowy</button>
+        <button data-s="hi" aria-pressed="false">Wysoki</button>
+      </div>
+    </section>
+
+    <section>
+      <h2>Warstwa klastrów</h2>
+      <div class="seg" id="metric">
+        <button data-m="pop" aria-pressed="false">Mieszkańcy</button>
+        <button data-m="growth" aria-pressed="true">Przyrost</button>
+        <button data-m="trips" aria-pressed="false">Podróże ZTM</button>
+      </div>
+      <div class="legend">
+        <div class="ramp" id="ramp"></div>
+        <div class="ramp-l" id="ramp-l"></div>
+        <div class="muted" id="ramp-note"></div>
+        <div class="keys">
+          <span id="live-key" hidden><i style="height:10px;width:10px;border-radius:50%;background:var(--ink);box-shadow:0 0 0 2px var(--bus)"></i>autobus / <i style="height:10px;width:10px;border-radius:50%;background:var(--ink);box-shadow:0 0 0 2px var(--tram);margin-left:4px"></i>tramwaj na żywo</span>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Warstwy i filtr linii</h2>
+      <div class="params" style="grid-template-columns:1fr">
+        <label for="line-filter">Pokaż tylko linie (np. 523, 189, 17) — trasa, przystanki i pojazdy<input id="line-filter" type="text" placeholder="wszystkie linie" autocomplete="off" spellcheck="false"></label>
+      </div>
+      <div class="muted" id="filter-note" style="margin-top:6px"></div>
+      <div class="layers" id="layers">
+        <label class="check" for="lay-hex"><input type="checkbox" id="lay-hex" checked>Klastry (prognoza)</label>
+        <label class="check" for="lay-roads"><input type="checkbox" id="lay-roads" checked>Ulice</label>
+        <label class="check" for="lay-bus"><input type="checkbox" id="lay-bus"><i class="sw" style="border-top:2px solid var(--bus)"></i>Linie autobusowe</label>
+        <label class="check" for="lay-tram"><input type="checkbox" id="lay-tram" checked><i class="sw" style="border-top:2px solid var(--tram)"></i>Linie tramwajowe</label>
+        <label class="check" for="lay-metro"><input type="checkbox" id="lay-metro" checked><i class="sw" style="border-top:3px solid var(--metro)"></i>Metro</label>
+        <label class="check" for="lay-kolej"><input type="checkbox" id="lay-kolej" checked><i class="sw" style="border-top:3px solid var(--rail)"></i>SKM / KM / WKD</label>
+        <label class="check" for="lay-ztm"><input type="checkbox" id="lay-ztm" checked>Przystanki ZTM</label>
+        <label class="check" for="lay-nb"><input type="checkbox" id="lay-nb" checked><i class="sw" style="height:9px;width:9px;border-radius:50%;background:var(--sel)"></i>Nowe osiedla</label>
+        <label class="check" for="lay-planned"><input type="checkbox" id="lay-planned" checked>Planowane stacje</label>
+      </div>
+    </section>
+
+    <section>
+      <h2>Na żywo</h2>
+      <label class="check" for="live"><input type="checkbox" id="live"> Autobusy i tramwaje ZTM na mapie</label>
+      <div class="params" style="margin-top:8px;grid-template-columns:1fr" id="live-opts" hidden>
+        <label for="live-kind">Pokaż<select id="live-kind"><option value="0">autobusy i tramwaje</option><option value="1">tylko autobusy</option><option value="2">tylko tramwaje</option></select></label>
+      </div>
+      <div class="muted" id="live-status" style="margin-top:6px">Pozycje z API miasta (dane.um.warszawa.pl), odświeżane co 15 s. Filtr linii działa też tutaj.</div>
+    </section>
+
+    <section>
+      <h2>Piaskownica</h2>
+      <div class="tools" id="tools">
+        <button class="tool" data-mode="view" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l14 9-6 1-3 6z"/></svg>Przeglądaj</button>
+        <button class="tool" data-mode="route" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19c4-1 3-8 8-8s4 7 8-6"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="5" r="2"/></svg>Rysuj trasę</button>
+        <button class="tool" data-mode="stop" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="10" r="5"/><path d="M12 15v6"/></svg>Przystanki</button>
+      </div>
+      <div class="hint" id="hint" style="margin-top:8px"></div>
+      <div class="row" style="margin-top:8px">
+        <button class="btn" id="undo">Cofnij</button>
+        <button class="btn danger" id="clear">Usuń linię</button>
+        <button class="btn" id="reset">Resetuj</button>
+        <button class="btn" id="sample-line">Przykładowa linia</button>
+      </div>
+    </section>
+
+    <section>
+      <h2>Parametry linii</h2>
+      <div class="params">
+        <label for="headway">Kursy co [min] w szczycie<input id="headway" type="number" min="2" max="60" value="10"></label>
+        <label for="vehicle">Tabor<select id="vehicle"><option value="90">12 m (90 miejsc)</option><option value="150" selected>18 m przegubowy (150)</option></select></label>
+        <label for="dwell">Postój na przystanku [s]<input id="dwell" type="number" min="5" max="120" value="25"></label>
+        <label for="layover">Postój na pętli [min]<input id="layover" type="number" min="0" max="30" value="6"></label>
+        <label for="trips">Podróży na osobę dziennie<input id="trips" type="number" min="0.5" max="4" step="0.1" value="2.0"></label>
+        <label for="share">Udział komunikacji miejskiej [%]<input id="share" type="number" min="5" max="90" value="45"></label>
+      </div>
+      <div class="muted" style="margin-top:6px">Podróże i udział ZTM: wartości orientacyjne dla Warszawy (Warszawskie Badanie Ruchu) — do zmiany.</div>
+    </section>
+
+    <section>
+      <h2>Ocena propozycji <span class="muted" id="eval-year"></span></h2>
+      <div id="eval-empty" class="empty">Narysuj trasę albo postaw przystanki — ocena przelicza się przy każdej zmianie. Możesz też kliknąć „Przykładowa linia”.</div>
+      <div id="eval" hidden>
+        <div class="score">
+          <div><b id="e-new">–</b><span>nowy popyt w zasięgu 400 m (mieszkańcy)</span></div>
+          <div><b id="e-pax">–</b><span>pasażerów dziennie z nowego popytu</span></div>
+          <div><b id="e-all">–</b><span>wszyscy mieszkańcy w zasięgu 400 m</span></div>
+          <div><b id="e-fresh">–</b><span>w tym bez przystanku ZTM dziś</span></div>
+          <div><b id="e-fleet">–</b><span>pojazdów w szczycie</span></div>
+          <div><b id="e-len">–</b><span>długość trasy</span></div>
+          <div><b id="e-time">–</b><span>czas przejazdu w szczycie</span></div>
+          <div class="wide">
+            <div class="row" style="justify-content:space-between"><span style="font-size:13.5px;color:var(--ink-2)">Ryzyko korków</span><span class="pill none" id="e-risk">brak trasy</span></div>
+            <ul class="list" id="e-jams"></ul>
+            <div class="muted" id="e-speed-src" style="margin-top:6px"></div>
+          </div>
+          <div class="wide">
+            <span style="font-size:13.5px;color:var(--ink-2)">Obciążenie w szczycie</span>
+            <div id="e-load" style="font-size:14px;margin-top:4px"></div>
+          </div>
+          <div class="wide">
+            <span style="font-size:13.5px;color:var(--ink-2)">Przesiadki na kolej i metro</span>
+            <ul class="list" id="e-rail"></ul>
+          </div>
+          <div class="wide">
+            <span style="font-size:13.5px;color:var(--ink-2)">Nowe osiedla w zasięgu</span>
+            <ul class="list" id="e-new-list"></ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Asystent</h2>
+      <div class="ai">
+        <div class="row"><button class="btn primary" id="ai-btn" disabled>Oceń propozycję</button><button class="btn" id="ai-stop" hidden>Zatrzymaj</button></div>
+        <div class="ai-out" id="ai-out"><span class="muted">Asystent opisze mocne i słabe strony narysowanej linii oraz zaproponuje, co poprawić.</span></div>
+        <div class="muted" id="ai-note"></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Wymiana z algorytmem</h2>
+      <details>
+        <summary>Wczytaj lub skopiuj propozycję (JSON)</summary>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+          <div class="muted">Format: <code>{"nazwa": "N01", "trasa": [[lon, lat], …], "przystanki": [[lon, lat], …]}</code>. <code>trasa</code> to punkty, przez które linia ma przejść (przyciągane do ulic); bez niej trasa prowadzi przez przystanki w podanej kolejności.</div>
+          <textarea id="json" spellcheck="false" aria-label="Propozycja w formacie JSON"></textarea>
+          <div class="row">
+            <button class="btn" id="json-load">Wczytaj z pola</button>
+            <label class="btn" for="json-file" style="display:inline-block">Wczytaj plik</label>
+            <input type="file" id="json-file" accept=".json,application/json" hidden>
+            <button class="btn" id="json-copy">Kopiuj obecną</button>
+          </div>
+          <div class="muted" id="json-msg"></div>
+        </div>
+      </details>
+    </section>
+
+    <footer>Dane: prognoza ludności klastrów (GUS NSP 2011/2021, BDL, pozwolenia GUNB), prędkości autobusów z rozkładu ZTM (GTFS, środa, szczyt 7–9 vs 20–22), sieć ulic OpenStreetMap (ODbL), kolej i metro OSM. Prototyp hackathonowy.</footer>
+  </aside>
+
+  <div class="mapwrap" id="mapwrap">
+    <div id="map"></div>
+    <div class="modebar" id="modebar" hidden></div>
+    <div class="loading" id="loading">Wczytywanie danych symulatora…</div>
+    <div class="zoom">
+      <button id="zin" aria-label="Przybliż">+</button>
+      <button id="zout" aria-label="Oddal">−</button>
+      <button id="zall" class="all" aria-label="Pokaż całą Warszawę">Całość</button>
+    </div>
+    <div class="tip" id="tip" hidden></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.js"></script>
+<script>
+(() => {
+  "use strict";
+  const WARSAW = [[20.85, 52.095], [21.275, 52.37]];
+  const WALK = 400, RAIL_WALK = 800, PEAK_SHARE = 0.10;   // 10% podróży dnia w godzinie szczytu
+  const fmt = new Intl.NumberFormat("pl-PL");
+  const fmt1 = new Intl.NumberFormat("pl-PL", { maximumFractionDigits: 1 });
+  const $ = (id) => document.getElementById(id);
+  const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const fc = (features) => ({ type: "FeatureCollection", features });
+
+  // ---------- geometria: lokalny układ metryczny ----------
+  const LON0 = 21.01, LAT0 = 52.23, KX = 111320 * Math.cos(LAT0 * Math.PI / 180), KY = 110540;
+  const toXY = (lon, lat) => [(lon - LON0) * KX, (lat - LAT0) * KY];
+  const toLL = (x, y) => [x / KX + LON0, y / KY + LAT0];
+  function segProject(px, py, ax, ay, bx, by) {
+    const dx = bx - ax, dy = by - ay, L2 = dx * dx + dy * dy || 1;
+    const t = Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / L2));
+    const qx = ax + t * dx, qy = ay + t * dy;
+    return { t, x: qx, y: qy, d: Math.hypot(px - qx, py - qy) };
+  }
+  class Grid {
+    constructor(cell) { this.c = cell; this.m = new Map(); }
+    key(i, j) { return i * 100003 + j; }
+    add(id, x, y) { const k = this.key(Math.floor(x / this.c), Math.floor(y / this.c)); let a = this.m.get(k); if (!a) this.m.set(k, a = []); a.push(id); }
+    near(x, y, r) {
+      const out = [], i0 = Math.floor((x - r) / this.c), i1 = Math.floor((x + r) / this.c), j0 = Math.floor((y - r) / this.c), j1 = Math.floor((y + r) / this.c);
+      for (let i = i0; i <= i1; i++) for (let j = j0; j <= j1; j++) { const a = this.m.get(this.key(i, j)); if (a) for (const id of a) out.push(id); }
+      return out;
+    }
+  }
+  class Heap {
+    constructor() { this.k = []; this.v = []; }
+    push(key, val) { const k = this.k, v = this.v; let i = k.length; k.push(key); v.push(val); while (i > 0) { const p = (i - 1) >> 1; if (k[p] <= k[i]) break; [k[p], k[i]] = [k[i], k[p]]; [v[p], v[i]] = [v[i], v[p]]; i = p; } }
+    pop() { const k = this.k, v = this.v, top = v[0], tk = k[0], lk = k.pop(), lv = v.pop(); if (k.length) { k[0] = lk; v[0] = lv; let i = 0; for (;;) { const l = 2 * i + 1, r = l + 1; let m = i; if (l < k.length && k[l] < k[m]) m = l; if (r < k.length && k[r] < k[m]) m = r; if (m === i) break; [k[m], k[i]] = [k[i], k[m]]; [v[m], v[i]] = [v[i], v[m]]; i = m; } } return [tk, top]; }
+    get size() { return this.k.length; }
+  }
+
+  // ---------- stan ----------
+  let D, B, map;
+  let year = 2036, scenario = "base", metric = "growth", mode = "view";
+  const route = { wps: [], legs: [] };     // wps: indeksy węzłów; legs[i]: krawędzie między wps[i] i wps[i+1]
+  let stops = [];                         // {x, y, lon, lat, edge, street}
+  const history = [];                     // stos do „Cofnij”
+  let G = null;                           // graf
+  let P = null;                           // ludność
+
+  // ---------- dane ----------
+  async function load() {
+    [D, B] = await Promise.all([fetch("symulator_dane.json").then((r) => r.json()), fetch("warszawa.json").then((r) => r.json())]);
+    buildGraph(); buildPeople();
+  }
+
+  function buildGraph() {
+    const g = D.graph, n = g.nodes.length;
+    const nx = new Float64Array(n), ny = new Float64Array(n);
+    g.nodes.forEach(([lon, lat], i) => { const [x, y] = toXY(lon, lat); nx[i] = x; ny[i] = y; });
+    const out = Array.from({ length: n }, () => []);
+    const edges = g.edges.map((e, i) => {
+      const [u, v, len, cls, name, vp, vf, meas, stopOk, id, coords] = e;
+      out[u].push(i);
+      return { u, v, len, cls, name: g.names[name], vp, vf, meas, stopOk, id, coords, xy: coords.map(([lo, la]) => toXY(lo, la)) };
+    });
+    const nodeGrid = new Grid(200), edgeGrid = new Grid(150);
+    for (let i = 0; i < n; i++) if (out[i].length) nodeGrid.add(i, nx[i], ny[i]);
+    edges.forEach((e, i) => { for (const [x, y] of e.xy) edgeGrid.add(i, x, y); });
+    G = { nx, ny, out, edges, nodeGrid, edgeGrid };
+  }
+
+  function buildPeople() {
+    const pts = D.people.map(([lon, lat, h, p]) => { const [x, y] = toXY(lon, lat); return { x, y, h, p }; });
+    const nb = D.newbuild.map((b) => { const [x, y] = toXY(b.xy[0], b.xy[1]); return { ...b, x, y }; });
+    const ztm = D.stops.ztm.map(([lon, lat, name, tram]) => { const [x, y] = toXY(lon, lat); return { x, y, name, tram }; });
+    const rail = D.stops.rail.map(([lon, lat, name, sys, lines]) => { const [x, y] = toXY(lon, lat); return { x, y, name, sys, lines, open: 2025 }; })
+      .concat(D.stops.planned.filter((p) => p[3] !== "tramwaj").map(([lon, lat, name, kind, y0]) => { const [x, y] = toXY(lon, lat); return { x, y, name, sys: kind, lines: "planowana", open: y0 }; }));
+    const ztmGrid = new Grid(400); ztm.forEach((s, i) => ztmGrid.add(i, s.x, s.y));
+    const railGrid = new Grid(800); rail.forEach((s, i) => railGrid.add(i, s.x, s.y));
+    // Dla każdego punktu: czy ma dziś przystanek ZTM ≤ 400 m, i od którego roku stację ≤ 800 m.
+    const tag = (o) => {
+      o.ztm = ztmGrid.near(o.x, o.y, WALK).some((i) => Math.hypot(ztm[i].x - o.x, ztm[i].y - o.y) <= WALK);
+      let first = 9999;
+      for (const i of railGrid.near(o.x, o.y, RAIL_WALK)) if (Math.hypot(rail[i].x - o.x, rail[i].y - o.y) <= RAIL_WALK) first = Math.min(first, rail[i].open);
+      o.railFrom = first;
+    };
+    pts.forEach(tag); nb.forEach(tag);
+    const ptGrid = new Grid(400); pts.forEach((p, i) => ptGrid.add(i, p.x, p.y));
+    const nbGrid = new Grid(400); nb.forEach((p, i) => nbGrid.add(i, p.x, p.y));
+    P = { pts, nb, ztm, rail, ptGrid, nbGrid, railGrid };
+  }
+
+  const yi = () => year - D.params.years[0];
+  const SCEN_NEW = { lo: 0.85 * 0.85, base: 1, hi: 1.05 * 1.15 };
+  const stockFactor = (h) => Math.pow(1 + D.params.drift[h], year - D.params.years[0]);
+  const ptPop = (p) => p.p * stockFactor(p.h);
+  const nbPop = (b) => b.series[yi()] * SCEN_NEW[scenario];
+  const hexPop = (h) => (scenario === "lo" ? h.pop_lo : scenario === "hi" ? h.pop_hi : h.pop)[yi()];
+
+  // ---------- routing ----------
+  const edgeTime = (e) => e.len / (e.vp / 3.6);          // sekundy w szczycie
+  function nearestNode(x, y, r = 400) {
+    let best = -1, bd = r;
+    for (const i of G.nodeGrid.near(x, y, r)) { const d = Math.hypot(G.nx[i] - x, G.ny[i] - y); if (d < bd) { bd = d; best = i; } }
+    return best;
+  }
+  function shortest(a, b) {
+    if (a === b) return [];
+    const dist = new Map([[a, 0]]), prev = new Map(), h = new Heap();
+    h.push(0, a);
+    while (h.size) {
+      const [d, u] = h.pop();
+      if (u === b) break;
+      if (d > (dist.get(u) ?? Infinity)) continue;
+      for (const ei of G.out[u]) {
+        const e = G.edges[ei], nd = d + edgeTime(e);
+        if (nd < (dist.get(e.v) ?? Infinity)) { dist.set(e.v, nd); prev.set(e.v, ei); h.push(nd, e.v); }
+      }
+    }
+    if (!prev.has(b)) return null;
+    const path = []; let cur = b;
+    while (cur !== a) { const ei = prev.get(cur); path.push(ei); cur = G.edges[ei].u; }
+    return path.reverse();
+  }
+  const routeEdges = () => route.legs.flat();
+
+  function addWaypoint(x, y) {
+    const n = nearestNode(x, y);
+    if (n < 0) return flash("Za daleko od ulicy, po której może jechać autobus.");
+    if (route.wps.length) {
+      const leg = shortest(route.wps[route.wps.length - 1], n);
+      if (!leg) return flash("Nie da się tu dojechać (ulice jednokierunkowe albo zakaz dla autobusów).");
+      route.legs.push(leg);
+    }
+    route.wps.push(n);
+    history.push({ t: "wp" });
+    changed();
+  }
+
+  // Przystanek: najbliższy punkt na trasie (≤ 80 m) albo na dowolnej ulicy dopuszczonej do przystanków.
+  function snapStop(x, y) {
+    let best = null;
+    const consider = (ei) => {
+      const e = G.edges[ei];
+      for (let k = 0; k < e.xy.length - 1; k++) {
+        const q = segProject(x, y, e.xy[k][0], e.xy[k][1], e.xy[k + 1][0], e.xy[k + 1][1]);
+        if (!best || q.d < best.d) best = { ...q, ei, k };
+      }
+    };
+    const onRoute = routeEdges();
+    if (onRoute.length) { onRoute.forEach(consider); if (best && best.d <= 80) return best; best = null; }
+    for (const ei of new Set(G.edgeGrid.near(x, y, 150))) consider(ei);
+    return best && best.d <= 150 ? best : null;
+  }
+  function addStop(x, y) {
+    const hit = stops.findIndex((s) => Math.hypot(s.x - x, s.y - y) < 40);
+    if (hit >= 0) { history.push({ t: "rmstop", s: stops[hit], i: hit }); stops.splice(hit, 1); return changed(); }
+    const q = snapStop(x, y);
+    if (!q) return flash("Brak ulicy dla autobusu w promieniu 150 m.");
+    const e = G.edges[q.ei];
+    if (!e.stopOk) return flash(`Tu nie postawimy przystanku: ${e.name || "odcinek"} to wiadukt, tunel, łącznica lub droga ekspresowa.`);
+    // Przesunięcie na prawą stronę jezdni (ruch prawostronny) — 4 m od osi.
+    const [ax, ay] = e.xy[q.k], [bx, by] = e.xy[q.k + 1], L = Math.hypot(bx - ax, by - ay) || 1;
+    const sx = q.x + (by - ay) / L * 4, sy = q.y - (bx - ax) / L * 4;
+    const [lon, lat] = toLL(sx, sy);
+    stops.push({ x: sx, y: sy, lon, lat, edge: e.id, street: e.name });
+    history.push({ t: "stop" });
+    changed();
+  }
+  function undo() {
+    const h = history.pop(); if (!h) return;
+    if (h.t === "wp") { route.wps.pop(); route.legs.pop(); }
+    else if (h.t === "stop") stops.pop();
+    else if (h.t === "rmstop") stops.splice(h.i, 0, h.s);
+    else if (h.t === "all") { route.wps = h.wps; route.legs = h.legs; stops = h.stops; }
+    changed();
+  }
+  function clearAll() {
+    if (!route.wps.length && !stops.length) return;
+    history.push({ t: "all", wps: route.wps, legs: route.legs, stops });
+    route.wps = []; route.legs = []; stops = [];
+    changed();
+  }
+
+  // ---------- ocena ----------
+  function evaluate() {
+    const edges = routeEdges().map((i) => G.edges[i]);
+    const headway = Math.max(2, +$("headway").value || 10), dwell = +$("dwell").value || 25, layover = +$("layover").value || 0;
+    const cap = +$("vehicle").value, trips = +$("trips").value || 2, share = (+$("share").value || 45) / 100;
+
+    // Zasięg przystanków: mieszkańcy w 400 m (stara zabudowa + nowe osiedla w roku t).
+    const seen = new Set(), seenNb = new Set();
+    let all = 0, fresh = 0, freshNew = 0, nbAll = 0;
+    const nbHits = [];
+    for (const s of stops) {
+      for (const i of P.ptGrid.near(s.x, s.y, WALK)) {
+        if (seen.has(i)) continue; const p = P.pts[i];
+        if (Math.hypot(p.x - s.x, p.y - s.y) > WALK) continue;
+        seen.add(i); const v = ptPop(p); all += v;
+        if (!p.ztm && p.railFrom > year) fresh += v;
+      }
+      for (const i of P.nbGrid.near(s.x, s.y, WALK)) {
+        if (seenNb.has(i)) continue; const b = P.nb[i];
+        if (Math.hypot(b.x - s.x, b.y - s.y) > WALK) continue;
+        seenNb.add(i); const v = nbPop(b); if (v <= 0) continue;
+        all += v; nbAll += v; nbHits.push({ b, v, fresh: !b.ztm && b.railFrom > year });
+        if (!b.ztm && b.railFrom > year) { fresh += v; freshNew += v; }
+      }
+    }
+    // Nowy popyt: mieszkańcy nowych osiedli (obecne linie są skrojone pod dzisiejszy popyt)
+    // + mieszkańcy starej zabudowy, którzy dziś nie mają żadnego przystanku ani stacji.
+    const demand = nbAll + (fresh - freshNew);
+    const pax = demand * trips * share;
+
+    // Czas, korki, tabor.
+    let len = 0, tPeak = 0, tFree = 0, jamLen = 0, measLen = 0;
+    const byStreet = new Map();
+    for (const e of edges) {
+      len += e.len; tPeak += e.len / (e.vp / 3.6); tFree += e.len / (e.vf / 3.6);
+      if (e.meas) measLen += e.len;
+      const jam = 1 - e.vp / e.vf;
+      if (jam >= 0.3 || e.vp < 12) {
+        jamLen += e.len;
+        const k = e.name || "bez nazwy", o = byStreet.get(k) || { len: 0, t: 0 };
+        o.len += e.len; o.t += e.len / (e.vp / 3.6); byStreet.set(k, o);
+      }
+    }
+    const nStops = stops.length;
+    const runPeak = tPeak + nStops * dwell, runFree = tFree + nStops * dwell;
+    const cycle = 2 * runPeak + 2 * layover * 60;
+    const fleet = len ? Math.ceil(cycle / (headway * 60)) : 0;
+    const jamShare = len ? jamLen / len : 0;
+    const risk = !len ? ["none", "brak trasy"] : jamShare < 0.15 ? ["good", "niskie"] : jamShare < 0.35 ? ["warn", "średnie"] : ["crit", "wysokie"];
+    const jams = [...byStreet.entries()].map(([name, o]) => ({ name, len: o.len, v: o.len / o.t * 3.6 })).sort((a, b) => b.len - a.len).slice(0, 4);
+
+    // Obciążenie: szczytowa godzina, kierunek dominujący ~60% potoku.
+    const peakDir = pax * PEAK_SHARE * 0.6, perRun = peakDir / (60 / headway);
+    // Przesiadki: stacje ≤ 400 m od przystanków, otwarte do roku t.
+    const railHits = new Map();
+    for (const s of stops) for (const i of P.railGrid.near(s.x, s.y, WALK)) {
+      const r = P.rail[i]; if (r.open > year || Math.hypot(r.x - s.x, r.y - s.y) > WALK) continue;
+      railHits.set(r.name, r);
+    }
+    return { len, tPeak: runPeak, tFree: runFree, fleet, headway, all, fresh, freshNew, nbAll, demand, pax, perRun, cap, jamShare, risk, jams,
+             measShare: len ? measLen / len : 0, rail: [...railHits.values()], nbHits: nbHits.sort((a, b) => b.v - a.v), nStops, cycle };
+  }
+
+  let lastEval = null;
+  function renderEval() {
+    const has = route.wps.length > 1 || stops.length > 0;
+    $("eval-empty").hidden = has; $("eval").hidden = !has;
+    $("eval-year").textContent = `· rok ${year}`;
+    if (!$("ai-stop").hidden) {} else $("ai-btn").disabled = !has;
+    if (!has) { lastEval = null; return; }
+    const r = lastEval = evaluate();
+    $("e-new").textContent = fmt.format(Math.round(r.demand));
+    $("e-fresh").textContent = fmt.format(Math.round(r.fresh));
+    $("e-pax").textContent = fmt.format(Math.round(r.pax / 10) * 10);
+    $("e-all").textContent = fmt.format(Math.round(r.all));
+    $("e-fleet").textContent = r.len ? `${r.fleet}` : "–";
+    $("e-len").textContent = r.len ? `${fmt1.format(r.len / 1000)} km` : "–";
+    $("e-time").textContent = r.len ? `${Math.round(r.tPeak / 60)} min` : "–";
+    const pill = $("e-risk"); pill.className = `pill ${r.risk[0]}`; pill.textContent = r.risk[1];
+    $("e-jams").innerHTML = r.len ? (r.jams.length ? r.jams.map((j) => `<li><span>${esc(j.name)}</span><span>${fmt.format(Math.round(j.len))} m · ${fmt1.format(j.v)} km/h</span></li>`).join("")
+      : `<li><span>Brak odcinków z korkiem</span><span></span></li>`) : "";
+    $("e-speed-src").textContent = r.len ? `W korku ${Math.round(r.jamShare * 100)}% długości (szczyt ≥ 30% wolniej niż wieczorem lub < 12 km/h). Prędkości z rozkładu ZTM dla ${Math.round(r.measShare * 100)}% trasy, reszta wg klasy drogi. Bez korków: ${Math.round(r.tFree / 60)} min.` : "";
+    const loadPct = r.perRun / r.cap;
+    $("e-load").innerHTML = r.len
+      ? `${fmt.format(Math.round(r.perRun))} pasażerów na kurs przy kursach co ${r.headway} min — <b style="color:var(--${loadPct > 1 ? "crit" : loadPct > 0.8 ? "warn" : "good"})">${Math.round(loadPct * 100)}% pojemności</b>. Obieg ${Math.round(r.cycle / 60)} min.`
+      : `<span class="muted">Narysuj trasę, żeby policzyć tabor i obciążenie.</span>`;
+    $("e-rail").innerHTML = r.rail.length ? r.rail.map((s) => `<li><span>${esc(s.name)}</span><span>${esc(s.lines === "planowana" ? `planowana · ${s.open}` : `${s.sys}: ${s.lines}`)}</span></li>`).join("")
+      : `<li><span>Żaden przystanek nie leży ≤ 400 m od stacji</span><span></span></li>`;
+    $("e-new-list").innerHTML = r.nbHits.length ? r.nbHits.slice(0, 5).map((h) => `<li><span>${esc(h.b.adres || "pozwolenie GUNB")} (${h.b.rok})</span><span>+${fmt.format(Math.round(h.v))} os.${h.fresh ? "" : " · ma już ZTM"}</span></li>`).join("")
+      : `<li><span>Brak nowych osiedli w zasięgu</span><span></span></li>`;
+  }
+  const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+
+  // ---------- mapa ----------
+  function decode(a, S) { const o = []; let x = 0, y = 0; for (let i = 0; i < a.length; i += 2) { x += a[i]; y += a[i + 1]; o.push([x / S, y / S]); } return o; }
+  const METRICS = {
+    pop: { steps: [500, 2000, 4000, 7000, 10000], note: "mieszkańców klastra", value: (h) => hexPop(h), div: false },
+    growth: { steps: [-1000, -250, 250, 1000, 3000], note: "zmiana liczby mieszkańców od 2025", value: (h) => hexPop(h) - h.pop[0], div: true },
+    trips: { steps: [500, 2000, 4000, 7000, 10000], note: "podróży komunikacją miejską dziennie (start w klastrze)", value: (h) => hexPop(h) * (+$("trips").value || 2) * (+$("share").value || 45) / 100, div: false },
+  };
+  const rampColors = (m) => m.div ? ["--dneg2", "--dneg1", "--dmid", "--dpos1", "--dpos2", "--dpos3"] : ["--s1", "--s2", "--s3", "--s4", "--s5"];
+  function hexColorExpr() {
+    const m = METRICS[metric], c = rampColors(m).map(css);
+    if (m.div) return ["step", ["get", "v"], c[0], m.steps[0], c[1], m.steps[1], c[2], m.steps[2], c[3], m.steps[3], c[4], m.steps[4], c[5]];
+    return ["step", ["get", "v"], "rgba(0,0,0,0)", 100, c[0], m.steps[1], c[1], m.steps[2], c[2], m.steps[3], c[3], m.steps[4], c[4]];
+  }
+  function renderLegend() {
+    const m = METRICS[metric], cols = rampColors(m);
+    const show = m.div ? cols.filter((_, i) => i !== 2) : cols;
+    $("ramp").innerHTML = show.map((c) => `<i style="background:var(${c})"></i>`).join("");
+    $("ramp-l").innerHTML = (m.div ? ["< −1000", "−250", "+250", "+1000", "> +3000"] : ["100+", "2 tys.", "4 tys.", "7 tys.", "10 tys.+"]).map((t) => `<span>${t}</span>`).join("");
+    $("ramp-note").textContent = `${m.note}, rok ${year}${m.div ? " (szary: ±250)" : ""}`;
+  }
+  const hexFeatures = () => D.hexes.map((h, i) => ({ type: "Feature", id: i, properties: { v: METRICS[metric].value(h), i }, geometry: { type: "MultiPolygon", coordinates: h.rings.map((r) => [r]) } }));
+  const nbFeatures = () => P.nb.map((b, i) => ({ type: "Feature", properties: { v: nbPop(b), i }, geometry: { type: "Point", coordinates: b.xy } })).filter((f) => f.properties.v > 30);
+
+  function routeFeatures() {
+    return routeEdges().map((ei) => { const e = G.edges[ei], jam = 1 - e.vp / e.vf; return { type: "Feature", properties: { j: jam >= 0.3 || e.vp < 12 ? 2 : jam >= 0.15 ? 1 : 0 }, geometry: { type: "LineString", coordinates: e.coords } }; });
+  }
+  function circle(x, y, r) { const c = []; for (let k = 0; k <= 40; k++) { const a = (k / 40) * 2 * Math.PI; c.push(toLL(x + r * Math.cos(a), y + r * Math.sin(a))); } return c; }
+  function updateMapSources() {
+    if (!map || !map.getSource("route")) return;
+    map.getSource("route").setData(fc(routeFeatures()));
+    map.getSource("wps").setData(fc(route.wps.map((n, i) => ({ type: "Feature", properties: { end: i === 0 || i === route.wps.length - 1 }, geometry: { type: "Point", coordinates: toLL(G.nx[n], G.ny[n]) } }))));
+    map.getSource("nstops").setData(fc(stops.map((s) => ({ type: "Feature", properties: { street: s.street || "" }, geometry: { type: "Point", coordinates: [s.lon, s.lat] } }))));
+    map.getSource("catch").setData(fc(stops.map((s) => ({ type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [circle(s.x, s.y, WALK)] } }))));
+  }
+  function updateYearLayers() {
+    if (!map || !map.getSource("hex")) return;
+    map.getSource("hex").setData(fc(hexFeatures()));
+    map.getSource("nb").setData(fc(nbFeatures()));
+    map.setFilter("planned", ["<=", ["get", "y"], year]);
+    map.setFilter("planned-future", [">", ["get", "y"], year]);
+  }
+
+  function buildMap() {
+    map = new maplibregl.Map({
+      container: "map", bounds: WARSAW, fitBoundsOptions: { padding: 24 }, attributionControl: false, maxZoom: 18, minZoom: 9,
+      maxBounds: [[20.55, 51.98], [21.6, 52.48]],
+      dragRotate: false, pitchWithRotate: false, doubleClickZoom: false,
+      style: { version: 8, sources: {}, layers: [{ id: "bg", type: "background", paint: { "background-color": css("--ground") } }] },
+    });
+    map.touchZoomRotate.disableRotation();
+    map.on("load", () => {
+      const S = B.scale;
+      const line = (coords) => ({ type: "Feature", properties: {}, geometry: { type: "LineString", coordinates: coords } });
+      map.addSource("river", { type: "geojson", data: fc(B.river.map((c) => line(decode(c, S)))) });
+      map.addSource("districts", { type: "geojson", data: fc(B.districts.flatMap((d) => d.rings.map((c) => line(decode(c, S))))) });
+      map.addSource("roads", { type: "geojson", data: fc(B.roads.edges.map((e) => ({ type: "Feature", properties: { c: e[0] }, geometry: { type: "LineString", coordinates: decode(e[7], S) } }))), tolerance: 0.4 });
+      map.addSource("trams", { type: "geojson", data: fc(B.trams.edges.map((e) => line(decode(e[2], S)))) });
+      map.addSource("rail", { type: "geojson", data: fc(D.rail.flatMap((r) => r.parts.map((p) => ({ type: "Feature", properties: { m: r.system === "metro" }, geometry: { type: "LineString", coordinates: p } })))) });
+      map.addSource("stations", { type: "geojson", data: fc(D.stops.rail.map(([lon, lat, name, sys]) => ({ type: "Feature", properties: { name, sys, m: sys === "metro" }, geometry: { type: "Point", coordinates: [lon, lat] } }))) });
+      map.addSource("plannedsrc", { type: "geojson", data: fc(D.stops.planned.map(([lon, lat, name, kind, y]) => ({ type: "Feature", properties: { name, kind, y, tram: kind === "tramwaj" }, geometry: { type: "Point", coordinates: [lon, lat] } }))) });
+      map.addSource("ztm", { type: "geojson", data: fc(D.stops.ztm.map(([lon, lat, name, tram, lines, nr]) => ({ type: "Feature", properties: { name, nr, t: !!tram, lines, l: `,${lines},` }, geometry: { type: "Point", coordinates: [lon, lat] } }))) });
+      map.addSource("routes", { type: "geojson", data: fc((D.routes || []).flatMap((r) => r.parts.map((p) => ({ type: "Feature", properties: { ref: r.ref, typ: r.typ, nazwa: r.nazwa, kursy: r.kursy }, geometry: { type: "LineString", coordinates: p } })))) });
+      // Maska: wszystko poza granicą Warszawy przykryte kolorem tła.
+      map.addSource("mask", { type: "geojson", data: { type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [[[19, 51], [23, 51], [23, 53.5], [19, 53.5], [19, 51]], ...(D.boundary || [])] } } });
+      map.addSource("hex", { type: "geojson", data: fc(hexFeatures()) });
+      map.addSource("nb", { type: "geojson", data: fc(nbFeatures()) });
+      for (const s of ["route", "wps", "nstops", "catch", "live"]) map.addSource(s, { type: "geojson", data: fc([]) });
+
+      map.addLayer({ id: "river", type: "line", source: "river", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": css("--water"), "line-width": ["interpolate", ["exponential", 2], ["zoom"], 9, 4, 12, 22, 15, 140, 18, 1100] } });
+      map.addLayer({ id: "hex", type: "fill", source: "hex", paint: { "fill-color": hexColorExpr(), "fill-opacity": 0.5 } });
+      map.addLayer({ id: "roads", type: "line", source: "roads", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": css("--road"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, ["match", ["get", "c"], 0, 1.4, 1, 1.2, 2, 0.9, 3, 0.7, 0.3], 16, ["match", ["get", "c"], 0, 8, 1, 7, 2, 5, 3, 4, 2]] } });
+      map.addLayer({ id: "districts", type: "line", source: "districts", paint: { "line-color": css("--district"), "line-width": 1, "line-dasharray": [3, 2] } });
+      map.addLayer({ id: "trams", type: "line", source: "trams", paint: { "line-color": css("--tram"), "line-opacity": 0.6, "line-width": ["interpolate", ["linear"], ["zoom"], 10, 0.8, 16, 2.5] } });
+      map.addLayer({ id: "routes-bus", type: "line", source: "routes", filter: ["==", ["get", "typ"], "autobus"], layout: { "line-cap": "round", "line-join": "round", visibility: "none" }, paint: { "line-color": css("--bus"), "line-opacity": 0.55, "line-width": routeWidth(1) } });
+      map.addLayer({ id: "routes-tram", type: "line", source: "routes", filter: ["==", ["get", "typ"], "tram"], layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": css("--tram"), "line-opacity": 0.75, "line-width": routeWidth(1) } });
+      map.addLayer({ id: "rail-kolej", type: "line", source: "rail", filter: ["!", ["get", "m"]], paint: { "line-color": css("--rail"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 1.6, 16, 5] } });
+      map.addLayer({ id: "rail-metro", type: "line", source: "rail", filter: ["get", "m"], paint: { "line-color": css("--metro"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 2.6, 16, 5] } });
+      map.addLayer({ id: "ztm", type: "circle", source: "ztm", minzoom: 13.5, paint: { "circle-radius": 2.5, "circle-color": css("--paper"), "circle-stroke-width": 1, "circle-stroke-color": css("--ink-3") } });
+      map.addLayer({ id: "ztm-sel", type: "circle", source: "ztm", filter: ["==", ["get", "l"], "-"], layout: { visibility: "none" }, paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 3, 15, 5.5], "circle-color": css("--paper"), "circle-stroke-width": 2, "circle-stroke-color": ["case", ["get", "t"], css("--tram"), css("--bus")] } });
+      map.addLayer({ id: "nb", type: "circle", source: "nb", paint: { "circle-radius": ["interpolate", ["linear"], ["get", "v"], 30, 2.5, 1000, 6, 4000, 11], "circle-color": css("--sel"), "circle-opacity": 0.85, "circle-stroke-width": 1, "circle-stroke-color": css("--paper") } });
+      map.addLayer({ id: "stations-kolej", type: "circle", source: "stations", filter: ["!", ["get", "m"]], paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 3, 15, 6], "circle-color": css("--paper"), "circle-stroke-width": 2, "circle-stroke-color": css("--rail") } });
+      map.addLayer({ id: "stations-metro", type: "circle", source: "stations", filter: ["get", "m"], paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 3, 15, 6], "circle-color": css("--paper"), "circle-stroke-width": 2, "circle-stroke-color": css("--metro") } });
+      map.addLayer({ id: "planned-future", type: "circle", source: "plannedsrc", filter: [">", ["get", "y"], year], paint: { "circle-radius": ["case", ["get", "tram"], 2.5, 5], "circle-color": "rgba(0,0,0,0)", "circle-stroke-width": 1.5, "circle-stroke-color": ["case", ["get", "tram"], css("--tram"), css("--metro")], "circle-stroke-opacity": 0.6 } });
+      map.addLayer({ id: "planned", type: "circle", source: "plannedsrc", filter: ["<=", ["get", "y"], year], paint: { "circle-radius": ["case", ["get", "tram"], 3, 6], "circle-color": ["case", ["get", "tram"], css("--tram"), css("--metro")], "circle-stroke-width": 1.5, "circle-stroke-color": css("--paper") } });
+      map.addLayer({ id: "mask", type: "fill", source: "mask", paint: { "fill-color": css("--ground"), "fill-opacity": 0.92 } });
+      map.addLayer({ id: "catch", type: "fill", source: "catch", paint: { "fill-color": css("--accent"), "fill-opacity": 0.12 } });
+      map.addLayer({ id: "catch-line", type: "line", source: "catch", paint: { "line-color": css("--accent"), "line-width": 1, "line-opacity": 0.6 } });
+      map.addLayer({ id: "route-casing", type: "line", source: "route", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": css("--ink"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 6, 16, 12] } });
+      map.addLayer({ id: "route", type: "line", source: "route", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": ["match", ["get", "j"], 2, css("--crit"), 1, css("--warn"), css("--good")], "line-width": ["interpolate", ["linear"], ["zoom"], 10, 3.5, 16, 8] } });
+      map.addLayer({ id: "wps", type: "circle", source: "wps", paint: { "circle-radius": ["case", ["get", "end"], 6, 3.5], "circle-color": css("--ink"), "circle-stroke-width": 2, "circle-stroke-color": css("--paper") } });
+      map.addLayer({ id: "live", type: "circle", source: "live", paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 2.5, 14, 5, 17, 8], "circle-color": css("--ink"), "circle-stroke-width": 2.2, "circle-stroke-color": ["case", ["==", ["get", "typ"], 2], css("--tram"), css("--bus")], "circle-opacity": ["interpolate", ["linear"], ["get", "age"], 0, 1, 180, 0.35], "circle-stroke-opacity": ["interpolate", ["linear"], ["get", "age"], 0, 1, 180, 0.35] } });
+      map.addLayer({ id: "nstops", type: "circle", source: "nstops", paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 5, 16, 8], "circle-color": css("--paper"), "circle-stroke-width": 3, "circle-stroke-color": css("--accent") } });
+      wireMap();
+      applyLayers();
+      $("loading").hidden = true;
+      changed();
+      // Link z #przyklad otwiera symulator od razu z przykładową linią (np. na prezentacji).
+      if (location.hash === "#przyklad") loadProposal(SAMPLE);
+    });
+  }
+
+  function wireMap() {
+    const tip = $("tip");
+    map.on("mousemove", (e) => {
+      const f = map.queryRenderedFeatures([[e.point.x - 4, e.point.y - 4], [e.point.x + 4, e.point.y + 4]], { layers: ["live", "nstops", "stations-metro", "stations-kolej", "planned", "ztm-sel", "ztm", "nb", "routes-bus", "routes-tram", "hex"].filter((l) => map.getLayoutProperty(l, "visibility") !== "none") })[0];
+      if (!f || mode !== "view" && f.layer.id === "hex") { tip.hidden = true; return; }
+      let t = "";
+      if (f.layer.id === "live") t = `${f.properties.typ === 2 ? "Tramwaj" : "Autobus"} ${f.properties.linia} · brygada ${f.properties.bryg} · nr ${f.properties.nr} · ${f.properties.age} s temu`;
+      else if (f.layer.id === "nstops") t = `Nowy przystanek · ${f.properties.street || "ulica bez nazwy"}`;
+      else if (f.layer.id.startsWith("stations")) t = `${f.properties.name} · ${f.properties.sys}`;
+      else if (f.layer.id.startsWith("ztm")) t = `${f.properties.name} ${f.properties.nr} · linie: ${f.properties.lines.split(",").join(", ")}`;
+      else if (f.layer.id.startsWith("routes")) t = `${f.properties.typ === "tram" ? "Tramwaj" : "Autobus"} ${f.properties.ref} · ${f.properties.nazwa} · ${f.properties.kursy} kursów dziennie w kierunku`;
+      else if (f.layer.id === "planned") t = `${f.properties.name} · planowana, ${f.properties.y}`;
+      else if (f.layer.id === "nb") { const b = P.nb[f.properties.i]; t = `${b.adres || "Pozwolenie"} (${b.rok}) · +${fmt.format(Math.round(nbPop(b)))} os. w ${year}`; }
+      else { const h = D.hexes[f.properties.i]; t = `${h.d} · ${fmt.format(hexPop(h))} mieszkańców w ${year} (${fmt.format(hexPop(h) - h.pop[0])} vs 2025)`; }
+      tip.textContent = t; tip.hidden = false; tip.style.left = e.point.x + "px"; tip.style.top = e.point.y + "px";
+    });
+    map.on("mouseout", () => (tip.hidden = true));
+    map.on("click", (e) => {
+      const [x, y] = toXY(e.lngLat.lng, e.lngLat.lat);
+      if (mode === "route") addWaypoint(x, y);
+      else if (mode === "stop") addStop(x, y);
+    });
+    $("zin").onclick = () => map.zoomIn();
+    $("zout").onclick = () => map.zoomOut();
+    $("zall").onclick = () => map.fitBounds(WARSAW, { padding: 24 });
+  }
+
+  // ---------- UI ----------
+  const HINTS = {
+    view: "Najedź na klaster, żeby zobaczyć prognozę. Wybierz „Rysuj trasę” albo „Przystanki”, żeby testować pomysł.",
+    route: "Klikaj kolejne punkty na mapie — trasa sama przyciągnie się do ulic, którymi może jechać autobus (masa, wysokość, szerokość, kierunek ruchu).",
+    stop: "Kliknij przy trasie lub ulicy, żeby postawić przystanek (po prawej stronie jezdni). Kliknij istniejący nowy przystanek, żeby go usunąć.",
+  };
+  function setMode(m) {
+    mode = m;
+    $("tools").querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.mode === m));
+    $("hint").textContent = HINTS[m];
+    $("mapwrap").classList.toggle("drawing", m !== "view");
+    $("modebar").hidden = m === "view";
+    $("modebar").textContent = m === "route" ? "Rysowanie trasy — klikaj kolejne punkty" : "Stawianie przystanków — klik dodaje, klik na przystanku usuwa";
+  }
+  let flashT;
+  function flash(msg) { const h = $("hint"); h.textContent = msg; h.style.color = css("--crit"); clearTimeout(flashT); flashT = setTimeout(() => { h.style.color = ""; h.textContent = HINTS[mode]; }, 3500); }
+
+  let raf = 0;
+  function changed() { cancelAnimationFrame(raf); raf = requestAnimationFrame(() => { updateMapSources(); renderEval(); }); }
+  function yearChanged() {
+    $("year-label").textContent = year;
+    renderLegend(); updateYearLayers(); renderEval();
+  }
+
+  // Resetuj: usuwa linię i przywraca domyślny rok, scenariusz, warstwę, parametry i widok mapy.
+  const DEFAULTS = { headway: 10, vehicle: 150, dwell: 25, layover: 6, trips: 2.0, share: 45 };
+  function resetAll() {
+    clearAll();
+    year = 2036; $("year").value = 2036; scenario = "base"; metric = "growth";
+    $("scenario").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x.dataset.s === "base"));
+    $("metric").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x.dataset.m === "growth"));
+    for (const [id, v] of Object.entries(DEFAULTS)) $(id).value = v;
+    $("line-filter").value = "";
+    for (const k of Object.keys(LAYERS)) $(`lay-${k}`).checked = k !== "bus";
+    applyLayers();
+    $("ai-out").innerHTML = '<span class="muted">Asystent opisze mocne i słabe strony narysowanej linii oraz zaproponuje, co poprawić.</span>'; $("ai-note").textContent = "";
+    setMode("view");
+    if (map?.getLayer("hex")) map.setPaintProperty("hex", "fill-color", hexColorExpr());
+    yearChanged();
+    map?.fitBounds(WARSAW, { padding: 24 });
+  }
+
+  // ---------- pojazdy na żywo (przez frontend/serwer.py — API ZTM nie pozwala na zapytania z przeglądarki) ----------
+  let liveTimer = 0, liveData = null, liveOn = false;
+  async function liveAvailable() {
+    try { const r = await fetch("api/status", { cache: "no-store" }); if (!r.ok) return null; return (await r.json()).live; } catch { return null; }
+  }
+  async function setLive(on) {
+    liveOn = on; clearTimeout(liveTimer);
+    $("live-opts").hidden = !on; $("live-key").hidden = !on;
+    if (!on) { liveData = null; renderLive(); $("live-status").textContent = "Pozycje z API miasta (dane.um.warszawa.pl), odświeżane co 15 s. Filtr linii działa też tutaj."; return; }
+    const ok = await liveAvailable();
+    if (ok === null) { $("live-status").textContent = "Ta wersja strony nie ma połączenia z API. Pojazdy na żywo działają po uruchomieniu: ZTM_API_KEY=… .venv/bin/python frontend/serwer.py"; $("live").checked = false; liveOn = false; $("live-opts").hidden = true; $("live-key").hidden = true; return; }
+    if (!ok) { $("live-status").textContent = "Serwer działa bez klucza API. Uruchom go z ZTM_API_KEY=twój-klucz (darmowa rejestracja na api.um.warszawa.pl)."; $("live").checked = false; liveOn = false; $("live-opts").hidden = true; $("live-key").hidden = true; return; }
+    pollLive();
+  }
+  async function pollLive() {
+    if (!liveOn) return;
+    if (document.visibilityState === "visible") {
+      $("live-status").innerHTML = liveData ? $("live-status").innerHTML : "Łączenie z API ZTM…";
+      try {
+        const r = await fetch("api/pojazdy", { cache: "no-store" }), j = await r.json();
+        if (!r.ok) throw new Error(j.blad || `HTTP ${r.status}`);
+        liveData = j; renderLive();
+      } catch (e) { $("live-status").textContent = `Brak danych z API ZTM: ${e.message}. Ponowię za 15 s.`; }
+    }
+    liveTimer = setTimeout(pollLive, 15000);
+  }
+  // ---------- warstwy i filtr linii ----------
+  const LAYERS = { hex: ["hex"], roads: ["roads"], bus: ["routes-bus"], tram: ["routes-tram", "trams"], metro: ["rail-metro", "stations-metro"],
+                   kolej: ["rail-kolej", "stations-kolej"], ztm: ["ztm"], nb: ["nb"], planned: ["planned", "planned-future"] };
+  const routeWidth = (k) => ["interpolate", ["linear"], ["zoom"], 10, ["*", k, ["interpolate", ["linear"], ["get", "kursy"], 20, 0.5, 120, 1.3, 300, 2.6]], 16, ["*", k, ["interpolate", ["linear"], ["get", "kursy"], 20, 1.5, 120, 3.5, 300, 6]]];
+  const lineFilter = () => [...new Set($("line-filter").value.split(/[\s,;]+/).map((x) => x.trim().toUpperCase()).filter(Boolean))];
+  function applyLayers() {
+    if (!map?.getLayer("hex")) return;
+    const sel = lineFilter(), vis = (on) => (on ? "visible" : "none");
+    for (const [k, ids] of Object.entries(LAYERS)) for (const id of ids) map.setLayoutProperty(id, "visibility", vis($(`lay-${k}`).checked));
+    const known = new Set((D.routes || []).map((r) => r.ref.toUpperCase()));
+    if (sel.length) {
+      // Filtr linii: wybrane trasy zawsze widoczne i grubsze, przystanki tylko tych linii (przy każdym zoomie).
+      const inSel = ["in", ["upcase", ["get", "ref"]], ["literal", sel]];
+      map.setFilter("routes-bus", ["all", ["==", ["get", "typ"], "autobus"], inSel]);
+      map.setFilter("routes-tram", ["all", ["==", ["get", "typ"], "tram"], inSel]);
+      map.setLayoutProperty("routes-bus", "visibility", "visible"); map.setLayoutProperty("routes-tram", "visibility", "visible");
+      for (const id of ["routes-bus", "routes-tram"]) { map.setPaintProperty(id, "line-width", routeWidth(2.2)); map.setPaintProperty(id, "line-opacity", 0.95); }
+      map.setFilter("ztm-sel", ["any", ...sel.map((x) => ["in", `,${x},`, ["upcase", ["get", "l"]]])]);
+      map.setLayoutProperty("ztm-sel", "visibility", "visible"); map.setLayoutProperty("ztm", "visibility", "none");
+      const nStops = D.stops.ztm.filter((z) => sel.some((x) => `,${z[4].toUpperCase()},`.includes(`,${x},`))).length;
+      const unknown = sel.filter((x) => !known.has(x));
+      $("filter-note").textContent = `Linie ${sel.join(", ")}: ${fmt.format(nStops)} przystanków w Warszawie.` + (unknown.length ? ` Nie znaleziono: ${unknown.join(", ")}.` : "");
+    } else {
+      map.setFilter("routes-bus", ["==", ["get", "typ"], "autobus"]); map.setFilter("routes-tram", ["==", ["get", "typ"], "tram"]);
+      map.setPaintProperty("routes-bus", "line-width", routeWidth(1)); map.setPaintProperty("routes-bus", "line-opacity", 0.55);
+      map.setPaintProperty("routes-tram", "line-width", routeWidth(1)); map.setPaintProperty("routes-tram", "line-opacity", 0.75);
+      map.setLayoutProperty("ztm-sel", "visibility", "none");
+      $("filter-note").textContent = `${(D.routes || []).filter((r) => r.typ === "autobus").length} linii autobusowych i ${(D.routes || []).filter((r) => r.typ === "tram").length} tramwajowych w granicach Warszawy; grubość linii = liczba kursów.`;
+    }
+    renderLive();
+  }
+  function fitToFilter() {
+    const sel = new Set(lineFilter()); if (!sel.size || !map) return;
+    const b = new maplibregl.LngLatBounds(); let any = false;
+    for (const r of D.routes || []) if (sel.has(r.ref.toUpperCase())) for (const p of r.parts) for (const c of p) { b.extend(c); any = true; }
+    if (any) map.fitBounds(b, { padding: 50, maxZoom: 14, duration: 500 });
+  }
+  // Czy punkt leży w granicach Warszawy (ray casting po pierścieniach granicy).
+  function insideWarsaw(lon, lat) {
+    for (const ring of D.boundary || []) {
+      let inside = false;
+      for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+        const [xi, yi] = ring[i], [xj, yj] = ring[j];
+        if ((yi > lat) !== (yj > lat) && lon < ((xj - xi) * (lat - yi)) / (yj - yi) + xi) inside = !inside;
+      }
+      if (inside) return true;
+    }
+    return !(D.boundary || []).length;
+  }
+
+  function renderLive() {
+    if (!map?.getSource("live")) return;
+    if (!liveOn || !liveData) { map.getSource("live").setData(fc([])); return; }
+    const want = new Set(lineFilter());
+    const kind = +$("live-kind").value;
+    const vs = liveData.pojazdy.filter((v) => (!want.size || want.has(v[2].toUpperCase())) && (!kind || v[5] === kind) && insideWarsaw(v[0], v[1]));
+    map.getSource("live").setData(fc(vs.map(([lon, lat, linia, bryg, nr, typ, age]) => ({ type: "Feature", properties: { linia, bryg, nr, typ, age }, geometry: { type: "Point", coordinates: [lon, lat] } }))));
+    const nb = vs.filter((v) => v[5] === 1).length, nt = vs.length - nb, t = liveData.czas.slice(11, 19);
+    $("live-status").innerHTML = `<span class="live-dot"></span>${fmt.format(nb)} autobusów, ${fmt.format(nt)} tramwajów · stan z ${t}`;
+  }
+  document.addEventListener("visibilitychange", () => { if (liveOn && document.visibilityState === "visible") { clearTimeout(liveTimer); pollLive(); } });
+
+  // ---------- propozycje JSON ----------
+  function loadProposal(obj) {
+    const pts = (a) => Array.isArray(a) ? a.filter((p) => Array.isArray(p) && p.length >= 2 && isFinite(p[0]) && isFinite(p[1])) : [];
+    const auto = obj.przystanki === "auto";
+    const st = auto ? [] : pts(obj.przystanki || obj.stops), tr = pts(obj.trasa || obj.route);
+    if (!st.length && !tr.length) throw new Error("Brak punktów: oczekuję pól „trasa” i/lub „przystanki” jako list [lon, lat].");
+    history.push({ t: "all", wps: route.wps, legs: route.legs, stops });
+    route.wps = []; route.legs = []; stops = [];
+    let skipped = 0;
+    for (const [lon, lat] of (tr.length ? tr : st)) {
+      const before = route.wps.length; const [x, y] = toXY(lon, lat);
+      const n = nearestNode(x, y);
+      if (n < 0) { skipped++; continue; }
+      if (route.wps.length) { const leg = shortest(route.wps[route.wps.length - 1], n); if (!leg) { skipped++; continue; } route.legs.push(leg); }
+      route.wps.push(n);
+      if (route.wps.length === before) skipped++;
+    }
+    for (const [lon, lat] of st) { const [x, y] = toXY(lon, lat); const n = stops.length; addStopSilent(x, y); if (stops.length === n) skipped++; }
+    if (auto) stopsAlongRoute(450);
+    changed();
+    const b = new maplibregl.LngLatBounds(); [...tr, ...st].forEach((p) => b.extend(p));
+    map.fitBounds(b, { padding: 60, maxZoom: 15 });
+    return skipped;
+  }
+  // Tylko dla przykładu/demo: przystanki co `spacing` m wzdłuż trasy (na odcinkach, gdzie wolno).
+  function stopsAlongRoute(spacing) {
+    let acc = spacing / 2;
+    for (const ei of routeEdges()) {
+      const e = G.edges[ei];
+      for (let k = 0; k < e.xy.length - 1; k++) {
+        const [ax, ay] = e.xy[k], [bx, by] = e.xy[k + 1], L = Math.hypot(bx - ax, by - ay);
+        let pos = 0;
+        while (e.stopOk && acc + (L - pos) >= spacing) {
+          pos += spacing - acc; acc = 0;
+          const t = pos / L, x = ax + t * (bx - ax), y = ay + t * (by - ay);
+          const sx = x + (by - ay) / L * 4, sy = y - (bx - ax) / L * 4, [lon, lat] = toLL(sx, sy);
+          stops.push({ x: sx, y: sy, lon, lat, edge: e.id, street: e.name });
+        }
+        acc += L - pos;
+      }
+    }
+  }
+  function addStopSilent(x, y) {
+    const q = snapStop(x, y); if (!q) return;
+    const e = G.edges[q.ei]; if (!e.stopOk) return;
+    const [lon, lat] = toLL(q.x, q.y);
+    stops.push({ x: q.x, y: q.y, lon, lat, edge: e.id, street: e.name });
+  }
+  function currentProposal() {
+    return { nazwa: "propozycja", rok: year,
+      trasa: route.wps.map((n) => toLL(G.nx[n], G.ny[n]).map((v) => +v.toFixed(5))),
+      przystanki: stops.map((s) => [+s.lon.toFixed(5), +s.lat.toFixed(5)]),
+      krawedzie: routeEdges().map((i) => G.edges[i].id) };
+  }
+
+  // Przykład: dowóz z nowych osiedli Ursusa Północnego do stacji M2 Karolin i Chrzanów (otwarcie 2027).
+  const SAMPLE = { nazwa: "przykład", trasa: [[20.8770, 52.2005], [20.8897, 52.2275]], przystanki: "auto" };
+
+  // ---------- asystent ----------
+  let samplePromise = window.claude?.use ? window.claude.use("sample") : Promise.resolve(null), aiCtl = null;
+  function describe(r) {
+    return {
+      rok: year, scenariusz: scenario, dlugosc_km: +(r.len / 1000).toFixed(1), przystanki: r.nStops,
+      czas_szczyt_min: Math.round(r.tPeak / 60), czas_bez_korkow_min: Math.round(r.tFree / 60),
+      nowy_popyt_w_zasiegu: Math.round(r.demand), mieszkancy_nowych_osiedli_w_zasiegu: Math.round(r.nbAll),
+      bez_przystanku_ztm_dzis: Math.round(r.fresh), w_zasiegu_lacznie: Math.round(r.all),
+      pasazerow_dziennie: Math.round(r.pax), kursy_co_min: r.headway, pojazdy: r.fleet, pojemnosc_pojazdu: r.cap,
+      pasazerow_na_kurs_szczyt: Math.round(r.perRun), udzial_dlugosci_w_korku_proc: Math.round(r.jamShare * 100),
+      odcinki_z_korkiem: r.jams.map((j) => ({ ulica: j.name, metry: Math.round(j.len), kmh: +j.v.toFixed(1) })),
+      przesiadki: r.rail.map((s) => s.name), nowe_osiedla: r.nbHits.slice(0, 5).map((h) => ({ adres: h.b.adres, rok_pozwolenia: h.b.rok, nowi_mieszkancy: Math.round(h.v), juz_obsluzone_przez_ztm: !h.fresh })),
+      ulice_trasy: [...new Set(routeEdges().map((i) => G.edges[i].name).filter(Boolean))].slice(0, 15),
+    };
+  }
+  function templateComment(r) {
+    const out = [];
+    out.push(r.demand > 3000 ? `W zasięgu linii jest ${fmt.format(Math.round(r.demand))} osób nowego popytu (w tym ${fmt.format(Math.round(r.nbAll))} mieszkańców nowych osiedli) — obecne linie nie są pod nich zaplanowane, więc linia ma mocne uzasadnienie.` :
+      r.demand > 500 ? `Nowy popyt w zasięgu to ${fmt.format(Math.round(r.demand))} osób; reszta z ${fmt.format(Math.round(r.all))} mieszkańców w zasięgu ma już obsługę ZTM.` :
+      `Nowego popytu w zasięgu jest mało (${fmt.format(Math.round(r.demand))} os.) — linia głównie dubluje istniejącą obsługę.`);
+    if (r.fresh > 100) out.push(`${fmt.format(Math.round(r.fresh))} osób w zasięgu nie ma dziś żadnego przystanku ZTM.`);
+    if (r.len) out.push(r.risk[0] === "crit" ? `Około ${Math.round(r.jamShare * 100)}% trasy to odcinki z korkami${r.jams[0] ? ` (najdłużej ${r.jams[0].name})` : ""} — warto rozważyć buspas albo inny przebieg.` :
+      r.risk[0] === "warn" ? `Korki na ${Math.round(r.jamShare * 100)}% trasy${r.jams[0] ? `, głównie ${r.jams[0].name}` : ""}; czas przejazdu w szczycie ${Math.round(r.tPeak / 60)} min zamiast ${Math.round(r.tFree / 60)}.` :
+      `Trasa omija główne korki: ${Math.round(r.tPeak / 60)} min w szczycie.`);
+    if (r.len) out.push(`Przy kursach co ${r.headway} min potrzeba ${r.fleet} pojazdów; w szczycie ~${fmt.format(Math.round(r.perRun))} osób na kurs (${Math.round(r.perRun / r.cap * 100)}% pojemności).`);
+    out.push(r.rail.length ? `Przesiadka na kolej/metro: ${r.rail.map((s) => s.name).join(", ")}.` : "Linia nie dowozi do stacji kolei ani metra — dla linii dowozowej to słabość.");
+    return out.join("\n\n");
+  }
+  async function askAI() {
+    const r = lastEval; if (!r) return;
+    const out = $("ai-out"), note = $("ai-note"), sample = await samplePromise;
+    if (!sample) { out.textContent = templateComment(r); note.textContent = "Opis automatyczny z wyliczeń. Asystent AI działa w opublikowanej wersji aplikacji."; return; }
+    aiCtl = new AbortController(); $("ai-stop").hidden = false; $("ai-btn").disabled = true;
+    out.textContent = "Asystent analizuje propozycję…"; note.textContent = "";
+    const prompt = `Jesteś planistą transportu w Warszawie (ZTM). Oceń propozycję nowej linii autobusowej na podstawie wyliczeń symulatora (rok prognozy ${year}).
+Napisz po polsku, zwięźle (maks. 170 słów), bez nagłówków markdown:
+1) jednym zdaniem: czy linia ma sens i dlaczego,
+2) 2–3 konkretne ryzyka (korki na nazwanych ulicach, obciążenie, brak przesiadki),
+3) 2–3 konkretne propozycje poprawy (częstotliwość, tabor, buspas, przedłużenie do stacji) — odwołuj się do liczb.
+Nie wymyślaj danych, których nie ma poniżej. "nowy_popyt_w_zasiegu" = mieszkańcy nowych osiedli z pozwoleń GUNB w 400 m od przystanków (istniejące linie ich nie uwzględniają) + mieszkańcy bez żadnego przystanku ZTM w 400 m i kolei w 800 m.
+
+Dane:
+${JSON.stringify(describe(r), null, 1)}`;
+    try {
+      await sample(prompt, { signal: aiCtl.signal, onText: ({ text }) => { out.textContent = text; } });
+    } catch (e) {
+      if (e.text) out.textContent = e.text;
+      if (["not_granted", "sampling_disabled", "not_declared", "capability_disabled", "capability_removed"].includes(e.code)) {
+        samplePromise = Promise.resolve(null); out.textContent = templateComment(r); note.textContent = "Asystent AI jest niedostępny — pokazuję opis automatyczny.";
+      } else if (e.code === "rate_limited") note.textContent = "Za dużo zapytań do asystenta. Spróbuj za chwilę.";
+      else if (e.code !== "cancelled") note.textContent = "Asystent nie odpowiedział. Spróbuj ponownie.";
+    } finally { $("ai-stop").hidden = true; $("ai-btn").disabled = !lastEval; }
+  }
+
+  function wireUI() {
+    $("year").oninput = (e) => { year = +e.target.value; yearChanged(); };
+    $("scenario").querySelectorAll("button").forEach((b) => (b.onclick = () => { scenario = b.dataset.s; $("scenario").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x === b)); updateYearLayers(); renderEval(); }));
+    $("metric").querySelectorAll("button").forEach((b) => (b.onclick = () => { metric = b.dataset.m; $("metric").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x === b)); renderLegend(); if (map?.getLayer("hex")) { map.setPaintProperty("hex", "fill-color", hexColorExpr()); updateYearLayers(); } }));
+    $("tools").querySelectorAll("button").forEach((b) => (b.onclick = () => setMode(b.dataset.mode)));
+    $("undo").onclick = undo; $("clear").onclick = clearAll; $("reset").onclick = resetAll;
+    $("live").onchange = (e) => setLive(e.target.checked);
+    $("live-kind").onchange = renderLive;
+    let filterT; $("line-filter").oninput = () => { clearTimeout(filterT); filterT = setTimeout(applyLayers, 200); };
+    $("line-filter").onchange = () => { applyLayers(); fitToFilter(); };
+    $("layers").querySelectorAll("input").forEach((i) => (i.onchange = applyLayers));
+    $("sample-line").onclick = () => { loadProposal(SAMPLE); };
+    ["headway", "vehicle", "dwell", "layover", "trips", "share"].forEach((id) => ($(id).oninput = () => { renderEval(); if (metric === "trips" && (id === "trips" || id === "share")) updateYearLayers(); }));
+    $("ai-btn").onclick = askAI;
+    $("ai-stop").onclick = () => aiCtl?.abort();
+    $("json-load").onclick = () => { try { const n = loadProposal(JSON.parse($("json").value)); $("json-msg").textContent = n ? `Wczytano; pominięto ${n} punktów za daleko od ulic.` : "Wczytano propozycję."; } catch (e) { $("json-msg").textContent = `Nie udało się wczytać: ${e.message}`; } };
+    $("json-file").onchange = (e) => { const f = e.target.files[0]; if (!f) return; const rd = new FileReader(); rd.onload = () => { $("json").value = rd.result; $("json-load").click(); }; rd.readAsText(f); };
+    $("json-copy").onclick = async () => {
+      const txt = JSON.stringify(currentProposal()); $("json").value = txt;
+      try { await navigator.clipboard.writeText(txt); $("json-msg").textContent = "Skopiowano do schowka."; } catch { $("json").select(); $("json-msg").textContent = "Zaznaczono tekst w polu — skopiuj go ręcznie."; }
+    };
+    window.addEventListener("keydown", (e) => { if ((e.metaKey || e.ctrlKey) && e.key === "z") { e.preventDefault(); undo(); } if (e.key === "Escape") setMode("view"); });
+  }
+
+  function applyTheme() {
+    if (!map?.getLayer("hex")) return;
+    const set = (l, p, v) => map.setPaintProperty(l, p, v);
+    set("bg", "background-color", css("--ground")); set("river", "line-color", css("--water")); set("roads", "line-color", css("--road"));
+    set("districts", "line-color", css("--district")); set("trams", "line-color", css("--tram")); set("hex", "fill-color", hexColorExpr());
+    set("rail-metro", "line-color", css("--metro")); set("rail-kolej", "line-color", css("--rail"));
+    set("routes-bus", "line-color", css("--bus")); set("routes-tram", "line-color", css("--tram")); set("mask", "fill-color", css("--ground"));
+    set("ztm-sel", "circle-color", css("--paper")); set("ztm-sel", "circle-stroke-color", ["case", ["get", "t"], css("--tram"), css("--bus")]);
+    set("ztm", "circle-color", css("--paper")); set("ztm", "circle-stroke-color", css("--ink-3"));
+    set("nb", "circle-color", css("--sel")); set("nb", "circle-stroke-color", css("--paper"));
+    for (const l of ["stations-metro", "stations-kolej"]) set(l, "circle-color", css("--paper"));
+    set("stations-metro", "circle-stroke-color", css("--metro")); set("stations-kolej", "circle-stroke-color", css("--rail"));
+    set("planned", "circle-color", ["case", ["get", "tram"], css("--tram"), css("--metro")]); set("planned", "circle-stroke-color", css("--paper"));
+    set("planned-future", "circle-stroke-color", ["case", ["get", "tram"], css("--tram"), css("--metro")]);
+    set("catch", "fill-color", css("--accent")); set("catch-line", "line-color", css("--accent"));
+    set("route-casing", "line-color", css("--ink")); set("route", "line-color", ["match", ["get", "j"], 2, css("--crit"), 1, css("--warn"), css("--good")]);
+    set("wps", "circle-color", css("--ink")); set("wps", "circle-stroke-color", css("--paper"));
+    set("nstops", "circle-color", css("--paper")); set("nstops", "circle-stroke-color", css("--accent"));
+    set("live", "circle-color", css("--ink")); set("live", "circle-stroke-color", ["case", ["==", ["get", "typ"], 2], css("--tram"), css("--bus")]);
+  }
+
+  // API dla algorytmu zespołu i testów: window.symulator.wczytaj({...}), .propozycja(), .ocena()
+  window.symulator = { wczytaj: loadProposal, propozycja: currentProposal, ocena: () => lastEval, _G: () => G, _route: () => route };
+
+  wireUI(); setMode("view"); renderLegend();
+  load().then(() => {
+    buildMap();
+    matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applyTheme);
+    new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  }).catch((e) => { console.error(e); $("loading").textContent = "Nie udało się wczytać danych (symulator_dane.json, warszawa.json). Uruchom: .venv/bin/python frontend/serwer.py"; });
+})();
+</script>
