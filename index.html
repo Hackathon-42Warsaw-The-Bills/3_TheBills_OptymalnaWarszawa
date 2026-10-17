@@ -380,7 +380,8 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
 
   // ---------- dane ----------
   async function load() {
-    [D, B] = await Promise.all([fetch("frontend/symulator_dane.json").then((r) => r.json()), fetch("frontend/warszawa.json").then((r) => r.json())]);
+    // cache: "no-cache" — przeglądarka zawsze sprawdza, czy dane się zmieniły (po przeliczeniu prognozy nie pokaże starej kopii).
+    [D, B] = await Promise.all([fetch("frontend/symulator_dane.json", { cache: "no-cache" }).then((r) => r.json()), fetch("frontend/warszawa.json", { cache: "no-cache" }).then((r) => r.json())]);
     buildGraph(); buildPeople();
   }
 
@@ -682,7 +683,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       map.addSource("stations", { type: "geojson", data: fc(D.stops.rail.map(([lon, lat, name, sys]) => ({ type: "Feature", properties: { name, sys, m: sys === "metro" }, geometry: { type: "Point", coordinates: [lon, lat] } }))) });
       map.addSource("plannedsrc", { type: "geojson", data: fc(D.stops.planned.map(([lon, lat, name, kind, y]) => ({ type: "Feature", properties: { name, kind, y, tram: kind === "tramwaj" }, geometry: { type: "Point", coordinates: [lon, lat] } }))) });
       map.addSource("ztm", { type: "geojson", data: fc(D.stops.ztm.map(([lon, lat, name, tram, lines, nr]) => ({ type: "Feature", properties: { name, nr, t: !!tram, lines, l: `,${lines},` }, geometry: { type: "Point", coordinates: [lon, lat] } }))) });
-      map.addSource("routes", { type: "geojson", data: fc((D.routes || []).flatMap((r) => r.parts.map((p) => ({ type: "Feature", properties: { ref: r.ref, typ: r.typ, nazwa: r.nazwa, kursy: r.kursy }, geometry: { type: "LineString", coordinates: p } })))) });
+      map.addSource("routes", { type: "geojson", data: fc((D.routes || []).flatMap((r) => r.parts.map((p) => ({ type: "Feature", properties: { ref: r.ref, typ: r.typ, nazwa: r.nazwa, kursy: r.kursy, kier: `${r.ref}/${r.kier ?? 0}`, kierunek: r.kierunek || "" }, geometry: { type: "LineString", coordinates: p } })))) });
       // Maska: wszystko poza granicą Warszawy przykryte kolorem tła.
       map.addSource("mask", { type: "geojson", data: { type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [[[19, 51], [23, 51], [23, 53.5], [19, 53.5], [19, 51]], ...(D.boundary || [])] } } });
       map.addSource("hex", { type: "geojson", data: fc(hexFeatures()) });
@@ -775,15 +776,16 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     if (st.length) groups.push(`<div class="k">Stacje</div>` + st.map((f) => f.layer.id === "planned" ? `<b>${esc(f.properties.name)}</b> · planowana, ${f.properties.y}` : `<b>${esc(f.properties.name)}</b> · ${esc(f.properties.sys)}`).join("<br>"));
     const zs = uniq(by((id) => id.startsWith("ztm")), (f) => f.properties.name + f.properties.nr);
     if (zs.length) groups.push(`<div class="k">Przystanki ZTM</div>` + zs.slice(0, 4).map((f) => `<b>${esc(f.properties.name)} ${esc(f.properties.nr)}</b> · ${esc(f.properties.lines.split(",").join(", "))}`).join("<br>") + (zs.length > 4 ? `<br>…i ${zs.length - 4} więcej` : ""));
-    const rs = uniq(by((id) => id.startsWith("routes")), (f) => f.properties.ref);
+    const rsDir = uniq(by((id) => id.startsWith("routes")), (f) => f.properties.kier);   // linia + kierunek
+    const rs = uniq(rsDir, (f) => f.properties.ref);
     if (rs.length) {
       const sortRef = (a, b) => a.properties.ref.localeCompare(b.properties.ref, "pl", { numeric: true });
       const bus = rs.filter((f) => f.properties.typ !== "tram").sort(sortRef), tram = rs.filter((f) => f.properties.typ === "tram").sort(sortRef);
-      const kursy = rs.reduce((a, f) => a + f.properties.kursy, 0);
+      const kursy = rsDir.reduce((a, f) => a + f.properties.kursy, 0);   // oba kierunki, jeśli jadą tą ulicą
       let h = `<div class="k">Linie na tym odcinku (${rs.length})</div>`;
-      if (rs.length <= 3) h += rs.sort(sortRef).map((f) => `${f.properties.typ === "tram" ? "Tramwaj" : "Autobus"} <b>${esc(f.properties.ref)}</b> · ${esc(f.properties.nazwa)} · ${f.properties.kursy} kursów/dzień`).join("<br>");
+      if (rs.length <= 3) h += rs.sort(sortRef).map((f) => `${f.properties.typ === "tram" ? "Tramwaj" : "Autobus"} <b>${esc(f.properties.ref)}</b> · ${esc(f.properties.nazwa)} · ${f.properties.kursy} kursów/dzień w kierunku`).join("<br>");
       else h += (bus.length ? `Autobusy: <b>${bus.map((f) => esc(f.properties.ref)).join(", ")}</b>` : "") + (bus.length && tram.length ? "<br>" : "") + (tram.length ? `Tramwaje: <b>${tram.map((f) => esc(f.properties.ref)).join(", ")}</b>` : "");
-      if (rs.length > 1) h += `<br>Razem ~${fmt.format(kursy)} kursów dziennie w kierunku`;
+      if (rs.length > 1) h += `<br>Razem ~${fmt.format(kursy)} kursów dziennie (oba kierunki)`;
       groups.push(h);
     }
     const nb = by((id) => id === "nb");
@@ -984,7 +986,8 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       map.setPaintProperty("routes-bus", "line-width", routeWidth(1)); map.setPaintProperty("routes-bus", "line-opacity", 0.55);
       map.setPaintProperty("routes-tram", "line-width", routeWidth(1)); map.setPaintProperty("routes-tram", "line-opacity", 0.75);
       map.setLayoutProperty("ztm-sel", "visibility", "none");
-      $("filter-note").textContent = `${(D.routes || []).filter((r) => r.typ === "autobus").length} linii autobusowych i ${(D.routes || []).filter((r) => r.typ === "tram").length} tramwajowych w granicach Warszawy; grubość linii = liczba kursów.`;
+      const nRef = (t) => new Set((D.routes || []).filter((r) => r.typ === t).map((r) => r.ref)).size;
+      $("filter-note").textContent = `${nRef("autobus")} linii autobusowych i ${nRef("tram")} tramwajowych w granicach Warszawy (oba kierunki); grubość linii = liczba kursów.`;
     }
     renderLive();
     syncSections();

@@ -244,23 +244,24 @@ def export_rail_lines(boundary) -> list:
 
 def export_routes(boundary) -> list:
     """Trasy linii autobusowych i tramwajowych ZTM, przycięte do granic Warszawy.
-    Oba kierunki jednej linii łączymy: geometria dłuższego, kursy = średnia na kierunek."""
+    Oba kierunki osobno (drugi kierunek często jedzie inną ulicą: jednokierunkowe ulice, pętle),
+    po jednym — najdłuższym — przebiegu na kierunek; kursy = na ten kierunek."""
     path = DANE / "warszawa_linie_trasy.geojson"
     if not path.exists():
         return []
     r = gpd.read_file(path)
     r = r[r["typ"].isin(["autobus", "tram"])]
     out = []
-    for ref, grp in r.groupby("route_short_name", sort=False):
+    for (ref, kier), grp in r.groupby(["route_short_name", "direction_id"], sort=False):
         best = grp.loc[grp["dlugosc_km"].idxmax()]
         clipped = best.geometry.intersection(boundary)
         parts = parts_of(clipped, 0.00008)
         if not parts:
             continue
-        out.append({"ref": str(ref), "typ": best["typ"], "nazwa": best["route_long_name"],
-                    "kursy": int(round(grp["kursy_kierunek"].mean())), "parts": parts})
-    print(f"   linie ZTM w Warszawie: {sum(x['typ'] == 'autobus' for x in out)} autobusowych, "
-          f"{sum(x['typ'] == 'tram' for x in out)} tramwajowych")
+        out.append({"ref": str(ref), "typ": best["typ"], "nazwa": best["route_long_name"], "kier": str(kier),
+                    "kierunek": best.get("trip_headsign", ""), "kursy": int(grp["kursy_kierunek"].max()), "parts": parts})
+    print(f"   linie ZTM w Warszawie: {len({x['ref'] for x in out if x['typ'] == 'autobus'})} autobusowych, "
+          f"{len({x['ref'] for x in out if x['typ'] == 'tram'})} tramwajowych (oba kierunki: {len(out)} przebiegów)")
     return out
 
 

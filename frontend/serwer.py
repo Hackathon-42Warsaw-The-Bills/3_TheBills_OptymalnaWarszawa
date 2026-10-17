@@ -118,6 +118,12 @@ class Handler(SimpleHTTPRequestHandler):
             return self.send_error(404, "File not found")
         return super().do_GET()
 
+    def end_headers(self):
+        # Pliki danych zawsze z rewalidacją — po przeliczeniu prognozy przeglądarka nie użyje starej kopii.
+        if self.path.split("?")[0].endswith((".json", ".html")) or self.path.split("?")[0] == "/":
+            self.send_header("Cache-Control", "no-cache")
+        super().end_headers()
+
     def log_message(self, fmt, *args):
         if args and "/api/" in str(args[0]):
             return  # bez zalewania konsoli co 15 s
