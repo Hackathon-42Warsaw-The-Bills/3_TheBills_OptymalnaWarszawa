@@ -11,6 +11,7 @@ Wynik: viz/symulator_dane.json
   rail    — linie metra/SKM/KM/WKD do wyświetlenia
   routes  — trasy linii autobusowych i tramwajowych ZTM (dane/warszawa_linie_trasy.geojson) z liczbą kursów
   boundary— granica miasta (do maski „poza Warszawą”)
+  planned_metro — planowane linie metra (M2 zachód, M3, M4): stacje w kolejności, rok otwarcia
   infra   — cele podróży z dane/warszawa_infrastruktura.geojson (szpitale, szkoły, handel, kultura, parki…)
   Wszystko przycięte do granic Warszawy.
   params  — parametry modelu (osoby/mieszkanie, dryf, lata)
@@ -290,6 +291,42 @@ def export_infra(boundary) -> dict:
     return {"points": points, "parks": parks}
 
 
+# Planowane linie metra: kolejność stacji (OSM ma stacje jako punkty, bez przebiegu linii,
+# więc rysujemy przebieg orientacyjny — odcinki proste między stacjami). "*" = istniejąca stacja przesiadkowa.
+PLANNED_METRO = [
+    ("M2 zachód", "Bemowo – Karolin", 2027, ["Bemowo*", "Lazurowa", "Chrzanów", "Karolin"]),
+    ("M3", "Stadion Narodowy – Gocław", 2033, ["Stadion Narodowy*", "Dworzec Wschodni", "Mińska", "Wiatraczna",
+                                               "Ostrobramska", "Nowaka-Jeziorańskiego", "Gocław"]),
+    ("M4", "Wilanów – Tarchomin (bez finansowania)", 2040,
+     ["Wilanów", "Sobieskiego", "Patkowskiego", "Dolina Służewiecka", "Wilanowska*", "Smoluchowskiego",
+      "Rondo Unii Europejskiej", "Służewiec", "Żwirki i Wigury", "Wiślicka", "Bitwy Warszawskiej 1920 roku",
+      "Plac Narutowicza", "Plac Zawiszy", "Rondo Daszyńskiego*", "Okopowa", "Cmentarz Żydowski", "Rondo Radosława",
+      "Rydygiera", "Ruda", "Płochocińska", "Obrazkowa", "Myśliborska"]),
+]
+
+
+def export_planned_metro() -> list:
+    hubs = gpd.read_parquet(DATA_DIR / "hubs.parquet")
+    planned = hubs[(hubs["kind"] == "metro") & (hubs["status"] != "istniejący")]
+    planned_xy = {n: (g.x, g.y) for n, g in zip(planned["name"], planned.geometry)}
+    st = pd.read_csv(DANE / "kolej" / "stacje.csv", encoding="utf-8-sig")
+    existing_xy = {r.nazwa: (r.lon, r.lat) for r in st[st["system"] == "metro"].itertuples()}
+    out = []
+    for ref, opis, rok, names in PLANNED_METRO:
+        stations = []
+        for n in names:
+            exist = n.endswith("*")
+            name = n.rstrip("*")
+            xy = existing_xy.get(name) if exist else planned_xy.get(name)
+            if xy is None:
+                print(f"   ! brak współrzędnych stacji {name} ({ref})")
+                continue
+            stations.append([R5(xy[0]), R5(xy[1]), name, int(exist)])
+        out.append({"ref": ref, "opis": opis, "rok": rok, "stacje": stations})
+    print("   planowane metro: " + ", ".join(f"{m['ref']} ({len(m['stacje'])} st., {m['rok']})" for m in out))
+    return out
+
+
 def export_boundary(boundary) -> list:
     g = boundary.simplify(0.0002)
     return [[[R5(x), R5(y)] for x, y in p.exterior.coords] for p in getattr(g, "geoms", [g])]
@@ -306,7 +343,8 @@ def main() -> None:
     print("== linie, przystanki, granica")
     data = {"params": params, "hexes": export_hexes(hexes), "graph": graph, "people": people,
             "newbuild": newbuild, "stops": export_stops(boundary), "rail": export_rail_lines(boundary),
-            "routes": export_routes(boundary), "boundary": export_boundary(boundary), "infra": export_infra(boundary)}
+            "routes": export_routes(boundary), "boundary": export_boundary(boundary), "infra": export_infra(boundary),
+            "planned_metro": export_planned_metro()}
     OUT.write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")))
     print(f"== {OUT.relative_to(ROOT)}: {OUT.stat().st_size / 1e6:.1f} MB")
 

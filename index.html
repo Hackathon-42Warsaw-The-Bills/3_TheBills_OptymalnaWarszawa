@@ -196,8 +196,10 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
         <label class="check" for="lay-kolej"><input type="checkbox" id="lay-kolej" checked><i class="sw" style="border-top:3px solid var(--rail)"></i>SKM / KM / WKD</label>
         <label class="check" for="lay-ztm"><input type="checkbox" id="lay-ztm" checked>Przystanki ZTM</label>
         <label class="check" for="lay-nb"><input type="checkbox" id="lay-nb" checked><i class="sw" style="height:9px;width:9px;border-radius:50%;background:var(--sel)"></i>Nowe osiedla</label>
-        <label class="check" for="lay-planned"><input type="checkbox" id="lay-planned" checked>Planowane stacje</label>
+        <label class="check" for="lay-planned"><input type="checkbox" id="lay-planned" checked>Planowane tramwaje i kolej</label>
       </div>
+      <div class="subh">Planowane metro <span style="text-transform:none;letter-spacing:0;font-family:var(--f-body);font-weight:400">· linia przerywana = jeszcze nieotwarta w wybranym roku</span></div>
+      <div class="layers" id="pmetro-layers"></div>
       <div class="subh">Cele podróży</div>
       <div class="layers" id="infra-layers"></div>
     </section>
@@ -648,8 +650,9 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     if (!map || !map.getSource("hex")) return;
     map.getSource("hex").setData(fc(hexFeatures()));
     map.getSource("nb").setData(fc(nbFeatures()));
-    map.setFilter("planned", ["<=", ["get", "y"], year]);
-    map.setFilter("planned-future", [">", ["get", "y"], year]);
+    map.setFilter("planned", ["all", ["<=", ["get", "y"], year], ["!=", ["get", "kind"], "metro"]]);
+    map.setFilter("planned-future", ["all", [">", ["get", "y"], year], ["!=", ["get", "kind"], "metro"]]);
+    applyPlannedMetro();
   }
 
   function buildMap() {
@@ -700,8 +703,15 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       map.addLayer({ id: "nb", type: "circle", source: "nb", paint: { "circle-radius": ["interpolate", ["linear"], ["coalesce", ["get", "sum"], ["get", "v"]], 30, 2.5, 1000, 6, 4000, 11, 15000, 17], "circle-color": css("--sel"), "circle-opacity": 0.85, "circle-stroke-width": 1, "circle-stroke-color": css("--paper") } });
       map.addLayer({ id: "stations-kolej", type: "circle", source: "stations", filter: ["!", ["get", "m"]], paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 3, 15, 6], "circle-color": css("--paper"), "circle-stroke-width": 2, "circle-stroke-color": css("--rail") } });
       map.addLayer({ id: "stations-metro", type: "circle", source: "stations", filter: ["get", "m"], paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 3, 15, 6], "circle-color": css("--paper"), "circle-stroke-width": 2, "circle-stroke-color": css("--metro") } });
-      map.addLayer({ id: "planned-future", type: "circle", source: "plannedsrc", filter: [">", ["get", "y"], year], paint: { "circle-radius": ["case", ["get", "tram"], 2.5, 5], "circle-color": "rgba(0,0,0,0)", "circle-stroke-width": 1.5, "circle-stroke-color": ["case", ["get", "tram"], css("--tram"), css("--metro")], "circle-stroke-opacity": 0.6 } });
-      map.addLayer({ id: "planned", type: "circle", source: "plannedsrc", filter: ["<=", ["get", "y"], year], paint: { "circle-radius": ["case", ["get", "tram"], 3, 6], "circle-color": ["case", ["get", "tram"], css("--tram"), css("--metro")], "circle-stroke-width": 1.5, "circle-stroke-color": css("--paper") } });
+      const PM = D.planned_metro || [];
+      map.addSource("pmetro", { type: "geojson", data: fc(PM.map((m) => ({ type: "Feature", properties: { ref: m.ref, opis: m.opis, rok: m.rok, n: m.stacje.length }, geometry: { type: "LineString", coordinates: m.stacje.map((s) => [s[0], s[1]]) } }))) });
+      map.addSource("pmetro-st", { type: "geojson", data: fc(PM.flatMap((m) => m.stacje.map(([lon, lat, name, ex]) => ({ type: "Feature", properties: { ref: m.ref, rok: m.rok, name, ex }, geometry: { type: "Point", coordinates: [lon, lat] } })))) });
+      map.addLayer({ id: "pmetro-casing", type: "line", source: "pmetro", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": css("--paper"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 5, 16, 10] } });
+      map.addLayer({ id: "pmetro-future", type: "line", source: "pmetro", layout: { "line-cap": "butt", "line-join": "round" }, paint: { "line-color": css("--metro"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 2.6, 16, 5], "line-dasharray": [2, 1.6], "line-opacity": 0.85 } });
+      map.addLayer({ id: "pmetro-open", type: "line", source: "pmetro", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": css("--metro"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 2.6, 16, 5] } });
+      map.addLayer({ id: "pmetro-st", type: "circle", source: "pmetro-st", paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 3.5, 15, 7], "circle-color": ["case", [">", ["get", "rok"], year], css("--paper"), css("--metro")], "circle-stroke-width": 2, "circle-stroke-color": ["case", ["==", ["get", "ex"], 1], css("--ink"), css("--metro")] } });
+      map.addLayer({ id: "planned-future", type: "circle", source: "plannedsrc", filter: ["all", [">", ["get", "y"], year], ["!=", ["get", "kind"], "metro"]], paint: { "circle-radius": ["case", ["get", "tram"], 2.5, 5], "circle-color": "rgba(0,0,0,0)", "circle-stroke-width": 1.5, "circle-stroke-color": ["case", ["get", "tram"], css("--tram"), css("--metro")], "circle-stroke-opacity": 0.6 } });
+      map.addLayer({ id: "planned", type: "circle", source: "plannedsrc", filter: ["all", ["<=", ["get", "y"], year], ["!=", ["get", "kind"], "metro"]], paint: { "circle-radius": ["case", ["get", "tram"], 3, 6], "circle-color": ["case", ["get", "tram"], css("--tram"), css("--metro")], "circle-stroke-width": 1.5, "circle-stroke-color": css("--paper") } });
       map.addLayer({ id: "infra", type: "symbol", source: "infra", minzoom: 10.5,
         layout: { "icon-image": ["concat", "infra-", ["get", "g"]], "icon-size": ["interpolate", ["linear"], ["zoom"], 10.5, 0.55, 13, 0.75, 16, 1], "icon-allow-overlap": true,
                   "symbol-sort-key": ["match", ["get", "g"], "szpital", 0, "handel", 1, "urzad", 2, "kultura", 3, "szkola", 4, 5] } });
@@ -714,7 +724,9 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       map.addLayer({ id: "live", type: "circle", source: "live", paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 2.5, 14, 5, 17, 8], "circle-color": css("--ink"), "circle-stroke-width": 2.2, "circle-stroke-color": ["case", ["==", ["get", "typ"], 2], css("--tram"), css("--bus")], "circle-opacity": ["interpolate", ["linear"], ["get", "age"], 0, 1, 180, 0.35], "circle-stroke-opacity": ["interpolate", ["linear"], ["get", "age"], 0, 1, 180, 0.35] } });
       map.addLayer({ id: "nstops", type: "circle", source: "nstops", paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 5, 16, 8], "circle-color": css("--paper"), "circle-stroke-width": 3, "circle-stroke-color": css("--accent") } });
       wireMap();
+      renderPlannedMetroToggles();
       applyLayers();
+      applyPlannedMetro();
       $("loading").hidden = true;
       changed();
       // Link z #przyklad otwiera symulator od razu z przykładową linią (np. na prezentacji).
@@ -742,6 +754,15 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     if (pk.length && !inf.some((f) => f.properties.g === "park")) groups.push(`<div class="k">Park</div><b>${esc(pk[0].properties.nazwa)}</b> · ${fmt1.format(pk[0].properties.ha)} ha`);
     const ns = by((id) => id === "nstops");
     if (ns.length) groups.push(`<div class="k">Nowy przystanek</div>${esc(ns[0].properties.street || "ulica bez nazwy")}`);
+    const pms = uniq(by((id) => id === "pmetro-st"), (f) => f.properties.ref + f.properties.name);
+    const pml = uniq(by((id) => id === "pmetro-open" || id === "pmetro-future"), (f) => f.properties.ref);
+    if (pms.length || pml.length) {
+      const yr = (r) => (r > 2036 ? "po 2036, bez finansowania" : `otwarcie ${r}`);
+      groups.push(`<div class="k">Planowane metro · przebieg orientacyjny</div>` +
+        pms.map((f) => `<b>${esc(f.properties.name)}</b> · ${esc(f.properties.ref)}${f.properties.ex ? " (istniejąca stacja, przesiadka)" : ` · ${yr(f.properties.rok)}`}`).join("<br>") +
+        (pms.length && pml.length ? "<br>" : "") +
+        pml.filter((f) => !pms.some((s) => s.properties.ref === f.properties.ref)).map((f) => `<b>${esc(f.properties.ref)}</b> ${esc(f.properties.opis)} · ${f.properties.n} stacji · ${yr(f.properties.rok)}`).join("<br>"));
+    }
     const st = uniq(by((id) => id.startsWith("stations") || id === "planned"), (f) => f.properties.name);
     if (st.length) groups.push(`<div class="k">Stacje</div>` + st.map((f) => f.layer.id === "planned" ? `<b>${esc(f.properties.name)}</b> · planowana, ${f.properties.y}` : `<b>${esc(f.properties.name)}</b> · ${esc(f.properties.sys)}`).join("<br>"));
     const zs = uniq(by((id) => id.startsWith("ztm")), (f) => f.properties.name + f.properties.nr);
@@ -770,7 +791,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
 
   function wireMap() {
     const tip = $("tip");
-    const HIT = ["live", "infra", "parks", "nstops", "stations-metro", "stations-kolej", "planned", "ztm-sel", "ztm", "nb", "routes-bus", "routes-tram", "hex"];
+    const HIT = ["live", "infra", "parks", "nstops", "pmetro-st", "pmetro-open", "pmetro-future", "stations-metro", "stations-kolej", "planned", "ztm-sel", "ztm", "nb", "routes-bus", "routes-tram", "hex"];
     map.on("mousemove", (e) => {
       const r = 6, layers = HIT.filter((l) => map.getLayoutProperty(l, "visibility") !== "none");
       const fs = map.queryRenderedFeatures([[e.point.x - r, e.point.y - r], [e.point.x + r, e.point.y + r]], { layers });
@@ -825,6 +846,8 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     $("line-filter").value = "";
     for (const k of Object.keys(LAYERS)) $(`lay-${k}`).checked = k !== "bus";
     for (const k of Object.keys(INFRA)) $(`inf-${k}`).checked = INFRA_ON.has(k);
+    $("pmetro-layers").querySelectorAll("input").forEach((i) => (i.checked = PM_ON.has(i.dataset.ref)));
+    applyPlannedMetro();
     applyLayers();
     $("ai-out").innerHTML = '<span class="muted">Asystent opisze mocne i słabe strony narysowanej linii oraz zaproponuje, co poprawić.</span>'; $("ai-note").textContent = "";
     setMode("view");
@@ -883,6 +906,24 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     $("infra-layers").innerHTML = Object.entries(INFRA).map(([k, [label, color, glyph]]) =>
       `<label class="check" for="inf-${k}"><input type="checkbox" id="inf-${k}" ${INFRA_ON.has(k) ? "checked" : ""}><span class="ico" style="background:${color}">${glyph}</span>${label}</label>`).join("");
     $("infra-layers").querySelectorAll("input").forEach((i) => (i.onchange = applyLayers));
+  }
+
+  // ---------- planowane metro ----------
+  const PM_ON = new Set(["M2 zachód", "M3"]);
+  function renderPlannedMetroToggles() {
+    $("pmetro-layers").innerHTML = (D?.planned_metro || []).map((m, i) =>
+      `<label class="check" for="pm-${i}"><input type="checkbox" id="pm-${i}" data-ref="${esc(m.ref)}" ${PM_ON.has(m.ref) ? "checked" : ""}><i class="sw" style="border-top:3px dashed var(--metro)"></i>${esc(m.ref)} · ${m.rok > 2036 ? "po 2036" : m.rok}</label>`).join("");
+    $("pmetro-layers").querySelectorAll("input").forEach((i) => (i.onchange = applyPlannedMetro));
+  }
+  function applyPlannedMetro() {
+    if (!map?.getLayer("pmetro-open")) return;
+    const on = [...$("pmetro-layers").querySelectorAll("input:checked")].map((i) => i.dataset.ref);
+    const sel = ["in", ["get", "ref"], ["literal", on]];
+    map.setFilter("pmetro-casing", sel);
+    map.setFilter("pmetro-open", ["all", sel, ["<=", ["get", "rok"], year]]);
+    map.setFilter("pmetro-future", ["all", sel, [">", ["get", "rok"], year]]);
+    map.setFilter("pmetro-st", sel);
+    map.setPaintProperty("pmetro-st", "circle-color", ["case", [">", ["get", "rok"], year], css("--paper"), css("--metro")]);
   }
 
   // ---------- warstwy i filtr linii ----------
@@ -1095,6 +1136,9 @@ ${JSON.stringify(describe(r), null, 1)}`;
     set("bg", "background-color", css("--ground")); set("river", "line-color", css("--water")); set("roads", "line-color", css("--road"));
     set("districts", "line-color", css("--district")); set("trams", "line-color", css("--tram")); set("hex", "fill-color", hexColorExpr());
     set("rail-metro", "line-color", css("--metro")); set("rail-kolej", "line-color", css("--rail"));
+    for (const l of ["pmetro-open", "pmetro-future"]) set(l, "line-color", css("--metro"));
+    set("pmetro-casing", "line-color", css("--paper")); set("pmetro-st", "circle-stroke-color", ["case", ["==", ["get", "ex"], 1], css("--ink"), css("--metro")]);
+    applyPlannedMetro();
     set("parks", "fill-color", css("--park")); set("parks-line", "line-color", css("--park"));
     set("routes-bus", "line-color", css("--bus")); set("routes-tram", "line-color", css("--tram")); set("mask", "fill-color", css("--ground"));
     set("ztm-sel", "circle-color", css("--paper")); set("ztm-sel", "circle-stroke-color", ["case", ["get", "t"], css("--tram"), css("--bus")]);
