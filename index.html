@@ -13,6 +13,7 @@
   --tram: #b0307a; --rail: #3d4a8f; --metro: #c02a2a; --accent: #256abf; --sel: #f0b400;
   --m3: #0fa85a; --m4: #d4a000;   /* planowane metro: M3 zielona (#19e17d), M4 żółta — ciemniej dla kontrastu na jasnym tle */
   --good: #0f8a3c; --warn: #c98500; --crit: #d03b3b; --bus: #d9631e; --top: #c2255c; --park: #3f9a4f;
+  --bike: #0a7f9e;   /* stacje Veturilo */
   --h1: #fff1c1; --h2: #fdc46a; --h3: #f78c3b; --h4: #dc4a2c; --h5: #9c1b26;   /* heatmapa wykluczenia: niskie → wysokie */
   --s1: #e3eefb; --s2: #b7d3f6; --s3: #6da7ec; --s4: #2a78d6; --s5: #184f95;
   --p1: #eeeafc; --p2: #cbc0f3; --p3: #9d8be6; --p4: #6b53cf; --p5: #44309b;
@@ -29,6 +30,7 @@
   --m3: #19e17d; --m4: #ffd21f;
   --good: #3fc16b; --warn: #f0b429; --crit: #f06464; --bus: #ff9a4d; --top: #f06595; --park: #58b86a;
   --h1: #ffe9a8; --h2: #fdbb5a; --h3: #f78433; --h4: #e2492c; --h5: #b8202c;
+  --bike: #4cc3e0;
   --s1: #1a2a3d; --s2: #1f4677; --s3: #2a6bb8; --s4: #5a9bea; --s5: #a7cbf6;
   --p1: #231d3a; --p2: #3c2f70; --p3: #5e48b6; --p4: #9483ec; --p5: #cdc1fa;
   --t1: #13271f; --t2: #1b4a3c; --t3: #237a62; --t4: #43b392; --t5: #a0e4ce;
@@ -42,6 +44,7 @@
   --m3: #19e17d; --m4: #ffd21f;
   --good: #3fc16b; --warn: #f0b429; --crit: #f06464; --bus: #ff9a4d; --top: #f06595; --park: #58b86a;
   --h1: #ffe9a8; --h2: #fdbb5a; --h3: #f78433; --h4: #e2492c; --h5: #b8202c;
+  --bike: #4cc3e0;
   --s1: #1a2a3d; --s2: #1f4677; --s3: #2a6bb8; --s4: #5a9bea; --s5: #a7cbf6;
   --p1: #231d3a; --p2: #3c2f70; --p3: #5e48b6; --p4: #9483ec; --p5: #cdc1fa;
   --t1: #13271f; --t2: #1b4a3c; --t3: #237a62; --t4: #43b392; --t5: #a0e4ce;
@@ -282,6 +285,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
         <label class="check" for="lay-kolej"><input type="checkbox" id="lay-kolej" checked><i class="sw" style="border-top:3px solid var(--rail)"></i>SKM / KM / WKD</label>
         <label class="check" for="lay-ztm"><input type="checkbox" id="lay-ztm" checked>Przystanki ZTM</label>
         <label class="check" for="lay-nb"><input type="checkbox" id="lay-nb" checked><i class="sw" style="height:9px;width:9px;border-radius:50%;background:var(--sel)"></i>Nowe osiedla</label>
+        <label class="check" for="lay-veturilo"><input type="checkbox" id="lay-veturilo" checked><i class="sw" style="height:9px;width:9px;border-radius:50%;background:var(--bike)"></i>Stacje Veturilo</label>
         <label class="check" for="lay-planned"><input type="checkbox" id="lay-planned" checked>Planowane tramwaje i kolej</label>
       </div>
       <div class="subh"><label class="check" for="sec-pmetro"><input type="checkbox" id="sec-pmetro">Planowane metro</label><span class="note">linia przerywana = jeszcze nieotwarta w wybranym roku</span></div>
@@ -419,7 +423,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       </details>
     </section>
 
-    <footer>Dane: prognoza ludności klastrów (GUS NSP 2011/2021, BDL, pozwolenia GUNB), prędkości autobusów z rozkładu ZTM (GTFS, środa, szczyt 7–9 vs 20–22), sieć ulic OpenStreetMap (ODbL), kolej i metro OSM. Prototyp hackathonowy.</footer>
+    <footer>Dane: prognoza ludności klastrów (GUS NSP 2011/2021, BDL, pozwolenia GUNB), prędkości autobusów z rozkładu ZTM (GTFS, środa, szczyt 7–9 vs 20–22), sieć ulic OpenStreetMap (ODbL), kolej i metro OSM, stacje Veturilo (Nextbike GBFS, CC0). Prototyp hackathonowy.</footer>
   </aside>
 
   <div class="mapwrap" id="mapwrap">
@@ -498,7 +502,11 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
   // ---------- dane ----------
   async function load() {
     // cache: "no-cache" — przeglądarka zawsze sprawdza, czy dane się zmieniły (po przeliczeniu prognozy nie pokaże starej kopii).
-    [D, B] = await Promise.all([fetch("frontend/symulator_dane.json", { cache: "no-cache" }).then((r) => r.json()), fetch("frontend/warszawa.json", { cache: "no-cache" }).then((r) => r.json())]);
+    let vet;
+    [D, B, vet] = await Promise.all([fetch("frontend/symulator_dane.json", { cache: "no-cache" }).then((r) => r.json()), fetch("frontend/warszawa.json", { cache: "no-cache" }).then((r) => r.json()),
+                                     fetch("dane/veturilo_stacje.csv", { cache: "no-cache" }).then((r) => (r.ok ? r.text() : "")).catch(() => "")]);
+    VET.stations = parseRows(vet).filter((s) => Number.isFinite(+s.lon) && Number.isFinite(+s.lat))
+      .map((s) => ({ id: s.station_id, name: (s.nazwa || "").trim(), nr: s.numer, lon: +s.lon, lat: +s.lat, cap: +s.stojaki || 0, h3: s.h3, xy: toXY(+s.lon, +s.lat) }));
     buildGraph(); buildPeople();
     await loadTop();
   }
@@ -892,6 +900,8 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       map.addLayer({ id: "rail-metro", type: "line", source: "rail", filter: ["get", "m"], paint: { "line-color": css("--metro"), "line-width": RAIL_WIDTH["rail-metro"] } });
       map.addLayer({ id: "ztm", type: "circle", source: "ztm", minzoom: 13.5, paint: { "circle-radius": 2.5, "circle-color": css("--paper"), "circle-stroke-width": 1, "circle-stroke-color": css("--ink-3") } });
       map.addLayer({ id: "ztm-sel", type: "circle", source: "ztm", filter: ["==", ["get", "l"], "-"], layout: { visibility: "none" }, paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 3, 15, 5.5], "circle-color": css("--paper"), "circle-stroke-width": 2, "circle-stroke-color": ["case", ["get", "t"], css("--tram"), css("--bus")] } });
+      map.addSource("veturilo", { type: "geojson", data: fc(vetFeatures()) });
+      map.addLayer({ id: "veturilo", type: "circle", source: "veturilo", minzoom: 10.5, paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10.5, 2, 13, 4, 16, 7], "circle-color": css("--bike"), "circle-stroke-width": 1.5, "circle-stroke-color": css("--paper") } });
       map.addLayer({ id: "nb", type: "circle", source: "nb", paint: { "circle-radius": ["interpolate", ["linear"], ["coalesce", ["get", "sum"], ["get", "v"]], 30, 2.5, 1000, 6, 4000, 11, 15000, 17], "circle-color": css("--sel"), "circle-opacity": 0.85, "circle-stroke-width": 1, "circle-stroke-color": css("--paper") } });
       map.addLayer({ id: "stations-kolej", type: "circle", source: "stations", filter: ["!", ["get", "m"]], paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 3, 15, 6], "circle-color": css("--paper"), "circle-stroke-width": 2, "circle-stroke-color": css("--rail") } });
       map.addLayer({ id: "stations-metro", type: "circle", source: "stations", filter: ["get", "m"], paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 3, 15, 6], "circle-color": css("--paper"), "circle-stroke-width": 2, "circle-stroke-color": css("--metro") } });
@@ -978,6 +988,13 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     }
     const st = uniq(by((id) => id.startsWith("stations") || id === "planned"), (f) => f.properties.name);
     if (st.length) groups.push(`<div class="k">Stacje</div>` + st.map((f) => f.layer.id === "planned" ? `<b>${esc(f.properties.name)}</b> · planowana, ${f.properties.y}` : `<b>${esc(f.properties.name)}</b> · ${esc(f.properties.sys)}`).join("<br>"));
+    const vt = uniq(by((id) => id === "veturilo"), (f) => f.properties.id);
+    if (vt.length) {
+      const live = vt.some((f) => f.properties.bikes >= 0), hm = VET.updated?.toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit" });
+      groups.push(`<div class="k">Veturilo</div>` + vt.slice(0, 3).map((f) => { const p = f.properties;
+        return `<b>${esc(p.name)}</b> · nr ${esc(p.nr)} · ${fmt.format(p.cap)} stojaków` + (p.bikes >= 0 ? `<br>teraz: ${fmt.format(p.bikes)} rowerów, ${fmt.format(p.docks)} wolnych stojaków` : ""); }).join("<br>")
+        + (live && hm ? `<br><span style="opacity:0.7">stan na żywo z ${hm}</span>` : ""));
+    }
     const zs = uniq(by((id) => id.startsWith("ztm")), (f) => f.properties.name + f.properties.nr);
     if (zs.length) groups.push(`<div class="k">Przystanki ZTM</div>` + zs.slice(0, 4).map((f) => `<b>${esc(f.properties.name)} ${esc(f.properties.nr)}</b> · ${esc(f.properties.lines.split(",").join(", "))}`).join("<br>") + (zs.length > 4 ? `<br>…i ${zs.length - 4} więcej` : ""));
     const rsDir = uniq(by((id) => id.startsWith("routes")), (f) => f.properties.kier);   // linia + kierunek
@@ -1009,7 +1026,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
 
   function wireMap() {
     const tip = $("tip");
-    const HIT = ["top-pt", "top-fill", "sim", "load", "live", "infra", "parks", "nstops", "pmetro-st", "pmetro-open", "pmetro-future", "stations-metro", "stations-kolej", "planned", "ztm-sel", "ztm", "nb", "routes-bus", "routes-tram", "heat", "hex"];
+    const HIT = ["top-pt", "top-fill", "sim", "load", "live", "infra", "parks", "nstops", "pmetro-st", "pmetro-open", "pmetro-future", "stations-metro", "stations-kolej", "planned", "veturilo", "ztm-sel", "ztm", "nb", "routes-bus", "routes-tram", "heat", "hex"];
     map.on("mousemove", (e) => {
       const r = 6, layers = HIT.filter((l) => map.getLayoutProperty(l, "visibility") !== "none");
       const fs = map.queryRenderedFeatures([[e.point.x - r, e.point.y - r], [e.point.x + r, e.point.y + r]], { layers });
@@ -1365,7 +1382,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
   const pmVar = (ref) => ({ M3: "--m3", M4: "--m4" })[ref] || "--metro";
   const pmColor = () => ["match", ["get", "ref"], "M3", css("--m3"), "M4", css("--m4"), css("--metro")];
   const LAYERS = { hex: ["hex"], roads: ["roads"], bus: ["routes-bus"], tram: ["routes-tram", "trams"], metro: ["rail-metro", "stations-metro"],
-                   kolej: ["rail-kolej", "stations-kolej"], ztm: ["ztm"], nb: ["nb"], planned: ["planned", "planned-future"] };
+                   kolej: ["rail-kolej", "stations-kolej"], ztm: ["ztm"], nb: ["nb"], veturilo: ["veturilo"], planned: ["planned", "planned-future"] };
   const routeWidth = (k) => ["interpolate", ["linear"], ["zoom"], 10, ["*", k, ["interpolate", ["linear"], ["get", "kursy"], 20, 0.5, 120, 1.3, 300, 2.6]], 16, ["*", k, ["interpolate", ["linear"], ["get", "kursy"], 20, 1.5, 120, 3.5, 300, 6]]];
   const SEL_WIDTH = ["interpolate", ["linear"], ["zoom"], 10, 3, 16, 7];   // grubość linii wybranych filtrem
   const RAIL_WIDTH = { "rail-kolej": ["interpolate", ["linear"], ["zoom"], 10, 1.6, 16, 5], "rail-metro": ["interpolate", ["linear"], ["zoom"], 10, 2.6, 16, 5] };
@@ -1397,7 +1414,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       const servesSel = ["any", ...sel.map((x) => ["in", `,${x},`, ["get", "l"]])];
       for (const id of ["stations-kolej", "stations-metro"]) map.setFilter(id, ["all", RAIL_KIND[id], servesSel]);
       for (const id of ["routes-bus", "routes-tram", "rail-kolej", "rail-metro", "stations-kolej", "stations-metro"]) map.setLayoutProperty(id, "visibility", "visible");
-      for (const id of ["trams", "planned", "planned-future"]) map.setLayoutProperty(id, "visibility", "none");
+      for (const id of ["trams", "planned", "planned-future", "veturilo"]) map.setLayoutProperty(id, "visibility", "none");
       for (const id of ["routes-bus", "routes-tram", "rail-kolej", "rail-metro"]) map.setPaintProperty(id, "line-width", SEL_WIDTH);
       for (const id of ["routes-bus", "routes-tram"]) map.setPaintProperty(id, "line-opacity", 0.95);
       map.setFilter("ztm-sel", ["any", ...sel.map((x) => ["in", `,${x},`, ["upcase", ["get", "l"]]])]);
@@ -1420,6 +1437,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     }
     applyPlannedMetro();
     renderLive();
+    ensureVeturilo();
     if (SIM.data) simFrame();
     renderLoad();
     syncSections();
@@ -1639,6 +1657,7 @@ ${JSON.stringify(describe(r), null, 1)}`;
     set("ztm-sel", "circle-color", css("--paper")); set("ztm-sel", "circle-stroke-color", ["case", ["get", "t"], css("--tram"), css("--bus")]);
     set("ztm", "circle-color", css("--paper")); set("ztm", "circle-stroke-color", css("--ink-3"));
     set("nb", "circle-color", css("--sel")); set("nb", "circle-stroke-color", css("--paper"));
+    set("veturilo", "circle-color", css("--bike")); set("veturilo", "circle-stroke-color", css("--paper"));
     for (const l of ["stations-metro", "stations-kolej"]) set(l, "circle-color", css("--paper"));
     set("stations-metro", "circle-stroke-color", css("--metro")); set("stations-kolej", "circle-stroke-color", css("--rail"));
     set("planned", "circle-color", ["case", ["get", "tram"], css("--tram"), css("--metro")]); set("planned", "circle-stroke-color", css("--paper"));
@@ -1651,11 +1670,52 @@ ${JSON.stringify(describe(r), null, 1)}`;
     set("live", "circle-color", css("--ink")); set("live", "circle-stroke-color", ["case", ["==", ["get", "typ"], 2], css("--tram"), css("--bus")]);
   }
 
+  // ---------- stacje Veturilo (dane/veturilo_stacje.csv z mapping/veturilo.py) + stan na żywo z GBFS Nextbike ----------
+  // Kanał GBFS jest otwarty (CC0) i pozwala na zapytania z przeglądarki, więc działa też na GitHub Pages.
+  const VET = { stations: [], status: new Map(), updated: null, timer: 0, busy: false };
+  const VET_STATUS = "https://gbfs.nextbike.net/maps/gbfs/v2/nextbike_vw/pl/station_status.json";
+  const vetFeatures = () => VET.stations.map((s) => {
+    const st = VET.status.get(s.id);
+    return { type: "Feature", properties: { id: s.id, name: s.name, nr: s.nr, cap: s.cap, bikes: st ? st.bikes : -1, docks: st ? st.docks : -1 }, geometry: { type: "Point", coordinates: [s.lon, s.lat] } };
+  });
+  const vetVisible = () => !!map?.getLayer("veturilo") && map.getLayoutProperty("veturilo", "visibility") !== "none";
+  function ensureVeturilo() { if (!VET.timer && !VET.busy) pollVeturilo(); }
+  async function pollVeturilo() {
+    clearTimeout(VET.timer); VET.timer = 0;
+    if (!vetVisible() || document.visibilityState !== "visible") return;
+    VET.busy = true;
+    try {
+      const j = await fetch(VET_STATUS, { cache: "no-store" }).then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); });
+      VET.status = new Map(j.data.stations.map((s) => [s.station_id, { bikes: s.num_bikes_available, docks: s.num_docks_available }]));
+      VET.updated = new Date((j.last_updated || Date.now() / 1000) * 1000);
+      map.getSource("veturilo")?.setData(fc(vetFeatures()));
+      if (CL.i >= 0) renderCluster();
+    } catch (e) { console.warn("Veturilo: brak stanu na żywo", e); }
+    finally { VET.busy = false; }
+    VET.timer = setTimeout(pollVeturilo, 60000);
+  }
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") ensureVeturilo(); });
+  // Wiersze panelu klastra: stacje w klastrze (stojaki, rowery teraz) albo najbliższa stacja.
+  // Odległość z dane/veturilo_w_klastrach.csv (od środka ciężkości klastra), gdy plik jest; inaczej liczona tutaj.
+  function vetRows(id, h, n, row, distFile) {
+    if (!VET.stations.length) return "";
+    const inHex = VET.stations.filter((s) => s.h3 === id);
+    if (inHex.length) {
+      const bikes = inHex.reduce((a, s) => a + (VET.status.get(s.id)?.bikes ?? 0), 0);
+      return row("Stacje Veturilo · stojaki", `${n(inHex.length)} · ${n(inHex.reduce((a, s) => a + s.cap, 0))}` + (VET.status.size ? ` · ${n(bikes)} rowerów teraz` : ""))
+        + `<div class="cp-note">${inHex.map((s) => esc(s.name)).join(", ")}</div>`;
+    }
+    const ring = h.rings[0], [cx, cy] = toXY(ring.reduce((a, p) => a + p[0], 0) / ring.length, ring.reduce((a, p) => a + p[1], 0) / ring.length);
+    const near = VET.stations.reduce((b, s) => { const d = Math.hypot(s.xy[0] - cx, s.xy[1] - cy); return d < b.d ? { s, d } : b; }, { d: Infinity });
+    return row("Stacje Veturilo", `brak · najbliższa ${n(Number.isFinite(distFile) ? distFile : near.d)} m`) + `<div class="cp-note">Najbliższa: ${esc(near.s.name)}</div>`;
+  }
+
   // ---------- panel statystyk klastra (prawy dolny róg mapy) ----------
   // Dane szczegółowe wczytywane raz, przy pierwszym kliknięciu klastra; brak pliku = brak tej sekcji.
   const CL = { i: -1, data: null, loading: null, bbox: null, pts: null };
   const SCEN_NAME = { lo: "niski", base: "bazowy", hi: "wysoki" };
-  function parseCSV(txt) {
+  const parseCSV = (txt) => new Map(parseRows(txt).map((o) => [o.h3, o]));
+  function parseRows(txt) {
     const rows = []; let row = [], f = "", q = false;
     txt = txt.replace(/^﻿/, "");
     for (let k = 0; k < txt.length; k++) {
@@ -1668,15 +1728,15 @@ ${JSON.stringify(describe(r), null, 1)}`;
     }
     if (f || row.length) { row.push(f.replace(/\r$/, "")); rows.push(row); }
     const [head, ...body] = rows;
-    return new Map(head ? body.filter((r) => r.length > 1).map((r) => { const o = Object.fromEntries(head.map((h, k) => [h, r[k] ?? ""])); return [o.h3, o]; }) : []);
+    return head ? body.filter((r) => r.length > 1).map((r) => Object.fromEntries(head.map((h, k) => [h, r[k] ?? ""]))) : [];
   }
   function loadClusterData() {
     if (CL.loading) return CL.loading;
     const csv = (p) => fetch(p, { cache: "no-cache" }).then((r) => (r.ok ? r.text() : "")).then(parseCSV).catch(() => new Map());
     const ml = fetchHeat().then((g) => new Map(g.features.map((f) => [f.properties.h3, f.properties]))).catch(() => new Map());
     CL.loading = Promise.all([csv("dane/cechy_klastrow.csv"), csv("dane/potrzeba_komunikacji.csv"), csv("dane/symulacja/klastry_podroze.csv"),
-                              csv("dane/historia_ludnosci.csv"), csv("dane/kolej/klastry_kolej.csv"), ml])
-      .then(([cechy, potrzeba, podroze, historia, kolej, ml]) => (CL.data = { cechy, potrzeba, podroze, historia, kolej, ml }));
+                              csv("dane/historia_ludnosci.csv"), csv("dane/kolej/klastry_kolej.csv"), ml, csv("dane/veturilo_w_klastrach.csv")])
+      .then(([cechy, potrzeba, podroze, historia, kolej, ml, vet]) => (CL.data = { cechy, potrzeba, podroze, historia, kolej, ml, vet }));
     return CL.loading;
   }
   const inRings = (lon, lat, rings) => rings.some((ring) => {
@@ -1796,7 +1856,8 @@ ${JSON.stringify(describe(r), null, 1)}`;
       row(`Mieszkańcy ≤ 800 m od stacji (w ${year})`, rShare != null ? pct(rShare) : null) +
       row("Metro", metro) +
       row("Kolej (SKM / KM / WKD)", rail) +
-      row("Linie kolejowe i metra w klastrze", v(kol, "linie") ? esc(v(kol, "linie")) : null));
+      row("Linie kolejowe i metra w klastrze", v(kol, "linie") ? esc(v(kol, "linie")) : null) +
+      vetRows(id, h, n, row, v(d?.vet.get(id), "odl_do_veturilo_m")));
 
     // Podróże — symulacja porannego szczytu
     const tc = (x) => (x == null || !Number.isFinite(+x) ? "brak połączenia" : `${n(x)} min`);
