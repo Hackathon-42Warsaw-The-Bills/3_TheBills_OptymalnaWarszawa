@@ -197,7 +197,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     <section>
       <h2>Warstwy i filtr linii</h2>
       <div class="params" style="grid-template-columns:1fr">
-        <label for="line-filter">Pokaż tylko linie (np. 523, 189, 17) — trasa, przystanki i pojazdy<input id="line-filter" type="text" placeholder="wszystkie linie" autocomplete="off" spellcheck="false"></label>
+        <label for="line-filter">Pokaż tylko linie (np. 523, 17, M1, S2, M3) — trasa, przystanki, stacje i pojazdy<input id="line-filter" type="text" placeholder="wszystkie linie" autocomplete="off" spellcheck="false"></label>
       </div>
       <div class="muted" id="filter-note" style="margin-top:6px"></div>
       <div class="row" style="margin-top:10px">
@@ -748,8 +748,9 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
         return !seenPair.has(k) && seenPair.add(k);
       }).map((e) => line(e.coords))) });
       map.addSource("trams", { type: "geojson", data: fc(B.trams.edges.map((e) => line(decode(e[2], S)))) });
-      map.addSource("rail", { type: "geojson", data: fc(D.rail.flatMap((r) => r.parts.map((p) => ({ type: "Feature", properties: { m: r.system === "metro" }, geometry: { type: "LineString", coordinates: p } })))) });
-      map.addSource("stations", { type: "geojson", data: fc(D.stops.rail.map(([lon, lat, name, sys]) => ({ type: "Feature", properties: { name, sys, m: sys === "metro" }, geometry: { type: "Point", coordinates: [lon, lat] } }))) });
+      map.addSource("rail", { type: "geojson", data: fc(D.rail.flatMap((r) => r.parts.map((p) => ({ type: "Feature", properties: { m: r.system === "metro", ref: r.ref }, geometry: { type: "LineString", coordinates: p } })))) });
+      // l = ",S2,S3," — linie zatrzymujące się na stacji, do filtra linii.
+      map.addSource("stations", { type: "geojson", data: fc(D.stops.rail.map(([lon, lat, name, sys, lines]) => ({ type: "Feature", properties: { name, sys, m: sys === "metro", l: `,${(lines || "").replace(/\s/g, "").toUpperCase()},` }, geometry: { type: "Point", coordinates: [lon, lat] } }))) });
       map.addSource("plannedsrc", { type: "geojson", data: fc(D.stops.planned.map(([lon, lat, name, kind, y]) => ({ type: "Feature", properties: { name, kind, y, tram: kind === "tramwaj" }, geometry: { type: "Point", coordinates: [lon, lat] } }))) });
       map.addSource("ztm", { type: "geojson", data: fc(D.stops.ztm.map(([lon, lat, name, tram, lines, nr]) => ({ type: "Feature", properties: { name, nr, t: !!tram, lines, l: `,${lines},` }, geometry: { type: "Point", coordinates: [lon, lat] } }))) });
       map.addSource("routes", { type: "geojson", data: fc((D.routes || []).flatMap((r) => r.parts.map((p) => ({ type: "Feature", properties: { ref: r.ref, typ: r.typ, nazwa: r.nazwa, kursy: r.kursy, kier: `${r.ref}/${r.kier ?? 0}`, kierunek: r.kierunek || "" }, geometry: { type: "LineString", coordinates: p } })))) });
@@ -775,8 +776,8 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       map.addLayer({ id: "trams", type: "line", source: "trams", paint: { "line-color": css("--tram"), "line-opacity": 0.6, "line-width": ["interpolate", ["linear"], ["zoom"], 10, 0.8, 16, 2.5] } });
       map.addLayer({ id: "routes-bus", type: "line", source: "routes", filter: ["==", ["get", "typ"], "autobus"], layout: { "line-cap": "round", "line-join": "round", visibility: "none" }, paint: { "line-color": css("--bus"), "line-opacity": 0.55, "line-width": routeWidth(1) } });
       map.addLayer({ id: "routes-tram", type: "line", source: "routes", filter: ["==", ["get", "typ"], "tram"], layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": css("--tram"), "line-opacity": 0.75, "line-width": routeWidth(1) } });
-      map.addLayer({ id: "rail-kolej", type: "line", source: "rail", filter: ["!", ["get", "m"]], paint: { "line-color": css("--rail"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 1.6, 16, 5] } });
-      map.addLayer({ id: "rail-metro", type: "line", source: "rail", filter: ["get", "m"], paint: { "line-color": css("--metro"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 2.6, 16, 5] } });
+      map.addLayer({ id: "rail-kolej", type: "line", source: "rail", filter: ["!", ["get", "m"]], paint: { "line-color": css("--rail"), "line-width": RAIL_WIDTH["rail-kolej"] } });
+      map.addLayer({ id: "rail-metro", type: "line", source: "rail", filter: ["get", "m"], paint: { "line-color": css("--metro"), "line-width": RAIL_WIDTH["rail-metro"] } });
       map.addLayer({ id: "ztm", type: "circle", source: "ztm", minzoom: 13.5, paint: { "circle-radius": 2.5, "circle-color": css("--paper"), "circle-stroke-width": 1, "circle-stroke-color": css("--ink-3") } });
       map.addLayer({ id: "ztm-sel", type: "circle", source: "ztm", filter: ["==", ["get", "l"], "-"], layout: { visibility: "none" }, paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 3, 15, 5.5], "circle-color": css("--paper"), "circle-stroke-width": 2, "circle-stroke-color": ["case", ["get", "t"], css("--tram"), css("--bus")] } });
       map.addLayer({ id: "nb", type: "circle", source: "nb", paint: { "circle-radius": ["interpolate", ["linear"], ["coalesce", ["get", "sum"], ["get", "v"]], 30, 2.5, 1000, 6, 4000, 11, 15000, 17], "circle-color": css("--sel"), "circle-opacity": 0.85, "circle-stroke-width": 1, "circle-stroke-color": css("--paper") } });
@@ -1017,7 +1018,9 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
   }
   function applyPlannedMetro() {
     if (!map?.getLayer("pmetro-open")) return;
-    const on = [...$("pmetro-layers").querySelectorAll("input:checked")].map((i) => i.dataset.ref);
+    // Przy filtrze linii widać tylko planowane linie z filtra (np. „M3”), niezależnie od przełączników.
+    const fsel = lineFilter();
+    const on = fsel.length ? plannedInFilter(fsel) : [...$("pmetro-layers").querySelectorAll("input:checked")].map((i) => i.dataset.ref);
     const sel = ["in", ["get", "ref"], ["literal", on]];
     map.setFilter("pmetro-casing", sel);
     map.setFilter("pmetro-open", ["all", sel, ["<=", ["get", "rok"], year]]);
@@ -1035,6 +1038,10 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
                    kolej: ["rail-kolej", "stations-kolej"], ztm: ["ztm"], nb: ["nb"], planned: ["planned", "planned-future"] };
   const routeWidth = (k) => ["interpolate", ["linear"], ["zoom"], 10, ["*", k, ["interpolate", ["linear"], ["get", "kursy"], 20, 0.5, 120, 1.3, 300, 2.6]], 16, ["*", k, ["interpolate", ["linear"], ["get", "kursy"], 20, 1.5, 120, 3.5, 300, 6]]];
   const SEL_WIDTH = ["interpolate", ["linear"], ["zoom"], 10, 3, 16, 7];   // grubość linii wybranych filtrem
+  const RAIL_WIDTH = { "rail-kolej": ["interpolate", ["linear"], ["zoom"], 10, 1.6, 16, 5], "rail-metro": ["interpolate", ["linear"], ["zoom"], 10, 2.6, 16, 5] };
+  const RAIL_KIND = { "rail-kolej": ["!", ["get", "m"]], "rail-metro": ["get", "m"], "stations-kolej": ["!", ["get", "m"]], "stations-metro": ["get", "m"] };
+  // Planowane linie metra pasujące do filtra: „M2” wybiera też „M2 zachód”.
+  const plannedInFilter = (sel) => (D.planned_metro || []).map((m) => m.ref).filter((r) => sel.includes(r.toUpperCase()) || sel.includes(r.split(" ")[0].toUpperCase()));
   const lineFilter = () => [...new Set($("line-filter").value.split(/[\s,;]+/).map((x) => x.trim().toUpperCase()).filter(Boolean))];
   function applyLayers() {
     if (!map?.getLayer("hex")) return;
@@ -1043,37 +1050,50 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     const groups = Object.keys(INFRA).filter((k) => $(`inf-${k}`)?.checked);
     map.setFilter("infra", ["in", ["get", "g"], ["literal", groups]]);
     for (const id of ["parks", "parks-line"]) map.setLayoutProperty(id, "visibility", vis(groups.includes("park")));
-    const known = new Set((D.routes || []).map((r) => r.ref.toUpperCase()));
+    const known = new Set([...(D.routes || []), ...(D.rail || [])].map((r) => r.ref.toUpperCase()));
+    plannedInFilter(sel).forEach((r) => { known.add(r.toUpperCase()); known.add(r.split(" ")[0].toUpperCase()); });
     if (sel.length) {
-      // Filtr linii — autobusy i tramwaje tak samo: widoczne tylko wybrane trasy (pozostałe linie i tory
-      // tramwajowe ukryte), wszystkie tej samej, dużej grubości (nie zależnej od liczby kursów),
-      // przystanki tylko tych linii (przy każdym zoomie).
+      // Filtr linii — wszystkie środki transportu tak samo (autobus, tramwaj, metro, SKM/KM/WKD, planowane metro):
+      // widoczne tylko wybrane linie i ich przystanki/stacje (reszta sieci, tory tramwajowe i planowane stacje
+      // ukryte), wszystkie wybrane linie tej samej, dużej grubości (nie zależnej od liczby kursów).
       const inSel = ["in", ["upcase", ["get", "ref"]], ["literal", sel]];
       map.setFilter("routes-bus", ["all", ["==", ["get", "typ"], "autobus"], inSel]);
       map.setFilter("routes-tram", ["all", ["==", ["get", "typ"], "tram"], inSel]);
-      map.setLayoutProperty("routes-bus", "visibility", "visible"); map.setLayoutProperty("routes-tram", "visibility", "visible");
-      map.setLayoutProperty("trams", "visibility", "none");
-      for (const id of ["routes-bus", "routes-tram"]) { map.setPaintProperty(id, "line-width", SEL_WIDTH); map.setPaintProperty(id, "line-opacity", 0.95); }
+      for (const id of ["rail-kolej", "rail-metro"]) map.setFilter(id, ["all", RAIL_KIND[id], inSel]);
+      const servesSel = ["any", ...sel.map((x) => ["in", `,${x},`, ["get", "l"]])];
+      for (const id of ["stations-kolej", "stations-metro"]) map.setFilter(id, ["all", RAIL_KIND[id], servesSel]);
+      for (const id of ["routes-bus", "routes-tram", "rail-kolej", "rail-metro", "stations-kolej", "stations-metro"]) map.setLayoutProperty(id, "visibility", "visible");
+      for (const id of ["trams", "planned", "planned-future"]) map.setLayoutProperty(id, "visibility", "none");
+      for (const id of ["routes-bus", "routes-tram", "rail-kolej", "rail-metro"]) map.setPaintProperty(id, "line-width", SEL_WIDTH);
+      for (const id of ["routes-bus", "routes-tram"]) map.setPaintProperty(id, "line-opacity", 0.95);
       map.setFilter("ztm-sel", ["any", ...sel.map((x) => ["in", `,${x},`, ["upcase", ["get", "l"]]])]);
       map.setLayoutProperty("ztm-sel", "visibility", "visible"); map.setLayoutProperty("ztm", "visibility", "none");
-      const nStops = D.stops.ztm.filter((z) => sel.some((x) => `,${z[4].toUpperCase()},`.includes(`,${x},`))).length;
+      const serves = (lines) => sel.some((x) => `,${(lines || "").replace(/\s/g, "").toUpperCase()},`.includes(`,${x},`));
+      const pm = plannedInFilter(sel), nPm = (D.planned_metro || []).filter((x) => pm.includes(x.ref)).reduce((a, x) => a + x.stacje.filter((s) => !s[3]).length, 0);
+      const counts = [[D.stops.ztm.filter((z) => serves(z[4])).length, "przystanków ZTM"], [D.stops.rail.filter((s) => serves(s[4])).length, "stacji"], [nPm, "planowanych stacji metra"]]
+        .filter(([n]) => n).map(([n, w]) => `${fmt.format(n)} ${w}`);
       const unknown = sel.filter((x) => !known.has(x));
-      $("filter-note").textContent = `Linie ${sel.join(", ")}: ${fmt.format(nStops)} przystanków w Warszawie.` + (unknown.length ? ` Nie znaleziono: ${unknown.join(", ")}.` : "");
+      $("filter-note").textContent = `Linie ${sel.join(", ")}: ${counts.length ? counts.join(", ") + " w Warszawie" : "brak przystanków w Warszawie"}.` + (unknown.length ? ` Nie znaleziono: ${unknown.join(", ")}.` : "");
     } else {
       map.setFilter("routes-bus", ["==", ["get", "typ"], "autobus"]); map.setFilter("routes-tram", ["==", ["get", "typ"], "tram"]);
       map.setPaintProperty("routes-bus", "line-width", routeWidth(1)); map.setPaintProperty("routes-bus", "line-opacity", 0.55);
       map.setPaintProperty("routes-tram", "line-width", routeWidth(1)); map.setPaintProperty("routes-tram", "line-opacity", 0.75);
+      for (const id of ["rail-kolej", "rail-metro"]) { map.setFilter(id, RAIL_KIND[id]); map.setPaintProperty(id, "line-width", RAIL_WIDTH[id]); }
+      for (const id of ["stations-kolej", "stations-metro"]) map.setFilter(id, RAIL_KIND[id]);
       map.setLayoutProperty("ztm-sel", "visibility", "none");
       const nRef = (t) => new Set((D.routes || []).filter((r) => r.typ === t).map((r) => r.ref)).size;
       $("filter-note").textContent = `${nRef("autobus")} linii autobusowych i ${nRef("tram")} tramwajowych w granicach Warszawy (oba kierunki); grubość linii = liczba kursów.`;
     }
+    applyPlannedMetro();
     renderLive();
     syncSections();
   }
   function fitToFilter() {
     const sel = new Set(lineFilter()); if (!sel.size || !map) return;
     const b = new maplibregl.LngLatBounds(); let any = false;
-    for (const r of D.routes || []) if (sel.has(r.ref.toUpperCase())) for (const p of r.parts) for (const c of p) { b.extend(c); any = true; }
+    for (const r of [...(D.routes || []), ...(D.rail || [])]) if (sel.has(r.ref.toUpperCase())) for (const p of r.parts) for (const c of p) { b.extend(c); any = true; }
+    const pm = plannedInFilter([...sel]);
+    for (const m of D.planned_metro || []) if (pm.includes(m.ref)) for (const s of m.stacje) { b.extend([s[0], s[1]]); any = true; }
     if (any) map.fitBounds(b, { padding: 50, maxZoom: 14, duration: 500 });
   }
   // Czy punkt leży w granicach Warszawy (ray casting po pierścieniach granicy).
