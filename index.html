@@ -118,6 +118,14 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
 .subh { font: 600 12px/1 var(--f-display); text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); margin: 14px 0 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .subh .check { font: inherit; letter-spacing: inherit; color: var(--ink-2); gap: 7px; }
 .subh .note { text-transform: none; letter-spacing: 0; font: 400 12px/1.3 var(--f-body); color: var(--ink-3); }
+.clock { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: center; }
+.clock b { font: 600 34px/1 var(--f-display); font-variant-numeric: tabular-nums; min-width: 2.6em; }
+.loadkey { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; margin-top: 8px; }
+.loadkey i { height: 6px; border-radius: 2px; }
+.loadkey-l { display: grid; grid-template-columns: repeat(4, 1fr); font: 11px var(--f-mono); color: var(--ink-3); }
+.overlist button { all: unset; box-sizing: border-box; width: 100%; cursor: pointer; display: flex; justify-content: space-between; gap: 8px; padding: 5px 6px; border-radius: 5px; font-size: 13.5px; }
+.overlist button:hover, .overlist button:focus-visible { background: var(--chip); }
+.overlist small { color: var(--ink-3); }
 .btn.small { padding: 6px 9px; font-size: 12.5px; }
 .legend { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
 .ramp { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; }
@@ -213,6 +221,33 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       <div class="layers" id="pmetro-layers"></div>
       <div class="subh"><label class="check" for="sec-infra"><input type="checkbox" id="sec-infra">Cele podróży</label></div>
       <div class="layers" id="infra-layers"></div>
+    </section>
+
+    <section>
+      <h2>Symulacja ruchu</h2>
+      <div class="clock"><b id="sim-clock">7:00</b><input type="range" id="sim-time" min="14400" max="88200" step="60" value="25200" aria-label="Godzina symulacji"></div>
+      <div class="row" style="margin-top:8px">
+        <button class="btn primary" id="sim-play">▶ Start</button>
+        <div class="seg" id="sim-speed" style="flex:1">
+          <button data-v="30" aria-pressed="false">×30</button>
+          <button data-v="120" aria-pressed="true">×120</button>
+          <button data-v="600" aria-pressed="false">×600</button>
+        </div>
+      </div>
+      <div class="muted" id="sim-status" style="margin-top:6px">Autobusy, tramwaje, metro i SKM jadą według rozkładu ZTM (dzień roboczy). Linia z piaskownicy jeździ z ustawioną częstotliwością. Filtr linii działa też tutaj.</div>
+
+      <div class="subh" style="margin-top:16px"><label class="check" for="load-on"><input type="checkbox" id="load-on">Obciążenie linii w szczycie</label><span class="note">model pasażerów 7–8</span></div>
+      <div id="load-opts" hidden>
+        <div class="seg" id="load-year" style="margin-top:8px">
+          <button data-y="2025" aria-pressed="false">2025</button>
+          <button data-y="2036" aria-pressed="true">2036</button>
+        </div>
+        <div class="loadkey" id="load-key"></div>
+        <div class="loadkey-l"><span>&lt; 50%</span><span>50–80%</span><span>80–100%</span><span>&gt; 100%</span></div>
+        <div class="muted" id="load-sum" style="margin-top:6px"></div>
+        <ul class="list overlist" id="load-list"></ul>
+        <div class="muted" style="margin-top:4px">Model: podróże z domu w porannym szczycie (grawitacyjny), przypisane najszybszą trasą; 2036 = ludność 2036 + metro M2 zachód i M3, reszta sieci jak dziś. Porównania 2025↔2036 są wiarygodne, dokładne liczby pasażerów — orientacyjne (metro niedoszacowane).</div>
+      </div>
     </section>
 
     <section>
@@ -756,7 +791,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       // Nachodzące na siebie nowe osiedla łączą się w jedno kółko z sumą mieszkańców (rozdzielają się po przybliżeniu).
       map.addSource("nb", { type: "geojson", data: fc(nbFeatures()), cluster: true, clusterRadius: 22, clusterMaxZoom: 15,
                             clusterProperties: { sum: ["+", ["get", "v"]] } });
-      for (const s of ["route", "wps", "nstops", "catch", "live"]) map.addSource(s, { type: "geojson", data: fc([]) });
+      for (const s of ["route", "wps", "nstops", "catch", "live", "sim", "load"]) map.addSource(s, { type: "geojson", data: fc([]) });
 
       map.addLayer({ id: "river", type: "line", source: "river", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": css("--water"), "line-width": ["interpolate", ["exponential", 2], ["zoom"], 9, 4, 12, 22, 15, 140, 18, 1100] } });
       map.addLayer({ id: "hex", type: "fill", source: "hex", paint: { "fill-color": hexColorExpr(), "fill-opacity": 0.5 } });
@@ -793,6 +828,13 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       map.addLayer({ id: "route-casing", type: "line", source: "route", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": css("--ink"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 6, 16, 12] } });
       map.addLayer({ id: "route", type: "line", source: "route", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": ["match", ["get", "j"], 2, css("--crit"), 1, css("--warn"), css("--good")], "line-width": ["interpolate", ["linear"], ["zoom"], 10, 3.5, 16, 8] } });
       map.addLayer({ id: "wps", type: "circle", source: "wps", paint: { "circle-radius": ["case", ["get", "end"], 6, 3.5], "circle-color": css("--ink"), "circle-stroke-width": 2, "circle-stroke-color": css("--paper") } });
+      map.addLayer({ id: "load", type: "line", source: "load", layout: { "line-cap": "round", visibility: "none" }, paint: {
+        // Lekko obciążone odcinki cienkie i przejrzyste, pełne i przepełnione — grube i wyraźne.
+        "line-color": loadColorExpr(), "line-opacity": ["interpolate", ["linear"], ["get", "u"], 0, 0.18, 0.5, 0.35, 0.8, 0.85, 1, 1],
+        "line-width": ["interpolate", ["linear"], ["zoom"], 10, ["interpolate", ["linear"], ["get", "u"], 0, 0.6, 0.5, 1, 0.8, 2.5, 1, 3.5, 2, 6], 15, ["interpolate", ["linear"], ["get", "u"], 0, 1.5, 0.5, 3, 0.8, 7, 1, 10, 2, 16]] } });
+      map.addLayer({ id: "sim", type: "circle", source: "sim", paint: {
+        "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, ["match", ["get", "k"], "metro", 4.5, "kolej", 4, "nowa", 4.5, 3], 15, ["match", ["get", "k"], "metro", 10, "kolej", 9, "nowa", 9, 7]],
+        "circle-color": simColorExpr(), "circle-stroke-width": 1.4, "circle-stroke-color": css("--ink") } });
       map.addLayer({ id: "live", type: "circle", source: "live", paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 2.5, 14, 5, 17, 8], "circle-color": css("--ink"), "circle-stroke-width": 2.2, "circle-stroke-color": ["case", ["==", ["get", "typ"], 2], css("--tram"), css("--bus")], "circle-opacity": ["interpolate", ["linear"], ["get", "age"], 0, 1, 180, 0.35], "circle-stroke-opacity": ["interpolate", ["linear"], ["get", "age"], 0, 1, 180, 0.35] } });
       map.addLayer({ id: "nstops", type: "circle", source: "nstops", paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 5, 16, 8], "circle-color": css("--paper"), "circle-stroke-width": 3, "circle-stroke-color": css("--accent") } });
       wireMap();
@@ -824,6 +866,10 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     if (inf.length) groups.push(`<div class="k">Cele podróży</div>` + inf.slice(0, 5).map((f) => `<span class="ico" style="background:${INFRA[f.properties.g]?.[1] || "#666"};margin-right:5px;vertical-align:-3px">${INFRA[f.properties.g]?.[2] || ""}</span><b>${esc(f.properties.nazwa || KAT[f.properties.kat] || "")}</b> · ${esc(KAT[f.properties.kat] || f.properties.kat)}`).join("<br>") + (inf.length > 5 ? `<br>…i ${inf.length - 5} więcej` : ""));
     const pk = by((id) => id === "parks");
     if (pk.length && !inf.some((f) => f.properties.g === "park")) groups.push(`<div class="k">Park</div><b>${esc(pk[0].properties.nazwa)}</b> · ${fmt1.format(pk[0].properties.ha)} ha`);
+    const sv = uniq(by((id) => id === "sim"), (f) => f.properties.id);
+    if (sv.length) groups.push(`<div class="k">Symulacja · ${fmtClock(SIM.t)}</div>` + sv.slice(0, 5).map((f) => `${SIM_LABEL[f.properties.k]} <b>${esc(f.properties.r)}</b>`).join("<br>") + (sv.length > 5 ? `<br>…i ${sv.length - 5} więcej` : ""));
+    const ld = uniq(by((id) => id === "load"), (f) => f.properties.i).sort((a, b) => b.properties.u - a.properties.u);
+    if (ld.length) groups.push(`<div class="k">Obciążenie w szczycie · ${LOAD.year}</div>` + ld.slice(0, 4).map((f) => `<b>${esc(f.properties.l)}</b> ${esc(f.properties.z)} → ${esc(f.properties.d)} · ${fmt.format(f.properties.p)} pas./h · <b>${Math.round(f.properties.u * 100)}%</b> pojemności`).join("<br>") + (ld.length > 4 ? `<br>…i ${ld.length - 4} więcej` : ""));
     const ns = by((id) => id === "nstops");
     if (ns.length) groups.push(`<div class="k">Nowy przystanek</div>${esc(ns[0].properties.street || "ulica bez nazwy")}`);
     const pms = uniq(by((id) => id === "pmetro-st"), (f) => f.properties.ref + f.properties.name);
@@ -864,7 +910,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
 
   function wireMap() {
     const tip = $("tip");
-    const HIT = ["live", "infra", "parks", "nstops", "pmetro-st", "pmetro-open", "pmetro-future", "stations-metro", "stations-kolej", "planned", "ztm-sel", "ztm", "nb", "routes-bus", "routes-tram", "hex"];
+    const HIT = ["sim", "load", "live", "infra", "parks", "nstops", "pmetro-st", "pmetro-open", "pmetro-future", "stations-metro", "stations-kolej", "planned", "ztm-sel", "ztm", "nb", "routes-bus", "routes-tram", "hex"];
     map.on("mousemove", (e) => {
       const r = 6, layers = HIT.filter((l) => map.getLayoutProperty(l, "visibility") !== "none");
       const fs = map.queryRenderedFeatures([[e.point.x - r, e.point.y - r], [e.point.x + r, e.point.y + r]], { layers });
@@ -903,7 +949,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
   function flash(msg) { const h = $("hint"); h.textContent = msg; h.style.color = css("--crit"); clearTimeout(flashT); flashT = setTimeout(() => { h.style.color = ""; h.textContent = HINTS[mode]; }, 3500); }
 
   let raf = 0;
-  function changed() { cancelAnimationFrame(raf); raf = requestAnimationFrame(() => { updateMapSources(); renderEval(); }); }
+  function changed() { cancelAnimationFrame(raf); raf = requestAnimationFrame(() => { updateMapSources(); renderEval(); if (SIM.data) { simExtraTrips(); simFrame(); } }); }
   function yearChanged() {
     $("year-label").textContent = year;
     renderLegend(); updateYearLayers(); renderEval();
@@ -928,6 +974,119 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     if (map?.getLayer("hex")) map.setPaintProperty("hex", "fill-color", hexColorExpr());
     yearChanged();
     map?.fitBounds(WARSAW, { padding: 24 });
+  }
+
+  // ---------- symulacja ruchu według rozkładu (frontend/symulacja_dane.json) ----------
+  const SIM = { data: null, t: 7 * 3600, playing: false, speed: 120, last: 0, drawn: 0, extra: [], loading: null };
+  const SIM_LABEL = { autobus: "Autobus", tramwaj: "Tramwaj", metro: "Metro", kolej: "SKM", nowa: "Nowa linia" };
+  const simColorExpr = () => ["match", ["get", "k"], "tramwaj", css("--tram"), "metro", css("--metro"), "kolej", css("--rail"), "nowa", css("--accent"), css("--bus")];
+  const fmtClock = (t) => { const m = Math.floor(t / 60) % 1440; return `${Math.floor(m / 60)}:${String(m % 60).padStart(2, "0")}`; };
+  async function simLoad() {
+    if (SIM.data) return SIM.data;
+    SIM.loading ||= fetch("frontend/symulacja_dane.json", { cache: "no-cache" }).then((r) => r.json()).then((d) => {
+      d.ends = d.trips.map(([, pi, s]) => s + d.profiles[pi][d.profiles[pi].length - 1]);
+      d.maxDur = Math.max(...d.trips.map(([, pi]) => d.profiles[pi][d.profiles[pi].length - 1]));
+      d.starts = d.trips.map((t) => t[2]);
+      return (SIM.data = d);
+    });
+    return SIM.loading;
+  }
+  const lowerBound = (arr, v) => { let lo = 0, hi = arr.length; while (lo < hi) { const m = (lo + hi) >> 1; if (arr[m] < v) lo = m + 1; else hi = m; } return lo; };
+  // Punkt na przebiegu w odległości d [m]
+  function pointAt(shape, d) {
+    const D = shape.d; if (d <= 0) return shape.c[0]; if (d >= D[D.length - 1]) return shape.c[shape.c.length - 1];
+    const i = Math.max(1, lowerBound(D, d)), f = (d - D[i - 1]) / ((D[i] - D[i - 1]) || 1), a = shape.c[i - 1], b = shape.c[i];
+    return [a[0] + f * (b[0] - a[0]), a[1] + f * (b[1] - a[1])];
+  }
+  // Odległość wzdłuż przebiegu po czasie rel [s] od startu (profil: d0,t0,d1,t1,…)
+  function distAt(prof, rel) {
+    for (let k = 2; k < prof.length; k += 2) if (prof[k + 1] >= rel) {
+      const t0 = prof[k - 1], t1 = prof[k + 1], f = t1 > t0 ? (rel - t0) / (t1 - t0) : 1;
+      return prof[k - 2] + f * (prof[k] - prof[k - 2]);
+    }
+    return prof[prof.length - 2];
+  }
+  // Linia z piaskownicy w symulacji: kursy w obie strony co `headway` min, 5:00–23:00, stała prędkość z oceny.
+  function simExtraTrips() {
+    const r = lastEval; SIM.extra = [];
+    if (!r || !r.len || route.wps.length < 2) return;
+    const coords = routeEdges().flatMap((ei, i) => (i ? G.edges[ei].coords.slice(1) : G.edges[ei].coords));
+    const xy = coords.map(([lo, la]) => toXY(lo, la)); const d = [0];
+    for (let i = 1; i < xy.length; i++) d.push(d[i - 1] + Math.hypot(xy[i][0] - xy[i - 1][0], xy[i][1] - xy[i - 1][1]));
+    const fwd = { c: coords, d }, back = { c: [...coords].reverse(), d: d.map((v) => d[d.length - 1] - v).reverse() };
+    const dur = r.tPeak, head = r.headway * 60;
+    for (let s0 = 5 * 3600; s0 <= 23 * 3600; s0 += head) for (const sh of [fwd, back]) SIM.extra.push({ sh, s: s0, dur });
+  }
+  function simFrame() {
+    const d = SIM.data; if (!d || !map?.getSource("sim")) return;
+    const t = SIM.t, sel = new Set(lineFilter()), feats = [], counts = { autobus: 0, tramwaj: 0, metro: 0, kolej: 0, nowa: 0 };
+    const from = lowerBound(d.starts, t - d.maxDur), to = lowerBound(d.starts, t + 1);
+    for (let i = from; i < to; i++) {
+      if (d.ends[i] < t) continue;
+      const [si, pi, s0, ri] = d.trips[i], ref = d.routes[ri];
+      if (sel.size && !sel.has(ref.toUpperCase())) continue;
+      const k = d.route_typ[ri]; counts[k]++;
+      feats.push({ type: "Feature", properties: { k, r: ref, id: i }, geometry: { type: "Point", coordinates: pointAt(d.shapes[si], distAt(d.profiles[pi], t - s0)) } });
+    }
+    SIM.extra.forEach((x, j) => {
+      if (t < x.s || t > x.s + x.dur) return;
+      counts.nowa++;
+      feats.push({ type: "Feature", properties: { k: "nowa", r: "nowa", id: -1 - j }, geometry: { type: "Point", coordinates: pointAt(x.sh, (t - x.s) / x.dur * x.sh.d[x.sh.d.length - 1]) } });
+    });
+    map.getSource("sim").setData(fc(feats));
+    $("sim-clock").textContent = fmtClock(t); $("sim-time").value = Math.round(t);
+    $("sim-status").textContent = `W ruchu: ${fmt.format(counts.autobus)} autobusów, ${fmt.format(counts.tramwaj)} tramwajów, ${fmt.format(counts.metro)} pociągów metra, ${fmt.format(counts.kolej)} SKM` + (counts.nowa ? `, ${counts.nowa} na nowej linii` : "");
+  }
+  function simTick(ts) {
+    if (!SIM.playing) return;
+    if (SIM.last) SIM.t += ((ts - SIM.last) / 1000) * SIM.speed;
+    if (SIM.t > 88200) SIM.t = 4 * 3600;   // po 24:30 od nowa od 4:00
+    SIM.last = ts;
+    if (ts - SIM.drawn > 70) { simFrame(); SIM.drawn = ts; }   // ~14 klatek/s wystarcza
+    requestAnimationFrame(simTick);
+  }
+  async function simToggle() {
+    if (SIM.playing) { SIM.playing = false; $("sim-play").textContent = "▶ Start"; return; }
+    $("sim-play").textContent = "Wczytywanie…"; await simLoad();
+    simExtraTrips();
+    SIM.playing = true; SIM.last = 0; $("sim-play").textContent = "❚❚ Pauza";
+    requestAnimationFrame(simTick);
+  }
+
+  // ---------- obciążenie linii w szczycie (frontend/pasazerowie_dane.json) ----------
+  const LOAD = { data: null, year: 2036, on: false };
+  const LOAD_BINS = [0.5, 0.8, 1.0];
+  const loadColorExpr = () => ["step", ["get", "u"], css("--good"), LOAD_BINS[0], css("--warn"), LOAD_BINS[1], css("--bus"), LOAD_BINS[2], css("--crit")];
+  function renderLoadKey() { $("load-key").innerHTML = ["--good", "--warn", "--bus", "--crit"].map((c) => `<i style="background:var(${c})"></i>`).join(""); }
+  async function loadLoad() {
+    if (LOAD.data) return LOAD.data;
+    const d = await fetch("frontend/pasazerowie_dane.json", { cache: "no-cache" }).then((r) => r.json());
+    return (LOAD.data = d);
+  }
+  function renderLoad() {
+    if (!map?.getSource("load")) return;
+    map.setLayoutProperty("load", "visibility", LOAD.on ? "visible" : "none");
+    if (!LOAD.on || !LOAD.data) return;
+    const sel = new Set(lineFilter()), ki = LOAD.year === 2025 ? 9 : 10, feats = [], perLine = new Map();
+    LOAD.data.odcinki.forEach((o, i) => {
+      const [l, typ, , x0, y0, x1, y1, , cap, p25, p36, z, d] = o, p = ki === 9 ? p25 : p36;
+      if (p == null || (sel.size && !sel.has(l.toUpperCase()))) return;
+      const u = cap > 0 ? p / cap : 0;
+      if (p > 0) feats.push({ type: "Feature", properties: { i, l, p, u, z, d }, geometry: { type: "LineString", coordinates: [[x0, y0], [x1, y1]] } });
+      const m = perLine.get(l); if (!m || u > m.u) perLine.set(l, { l, typ, u, p, z, d });
+    });
+    feats.sort((a, b) => a.properties.u - b.properties.u);   // najbardziej obciążone rysowane na wierzchu
+    map.getSource("load").setData(fc(feats));
+    const over = feats.filter((f) => f.properties.u > 1).length;
+    $("load-sum").textContent = `${LOAD.year}: ${fmt.format(over)} odcinków przepełnionych (> 100% pojemności w godzinie szczytu).`;
+    const top = [...perLine.values()].sort((a, b) => b.u - a.u).slice(0, 8);
+    $("load-list").innerHTML = top.map((m) => `<li><button data-l="${esc(m.l)}"><span><b>${esc(m.l)}</b> <small>${esc(m.z)} → ${esc(m.d)}</small></span><span style="color:var(--${m.u > 1 ? "crit" : m.u > 0.8 ? "warn" : "ink-3"});font-weight:600">${Math.round(m.u * 100)}%</span></button></li>`).join("");
+    $("load-list").querySelectorAll("button").forEach((b) => (b.onclick = () => { $("line-filter").value = b.dataset.l; applyLayers(); fitToFilter(); }));
+  }
+  async function setLoad(on) {
+    LOAD.on = on; $("load-opts").hidden = !on;
+    if (on) await loadLoad();
+    renderLoad();
   }
 
   // ---------- pojazdy na żywo (przez frontend/serwer.py — API ZTM nie pozwala na zapytania z przeglądarki;
@@ -1057,6 +1216,8 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       $("filter-note").textContent = `${nRef("autobus")} linii autobusowych i ${nRef("tram")} tramwajowych w granicach Warszawy (oba kierunki); grubość linii = liczba kursów.`;
     }
     renderLive();
+    if (SIM.data) simFrame();
+    renderLoad();
     syncSections();
   }
   function fitToFilter() {
@@ -1232,6 +1393,11 @@ ${JSON.stringify(describe(r), null, 1)}`;
     $("undo").onclick = undo; $("clear").onclick = clearAll; $("reset").onclick = resetAll;
     $("live").onchange = (e) => setLive(e.target.checked);
     $("live-kind").onchange = renderLive;
+    $("sim-play").onclick = simToggle;
+    $("sim-time").oninput = async (e) => { SIM.t = +e.target.value; $("sim-clock").textContent = fmtClock(SIM.t); if (!SIM.data) { await simLoad(); simExtraTrips(); } simFrame(); };
+    $("sim-speed").querySelectorAll("button").forEach((b) => (b.onclick = () => { SIM.speed = +b.dataset.v; $("sim-speed").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x === b)); }));
+    $("load-on").onchange = (e) => setLoad(e.target.checked);
+    $("load-year").querySelectorAll("button").forEach((b) => (b.onclick = () => { LOAD.year = +b.dataset.y; $("load-year").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x === b)); renderLoad(); }));
     let filterT; $("line-filter").oninput = () => { clearTimeout(filterT); filterT = setTimeout(applyLayers, 200); };
     $("line-filter").onchange = () => { applyLayers(); fitToFilter(); };
     $("layers").querySelectorAll("input").forEach((i) => (i.onchange = applyLayers));
@@ -1270,13 +1436,14 @@ ${JSON.stringify(describe(r), null, 1)}`;
     set("route-casing", "line-color", css("--ink")); set("route", "line-color", ["match", ["get", "j"], 2, css("--crit"), 1, css("--warn"), css("--good")]);
     set("wps", "circle-color", css("--ink")); set("wps", "circle-stroke-color", css("--paper"));
     set("nstops", "circle-color", css("--paper")); set("nstops", "circle-stroke-color", css("--accent"));
+    set("sim", "circle-color", simColorExpr()); set("sim", "circle-stroke-color", css("--ink")); set("load", "line-color", loadColorExpr()); renderLoadKey();
     set("live", "circle-color", css("--ink")); set("live", "circle-stroke-color", ["case", ["==", ["get", "typ"], 2], css("--tram"), css("--bus")]);
   }
 
   // API dla algorytmu zespołu i testów: window.symulator.wczytaj({...}), .propozycja(), .ocena()
   window.symulator = { wczytaj: loadProposal, propozycja: currentProposal, ocena: () => lastEval, _G: () => G, _route: () => route, _map: () => map };
 
-  renderInfraToggles(); wireUI(); wireSections(); syncSections(); setMode("view"); renderLegend();
+  renderLoadKey(); renderInfraToggles(); wireUI(); wireSections(); syncSections(); setMode("view"); renderLegend();
   load().then(() => {
     buildMap();
     matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applyTheme);
