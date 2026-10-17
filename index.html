@@ -10,6 +10,7 @@
   --paper: #fbfcfb; --ground: #eceeed; --ink: #15201b; --ink-2: #46534d; --ink-3: #6f7b76;
   --rule: #d8dddb; --chip: #e5e9e7; --road: #c9d0cd; --water: #bcd6e8; --district: #97a39e;
   --tram: #b0307a; --rail: #3d4a8f; --metro: #c02a2a; --accent: #256abf; --sel: #f0b400;
+  --m3: #0fa85a; --m4: #d4a000;   /* planowane metro: M3 zielona (#19e17d), M4 żółta — ciemniej dla kontrastu na jasnym tle */
   --good: #0f8a3c; --warn: #c98500; --crit: #d03b3b; --bus: #d9631e; --park: #3f9a4f;
   --s1: #e3eefb; --s2: #b7d3f6; --s3: #6da7ec; --s4: #2a78d6; --s5: #184f95;
   --p1: #eeeafc; --p2: #cbc0f3; --p3: #9d8be6; --p4: #6b53cf; --p5: #44309b;
@@ -23,6 +24,7 @@
   --paper: #161b19; --ground: #0f1312; --ink: #e6ebe8; --ink-2: #a9b4af; --ink-3: #7d8984;
   --rule: #2b3330; --chip: #222a27; --road: #2a322f; --water: #1d3546; --district: #56615c;
   --tram: #e163a8; --rail: #8f9cf0; --metro: #ff6b6b; --accent: #6da7ec; --sel: #f5c22b;
+  --m3: #19e17d; --m4: #ffd21f;
   --good: #3fc16b; --warn: #f0b429; --crit: #f06464; --bus: #ff9a4d; --park: #58b86a;
   --s1: #1a2a3d; --s2: #1f4677; --s3: #2a6bb8; --s4: #5a9bea; --s5: #a7cbf6;
   --p1: #231d3a; --p2: #3c2f70; --p3: #5e48b6; --p4: #9483ec; --p5: #cdc1fa;
@@ -34,6 +36,7 @@
   --paper: #161b19; --ground: #0f1312; --ink: #e6ebe8; --ink-2: #a9b4af; --ink-3: #7d8984;
   --rule: #2b3330; --chip: #222a27; --road: #2a322f; --water: #1d3546; --district: #56615c;
   --tram: #e163a8; --rail: #8f9cf0; --metro: #ff6b6b; --accent: #6da7ec; --sel: #f5c22b;
+  --m3: #19e17d; --m4: #ffd21f;
   --good: #3fc16b; --warn: #f0b429; --crit: #f06464; --bus: #ff9a4d; --park: #58b86a;
   --s1: #1a2a3d; --s2: #1f4677; --s3: #2a6bb8; --s4: #5a9bea; --s5: #a7cbf6;
   --p1: #231d3a; --p2: #3c2f70; --p3: #5e48b6; --p4: #9483ec; --p5: #cdc1fa;
@@ -776,9 +779,9 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       map.addSource("pmetro", { type: "geojson", data: fc(PM.map((m) => ({ type: "Feature", properties: { ref: m.ref, opis: m.opis, rok: m.rok, n: m.stacje.length }, geometry: { type: "LineString", coordinates: m.stacje.map((s) => [s[0], s[1]]) } }))) });
       map.addSource("pmetro-st", { type: "geojson", data: fc(PM.flatMap((m) => m.stacje.map(([lon, lat, name, ex]) => ({ type: "Feature", properties: { ref: m.ref, rok: m.rok, name, ex }, geometry: { type: "Point", coordinates: [lon, lat] } })))) });
       map.addLayer({ id: "pmetro-casing", type: "line", source: "pmetro", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": css("--paper"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 5, 16, 10] } });
-      map.addLayer({ id: "pmetro-future", type: "line", source: "pmetro", layout: { "line-cap": "butt", "line-join": "round" }, paint: { "line-color": css("--metro"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 2.6, 16, 5], "line-dasharray": [2, 1.6], "line-opacity": 0.85 } });
-      map.addLayer({ id: "pmetro-open", type: "line", source: "pmetro", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": css("--metro"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 2.6, 16, 5] } });
-      map.addLayer({ id: "pmetro-st", type: "circle", source: "pmetro-st", paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 3.5, 15, 7], "circle-color": ["case", [">", ["get", "rok"], year], css("--paper"), css("--metro")], "circle-stroke-width": 2, "circle-stroke-color": ["case", ["==", ["get", "ex"], 1], css("--ink"), css("--metro")] } });
+      map.addLayer({ id: "pmetro-future", type: "line", source: "pmetro", layout: { "line-cap": "butt", "line-join": "round" }, paint: { "line-color": pmColor(), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 2.6, 16, 5], "line-dasharray": [2, 1.6], "line-opacity": 0.85 } });
+      map.addLayer({ id: "pmetro-open", type: "line", source: "pmetro", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": pmColor(), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 2.6, 16, 5] } });
+      map.addLayer({ id: "pmetro-st", type: "circle", source: "pmetro-st", paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 3.5, 15, 7], "circle-color": ["case", [">", ["get", "rok"], year], css("--paper"), pmColor()], "circle-stroke-width": 2, "circle-stroke-color": ["case", ["==", ["get", "ex"], 1], css("--ink"), pmColor()] } });
       map.addLayer({ id: "planned-future", type: "circle", source: "plannedsrc", filter: ["all", [">", ["get", "y"], year], ["!=", ["get", "kind"], "metro"]], paint: { "circle-radius": ["case", ["get", "tram"], 2.5, 5], "circle-color": "rgba(0,0,0,0)", "circle-stroke-width": 1.5, "circle-stroke-color": ["case", ["get", "tram"], css("--tram"), css("--metro")], "circle-stroke-opacity": 0.6 } });
       map.addLayer({ id: "planned", type: "circle", source: "plannedsrc", filter: ["all", ["<=", ["get", "y"], year], ["!=", ["get", "kind"], "metro"]], paint: { "circle-radius": ["case", ["get", "tram"], 3, 6], "circle-color": ["case", ["get", "tram"], css("--tram"), css("--metro")], "circle-stroke-width": 1.5, "circle-stroke-color": css("--paper") } });
       map.addLayer({ id: "infra", type: "symbol", source: "infra", minzoom: 10.5,
@@ -1002,7 +1005,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
   const PM_ON = new Set(["M2 zachód", "M3"]);
   function renderPlannedMetroToggles() {
     $("pmetro-layers").innerHTML = (D?.planned_metro || []).map((m, i) =>
-      `<label class="check" for="pm-${i}"><input type="checkbox" id="pm-${i}" data-ref="${esc(m.ref)}" ${PM_ON.has(m.ref) ? "checked" : ""}><i class="sw" style="border-top:3px dashed var(--metro)"></i>${esc(m.ref)} · ${m.rok > 2036 ? "po 2036" : m.rok}</label>`).join("");
+      `<label class="check" for="pm-${i}"><input type="checkbox" id="pm-${i}" data-ref="${esc(m.ref)}" ${PM_ON.has(m.ref) ? "checked" : ""}><i class="sw" style="border-top:3px dashed var(${pmVar(m.ref)})"></i>${esc(m.ref)} · ${m.rok > 2036 ? "po 2036" : m.rok}</label>`).join("");
     $("pmetro-layers").querySelectorAll("input").forEach((i) => (i.onchange = applyPlannedMetro));
   }
   function applyPlannedMetro() {
@@ -1013,11 +1016,14 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     map.setFilter("pmetro-open", ["all", sel, ["<=", ["get", "rok"], year]]);
     map.setFilter("pmetro-future", ["all", sel, [">", ["get", "rok"], year]]);
     map.setFilter("pmetro-st", sel);
-    map.setPaintProperty("pmetro-st", "circle-color", ["case", [">", ["get", "rok"], year], css("--paper"), css("--metro")]);
+    map.setPaintProperty("pmetro-st", "circle-color", ["case", [">", ["get", "rok"], year], css("--paper"), pmColor()]);
     syncSections();
   }
 
   // ---------- warstwy i filtr linii ----------
+  // Kolory planowanych linii metra: M3 zielona, M4 żółta, przedłużenie M2 — kolor metra (czerwony).
+  const pmVar = (ref) => ({ M3: "--m3", M4: "--m4" })[ref] || "--metro";
+  const pmColor = () => ["match", ["get", "ref"], "M3", css("--m3"), "M4", css("--m4"), css("--metro")];
   const LAYERS = { hex: ["hex"], roads: ["roads"], bus: ["routes-bus"], tram: ["routes-tram", "trams"], metro: ["rail-metro", "stations-metro"],
                    kolej: ["rail-kolej", "stations-kolej"], ztm: ["ztm"], nb: ["nb"], planned: ["planned", "planned-future"] };
   const routeWidth = (k) => ["interpolate", ["linear"], ["zoom"], 10, ["*", k, ["interpolate", ["linear"], ["get", "kursy"], 20, 0.5, 120, 1.3, 300, 2.6]], 16, ["*", k, ["interpolate", ["linear"], ["get", "kursy"], 20, 1.5, 120, 3.5, 300, 6]]];
@@ -1248,8 +1254,8 @@ ${JSON.stringify(describe(r), null, 1)}`;
     set("bg", "background-color", css("--ground")); set("river", "line-color", css("--water")); set("roads", "line-color", css("--road"));
     set("districts", "line-color", css("--district")); set("trams", "line-color", css("--tram")); set("hex", "fill-color", hexColorExpr());
     set("rail-metro", "line-color", css("--metro")); set("rail-kolej", "line-color", css("--rail"));
-    for (const l of ["pmetro-open", "pmetro-future"]) set(l, "line-color", css("--metro"));
-    set("pmetro-casing", "line-color", css("--paper")); set("pmetro-st", "circle-stroke-color", ["case", ["==", ["get", "ex"], 1], css("--ink"), css("--metro")]);
+    for (const l of ["pmetro-open", "pmetro-future"]) set(l, "line-color", pmColor());
+    set("pmetro-casing", "line-color", css("--paper")); set("pmetro-st", "circle-stroke-color", ["case", ["==", ["get", "ex"], 1], css("--ink"), pmColor()]);
     applyPlannedMetro();
     set("parks", "fill-color", css("--park")); set("parks-line", "line-color", css("--park"));
     set("routes-bus", "line-color", css("--bus")); set("routes-tram", "line-color", css("--tram")); set("mask", "fill-color", css("--ground"));
