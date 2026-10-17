@@ -14,6 +14,7 @@
   --m3: #0fa85a; --m4: #d4a000;   /* planowane metro: M3 zielona (#19e17d), M4 żółta — ciemniej dla kontrastu na jasnym tle */
   --good: #0f8a3c; --warn: #c98500; --crit: #d03b3b; --bus: #d9631e; --top: #c2255c; --park: #3f9a4f;
   --bike: #0a7f9e;   /* stacje Veturilo */
+  --board: #7c3aed;   /* wsiadający na przystankach */
   --h1: #fff1c1; --h2: #fdc46a; --h3: #f78c3b; --h4: #dc4a2c; --h5: #9c1b26;   /* heatmapa wykluczenia: niskie → wysokie */
   --s1: #e3eefb; --s2: #b7d3f6; --s3: #6da7ec; --s4: #2a78d6; --s5: #184f95;
   --p1: #eeeafc; --p2: #cbc0f3; --p3: #9d8be6; --p4: #6b53cf; --p5: #44309b;
@@ -31,6 +32,7 @@
   --good: #3fc16b; --warn: #f0b429; --crit: #f06464; --bus: #ff9a4d; --top: #f06595; --park: #58b86a;
   --h1: #ffe9a8; --h2: #fdbb5a; --h3: #f78433; --h4: #e2492c; --h5: #b8202c;
   --bike: #4cc3e0;
+  --board: #a78bfa;
   --s1: #1a2a3d; --s2: #1f4677; --s3: #2a6bb8; --s4: #5a9bea; --s5: #a7cbf6;
   --p1: #231d3a; --p2: #3c2f70; --p3: #5e48b6; --p4: #9483ec; --p5: #cdc1fa;
   --t1: #13271f; --t2: #1b4a3c; --t3: #237a62; --t4: #43b392; --t5: #a0e4ce;
@@ -45,6 +47,7 @@
   --good: #3fc16b; --warn: #f0b429; --crit: #f06464; --bus: #ff9a4d; --top: #f06595; --park: #58b86a;
   --h1: #ffe9a8; --h2: #fdbb5a; --h3: #f78433; --h4: #e2492c; --h5: #b8202c;
   --bike: #4cc3e0;
+  --board: #a78bfa;
   --s1: #1a2a3d; --s2: #1f4677; --s3: #2a6bb8; --s4: #5a9bea; --s5: #a7cbf6;
   --p1: #231d3a; --p2: #3c2f70; --p3: #5e48b6; --p4: #9483ec; --p5: #cdc1fa;
   --t1: #13271f; --t2: #1b4a3c; --t3: #237a62; --t4: #43b392; --t5: #a0e4ce;
@@ -241,6 +244,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
         <button data-m="pop" aria-pressed="false">Mieszkańcy</button>
         <button data-m="growth" aria-pressed="true">Przyrost</button>
         <button data-m="trips" aria-pressed="false">Podróże ZTM</button>
+        <button data-m="mpp" aria-pressed="false">Cele (MPP)</button>
       </div>
       <div class="legend">
         <div class="ramp" id="ramp"></div>
@@ -257,6 +261,9 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       <label class="check" for="top-on"><input type="checkbox" id="top-on" checked>Pokaż 30 klastrów, gdzie komunikacja jest najbardziej potrzebna</label>
       <div class="muted" id="top-note" style="margin-top:6px"></div>
       <ul class="list toplist" id="top-list" style="max-height:290px;overflow-y:auto"></ul>
+      <label class="check" for="prop-on" style="margin-top:10px"><input type="checkbox" id="prop-on" checked><i class="sw" style="height:9px;width:9px;border-radius:50%;border:2.5px solid var(--top);background:var(--paper)"></i>Proponowane lokalizacje przystanków</label>
+      <label class="check" for="propl-on"><input type="checkbox" id="propl-on"><i class="sw" style="height:8px;width:8px;border-radius:50%;background:var(--accent)"></i>Najlepsze miejsca na istniejących liniach</label>
+      <div class="muted" id="prop-note" style="margin-top:4px"></div>
       <button class="btn" id="heat-btn" type="button" aria-pressed="false" style="margin-top:12px">Pokaż heatmapę wykluczenia</button>
       <div id="heat-legend" hidden style="margin-top:10px">
         <div class="ramp"><i style="background:var(--h1)"></i><i style="background:var(--h2)"></i><i style="background:var(--h3)"></i><i style="background:var(--h4)"></i><i style="background:var(--h5)"></i></div>
@@ -305,7 +312,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
           <button data-v="600" aria-pressed="false">×600</button>
         </div>
       </div>
-      <div class="muted" id="sim-status" style="margin-top:6px">Autobusy, tramwaje, metro i SKM jadą według rozkładu ZTM (dzień roboczy). Linia z piaskownicy jeździ z ustawioną częstotliwością. Filtr linii działa też tutaj, a dzielnica wybrana w prawym górnym rogu mapy zawęża symulację do swoich granic.</div>
+      <div class="muted" id="sim-status" style="margin-top:6px">Autobusy, tramwaje, metro i SKM jadą według rozkładu ZTM (dzień roboczy). Linia z piaskownicy jeździ z ustawioną częstotliwością. Widać tylko pojazdy w granicach Warszawy. Filtr linii działa też tutaj, a dzielnica wybrana w prawym górnym rogu mapy zawęża symulację do swoich granic.</div>
 
       <div class="subh" style="margin-top:16px"><label class="check" for="load-on"><input type="checkbox" id="load-on">Obciążenie linii w szczycie</label><span class="note">model pasażerów 7–8</span></div>
       <div id="load-opts" hidden>
@@ -318,6 +325,15 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
         <div class="muted" id="load-sum" style="margin-top:6px"></div>
         <ul class="list overlist" id="load-list"></ul>
         <div class="muted" style="margin-top:4px">Model: podróże z domu w porannym szczycie (grawitacyjny), przypisane najszybszą trasą; 2036 = ludność 2036 + metro M2 zachód i M3, reszta sieci jak dziś. Porównania 2025↔2036 są wiarygodne, dokładne liczby pasażerów — orientacyjne (metro niedoszacowane).</div>
+      </div>
+
+      <div class="subh" style="margin-top:16px"><label class="check" for="board-on"><input type="checkbox" id="board-on"><i class="sw" style="height:9px;width:9px;border-radius:50%;background:var(--board)"></i>Wsiadający na przystankach</label><span class="note">model pasażerów 7–8</span></div>
+      <div id="board-opts" hidden>
+        <div class="seg" id="board-year" style="margin-top:8px">
+          <button data-y="2025" aria-pressed="false">2025</button>
+          <button data-y="2036" aria-pressed="true">2036</button>
+        </div>
+        <div class="muted" id="board-sum" style="margin-top:6px"></div>
       </div>
     </section>
 
@@ -502,9 +518,16 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
   // ---------- dane ----------
   async function load() {
     // cache: "no-cache" — przeglądarka zawsze sprawdza, czy dane się zmieniły (po przeliczeniu prognozy nie pokaże starej kopii).
-    let vet;
-    [D, B, vet] = await Promise.all([fetch("frontend/symulator_dane.json", { cache: "no-cache" }).then((r) => r.json()), fetch("frontend/warszawa.json", { cache: "no-cache" }).then((r) => r.json()),
-                                     fetch("dane/veturilo_stacje.csv", { cache: "no-cache" }).then((r) => (r.ok ? r.text() : "")).catch(() => "")]);
+    // Małe pliki z dane/ — brak któregoś nie blokuje aplikacji (pusta tabela).
+    const txt = (p) => fetch(p, { cache: "no-cache" }).then((r) => (r.ok ? r.text() : "")).catch(() => "");
+    let vet, mpp, prop, propL;
+    [D, B, vet, mpp, prop, propL] = await Promise.all([fetch("frontend/symulator_dane.json", { cache: "no-cache" }).then((r) => r.json()), fetch("frontend/warszawa.json", { cache: "no-cache" }).then((r) => r.json()),
+                                     txt("dane/veturilo_stacje.csv"), txt("dane/infrastruktura_w_klastrach.csv"), txt("dane/przystanki_top30.csv"), txt("dane/przystanki_top30_na_liniach.csv")]);
+    const mppBy = parseCSV(mpp);
+    D.hexes.forEach((h) => { const r = mppBy.get(h.h3); h.mpp = r ? +r.liczba_mpp || 0 : 0; h.mppCat = r || null; });
+    const pt = (r) => Number.isFinite(+r.lon) && Number.isFinite(+r.lat) && +r.lon !== 0;
+    PROP.st = parseRows(prop).filter(pt); PROP.ln = parseRows(propL).filter(pt);
+    renderPropNote();
     VET.stations = parseRows(vet).filter((s) => Number.isFinite(+s.lon) && Number.isFinite(+s.lat))
       .map((s) => ({ id: s.station_id, name: (s.nazwa || "").trim(), nr: s.numer, lon: +s.lon, lat: +s.lat, cap: +s.stojaki || 0, h3: s.h3 }));
     buildGraph(); buildPeople();
@@ -806,19 +829,22 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     pop: { ramp: "p", steps: [500, 2000, 4000, 7000, 10000], note: "mieszkańców klastra", value: (h) => hexPop(h), div: false },
     growth: { steps: [-500, -100, 100, 500, 2000], note: "zmiana liczby mieszkańców od 2025", value: (h) => hexPop(h) - h.pop[0], div: true },
     trips: { ramp: "t", steps: [500, 2000, 4000, 7000, 10000], note: "podróży komunikacją miejską dziennie (start w klastrze)", value: (h) => hexPop(h) * (+$("trips").value || 2) * (+$("share").value || 45) / 100, div: false },
+    // Miejsca pożytku publicznego (dane/infrastruktura_w_klastrach.csv): szkoły, szpitale, urzędy, kultura, parki, handel…
+    mpp: { ramp: "s", min: 1, steps: [1, 2, 4, 8, 12], labels: ["1", "2–3", "4–7", "8–11", "12+"], noYear: true,
+           note: "miejsc pożytku publicznego w klastrze (szkoły, szpitale, urzędy, kultura, parki, handel)", value: (h) => h.mpp || 0, div: false },
   };
   const rampColors = (m) => m.div ? ["--dneg2", "--dneg1", "--dmid", "--dpos1", "--dpos2", "--dpos3"] : [1, 2, 3, 4, 5].map((i) => `--${m.ramp}${i}`);
   function hexColorExpr() {
     const m = METRICS[metric], c = rampColors(m).map(css);
     if (m.div) return ["step", ["get", "v"], c[0], m.steps[0], c[1], m.steps[1], c[2], m.steps[2], c[3], m.steps[3], c[4], m.steps[4], c[5]];
-    return ["step", ["get", "v"], "rgba(0,0,0,0)", 100, c[0], m.steps[1], c[1], m.steps[2], c[2], m.steps[3], c[3], m.steps[4], c[4]];
+    return ["step", ["get", "v"], "rgba(0,0,0,0)", m.min ?? 100, c[0], m.steps[1], c[1], m.steps[2], c[2], m.steps[3], c[3], m.steps[4], c[4]];
   }
   function renderLegend() {
     const m = METRICS[metric], cols = rampColors(m);
     const show = m.div ? cols.filter((_, i) => i !== 2) : cols;
     $("ramp").innerHTML = show.map((c) => `<i style="background:var(${c})"></i>`).join("");
-    $("ramp-l").innerHTML = (m.div ? ["< −500", "−100", "+100", "+500", "> +2000"] : ["100+", "2 tys.", "4 tys.", "7 tys.", "10 tys.+"]).map((t) => `<span>${t}</span>`).join("");
-    $("ramp-note").textContent = `${m.note}, rok ${year}${m.div ? " (szary: ±100)" : ""}`;
+    $("ramp-l").innerHTML = (m.labels || (m.div ? ["< −500", "−100", "+100", "+500", "> +2000"] : ["100+", "2 tys.", "4 tys.", "7 tys.", "10 tys.+"])).map((t) => `<span>${t}</span>`).join("");
+    $("ramp-note").textContent = `${m.note}${m.noYear ? "" : `, rok ${year}`}${m.div ? " (szary: ±100)" : ""}`;
   }
   const hexFeatures = () => D.hexes.map((h, i) => ({ type: "Feature", id: i, properties: { v: METRICS[metric].value(h), i }, geometry: { type: "MultiPolygon", coordinates: h.rings.map((r) => [r]) } }));
   const nbFeatures = () => P.nb.map((b, i) => ({ type: "Feature", properties: { v: nbPop(b), i }, geometry: { type: "Point", coordinates: b.xy } })).filter((f) => f.properties.v > 30);
@@ -898,6 +924,8 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       map.addLayer({ id: "routes-tram", type: "line", source: "routes", filter: ["==", ["get", "typ"], "tram"], layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": css("--tram"), "line-opacity": 0.75, "line-width": routeWidth(1) } });
       map.addLayer({ id: "rail-kolej", type: "line", source: "rail", filter: ["!", ["get", "m"]], paint: { "line-color": css("--rail"), "line-width": RAIL_WIDTH["rail-kolej"] } });
       map.addLayer({ id: "rail-metro", type: "line", source: "rail", filter: ["get", "m"], paint: { "line-color": css("--metro"), "line-width": RAIL_WIDTH["rail-metro"] } });
+      map.addSource("board", { type: "geojson", data: fc([]) });
+      map.addLayer({ id: "board", type: "circle", source: "board", layout: { visibility: "none" }, paint: { "circle-radius": ["interpolate", ["linear"], ["sqrt", ["get", "v"]], 1, 2, 10, 4, 30, 10, 85, 22], "circle-color": css("--board"), "circle-opacity": 0.55, "circle-stroke-width": 0.8, "circle-stroke-color": css("--paper") } });
       map.addLayer({ id: "ztm", type: "circle", source: "ztm", minzoom: 13.5, paint: { "circle-radius": 2.5, "circle-color": css("--paper"), "circle-stroke-width": 1, "circle-stroke-color": css("--ink-3") } });
       map.addLayer({ id: "ztm-sel", type: "circle", source: "ztm", filter: ["==", ["get", "l"], "-"], layout: { visibility: "none" }, paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 3, 15, 5.5], "circle-color": css("--paper"), "circle-stroke-width": 2, "circle-stroke-color": ["case", ["get", "t"], css("--tram"), css("--bus")] } });
       map.addSource("veturilo", { type: "geojson", data: fc(vetFeatures()) });
@@ -923,6 +951,10 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       map.addLayer({ id: "top-fill", type: "fill", source: "top", paint: { "fill-color": css("--top"), "fill-opacity": 0.14 } });
       map.addLayer({ id: "top-line", type: "line", source: "top", paint: { "line-color": css("--top"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 2, 15, 4] } });
       map.addLayer({ id: "top-pt", type: "symbol", source: "top-pt", layout: { "icon-image": ["concat", "rank-", ["to-string", ["get", "rank"]]], "icon-size": ["interpolate", ["linear"], ["zoom"], 10, 0.75, 14, 1], "icon-allow-overlap": true, "symbol-sort-key": ["get", "rank"] } });
+      map.addSource("prop-line", { type: "geojson", data: fc(propLineFeatures()) });
+      map.addSource("prop-st", { type: "geojson", data: fc(propFeatures()) });
+      map.addLayer({ id: "prop-line", type: "circle", source: "prop-line", layout: { visibility: "none" }, paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 3, 15, 6], "circle-color": css("--accent"), "circle-stroke-width": 1.5, "circle-stroke-color": css("--paper") } });
+      map.addLayer({ id: "prop-st", type: "circle", source: "prop-st", paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 4, 15, 8], "circle-color": css("--paper"), "circle-stroke-width": 3, "circle-stroke-color": css("--top") } });
       map.addLayer({ id: "mask", type: "fill", source: "mask", paint: { "fill-color": css("--ground"), "fill-opacity": 0.92 } });
       map.addLayer({ id: "catch", type: "fill", source: "catch", paint: { "fill-color": css("--accent"), "fill-opacity": 0.12 } });
       map.addLayer({ id: "catch-line", type: "line", source: "catch", paint: { "line-color": css("--accent"), "line-width": 1, "line-opacity": 0.6 } });
@@ -1015,18 +1047,26 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       if (f.properties.cluster) groups.push(`<div class="k">Nowe osiedla</div>${f.properties.point_count} inwestycji · <b>+${fmt.format(Math.round(f.properties.sum))} os.</b> w ${year} (przybliż, aby rozdzielić)`);
       else { const b = P.nb[f.properties.i]; groups.push(`<div class="k">Nowe osiedle</div><b>${esc(b.adres || "pozwolenie GUNB")}</b> (pozwolenie ${b.rok}) · +${fmt.format(Math.round(nbPop(b)))} os. w ${year}`); }
     }
+    const ps = uniq(by((id) => id === "prop-st"), (f) => f.properties.i);
+    if (ps.length) { const r = PROP.st[ps[0].properties.i]; groups.push(`<div class="k">Proponowany przystanek · klaster #${esc(r.rank)} ${esc(r.dzielnica)}</div>${propHTML(r)}`); }
+    const pl = uniq(by((id) => id === "prop-line"), (f) => f.properties.i);
+    if (pl.length) groups.push(`<div class="k">Nowy przystanek na istniejącej linii</div>` + pl.slice(0, 4).map((f) => { const r = PROP.ln[f.properties.i];
+      return `Linia <b>${esc(r.linia)}</b> · ${esc(r.ulica || "ulica bez nazwy")} · ocena ${n0(r.ocena)} · ${n0(r.odl_do_przystanku_ztm_m)} m od przystanku ZTM (klaster #${esc(r.rank)})`; }).join("<br>"));
+    const bd = uniq(by((id) => id === "board"), (f) => f.properties.n + f.properties.nr);
+    if (bd.length) groups.push(`<div class="k">Wsiadający w szczycie 7–8 · model</div>` + bd.slice(0, 3).map((f) => { const p = f.properties;
+      return `<b>${esc(p.n)}${p.nr ? " " + esc(p.nr) : ""}</b> · 2025: ${n0(p.b25)}/h → 2036: ${n0(p.b36)}/h`; }).join("<br>"));
     const tp = by((id) => id === "top-fill" || id === "top-pt");
     if (tp.length) { const t = TOP.byRank.get(tp[0].properties.rank); groups.push(`<div class="k">Priorytet ML · #${t.rank}</div><b>${esc(t.dzielnica)}</b> · prawdopodobieństwo wykluczenia komunikacyjnego <b>${Math.round(t.pred * 100)}%</b>`); }
     const ht = by((id) => id === "heat");
     if (ht.length) { const p = ht[0].properties; groups.push(`<div class="k">Wykluczenie komunikacyjne · model ML</div><b>${esc(p.d)}</b> · prawdopodobieństwo <b>${Math.round(p.p * 100)}%</b> · miejsce ${p.rank} z ${HEAT.n}`); }
     const hx = by((id) => id === "hex");
-    if (hx.length && mode === "view") { const h = D.hexes[hx[0].properties.i]; groups.push(`<div class="k">Klaster · ${esc(h.d)}</div>${fmt.format(hexPop(h))} mieszkańców w ${year} (${hexPop(h) - h.pop[0] >= 0 ? "+" : ""}${fmt.format(hexPop(h) - h.pop[0])} vs 2025)`); }
+    if (hx.length && mode === "view") { const h = D.hexes[hx[0].properties.i]; groups.push(`<div class="k">Klaster · ${esc(h.d)}</div>${fmt.format(hexPop(h))} mieszkańców w ${year} (${hexPop(h) - h.pop[0] >= 0 ? "+" : ""}${fmt.format(hexPop(h) - h.pop[0])} vs 2025)` + (metric === "mpp" ? `<br>${fmt.format(h.mpp || 0)} miejsc pożytku publicznego` : "")); }
     return groups.map((g) => `<div class="g">${g}</div>`).join("");
   }
 
   function wireMap() {
     const tip = $("tip");
-    const HIT = ["top-pt", "top-fill", "sim", "load", "live", "infra", "parks", "nstops", "pmetro-st", "pmetro-open", "pmetro-future", "stations-metro", "stations-kolej", "planned", "veturilo", "ztm-sel", "ztm", "nb", "routes-bus", "routes-tram", "heat", "hex"];
+    const HIT = ["prop-st", "prop-line", "top-pt", "top-fill", "board", "sim", "load", "live", "infra", "parks", "nstops", "pmetro-st", "pmetro-open", "pmetro-future", "stations-metro", "stations-kolej", "planned", "veturilo", "ztm-sel", "ztm", "nb", "routes-bus", "routes-tram", "heat", "hex"];
     map.on("mousemove", (e) => {
       const r = 6, layers = HIT.filter((l) => map.getLayoutProperty(l, "visibility") !== "none");
       const fs = map.queryRenderedFeatures([[e.point.x - r, e.point.y - r], [e.point.x + r, e.point.y + r]], { layers });
@@ -1083,6 +1123,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     for (const [id, v] of Object.entries(DEFAULTS)) $(id).value = v;
     $("line-filter").value = "";
     for (const k of Object.keys(LAYERS)) $(`lay-${k}`).checked = k !== "bus";
+    $("prop-on").checked = true; $("propl-on").checked = false;
     for (const k of Object.keys(INFRA)) $(`inf-${k}`).checked = INFRA_ON.has(k);
     $("pmetro-layers").querySelectorAll("input").forEach((i) => (i.checked = PM_ON.has(i.dataset.ref)));
     applyPlannedMetro();
@@ -1118,6 +1159,68 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     g.fillText(String(n), S / 2, S / 2 + 1);
     return g.getImageData(0, 0, S, S);
   }
+  // ---------- proponowane przystanki w 30 klastrach priorytetowych (mapping/przystanki_top30.py) ----------
+  const PROP = { st: [], ln: [] };
+  const MPP_KAT = { school: "szkoły", hospital: "szpitale", town_hall: "urzędy", mall: "centra handlowe", marketplace: "targowiska",
+                    cinema: "kina", theatre: "teatry", museum: "muzea", park: "parki", religious: "miejsca kultu" };
+  const isTrue = (v) => String(v).toLowerCase() === "true";
+  const n0 = (x) => fmt.format(Math.round(+x || 0));
+  const propFeatures = () => PROP.st.map((r, i) => ({ type: "Feature", properties: { i }, geometry: { type: "Point", coordinates: [+r.lon, +r.lat] } }));
+  const propLineFeatures = () => PROP.ln.map((r, i) => ({ type: "Feature", properties: { i, l: String(r.linia).toUpperCase() }, geometry: { type: "Point", coordinates: [+r.lon, +r.lat] } }));
+  function propHTML(r) {
+    const extra = [isTrue(r.przesiadka_kolej) && "przesiadka na kolej / metro", isTrue(r.przy_veturilo) && "przy stacji Veturilo",
+                   r.linie_ztm_na_ulicy && `linie ZTM na ulicy: ${esc(r.linie_ztm_na_ulicy)}`].filter(Boolean);
+    return `<b>${esc(r.ulica || "ulica bez nazwy")}</b> · propozycja ${esc(r.nr)} w klastrze<br>nowo obsłużeni: <b>${n0(r.nowo_obsluzeni)}</b> os. (ocena ${n0(r.ocena)})`
+      + `<br>mieszkańcy ${n0(r.mieszkancy_2025)} · nowi do 2036 ${n0(r.nowi_2036)} · miejsca pracy ${n0(r.miejsca_pracy)}`
+      + `<br>najbliższy przystanek ZTM: ${n0(r.odl_do_przystanku_ztm_m)} m` + (extra.length ? `<br>${extra.join(" · ")}` : "");
+  }
+  function renderPropNote() {
+    $("prop-note").textContent = PROP.st.length
+      ? `${PROP.st.length} lokalizacji w ${new Set(PROP.st.map((r) => r.h3)).size} klastrach: tam nowy przystanek obsłuży najwięcej osób bez dojścia do ZTM. Na liniach: ${PROP.ln.length} punktów (${new Set(PROP.ln.map((r) => r.linia)).size} linii).`
+      : "Brak pliku dane/przystanki_top30.csv.";
+  }
+
+  // ---------- wsiadający na przystankach w szczycie (dane/symulacja/przystanki_wsiadania.csv) ----------
+  // Plik nie ma współrzędnych: słupki ZTM łączymy po nazwie i numerze, perony metra i stacje kolei po nazwie stacji,
+  // nowe stacje metra (NEW:…) po planowanych liniach. Słupki/perony w jednym miejscu sumujemy.
+  const BOARD = { on: false, year: 2036, pts: null, miss: 0, loading: null };
+  function loadBoard() {
+    if (BOARD.loading) return BOARD.loading;
+    BOARD.loading = fetch("dane/symulacja/przystanki_wsiadania.csv", { cache: "no-cache" }).then((r) => (r.ok ? r.text() : "")).catch(() => "").then((t) => {
+      const ztm = new Map(D.stops.ztm.map(([lon, lat, name, , lines, nr]) => [`${name}|${nr}`, { lon, lat, lines }]));
+      const rail = new Map(D.stops.rail.map(([lon, lat, name, , lines]) => [name, { lon, lat, lines }]));
+      const plan = new Map((D.planned_metro || []).flatMap((m) => m.stacje.map(([lon, lat, name]) => [name, { lon, lat, lines: m.ref.split(" ")[0] }])));
+      const at = new Map(); let miss = 0;
+      for (const r of parseRows(t)) {
+        const id = r.stop_id || "", station = id.startsWith("NEW:") || id.includes("M:") || !r.nr;
+        const loc = id.startsWith("NEW:") ? plan.get(r.nazwa) : station ? rail.get(r.nazwa) : ztm.get(`${r.nazwa}|${r.nr}`);
+        if (!loc) { miss++; continue; }
+        const k = `${loc.lon},${loc.lat}`;
+        if (!at.has(k)) at.set(k, { name: r.nazwa, nr: station ? "" : r.nr, lon: loc.lon, lat: loc.lat, l: `,${String(loc.lines || "").replace(/\s/g, "").toUpperCase()},`, b25: 0, b36: 0 });
+        const o = at.get(k); o.b25 += +r.wsiadajacy_h_2025 || 0; o.b36 += +r.wsiadajacy_h_2036 || 0;
+      }
+      BOARD.pts = [...at.values()]; BOARD.miss = miss;
+    });
+    return BOARD.loading;
+  }
+  function renderBoard() {
+    if (!map?.getSource("board")) return;
+    map.setLayoutProperty("board", "visibility", BOARD.on ? "visible" : "none");
+    if (!BOARD.on || !BOARD.pts) return;
+    const sel = lineFilter(), key = BOARD.year === 2025 ? "b25" : "b36";
+    const pts = BOARD.pts.filter((p) => p[key] >= 1 && (!sel.length || sel.some((x) => p.l.includes(`,${x},`))) && inSimArea([p.lon, p.lat]))
+      .sort((a, b) => b[key] - a[key]);   // duże kółka pod spodem, małe na wierzchu
+    map.getSource("board").setData(fc(pts.map((p) => ({ type: "Feature", properties: { v: p[key], n: p.name, nr: p.nr, b25: p.b25, b36: p.b36 }, geometry: { type: "Point", coordinates: [p.lon, p.lat] } }))));
+    const total = pts.reduce((a, p) => a + p[key], 0);
+    $("board-sum").textContent = `${BOARD.year}${DSEL ? ` · ${DSEL.name}` : ""}: ${n0(total)} wsiadających w godzinie szczytu na ${n0(pts.length)} przystankach.`
+      + (pts.length ? ` Najwięcej: ${pts.slice(0, 3).map((p) => `${p.name}${p.nr ? " " + p.nr : ""} (${n0(p[key])})`).join(", ")}.` : "");
+  }
+  async function setBoard(on) {
+    BOARD.on = on; $("board-opts").hidden = !on;
+    if (on && !BOARD.pts) { $("board-sum").textContent = "Wczytywanie…"; await loadBoard(); }
+    renderBoard();
+  }
+
   // ---------- heatmapa wykluczenia (dane/heatmapa_wykluczenia.geojson, model ML) ----------
   // Plik (~0,5 MB) wczytywany dopiero przy pierwszym włączeniu; włączona heatmapa zastępuje kolory klastrów.
   const HEAT = { on: false, loaded: false, n: 0 };
@@ -1222,16 +1325,16 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       if (d.ends[i] < t) continue;
       const [si, pi, s0, ri] = d.trips[i], ref = d.routes[ri];
       if (sel.size && !sel.has(ref.toUpperCase())) continue;
-      if (DSEL && !boxesTouch(d.shapeBox[si], DSEL.box)) continue;   // przebieg w całości poza wybraną dzielnicą
+      if (!boxesTouch(d.shapeBox[si], simAreaBox())) continue;   // przebieg w całości poza miastem / wybraną dzielnicą
       const pos = pointAt(d.shapes[si], distAt(d.profiles[pi], t - s0));
-      if (!inSelDistrict(pos)) continue;
+      if (!inSimArea(pos)) continue;
       const k = d.route_typ[ri]; counts[k]++;
       feats.push({ type: "Feature", properties: { k, r: ref, id: i }, geometry: { type: "Point", coordinates: pos } });
     }
     SIM.extra.forEach((x, j) => {
       if (t < x.s || t > x.s + x.dur) return;
       const pos = pointAt(x.sh, (t - x.s) / x.dur * x.sh.d[x.sh.d.length - 1]);
-      if (!inSelDistrict(pos)) return;
+      if (!inSimArea(pos)) return;
       counts.nowa++;
       feats.push({ type: "Feature", properties: { k: "nowa", r: "nowa", id: -1 - j }, geometry: { type: "Point", coordinates: pos } });
     });
@@ -1273,7 +1376,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     LOAD.data.odcinki.forEach((o, i) => {
       const [l, typ, , x0, y0, x1, y1, , cap, p25, p36, z, d] = o, p = ki === 9 ? p25 : p36;
       if (p == null || (sel.size && !sel.has(l.toUpperCase()))) return;
-      if (DSEL && !inSelDistrict([x0, y0]) && !inSelDistrict([x1, y1])) return;   // odcinek poza wybraną dzielnicą
+      if (!inSimArea([x0, y0]) && !inSimArea([x1, y1])) return;   // odcinek poza miastem / wybraną dzielnicą
       const u = cap > 0 ? p / cap : 0;
       if (p > 0) feats.push({ type: "Feature", properties: { i, l, p, u, z, d }, geometry: { type: "LineString", coordinates: [[x0, y0], [x1, y1]] } });
       const m = perLine.get(l); if (!m || u > m.u) perLine.set(l, { l, typ, u, p, z, d });
@@ -1401,6 +1504,11 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     if (!map?.getLayer("hex")) return;
     const sel = lineFilter(), vis = (on) => (on ? "visible" : "none");
     for (const [k, ids] of Object.entries(LAYERS)) for (const id of ids) map.setLayoutProperty(id, "visibility", vis($(`lay-${k}`).checked));
+    if (map.getLayer("prop-st")) {
+      map.setLayoutProperty("prop-st", "visibility", vis($("prop-on").checked));
+      map.setLayoutProperty("prop-line", "visibility", vis($("propl-on").checked));
+      map.setFilter("prop-line", sel.length ? ["in", ["get", "l"], ["literal", sel]] : null);   // filtr linii: tylko punkty wybranych linii
+    }
     if (map.getLayer("heat")) {
       map.setLayoutProperty("heat", "visibility", vis(HEAT.on));
       if (HEAT.on) map.setLayoutProperty("hex", "visibility", "none");
@@ -1444,6 +1552,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     }
     applyPlannedMetro();
     renderLive();
+    renderBoard();
     ensureVeturilo();
     if (SIM.data) simFrame();
     renderLoad();
@@ -1625,6 +1734,9 @@ ${JSON.stringify(describe(r), null, 1)}`;
     $("live").onchange = (e) => setLive(e.target.checked);
     $("live-kind").onchange = renderLive;
     $("top-on").onchange = applyTop;
+    $("prop-on").onchange = applyLayers; $("propl-on").onchange = applyLayers;
+    $("board-on").onchange = (e) => setBoard(e.target.checked);
+    $("board-year").querySelectorAll("button").forEach((b) => (b.onclick = () => { BOARD.year = +b.dataset.y; $("board-year").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x === b)); renderBoard(); }));
     $("heat-btn").onclick = toggleHeat;
     $("sim-play").onclick = simToggle;
     $("sim-time").oninput = async (e) => { SIM.t = +e.target.value; $("sim-clock").textContent = fmtClock(SIM.t); if (!SIM.data) { await simLoad(); simExtraTrips(); } simFrame(); };
@@ -1665,6 +1777,9 @@ ${JSON.stringify(describe(r), null, 1)}`;
     set("ztm", "circle-color", css("--paper")); set("ztm", "circle-stroke-color", css("--ink-3"));
     set("nb", "circle-color", css("--sel")); set("nb", "circle-stroke-color", css("--paper"));
     set("veturilo", "circle-color", css("--bike")); set("veturilo", "circle-stroke-color", css("--paper"));
+    set("prop-st", "circle-color", css("--paper")); set("prop-st", "circle-stroke-color", css("--top"));
+    set("prop-line", "circle-color", css("--accent")); set("prop-line", "circle-stroke-color", css("--paper"));
+    set("board", "circle-color", css("--board")); set("board", "circle-stroke-color", css("--paper"));
     for (const l of ["stations-metro", "stations-kolej"]) set(l, "circle-color", css("--paper"));
     set("stations-metro", "circle-stroke-color", css("--metro")); set("stations-kolej", "circle-stroke-color", css("--rail"));
     set("planned", "circle-color", ["case", ["get", "tram"], css("--tram"), css("--metro")]); set("planned", "circle-stroke-color", css("--paper"));
@@ -1828,6 +1943,13 @@ ${JSON.stringify(describe(r), null, 1)}`;
       row("Kursy do dołożenia do 2036", def36 != null ? sgn(def36) : null, defCls(def36)) +
       (v(pt, "metro_nowe_2036") === "True" ? `<div class="cp-note">Do 2036 r. w pobliżu otworzy się stacja metra — model zakłada mniejszą potrzebę autobusów.</div>` : ""));
 
+    // Proponowane przystanki (tylko 30 klastrów priorytetowych)
+    const props = PROP.st.filter((r) => r.h3 === id).sort((a, b) => +a.nr - +b.nr), propLines = PROP.ln.filter((r) => r.h3 === id);
+    html += sec("Proponowane przystanki · algorytm",
+      props.map((r) => row(`${esc(r.nr)}. ${esc(r.ulica || "ulica bez nazwy")}`, `${n0(r.nowo_obsluzeni)} nowo obsłużonych`)).join("") +
+      (props.length ? `<div class="cp-note">Najbliższy istniejący przystanek ZTM: ${props.map((r) => `${n0(r.odl_do_przystanku_ztm_m)} m`).join(" · ")}.</div>` : "") +
+      (propLines.length ? `<div class="cp-note">Najlepsze miejsca na istniejących liniach: ${propLines.slice(0, 6).map((r) => `${esc(r.linia)} (${esc(r.ulica || "—")})`).join(", ")}${propLines.length > 6 ? "…" : ""}</div>` : ""));
+
     // Komunikacja dziś
     const lines = new Set(), stopNames = new Set();
     for (const [lon, lat, name, , ls, nr] of D.stops.ztm) if (inRings(lon, lat, h.rings)) { stopNames.add(`${name} ${nr}`); (ls || "").split(",").filter(Boolean).forEach((l) => lines.add(l)); }
@@ -1868,6 +1990,8 @@ ${JSON.stringify(describe(r), null, 1)}`;
       row("Biura, handel, usługi", m2(v(c, "praca_biura_uslugi_m2"))) +
       row("Przemysł i magazyny", m2(v(c, "praca_przemysl_m2"))) +
       row("Sklepy i punkty usługowe", v(c, "punkty_uslug") != null ? n(v(c, "punkty_uslug")) : null) +
+      row("Miejsca pożytku publicznego (MPP)", n(h.mpp || 0)) +
+      (h.mppCat ? `<div class="cp-note">${Object.entries(MPP_KAT).map(([k, label]) => [label, +h.mppCat[k] || 0]).filter(([, x]) => x > 0).map(([label, x]) => `${label}: ${x}`).join(" · ")}</div>` : "") +
       (c ? (infra.length ? infra.map(([label, x]) => row(label, n(x))).join("") : row("Szkoły, szpitale, urzędy…", "brak w klastrze")) : ""));
 
     $("cp-body").innerHTML = loading + html;
@@ -1905,11 +2029,20 @@ ${JSON.stringify(describe(r), null, 1)}`;
   let DSEL = null;
   const boxesTouch = (a, b) => a[0] <= b[2] && a[2] >= b[0] && a[1] <= b[3] && a[3] >= b[1];
   const inSelDistrict = ([lon, lat]) => !DSEL || (lon >= DSEL.box[0] && lon <= DSEL.box[2] && lat >= DSEL.box[1] && lat <= DSEL.box[3] && inRings(lon, lat, DSEL.rings));
+  // Obszar symulacji: wybrana dzielnica, a bez niej granice Warszawy — pojazdy i odcinki poza miastem są ukryte.
+  let CITY_BOX = null;
+  const cityBox = () => CITY_BOX ||= (D.boundary || []).flat().reduce((b, [x, y]) => [Math.min(b[0], x), Math.min(b[1], y), Math.max(b[2], x), Math.max(b[3], y)], [Infinity, Infinity, -Infinity, -Infinity]);
+  const simAreaBox = () => (DSEL ? DSEL.box : cityBox());
+  const inSimArea = (p) => {
+    if (DSEL) return inSelDistrict(p);
+    const b = cityBox();
+    return p[0] >= b[0] && p[0] <= b[2] && p[1] >= b[1] && p[1] <= b[3] && insideWarsaw(p[0], p[1]);
+  };
   function setSelDistrict(d) {
     if (DSEL === d) return;
     DSEL = d;
     if (SIM.data) simFrame();
-    renderLoad();
+    renderLoad(); renderBoard();
   }
   function pickDistrict(d) {
     $("dpick-in").value = d.name; openDist(false); syncDistBtn();
