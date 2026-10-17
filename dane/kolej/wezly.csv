@@ -1,0 +1,376 @@
+﻿nazwa,systemy,linie,lon,lat,w_warszawie,n_linii
+Antoniówka,KM,KM: R81,21.279075,51.424885,False,1
+Arcelin,KM,"KM: R91, RE91, RE92",20.318299,52.659819,False,3
+Augustówka,KM,"KM: R7, RE7",21.513675,51.987332,False,2
+Baboszewo,KM,"KM: R91, RE91, RE92",20.260113,52.683268,False,3
+Barchów,KM,"KM: R60, RE6",21.64669,52.517304,False,2
+Barcząca,KM,KM: R2,21.624294,52.157154,False,1
+Bartodzieje,KM,KM: R80,21.178028,51.525132,False,1
+Bemowo,metro,metro: M2,20.915499,52.239207,True,1
+Białki Siedleckie,KM,"KM: R2, RE2",22.309478,52.128645,False,2
+Bieliny Opoczyńskie,KM,KM: R82,20.503053,51.423751,False,1
+Borki-Kosy,KM,"KM: R2, RE2",22.358344,52.089031,False,2
+Boża Wola,KM,KM: R3,20.526934,52.189878,False,1
+Brody Warszawskie,KM,"KM: R9, R90",20.748277,52.514202,False,2
+Brwinów,KM,KM: R1,20.719074,52.141935,False,1
+Brzózki,WKD,WKD: A1,20.678297,52.105031,False,1
+Bródno,metro,metro: M2,21.028939,52.293585,True,1
+Bąkowiec,KM,KM: R81,21.724261,51.517479,False,1
+Błonie,KM,"KM: R3, RE3, RE31",20.607543,52.186517,False,3
+Błonie Rokitno,KM,KM: R3,20.640087,52.188982,False,1
+Cegłów,KM,"KM: R2, RE2",21.736309,52.148499,False,2
+Celestynów,KM,"KM: R7, RE7",21.394061,52.057624,False,2
+Centrum,metro,metro: M1,21.010186,52.231007,True,1
+Centrum Nauki Kopernik,metro,metro: M2,21.03179,52.239908,True,1
+Chorzele,KM,KM: R61/R62,20.939494,53.281865,False,1
+Chotomów,KM,"KM: R9, R90, RE90",20.884368,52.415735,False,3
+Chronów,KM,KM: R82,20.92988,51.358136,False,1
+Chrosna,KM,"KM: R7, RE7",21.448515,52.031446,False,2
+Chrzęsne,KM,"KM: R60, RE6",21.473789,52.446746,False,2
+Chynów,KM,"KM: R80, RE80",21.100684,51.902726,False,2
+Ciechanów,KM,"KM: R90, RE9, RE90",20.590775,52.883757,False,3
+Ciechanów Przemysłowy,KM,KM: R90,20.615417,52.864648,False,1
+Cieksyn,KM,"KM: R91, RE91, RE92",20.664114,52.57748,False,3
+Cierpigórz,KM,"KM: R21, RE2",22.594634,52.226013,False,2
+Cisie,KM,KM: R2,21.390371,52.210007,False,1
+Czachówek Górny,KM,KM: R80,21.077726,51.967719,False,1
+Czachówek Południowy,KM,"KM: R80, RE80",21.081572,51.958234,False,2
+Czachówek Wschodni,KM,"KM: R8, R80",21.104245,51.973467,False,2
+Czeruchy,KM,"KM: R90, RE90",20.506009,52.936104,False,2
+Czyżew,KM,"KM: R6, RE6",22.342855,52.800158,False,2
+Dalanówek,KM,"KM: R91, RE91, RE92",20.463889,52.594436,False,3
+Dalekie,KM,KM: R61,21.494417,52.682458,False,1
+Dobczyn,KM,"KM: R6, R60",21.313033,52.378828,False,2
+Dobieszyn,KM,"KM: R80, RE80",21.176285,51.631467,False,2
+Drzewica,KM,KM: R82,20.465654,51.436945,False,1
+Dworzec Gdański,metro,metro: M1,20.994186,52.258059,True,1
+Dworzec Wileński,metro,metro: M2,21.035796,52.253777,True,1
+Dziewule,KM,"KM: R2, RE2",22.386219,52.055424,False,2
+Dąbkowizna,"KM, SKM","KM: RE91, RE92 | SKM: S40",21.086114,52.423819,False,3
+Dąbrówka Zabłotnia,KM,"KM: R8, RE80",21.045944,51.309632,False,2
+Dębe Wielkie,KM,KM: R2,21.422882,52.199158,False,1
+Dęblin,KM,"KM: R7, R81, RE7",21.831743,51.579731,False,3
+Fronołów,KM,"KM: R21, RE2",22.928985,52.360842,False,2
+Garbatka-Letnisko,KM,KM: R81,21.6301,51.49482,False,1
+Garwolin,KM,"KM: R7, RE7",21.553479,51.9019,False,2
+Gierwaty,KM,KM: R61,21.604024,52.992612,False,1
+Gostynin,KM,"KM: R31, RE3, RE31",19.476398,52.433619,False,3
+Goworowo,KM,KM: R61,21.581959,52.921031,False,1
+Gozdowo,KM,KM: R31,19.695705,52.729365,False,1
+Gołotczyzna,KM,"KM: R90, RE90",20.681825,52.784575,False,2
+Gośniewice,KM,KM: R80,21.139826,51.816322,False,1
+Grabniak,KM,"KM: R7, RE7",21.705779,51.712172,False,2
+Grabów nad Pilicą,KM,KM: R80,21.182093,51.741971,False,1
+Grodzisk Mazowiecki,KM,"KM: R1, RE1",20.623442,52.110442,False,2
+Grodzisk Mazowiecki Jordanowice,WKD,WKD: A1,20.636783,52.103322,False,1
+Grodzisk Mazowiecki Okrężna,WKD,WKD: A1,20.659664,52.100732,False,1
+Grodzisk Mazowiecki Piaskowa,WKD,WKD: A1,20.651066,52.10276,False,1
+Grodzisk Mazowiecki Radońska,WKD,WKD: A1,20.628452,52.100638,False,1
+Grodziszcze Mazowieckie,KM,KM: R2,21.870449,52.160206,False,1
+Groszowice Wrzosów,KM,KM: R81,21.301031,51.429609,False,1
+Grzegorzewo,KM,KM: R61,21.428696,52.485493,False,1
+Góra Kalwaria,KM,"KM: R8, R80",21.192923,51.989292,False,2
+Gąsawy Plebańskie,KM,"KM: R8, RE80",20.94733,51.23181,False,2
+Gąsocin,KM,"KM: R90, RE90",20.720498,52.738463,False,2
+Halinów,KM,"KM: R2, RE2",21.350215,52.223401,False,2
+Imielin,metro,metro: M1,21.046141,52.14927,True,1
+Iłowo,KM,"KM: R90, RE90",20.293486,53.165746,False,2
+Jackowo Dworskie,KM,KM: R90,20.775002,52.631152,False,1
+Jaktorów,KM,"KM: R1, RE1",20.551754,52.086626,False,2
+Janówek,KM,"KM: R9, R90",20.778444,52.425295,False,2
+Jarzębia Łąka,KM,KM: R61,21.447751,52.457834,False,1
+Jasienica Mazowiecka,KM,"KM: R6, R60",21.398829,52.415539,False,2
+Jasionna Łowicka,KM,"KM: R3, RE3",20.122963,52.124362,False,2
+Jastrząb,KM,"KM: R8, RE80",20.984537,51.248795,False,2
+Jastrząbka,KM,KM: R61/R62,21.249414,53.131943,False,1
+Jedlnia Kościelna,KM,KM: R81,21.408417,51.455441,False,1
+Jedlnia Letnisko,KM,KM: R81,21.329138,51.42989,False,1
+Jesionka,KM,"KM: R1, RE1",20.334677,52.014806,False,2
+Józefin,KM,KM: R2,21.333289,52.229045,False,1
+Józefów,"KM, SKM","KM: R7, RE7 | SKM: S1",21.234068,52.138691,False,3
+Kabaty,metro,metro: M1,21.065064,52.132073,True,1
+Kaczorowo,KM,"KM: R91, RE91, RE92",20.173256,52.727018,False,3
+Kanie Helenowskie,WKD,"WKD: A1, A12",20.774327,52.13166,False,2
+Kazimierówka,WKD,WKD: A1,20.698128,52.111004,False,1
+Kałęczyn,KM,KM: R90,20.747392,52.707379,False,1
+Kietlanka,KM,"KM: R6, RE6",22.17821,52.743774,False,2
+Klembów,KM,"KM: R6, R60",21.352943,52.395931,False,2
+Kobyłka,KM,"KM: R6, R60",21.215564,52.336957,False,2
+Kobyłka Ossów,KM,"KM: R6, R60",21.193302,52.327299,False,2
+Komorów,WKD,"WKD: A1, A12",20.811364,52.14812,False,2
+Kondratowicza,metro,metro: M2,21.048689,52.292085,True,1
+Konopki,KM,"KM: R90, RE90",20.459645,52.996725,False,2
+Kornelin,KM,"KM: R3, RE3",20.205842,52.182928,False,2
+Kosiorki,KM,"KM: R2, RE2",22.335999,52.107106,False,2
+Koszewnica,KM,KM: R2,21.984879,52.169632,False,1
+Kotuń,KM,"KM: R2, RE2",22.067822,52.176273,False,2
+Koziebrody,KM,"KM: R91, RE91, RE92",19.972382,52.802109,False,3
+Kołbiel,KM,"KM: R7, RE7",21.434359,52.040256,False,2
+Kończyce Radomskie,KM,KM: R82,21.045362,51.34909,False,1
+Krośnice Mazowieckie,KM,"KM: R90, RE90",20.49083,52.967938,False,2
+Krusze,KM,"KM: RE91, RE92",21.358564,52.427196,False,2
+Kruszyna,KM,KM: R80,21.17897,51.579826,False,1
+Krynka Łukowska,KM,"KM: R2, RE2",22.375783,52.006723,False,2
+Krzymosze,KM,"KM: R21, RE2",22.439099,52.177955,False,2
+Krężel,KM,KM: R80,21.111412,51.871513,False,1
+Księcia Janusza,metro,metro: M2,20.944377,52.239182,True,1
+Kątne,KM,KM: R90,20.762399,52.606703,False,1
+Kęszyce,KM,"KM: R3, RE3",20.147436,52.137935,False,2
+Legionowo,"KM, SKM","KM: R9, R90, RE9, RE90, RL | SKM: S3, S4, S40",20.941597,52.401467,False,8
+Legionowo Piaski,"KM, SKM","KM: RE91, RE92 | SKM: S4, S40",20.942786,52.41258,False,4
+Legionowo Przystanek,KM,"KM: R9, R90, RE91, RE92, RL",20.914104,52.411308,False,5
+Leokadia,KM,"KM: R7, RE7",21.631312,51.768319,False,2
+Lesiów,KM,KM: R80,21.19373,51.479221,False,1
+Leszczydół,KM,KM: R61,21.469417,52.646081,False,1
+Lipowe Pole,KM,"KM: R8, RE80",20.901003,51.154927,False,2
+Lucynów,KM,KM: R61,21.459306,52.553214,False,1
+Malichy,WKD,"WKD: A1, A12",20.841123,52.169409,False,2
+Marymont,metro,metro: M1,20.971701,52.27163,True,1
+Małkinia,KM,"KM: R6, R60, RE6",22.033318,52.694066,False,3
+Michalczew,KM,KM: R80,21.120885,51.843868,False,1
+Michalin,"KM, SKM",KM: R7 | SKM: S1,21.221569,52.151246,False,2
+Michałowice,WKD,"WKD: A1, A12",20.881496,52.175419,False,2
+Michałów-Reginów,"KM, SKM","KM: RE91, RE92 | SKM: S4, S40",20.963087,52.42268,False,4
+Mienia,KM,KM: R2,21.687115,52.149327,False,1
+Mieszaki,KM,"KM: R91, RE91, RE92",19.745199,52.836756,False,3
+Mika,KM,"KM: R7, RE7",21.747012,51.673584,False,2
+Milanówek,KM,KM: R1,20.668101,52.125125,False,1
+Milanówek Grudów,WKD,WKD: A12,20.68241,52.122224,False,1
+Międzyborów,KM,"KM: R1, RE1",20.482187,52.063513,False,2
+Mińsk Mazowiecki,KM,"KM: R2, RE2",21.552219,52.175863,False,2
+Mińsk Mazowiecki Anielina,KM,KM: R2,21.585532,52.167794,False,1
+Modlin,KM,"KM: R9, R90, RE90, RE91, RE92, RL",20.704884,52.443918,False,6
+Mokra Wieś,KM,"KM: R60, RE6",21.50001,52.457481,False,2
+Mordy,KM,"KM: R21, RE2",22.496852,52.195885,False,2
+Mordy Miasto,KM,"KM: R21, RE2",22.521304,52.203341,False,2
+Mostówka,KM,KM: R61,21.44206,52.519071,False,1
+Mrozy,KM,"KM: R2, RE2",21.800919,52.164065,False,2
+Mława,KM,"KM: R90, RE90",20.350954,53.126087,False,2
+Mława Miasto,KM,"KM: R90, RE9, RE90",20.364125,53.108679,False,3
+Młociny,metro,metro: M1,20.929868,52.29077,True,1
+Młynów,metro,metro: M2,20.960105,52.237662,True,1
+Nasielsk,KM,"KM: R9, R90, R91, RE9, RE90, RE91, RE92",20.767628,52.572213,False,7
+Natolin,metro,metro: M1,21.056447,52.141097,True,1
+Niemojki,KM,"KM: R21, RE2",22.701499,52.258742,False,2
+Nieporęt,"KM, SKM","KM: RE91, RE92 | SKM: S40",21.032206,52.430669,False,3
+Nowa Iwiczna,"KM, SKM","KM: R8, R80 | SKM: S4, S40",20.995299,52.091132,False,4
+Nowa Sucha,KM,"KM: R3, RE3",20.172266,52.161447,False,2
+Nowa Wieś Kościelna,KM,KM: R61/R62,21.412562,53.084725,False,1
+Nowa Wieś Warszawska,WKD,"WKD: A1, A12",20.795654,52.140511,False,2
+Nowe Dębe Wielkie,KM,KM: R2,21.440072,52.193409,False,1
+Nowy Dwór Mazowiecki,KM,"KM: R9, R90, RE9, RE90, RE91, RE92, RL",20.724045,52.425282,False,7
+Nowy Świat-Uniwersytet,metro,metro: M2,21.016817,52.23682,True,1
+Olszewka,KM,KM: R61/R62,21.054546,53.217201,False,1
+Opacz,WKD,"WKD: A1, A12",20.904714,52.1814,False,2
+Ostrołeka,KM,KM: R61/R62,21.61703,53.056237,False,1
+Ostrołęka,KM,KM: R61,21.617365,53.056194,False,1
+Ostrówek Węgrowski,KM,"KM: R60, RE6",21.75021,52.559471,False,2
+Otrębusy,WKD,"WKD: A1, A12",20.761549,52.126374,False,2
+Otwock,"KM, SKM","KM: R7, RE7 | SKM: S1",21.263275,52.109405,False,3
+Otwock Śródborów,KM,KM: R7,21.294403,52.101222,False,1
+Otwock Świder,"KM, SKM",KM: R7 | SKM: S1,21.252111,52.120417,False,2
+Ożarów Mazowiecki,KM,"KM: R3, RE3, RE31",20.79581,52.20742,False,3
+Parciaki,KM,KM: R61/R62,21.14091,53.174994,False,1
+Parzniew,KM,KM: R1,20.763097,52.156427,False,1
+Pasieki,KM,KM: R61,21.56046,52.853967,False,1
+Patków,KM,"KM: R21, RE2",22.745505,52.270804,False,2
+Piasecznica,KM,KM: R3,20.344228,52.210012,False,1
+Piaseczno,"KM, SKM","KM: R8, R80, RE80 | SKM: S4, S40",21.017244,52.066578,False,5
+Piastów,"KM, SKM",KM: R1 | SKM: S1,20.842591,52.182534,False,2
+Pilawa,KM,"KM: R7, RE7",21.534036,51.954854,False,2
+Pionki,KM,KM: R81,21.462308,51.479803,False,1
+Pionki Zachodnie,KM,KM: R81,21.441087,51.47185,False,1
+Plac Wilsona,metro,metro: M1,20.984368,52.269296,True,1
+Platerów,KM,"KM: R21, RE2",22.820626,52.301058,False,2
+Podbór,KM,KM: R82,20.875712,51.36045,False,1
+Podkowa Leśna Główna,WKD,"WKD: A1, A12",20.725155,52.12237,False,2
+Podkowa Leśna Wschodnia,WKD,"WKD: A1, A12",20.738475,52.123786,False,2
+Podkowa Leśna Zachodnia,WKD,"WKD: A1, A12",20.712287,52.120918,False,2
+Pogorzel Warszawska,KM,KM: R7,21.340559,52.094697,False,1
+Pole Mokotowskie,metro,metro: M1,21.007931,52.208778,True,1
+Polesie,WKD,WKD: A12,20.697141,52.121836,False,1
+Politechnika,metro,metro: M1,21.015347,52.218754,True,1
+Pomiechówek,KM,"KM: R9, R90, RE90, RE91, RE92",20.743698,52.47349,False,5
+Prabuty Góry,KM,KM: R61,21.569852,52.806381,False,1
+Proboszczewice Płockie,KM,KM: R31,19.713764,52.660257,False,1
+Prostyń,KM,"KM: R60, RE6",21.960601,52.659004,False,2
+Pruszków,"KM, SKM",KM: R1 | SKM: S1,20.799011,52.168251,False,2
+Pruszków WKD,WKD,"WKD: A1, A12",20.816594,52.161624,False,2
+Przetycz,KM,KM: R61,21.55115,52.769061,False,1
+Przysucha,KM,KM: R82,20.659894,51.377803,False,1
+Płochocin,KM,KM: R3,20.702025,52.200069,False,1
+Płock,KM,"KM: R31, RE3, RE31",19.712531,52.55279,False,3
+Płock Radziwie,KM,KM: R31,19.672225,52.524255,False,1
+Płock Trzepowo,KM,KM: R31,19.733747,52.588706,False,1
+Płocka,metro,metro: M2,20.966369,52.232502,True,1
+Płońsk,KM,"KM: R91, RE91, RE92",20.366414,52.615814,False,3
+Raciborów Kutnowski,KM,KM: R31,19.341597,52.280338,False,1
+Raciąż,KM,"KM: R91, RE91, RE92",20.104108,52.779277,False,3
+Racławicka,metro,metro: M1,21.012235,52.198864,True,1
+Radom Gołębiów,KM,"KM: R80, RE80",21.187935,51.412409,False,2
+Radom Główny,KM,"KM: R8, R80, R81, R82, RE80",21.156157,51.391174,False,5
+Radom Potkanów,KM,KM: R82,21.102081,51.353035,False,1
+Radom Południowy,KM,"KM: R8, R82, RE80",21.136837,51.363386,False,3
+Radom Północny,KM,KM: R80,21.186484,51.4196,False,1
+Radom Stara Wola,KM,KM: R80,21.184852,51.439317,False,1
+Radom Wschodni,KM,"KM: R80, R81, RE80",21.174584,51.399604,False,3
+Radomyśl,KM,"KM: R2, RE2",22.381016,52.031166,False,2
+Radziwiłłów Mazowiecki,KM,"KM: R1, RE1",20.290357,52.000298,False,2
+Radzymin,"KM, SKM","KM: RE91, RE92 | SKM: S40",21.177407,52.424293,False,3
+Rajec Poduchowny,KM,KM: R81,21.253351,51.415052,False,1
+Raszujka,KM,KM: R61/R62,21.004255,53.245882,False,1
+Ratusz Arsenał,metro,metro: M1,21.000882,52.245216,True,1
+Reguły,WKD,"WKD: A1, A12",20.858655,52.170353,False,2
+Rogożew,KM,KM: R31,19.541351,52.461791,False,1
+Rokitnia Stara,KM,"KM: R7, RE7",21.798348,51.612006,False,2
+Rondo Daszyńskiego,metro,metro: M2,20.982895,52.230083,True,1
+Rondo ONZ,metro,metro: M2,20.998282,52.23311,True,1
+Rożki,KM,"KM: R8, RE80",21.054069,51.338835,False,2
+Ruda Talubska,KM,"KM: R7, RE7",21.589491,51.853164,False,2
+Ruda Wielka,KM,KM: RE80,21.040222,51.292551,False,1
+Rybienko,KM,KM: R61,21.458151,52.582311,False,1
+Sabinka,KM,KM: R2,22.172555,52.173208,False,1
+Sadowne Węgrowskie,KM,"KM: R60, RE6",21.858402,52.605244,False,2
+Sarnaki,KM,"KM: R21, RE2",22.879491,52.325123,False,2
+Seroki,KM,KM: R3,20.467582,52.196475,False,1
+Siedlce,KM,"KM: R2, R21, RE2",22.273086,52.161181,False,3
+Siedlce Wschodnie,KM,"KM: R2, RE2",22.297839,52.144349,False,2
+Siedlce Zachodnie,KM,"KM: R2, RE2",22.235528,52.173514,False,2
+Siemiatycze,KM,"KM: R21, RE2",22.944705,52.390754,False,2
+Sierakówek,KM,KM: R31,19.420565,52.370708,False,1
+Sierpc,KM,"KM: R31, R91, RE91, RE92",19.653566,52.848148,False,4
+Skierniewice Rawka,KM,"KM: R1, RE1",20.221289,51.977582,False,2
+Skrzynno,KM,KM: R82,20.721672,51.365197,False,1
+Smogorzów Przysuski,KM,KM: R82,20.605192,51.394896,False,1
+Sobolew,KM,"KM: R7, RE7",21.672498,51.741665,False,2
+Sochaczew,KM,"KM: R3, RE3, RE31",20.238174,52.21484,False,3
+Sosnowe,KM,KM: R2,21.940488,52.175854,False,1
+Stadion Narodowy,metro,metro: M2,21.042847,52.246835,True,1
+Stara Wieś,KM,KM: R7,21.358786,52.084267,False,1
+Stare Bielany,metro,metro: M1,20.949351,52.281828,True,1
+Stok Lacki,KM,"KM: R21, RE2",22.386487,52.161582,False,2
+Stokłosy,metro,metro: M1,21.034752,52.156073,True,1
+Strzelce Kujawskie,KM,"KM: R31, RE3, RE31",19.368708,52.322845,False,3
+Strzyżyna,KM,KM: R80,21.172687,51.693657,False,1
+Studzianki Nowe,KM,"KM: R9, R90",20.751495,52.537884,False,2
+Stupsk Mazowiecki,KM,"KM: R90, RE90",20.433989,53.021164,False,2
+Sucha Żyrardowska,KM,"KM: R1, RE1",20.359248,52.022836,False,2
+Sulejówek,"KM, SKM",KM: R2 | SKM: S2,21.277172,52.247715,False,2
+Sulejówek Miłosna,"KM, SKM",KM: R2 | SKM: S2,21.298652,52.240641,False,2
+Susk,KM,KM: R31,19.683074,52.785243,False,1
+Sułkowice,KM,KM: R80,21.092366,51.926928,False,1
+Sycze,KM,"KM: R21, RE2",22.998404,52.429206,False,2
+Szewnica,KM,"KM: R60, RE6",21.563003,52.483207,False,2
+Szulborze Wielkie,KM,"KM: R6, RE6",22.227094,52.760465,False,2
+Szwedzka,metro,metro: M2,21.045523,52.263471,True,1
+Szydłowiec,KM,"KM: R8, RE80",20.923433,51.207984,False,2
+Słodowiec,metro,metro: M1,20.960126,52.276826,True,1
+Służew,metro,metro: M1,21.026307,52.172761,True,1
+Targówek Mieszkaniowy,metro,metro: M2,21.051366,52.269252,True,1
+Teresin Niepokalanów,KM,"KM: R3, RE3, RE31",20.416319,52.202101,False,3
+Topór,KM,"KM: R60, RE6",21.811865,52.584517,False,2
+Trablice,KM,"KM: R8, RE80",21.100976,51.349449,False,2
+Trocka,metro,metro: M2,21.055059,52.275102,True,1
+Tworki,WKD,"WKD: A1, A12",20.823288,52.168981,False,2
+Tłuszcz,KM,"KM: R6, R60, R61, RE6, RE91, RE92",21.433709,52.430448,False,6
+Ulrychów,metro,metro: M2,20.930006,52.240322,True,1
+Urle,KM,"KM: R60, RE6",21.621731,52.507128,False,2
+Ursynów,metro,metro: M1,21.027631,52.162025,True,1
+Ustanówek,KM,"KM: R8, R80",21.060076,51.996764,False,2
+Warka,KM,"KM: R80, RE80",21.168885,51.793677,False,2
+Warka Miasto,KM,"KM: R80, RE80",21.177417,51.781099,False,2
+Warszawa Aleje Jerozolimskie,"KM, SKM, WKD","KM: R8, R80, RE2, RL | SKM: S2, S3, S4, S40 | WKD: A1, A12",20.941428,52.20577,True,10
+Warszawa Anin,"KM, SKM","KM: R7, RE7 | SKM: S1",21.159726,52.213218,True,3
+Warszawa Centralna,"KM, SKM","KM: R9, RE1, RE2, RE3, RE31, RE9, RL | SKM: S3",21.003103,52.228747,True,8
+Warszawa Choszczówka,"KM, SKM","KM: R9, R90 | SKM: S3, S4, S40",20.97246,52.35756,True,5
+Warszawa Dawidy,"KM, SKM","KM: R8, R80 | SKM: S4, S40",20.991121,52.128564,True,4
+Warszawa Falenica,"KM, SKM","KM: R7, RE7 | SKM: S1",21.214295,52.15838,True,3
+Warszawa Gdańska,"KM, SKM","KM: R8, R80, R90, RE80, RE90 | SKM: S4, S40",20.991415,52.259156,True,7
+Warszawa Gocławek,"KM, SKM","KM: R7, RE7 | SKM: S1",21.132598,52.238695,True,3
+Warszawa Gołąbki,KM,KM: R3,20.864202,52.208421,False,1
+Warszawa Grochów,"KM, SKM","KM: R7, RE7 | SKM: S1",21.083951,52.255568,True,3
+Warszawa Główna,KM,KM: R1,20.985048,52.22504,True,1
+Warszawa Jeziorki,"KM, SKM","KM: R8, R80 | SKM: S4, S40",20.99317,52.110023,True,4
+Warszawa Koło,"KM, SKM","KM: R8, R80, R90, RE80, RE90 | SKM: S4, S40",20.959014,52.246219,True,7
+Warszawa Lotnisko Chopina,"KM, SKM","KM: RL | SKM: S2, S3",20.975214,52.169638,True,3
+Warszawa Miedzeszyn,"KM, SKM","KM: R7, RE7 | SKM: S1",21.202758,52.170112,True,3
+Warszawa Międzylesie,"KM, SKM","KM: R7, RE7 | SKM: S1",21.16893,52.203993,True,3
+Warszawa Mokry Ług,KM,"KM: R6, RE6",21.170506,52.277247,True,2
+Warszawa Młynów,"KM, SKM","KM: R8, R80, R90, RE80, RE90 | SKM: S4, S40",20.958466,52.239151,True,7
+Warszawa Ochota,"KM, SKM","KM: R1, R2, R3, R6, R7, RE6, RE7 | SKM: S1, S2",20.990555,52.225763,True,9
+Warszawa Ochota WKD,WKD,"WKD: A1, A12",20.989518,52.22541,True,2
+Warszawa Okęcie,"KM, SKM","KM: R8, R80 | SKM: S4, S40",20.987345,52.166131,True,4
+Warszawa Olszynka Grochowska,"KM, SKM","KM: R7, RE7 | SKM: S1",21.106844,52.249802,True,3
+Warszawa Powiśle,"KM, SKM","KM: R1, R2, R3, R6, R7, RE6, RE7 | SKM: S1, S2",21.028125,52.233705,True,9
+Warszawa Powązki,"KM, SKM","KM: R8, R80, R90, RE80, RE90 | SKM: S4, S40",20.972209,52.256022,True,7
+Warszawa Praga,"KM, SKM","KM: R9, R90 | SKM: S3, S4, S40",21.022355,52.277516,True,5
+Warszawa Płudy,"KM, SKM","KM: R9, R90, RL | SKM: S3, S4, S40",20.985807,52.334209,True,6
+Warszawa Radość,"KM, SKM","KM: R7, RE7 | SKM: S1",21.191277,52.181626,True,3
+Warszawa Rakowiec,"KM, SKM","KM: R8, R80, RE2, RE80, RL | SKM: S2, S3, S4, S40",20.966058,52.196818,True,9
+Warszawa Raków,WKD,"WKD: A1, A12",20.935873,52.194499,True,2
+Warszawa Reduta Ordona,WKD,"WKD: A1, A12",20.947848,52.214382,True,2
+Warszawa Rembertów,"KM, SKM","KM: R2, R6, RE6 | SKM: S2",21.158478,52.257116,True,4
+Warszawa Salomea,WKD,"WKD: A1, A12",20.924487,52.186486,True,2
+Warszawa Stadion,"KM, SKM","KM: R1, R2, R3, R6, R7, RE6, RE7 | SKM: S1, S2",21.043963,52.244894,True,9
+Warszawa Służewiec,"KM, SKM","KM: R8, R80, RE2, RE80, RL | SKM: S2, S3, S4, S40",20.987028,52.180758,True,9
+Warszawa Targówek,"KM, SKM","KM: R9, RL | SKM: S3",21.051738,52.264248,True,3
+Warszawa Toruńska,"KM, SKM","KM: R9, R90, RE90, RL | SKM: S3, S4, S40",21.013064,52.294119,True,7
+Warszawa Ursus,"KM, SKM",KM: R1 | SKM: S1,20.885414,52.196453,True,2
+Warszawa Ursus Niedźwiadek,"KM, SKM",KM: R1 | SKM: S1,20.869879,52.19142,True,2
+Warszawa Ursus Północny,KM,KM: R3,20.889623,52.205752,True,1
+Warszawa Wawer,"KM, SKM","KM: R7, RE7 | SKM: S1",21.149495,52.223485,True,3
+Warszawa Wesoła,"KM, SKM",KM: R2 | SKM: S2,21.224076,52.254088,True,2
+Warszawa Wileńska,KM,KM: R60,21.038558,52.255802,True,1
+Warszawa Wola,"KM, SKM","KM: R8, R80, R90, RE80, RE90 | SKM: S4, S40",20.957843,52.230002,True,7
+Warszawa Wola Grzybowska,"KM, SKM",KM: R2 | SKM: S2,21.250911,52.252819,True,2
+Warszawa Wschodnia,"KM, SKM","KM: R1, R2, R3, R6, R7, R9, RE1, RE2, RE3, RE31, RE6, RE7, RE80, RE9, RL | SKM: S1, S2, S3",21.053162,52.251552,True,18
+Warszawa Włochy,"KM, SKM","KM: R1, R3 | SKM: S1",20.91492,52.206177,True,3
+Warszawa ZOO,"KM, SKM","KM: R90, RE80, RE90 | SKM: S4, S40",21.017826,52.26352,True,5
+Warszawa Zachodnia,"KM, SKM","KM: R1, R2, R3, R6, R7, R8, R80, R9, R90, RE1, RE2, RE3, RE31, RE6, RE7, RE80, RE9, RE90, RL | SKM: S1, S2, S3, S4, S40",20.964044,52.220667,True,24
+Warszawa Zachodnia WKD,WKD,"WKD: A1, A12",20.965661,52.219474,True,2
+Warszawa Zacisze-Wilno,KM,KM: R60,21.080197,52.277938,True,1
+Warszawa Środmieście WKD,WKD,"WKD: A1, A12",20.999754,52.227537,True,2
+Warszawa Śródmieście,"KM, SKM","KM: R1, R2, R3, R6, R7, RE6, RE7 | SKM: S1, S2",21.007584,52.229404,True,9
+Warszawa Żerań,"KM, SKM","KM: R9, R90 | SKM: S3, S4, S40",20.998893,52.314179,True,5
+Warszawa Żwirki i Wigury,"KM, SKM","KM: R8, R80, RE2, RL | SKM: S2, S3, S4, S40",20.980496,52.193372,True,8
+Wawrzyszew,metro,metro: M1,20.939515,52.286347,True,1
+Wieliszew,"KM, SKM","KM: RE91, RE92 | SKM: S4, S40",20.974776,52.428169,False,4
+Wieliszew Centrum,SKM,SKM: S4,20.995196,52.443329,False,1
+Wieniawa,KM,KM: R82,20.78952,51.363478,False,1
+Wierzbno,metro,metro: M1,21.016797,52.189872,True,1
+Wilanowska,metro,metro: M1,21.023145,52.181817,True,1
+Witanów,KM,KM: R3,20.574164,52.18593,False,1
+Wkra,KM,"KM: R91, RE91, RE92",20.571819,52.584764,False,3
+Wola Bierwiecka,KM,KM: R80,21.177302,51.543175,False,1
+Wola Lipieniecka,KM,"KM: R8, RE80",21.026544,51.27707,False,2
+Wola Rowska,KM,"KM: R7, RE7",21.600841,51.822479,False,2
+Wolanów,KM,KM: R82,21.000132,51.353303,False,1
+Wołomin,KM,"KM: R6, R60, RE6",21.238049,52.346648,False,3
+Wołomin Słoneczna,KM,"KM: R6, R60",21.255727,52.354331,False,2
+Wrzosów,KM,KM: R2,21.482637,52.18439,False,1
+Wygoda,KM,"KM: R7, RE7",21.731371,51.688539,False,2
+Wyszków,KM,KM: R61,21.446531,52.601739,False,1
+Wyszyny,KM,"KM: R90, RE90",20.39211,53.061189,False,2
+Zabiele Wielkie,KM,KM: R61/R62,21.340219,53.085089,False,1
+Zabieżki,KM,"KM: R7, RE7",21.471962,52.012429,False,2
+Zacisze,metro,metro: M2,21.062148,52.28375,True,1
+Zagościniec,KM,"KM: R6, R60",21.28049,52.364844,False,2
+Zajezierze koło Dęblina,KM,KM: R81,21.817256,51.542042,False,1
+Zalesie Górne,KM,"KM: R8, R80, RE80",21.041788,52.026515,False,3
+Zaręby Kościelne,KM,"KM: R6, RE6",22.140322,52.730803,False,2
+Zawidz,KM,"KM: R91, RE91, RE92",19.843662,52.829473,False,3
+Zawidz Kościelny,KM,"KM: R91, RE91, RE92",19.878038,52.824099,False,3
+Zegrze Południowe,SKM,SKM: S4,21.008013,52.451702,False,1
+Zielonka,KM,"KM: R6, R60, RE6",21.157512,52.311653,False,3
+Zielonka Bankowa,KM,"KM: R6, RE6",21.154008,52.291463,False,2
+Zygmuntowo Mazowieckie,KM,KM: R61,21.52562,52.727569,False,1
+Zygmuntów,KM,KM: R82,20.571094,51.409005,False,1
+Ząbki,KM,KM: R60,21.113369,52.292457,False,1
+Łaskarzew,KM,"KM: R7, RE7",21.608508,51.798171,False,2
+Łochów,KM,"KM: R60, RE6",21.687541,52.533924,False,2
+Łąck,KM,"KM: R31, RE3, RE31",19.59633,52.487118,False,3
+Świercze,KM,"KM: R90, RE90",20.762841,52.670381,False,2
+Świętokrzyska,metro,"metro: M1, M2",21.008215,52.235558,True,2
+Życzyn,KM,"KM: R7, RE7",21.76138,51.646833,False,2
+Żyrardów,KM,"KM: R1, RE1",20.44928,52.052562,False,2
+Żytkowice,KM,KM: R81,21.556734,51.483021,False,1
