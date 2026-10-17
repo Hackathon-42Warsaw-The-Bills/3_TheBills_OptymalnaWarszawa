@@ -11,7 +11,7 @@
   --rule: #d8dddb; --chip: #e5e9e7; --road: #c9d0cd; --water: #bcd6e8; --district: #97a39e;
   --tram: #b0307a; --rail: #3d4a8f; --metro: #c02a2a; --accent: #256abf; --sel: #f0b400;
   --m3: #0fa85a; --m4: #d4a000;   /* planowane metro: M3 zielona (#19e17d), M4 żółta — ciemniej dla kontrastu na jasnym tle */
-  --good: #0f8a3c; --warn: #c98500; --crit: #d03b3b; --bus: #d9631e; --park: #3f9a4f;
+  --good: #0f8a3c; --warn: #c98500; --crit: #d03b3b; --bus: #d9631e; --top: #c2255c; --park: #3f9a4f;
   --s1: #e3eefb; --s2: #b7d3f6; --s3: #6da7ec; --s4: #2a78d6; --s5: #184f95;
   --p1: #eeeafc; --p2: #cbc0f3; --p3: #9d8be6; --p4: #6b53cf; --p5: #44309b;
   --t1: #e1f4ee; --t2: #a9e0cf; --t3: #5fc0a6; --t4: #1f9a7b; --t5: #0f6a54;
@@ -25,7 +25,7 @@
   --rule: #2b3330; --chip: #222a27; --road: #2a322f; --water: #1d3546; --district: #56615c;
   --tram: #e163a8; --rail: #8f9cf0; --metro: #ff6b6b; --accent: #6da7ec; --sel: #f5c22b;
   --m3: #19e17d; --m4: #ffd21f;
-  --good: #3fc16b; --warn: #f0b429; --crit: #f06464; --bus: #ff9a4d; --park: #58b86a;
+  --good: #3fc16b; --warn: #f0b429; --crit: #f06464; --bus: #ff9a4d; --top: #f06595; --park: #58b86a;
   --s1: #1a2a3d; --s2: #1f4677; --s3: #2a6bb8; --s4: #5a9bea; --s5: #a7cbf6;
   --p1: #231d3a; --p2: #3c2f70; --p3: #5e48b6; --p4: #9483ec; --p5: #cdc1fa;
   --t1: #13271f; --t2: #1b4a3c; --t3: #237a62; --t4: #43b392; --t5: #a0e4ce;
@@ -37,7 +37,7 @@
   --rule: #2b3330; --chip: #222a27; --road: #2a322f; --water: #1d3546; --district: #56615c;
   --tram: #e163a8; --rail: #8f9cf0; --metro: #ff6b6b; --accent: #6da7ec; --sel: #f5c22b;
   --m3: #19e17d; --m4: #ffd21f;
-  --good: #3fc16b; --warn: #f0b429; --crit: #f06464; --bus: #ff9a4d; --park: #58b86a;
+  --good: #3fc16b; --warn: #f0b429; --crit: #f06464; --bus: #ff9a4d; --top: #f06595; --park: #58b86a;
   --s1: #1a2a3d; --s2: #1f4677; --s3: #2a6bb8; --s4: #5a9bea; --s5: #a7cbf6;
   --p1: #231d3a; --p2: #3c2f70; --p3: #5e48b6; --p4: #9483ec; --p5: #cdc1fa;
   --t1: #13271f; --t2: #1b4a3c; --t3: #237a62; --t4: #43b392; --t5: #a0e4ce;
@@ -126,6 +126,10 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
 .overlist button { all: unset; box-sizing: border-box; width: 100%; cursor: pointer; display: flex; justify-content: space-between; gap: 8px; padding: 5px 6px; border-radius: 5px; font-size: 13.5px; }
 .overlist button:hover, .overlist button:focus-visible { background: var(--chip); }
 .overlist small { color: var(--ink-3); }
+.toplist button { all: unset; box-sizing: border-box; width: 100%; cursor: pointer; display: grid; grid-template-columns: 26px 1fr auto; gap: 8px; align-items: center; padding: 5px 6px; border-radius: 5px; font-size: 13.5px; }
+.toplist button:hover, .toplist button:focus-visible { background: var(--chip); }
+.toplist .rk { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--top); color: #fff; font: 600 11.5px/1 var(--f-body); }
+.toplist small { color: var(--ink-3); }
 .btn.small { padding: 6px 9px; font-size: 12.5px; }
 .legend { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
 .ramp { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; }
@@ -193,6 +197,13 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
           <span id="live-key" hidden><i style="height:10px;width:10px;border-radius:50%;background:var(--ink);box-shadow:0 0 0 2px var(--bus)"></i>autobus / <i style="height:10px;width:10px;border-radius:50%;background:var(--ink);box-shadow:0 0 0 2px var(--tram);margin-left:4px"></i>tramwaj na żywo</span>
         </div>
       </div>
+    </section>
+
+    <section>
+      <h2>Priorytety · model ML</h2>
+      <label class="check" for="top-on"><input type="checkbox" id="top-on" checked>Pokaż 30 klastrów, gdzie komunikacja jest najbardziej potrzebna</label>
+      <div class="muted" id="top-note" style="margin-top:6px"></div>
+      <ul class="list toplist" id="top-list" style="max-height:290px;overflow-y:auto"></ul>
     </section>
 
     <section>
@@ -421,6 +432,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     // cache: "no-cache" — przeglądarka zawsze sprawdza, czy dane się zmieniły (po przeliczeniu prognozy nie pokaże starej kopii).
     [D, B] = await Promise.all([fetch("frontend/symulator_dane.json", { cache: "no-cache" }).then((r) => r.json()), fetch("frontend/warszawa.json", { cache: "no-cache" }).then((r) => r.json())]);
     buildGraph(); buildPeople();
+    await loadTop();
   }
 
   function buildGraph() {
@@ -822,6 +834,12 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       map.addLayer({ id: "infra", type: "symbol", source: "infra", minzoom: 10.5,
         layout: { "icon-image": ["concat", "infra-", ["get", "g"]], "icon-size": ["interpolate", ["linear"], ["zoom"], 10.5, 0.55, 13, 0.75, 16, 1], "icon-allow-overlap": true,
                   "symbol-sort-key": ["match", ["get", "g"], "szpital", 0, "handel", 1, "urzad", 2, "kultura", 3, "szkola", 4, 5] } });
+      map.addSource("top", { type: "geojson", data: fc(TOP.rows.filter((t) => t.hex).map((t) => ({ type: "Feature", properties: { rank: t.rank }, geometry: { type: "MultiPolygon", coordinates: t.hex.rings.map((r) => [r]) } }))) });
+      map.addSource("top-pt", { type: "geojson", data: fc(TOP.rows.map((t) => ({ type: "Feature", properties: { rank: t.rank }, geometry: { type: "Point", coordinates: [t.lon, t.lat] } }))) });
+      for (const t of TOP.rows) map.addImage(`rank-${t.rank}`, rankIcon(t.rank), { pixelRatio: 2 });
+      map.addLayer({ id: "top-fill", type: "fill", source: "top", paint: { "fill-color": css("--top"), "fill-opacity": 0.14 } });
+      map.addLayer({ id: "top-line", type: "line", source: "top", paint: { "line-color": css("--top"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 2, 15, 4] } });
+      map.addLayer({ id: "top-pt", type: "symbol", source: "top-pt", layout: { "icon-image": ["concat", "rank-", ["to-string", ["get", "rank"]]], "icon-size": ["interpolate", ["linear"], ["zoom"], 10, 0.75, 14, 1], "icon-allow-overlap": true, "symbol-sort-key": ["get", "rank"] } });
       map.addLayer({ id: "mask", type: "fill", source: "mask", paint: { "fill-color": css("--ground"), "fill-opacity": 0.92 } });
       map.addLayer({ id: "catch", type: "fill", source: "catch", paint: { "fill-color": css("--accent"), "fill-opacity": 0.12 } });
       map.addLayer({ id: "catch-line", type: "line", source: "catch", paint: { "line-color": css("--accent"), "line-width": 1, "line-opacity": 0.6 } });
@@ -838,6 +856,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       map.addLayer({ id: "live", type: "circle", source: "live", paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 2.5, 14, 5, 17, 8], "circle-color": css("--ink"), "circle-stroke-width": 2.2, "circle-stroke-color": ["case", ["==", ["get", "typ"], 2], css("--tram"), css("--bus")], "circle-opacity": ["interpolate", ["linear"], ["get", "age"], 0, 1, 180, 0.35], "circle-stroke-opacity": ["interpolate", ["linear"], ["get", "age"], 0, 1, 180, 0.35] } });
       map.addLayer({ id: "nstops", type: "circle", source: "nstops", paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 5, 16, 8], "circle-color": css("--paper"), "circle-stroke-width": 3, "circle-stroke-color": css("--accent") } });
       wireMap();
+      applyTop();
       renderPlannedMetroToggles();
       applyLayers();
       applyPlannedMetro();
@@ -903,6 +922,8 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       if (f.properties.cluster) groups.push(`<div class="k">Nowe osiedla</div>${f.properties.point_count} inwestycji · <b>+${fmt.format(Math.round(f.properties.sum))} os.</b> w ${year} (przybliż, aby rozdzielić)`);
       else { const b = P.nb[f.properties.i]; groups.push(`<div class="k">Nowe osiedle</div><b>${esc(b.adres || "pozwolenie GUNB")}</b> (pozwolenie ${b.rok}) · +${fmt.format(Math.round(nbPop(b)))} os. w ${year}`); }
     }
+    const tp = by((id) => id === "top-fill" || id === "top-pt");
+    if (tp.length) { const t = TOP.byRank.get(tp[0].properties.rank); groups.push(`<div class="k">Priorytet ML · #${t.rank}</div><b>${esc(t.dzielnica)}</b> · prawdopodobieństwo wykluczenia komunikacyjnego <b>${Math.round(t.pred * 100)}%</b>`); }
     const hx = by((id) => id === "hex");
     if (hx.length && mode === "view") { const h = D.hexes[hx[0].properties.i]; groups.push(`<div class="k">Klaster · ${esc(h.d)}</div>${fmt.format(hexPop(h))} mieszkańców w ${year} (${hexPop(h) - h.pop[0] >= 0 ? "+" : ""}${fmt.format(hexPop(h) - h.pop[0])} vs 2025)`); }
     return groups.map((g) => `<div class="g">${g}</div>`).join("");
@@ -910,7 +931,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
 
   function wireMap() {
     const tip = $("tip");
-    const HIT = ["sim", "load", "live", "infra", "parks", "nstops", "pmetro-st", "pmetro-open", "pmetro-future", "stations-metro", "stations-kolej", "planned", "ztm-sel", "ztm", "nb", "routes-bus", "routes-tram", "hex"];
+    const HIT = ["top-pt", "top-fill", "sim", "load", "live", "infra", "parks", "nstops", "pmetro-st", "pmetro-open", "pmetro-future", "stations-metro", "stations-kolej", "planned", "ztm-sel", "ztm", "nb", "routes-bus", "routes-tram", "hex"];
     map.on("mousemove", (e) => {
       const r = 6, layers = HIT.filter((l) => map.getLayoutProperty(l, "visibility") !== "none");
       const fs = map.queryRenderedFeatures([[e.point.x - r, e.point.y - r], [e.point.x + r, e.point.y + r]], { layers });
@@ -951,6 +972,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
   let raf = 0;
   function changed() { cancelAnimationFrame(raf); raf = requestAnimationFrame(() => { updateMapSources(); renderEval(); if (SIM.data) { simExtraTrips(); simFrame(); } }); }
   function yearChanged() {
+    if (TOP.rows.length) renderTopList();
     $("year-label").textContent = year;
     renderLegend(); updateYearLayers(); renderEval();
   }
@@ -974,6 +996,50 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     if (map?.getLayer("hex")) map.setPaintProperty("hex", "fill-color", hexColorExpr());
     yearChanged();
     map?.fitBounds(WARSAW, { padding: 24 });
+  }
+
+  // ---------- priorytety z modelu ML (dane/lista_heksagonow_top30.csv) ----------
+  const TOP = { rows: [], byRank: new Map() };
+  async function loadTop() {
+    try {
+      const txt = await fetch("dane/lista_heksagonow_top30.csv", { cache: "no-cache" }).then((r) => (r.ok ? r.text() : ""));
+      const [head, ...lines] = txt.trim().split(/\r?\n/);
+      const cols = head.split(",");
+      const hexBy = new Map(D.hexes.map((h) => [h.h3, h]));
+      TOP.rows = lines.filter(Boolean).map((l) => {
+        const v = Object.fromEntries(l.split(",").map((x, i) => [cols[i], x]));
+        return { h3: v.h3, dzielnica: v.dzielnica, lon: +v.lon, lat: +v.lat, rank: +v.rank, pred: +v.pred_wykluczenie, etykieta: +v.etykieta_final, hex: hexBy.get(v.h3) };
+      }).sort((a, b) => a.rank - b.rank);
+      TOP.byRank = new Map(TOP.rows.map((t) => [t.rank, t]));
+    } catch (e) { console.warn("brak listy top 30", e); TOP.rows = []; }
+  }
+  function rankIcon(n) {
+    const S = 44, c = document.createElement("canvas"); c.width = c.height = S;
+    const g = c.getContext("2d");
+    g.beginPath(); g.arc(S / 2, S / 2, S / 2 - 3, 0, 2 * Math.PI); g.fillStyle = css("--top"); g.fill();
+    g.lineWidth = 3; g.strokeStyle = "#ffffff"; g.stroke();
+    g.fillStyle = "#ffffff"; g.font = `700 ${n > 9 ? 17 : 20}px Barlow, system-ui, sans-serif`; g.textAlign = "center"; g.textBaseline = "middle";
+    g.fillText(String(n), S / 2, S / 2 + 1);
+    return g.getImageData(0, 0, S, S);
+  }
+  function applyTop() {
+    const on = $("top-on").checked && TOP.rows.length > 0;
+    if (map?.getLayer("top-fill")) for (const id of ["top-fill", "top-line", "top-pt"]) map.setLayoutProperty(id, "visibility", on ? "visible" : "none");
+    renderTopList();
+  }
+  function renderTopList() {
+    if (!TOP.rows.length) { $("top-note").textContent = "Brak pliku dane/lista_heksagonow_top30.csv."; $("top-list").innerHTML = ""; return; }
+    const total25 = TOP.rows.reduce((a, t) => a + (t.hex ? t.hex.pop[0] : 0), 0), totalY = TOP.rows.reduce((a, t) => a + (t.hex ? hexPop(t.hex) : 0), 0);
+    $("top-note").textContent = `Klastry wskazane przez model ML (prawdopodobieństwo wykluczenia komunikacyjnego ${Math.round(TOP.rows.at(-1).pred * 100)}–${Math.round(TOP.rows[0].pred * 100)}%). Mieszka w nich ${fmt.format(total25)} osób, w ${year} r. ${fmt.format(totalY)}.`;
+    $("top-list").innerHTML = TOP.rows.map((t) => {
+      const p0 = t.hex ? t.hex.pop[0] : null, p1 = t.hex ? hexPop(t.hex) : null;
+      return `<li><button data-r="${t.rank}"><span class="rk">${t.rank}</span><span>${esc(t.dzielnica)} <small>${p0 == null ? "" : `· ${fmt.format(p0)} → ${fmt.format(p1)} mieszk. (${year})`}</small></span><span style="font-weight:600">${Math.round(t.pred * 100)}%</span></button></li>`;
+    }).join("");
+    $("top-list").querySelectorAll("button").forEach((b) => (b.onclick = () => {
+      const t = TOP.byRank.get(+b.dataset.r); if (!map) return;
+      const bb = new maplibregl.LngLatBounds(); (t.hex ? t.hex.rings.flat() : [[t.lon, t.lat]]).forEach((c) => bb.extend(c));
+      map.fitBounds(bb, { padding: 120, maxZoom: 15, duration: 600 });
+    }));
   }
 
   // ---------- symulacja ruchu według rozkładu (frontend/symulacja_dane.json) ----------
@@ -1393,6 +1459,7 @@ ${JSON.stringify(describe(r), null, 1)}`;
     $("undo").onclick = undo; $("clear").onclick = clearAll; $("reset").onclick = resetAll;
     $("live").onchange = (e) => setLive(e.target.checked);
     $("live-kind").onchange = renderLive;
+    $("top-on").onchange = applyTop;
     $("sim-play").onclick = simToggle;
     $("sim-time").oninput = async (e) => { SIM.t = +e.target.value; $("sim-clock").textContent = fmtClock(SIM.t); if (!SIM.data) { await simLoad(); simExtraTrips(); } simFrame(); };
     $("sim-speed").querySelectorAll("button").forEach((b) => (b.onclick = () => { SIM.speed = +b.dataset.v; $("sim-speed").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x === b)); }));
@@ -1423,6 +1490,7 @@ ${JSON.stringify(describe(r), null, 1)}`;
     for (const l of ["pmetro-open", "pmetro-future"]) set(l, "line-color", pmColor());
     set("pmetro-casing", "line-color", css("--paper")); set("pmetro-st", "circle-stroke-color", ["case", ["==", ["get", "ex"], 1], css("--ink"), pmColor()]);
     applyPlannedMetro();
+    set("top-fill", "fill-color", css("--top")); set("top-line", "line-color", css("--top"));
     set("parks", "fill-color", css("--park")); set("parks-line", "line-color", css("--park"));
     set("routes-bus", "line-color", css("--bus")); set("routes-tram", "line-color", css("--tram")); set("mask", "fill-color", css("--ground"));
     set("ztm-sel", "circle-color", css("--paper")); set("ztm-sel", "circle-stroke-color", ["case", ["get", "t"], css("--tram"), css("--bus")]);
