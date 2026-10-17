@@ -112,7 +112,10 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
 .layers .check { font-size: 13.5px; }
 .sw { display: inline-block; width: 16px; flex: none; }
 .ico { display: inline-grid; place-items: center; width: 16px; height: 16px; border-radius: 50%; color: #fff; font: 700 10px/1 var(--f-body); flex: none; box-shadow: 0 0 0 1.5px var(--paper); }
-.subh { font: 600 12px/1 var(--f-display); text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); margin: 14px 0 0; }
+.subh { font: 600 12px/1 var(--f-display); text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); margin: 14px 0 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.subh .check { font: inherit; letter-spacing: inherit; color: var(--ink-2); gap: 7px; }
+.subh .note { text-transform: none; letter-spacing: 0; font: 400 12px/1.3 var(--f-body); color: var(--ink-3); }
+.btn.small { padding: 6px 9px; font-size: 12.5px; }
 .legend { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
 .ramp { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; }
 .ramp i { height: 10px; border-radius: 2px; }
@@ -187,6 +190,11 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
         <label for="line-filter">Pokaż tylko linie (np. 523, 189, 17) — trasa, przystanki i pojazdy<input id="line-filter" type="text" placeholder="wszystkie linie" autocomplete="off" spellcheck="false"></label>
       </div>
       <div class="muted" id="filter-note" style="margin-top:6px"></div>
+      <div class="row" style="margin-top:10px">
+        <button class="btn small" id="layers-all">Zaznacz wszystko</button>
+        <button class="btn small" id="layers-none">Odznacz wszystko</button>
+      </div>
+      <div class="subh"><label class="check" for="sec-layers"><input type="checkbox" id="sec-layers">Sieć i dane</label></div>
       <div class="layers" id="layers">
         <label class="check" for="lay-hex"><input type="checkbox" id="lay-hex" checked>Klastry (prognoza)</label>
         <label class="check" for="lay-roads"><input type="checkbox" id="lay-roads" checked>Ulice</label>
@@ -198,9 +206,9 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
         <label class="check" for="lay-nb"><input type="checkbox" id="lay-nb" checked><i class="sw" style="height:9px;width:9px;border-radius:50%;background:var(--sel)"></i>Nowe osiedla</label>
         <label class="check" for="lay-planned"><input type="checkbox" id="lay-planned" checked>Planowane tramwaje i kolej</label>
       </div>
-      <div class="subh">Planowane metro <span style="text-transform:none;letter-spacing:0;font-family:var(--f-body);font-weight:400">· linia przerywana = jeszcze nieotwarta w wybranym roku</span></div>
+      <div class="subh"><label class="check" for="sec-pmetro"><input type="checkbox" id="sec-pmetro">Planowane metro</label><span class="note">linia przerywana = jeszcze nieotwarta w wybranym roku</span></div>
       <div class="layers" id="pmetro-layers"></div>
-      <div class="subh">Cele podróży</div>
+      <div class="subh"><label class="check" for="sec-infra"><input type="checkbox" id="sec-infra">Cele podróży</label></div>
       <div class="layers" id="infra-layers"></div>
     </section>
 
@@ -908,6 +916,25 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     $("infra-layers").querySelectorAll("input").forEach((i) => (i.onchange = applyLayers));
   }
 
+  // ---------- sekcje warstw: zaznacz/odznacz całą grupę lub wszystko ----------
+  const SECTIONS = { "sec-layers": "layers", "sec-pmetro": "pmetro-layers", "sec-infra": "infra-layers" };
+  const sectionInputs = (box) => [...($(box)?.querySelectorAll("input[type=checkbox]") || [])];
+  function syncSections() {
+    for (const [master, box] of Object.entries(SECTIONS)) {
+      const ins = sectionInputs(box), n = ins.filter((i) => i.checked).length, m = $(master);
+      if (!m) continue;
+      m.checked = ins.length > 0 && n === ins.length;
+      m.indeterminate = n > 0 && n < ins.length;   // część zaznaczona
+    }
+  }
+  function setSection(box, on) { sectionInputs(box).forEach((i) => (i.checked = on)); }
+  function applyAllLayers() { applyLayers(); applyPlannedMetro(); syncSections(); }
+  function wireSections() {
+    for (const [master, box] of Object.entries(SECTIONS)) $(master).onchange = (e) => { setSection(box, e.target.checked); applyAllLayers(); };
+    $("layers-all").onclick = () => { Object.values(SECTIONS).forEach((b) => setSection(b, true)); applyAllLayers(); };
+    $("layers-none").onclick = () => { Object.values(SECTIONS).forEach((b) => setSection(b, false)); applyAllLayers(); };
+  }
+
   // ---------- planowane metro ----------
   const PM_ON = new Set(["M2 zachód", "M3"]);
   function renderPlannedMetroToggles() {
@@ -924,6 +951,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     map.setFilter("pmetro-future", ["all", sel, [">", ["get", "rok"], year]]);
     map.setFilter("pmetro-st", sel);
     map.setPaintProperty("pmetro-st", "circle-color", ["case", [">", ["get", "rok"], year], css("--paper"), css("--metro")]);
+    syncSections();
   }
 
   // ---------- warstwy i filtr linii ----------
@@ -959,6 +987,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       $("filter-note").textContent = `${(D.routes || []).filter((r) => r.typ === "autobus").length} linii autobusowych i ${(D.routes || []).filter((r) => r.typ === "tram").length} tramwajowych w granicach Warszawy; grubość linii = liczba kursów.`;
     }
     renderLive();
+    syncSections();
   }
   function fitToFilter() {
     const sel = new Set(lineFilter()); if (!sel.size || !map) return;
@@ -1158,7 +1187,7 @@ ${JSON.stringify(describe(r), null, 1)}`;
   // API dla algorytmu zespołu i testów: window.symulator.wczytaj({...}), .propozycja(), .ocena()
   window.symulator = { wczytaj: loadProposal, propozycja: currentProposal, ocena: () => lastEval, _G: () => G, _route: () => route, _map: () => map };
 
-  renderInfraToggles(); wireUI(); setMode("view"); renderLegend();
+  renderInfraToggles(); wireUI(); wireSections(); syncSections(); setMode("view"); renderLegend();
   load().then(() => {
     buildMap();
     matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applyTheme);
