@@ -9,7 +9,7 @@
 /* Layout: pulpit planisty — panel decyzyjny po lewej (horyzont, narzędzia, ocena na żywo), mapa heksów i sieci po prawej; na telefonie mapa nad panelem. */
 :root {
   --paper: #fbfcfb; --ground: #eceeed; --ink: #15201b; --ink-2: #46534d; --ink-3: #6f7b76;
-  --rule: #d8dddb; --chip: #e5e9e7; --road: #c9d0cd; --water: #bcd6e8; --district: #97a39e;
+  --rule: #d8dddb; --chip: #e5e9e7; --road: #c9d0cd; --water: #bcd6e8; --district: #000000;
   --tram: #b0307a; --rail: #3d4a8f; --metro: #c02a2a; --accent: #256abf; --sel: #f0b400;
   --m3: #0fa85a; --m4: #d4a000;   /* planowane metro: M3 zielona (#19e17d), M4 żółta — ciemniej dla kontrastu na jasnym tle */
   --good: #0f8a3c; --warn: #c98500; --crit: #d03b3b; --bus: #d9631e; --top: #c2255c; --park: #3f9a4f;
@@ -28,7 +28,7 @@
   --tram: #e163a8; --rail: #8f9cf0; --metro: #ff6b6b; --accent: #6da7ec; --sel: #f5c22b;
   --m3: #19e17d; --m4: #ffd21f;
   --good: #3fc16b; --warn: #f0b429; --crit: #f06464; --bus: #ff9a4d; --top: #f06595; --park: #58b86a;
-  --h1: #3a2f17; --h2: #7a4b16; --h3: #c2621c; --h4: #f0913a; --h5: #ffd36b;
+  --h1: #ffe9a8; --h2: #fdbb5a; --h3: #f78433; --h4: #e2492c; --h5: #b8202c;
   --s1: #1a2a3d; --s2: #1f4677; --s3: #2a6bb8; --s4: #5a9bea; --s5: #a7cbf6;
   --p1: #231d3a; --p2: #3c2f70; --p3: #5e48b6; --p4: #9483ec; --p5: #cdc1fa;
   --t1: #13271f; --t2: #1b4a3c; --t3: #237a62; --t4: #43b392; --t5: #a0e4ce;
@@ -41,7 +41,7 @@
   --tram: #e163a8; --rail: #8f9cf0; --metro: #ff6b6b; --accent: #6da7ec; --sel: #f5c22b;
   --m3: #19e17d; --m4: #ffd21f;
   --good: #3fc16b; --warn: #f0b429; --crit: #f06464; --bus: #ff9a4d; --top: #f06595; --park: #58b86a;
-  --h1: #3a2f17; --h2: #7a4b16; --h3: #c2621c; --h4: #f0913a; --h5: #ffd36b;
+  --h1: #ffe9a8; --h2: #fdbb5a; --h3: #f78433; --h4: #e2492c; --h5: #b8202c;
   --s1: #1a2a3d; --s2: #1f4677; --s3: #2a6bb8; --s4: #5a9bea; --s5: #a7cbf6;
   --p1: #231d3a; --p2: #3c2f70; --p3: #5e48b6; --p4: #9483ec; --p5: #cdc1fa;
   --t1: #13271f; --t2: #1b4a3c; --t3: #237a62; --t4: #43b392; --t5: #a0e4ce;
@@ -158,7 +158,18 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
 .tip .g + .g { margin-top: 5px; padding-top: 5px; border-top: 1px solid color-mix(in srgb, var(--paper) 25%, transparent); }
 .tip .k { opacity: 0.7; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
 .loading { position: absolute; inset: 0; display: grid; place-items: center; color: var(--ink-3); font-size: 14px; z-index: 1; }
-.modebar { position: absolute; left: 12px; top: calc(12px + env(safe-area-inset-top, 0px)); z-index: 2; background: var(--paper); border: 1px solid var(--rule); border-radius: 7px; padding: 7px 10px; font-size: 13px; color: var(--ink-2); max-width: min(420px, calc(100% - 90px)); }
+.modebar { position: absolute; left: 12px; top: calc(12px + env(safe-area-inset-top, 0px)); z-index: 2; background: var(--paper); border: 1px solid var(--rule); border-radius: 7px; padding: 7px 10px; font-size: 13px; color: var(--ink-2); max-width: min(420px, calc(100% - 300px)); }
+/* Lista dzielnic: pole z filtrowaniem, na lewo od przycisków powiększania. */
+.dpick { position: absolute; top: calc(12px + env(safe-area-inset-top, 0px)); right: calc(max(12px, env(safe-area-inset-right, 0px)) + 54px); width: 210px; z-index: 3; }
+.dpick input { width: 100%; height: 36px; padding: 0 34px 0 10px; font: 500 14px var(--f-body); color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 7px; }
+.dpick input::placeholder { color: var(--ink-3); }
+.dpick .dpick-btn { position: absolute; right: 3px; top: 3px; width: 30px; height: 30px; padding: 0; border: 0; border-radius: 5px; background: transparent; color: var(--ink-3); font-size: 15px; cursor: pointer; display: grid; place-items: center; }
+.dpick .dpick-btn:hover { background: var(--chip); color: var(--ink); }
+.dpick ul { position: absolute; top: 40px; left: 0; right: 0; margin: 0; padding: 4px 0; list-style: none; background: var(--paper); border: 1px solid var(--rule); border-radius: 7px; max-height: min(340px, 50vh); overflow-y: auto; box-shadow: 0 4px 14px rgb(0 0 0 / 0.16); }
+.dpick li { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; padding: 7px 10px; font-size: 14px; color: var(--ink); cursor: pointer; }
+.dpick li small { color: var(--ink-3); font-size: 12px; white-space: nowrap; }
+.dpick li[aria-selected="true"] { background: var(--chip); }
+.dpick li.empty { color: var(--ink-3); cursor: default; }
 
 .maplibregl-map { overflow: hidden; position: relative; -webkit-tap-highlight-color: transparent; }
 .maplibregl-canvas { position: absolute; left: 0; top: 0; }
@@ -170,6 +181,8 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
   html, body { height: auto; }
   .app { grid-template-columns: 1fr; grid-template-rows: 60vh auto; height: auto; }
   .mapwrap { order: -1; height: 60vh; }
+  .dpick { width: min(190px, calc(100% - 90px)); }
+  .modebar { top: calc(56px + env(safe-area-inset-top, 0px)); max-width: calc(100% - 90px); }
   .panel { border-right: 0; overflow: visible; padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-left: max(16px, env(safe-area-inset-left, 0px)); }
 }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } .live-dot { animation: none; } }
@@ -386,6 +399,11 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
   <div class="mapwrap" id="mapwrap">
     <div id="map"></div>
     <div class="modebar" id="modebar" hidden></div>
+    <div class="dpick" id="dpick">
+      <input id="dpick-in" type="text" role="combobox" aria-expanded="false" aria-controls="dpick-list" aria-autocomplete="list" aria-label="Przybliż do dzielnicy" placeholder="Dzielnica…" autocomplete="off" spellcheck="false">
+      <button class="dpick-btn" id="dpick-btn" type="button" tabindex="-1" aria-label="Pokaż listę dzielnic">▾</button>
+      <ul id="dpick-list" role="listbox" aria-label="Dzielnice" hidden></ul>
+    </div>
     <div class="loading" id="loading">Wczytywanie danych symulatora…</div>
     <div class="zoom">
       <button id="zin" aria-label="Przybliż">+</button>
@@ -797,6 +815,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       const line = (coords) => ({ type: "Feature", properties: {}, geometry: { type: "LineString", coordinates: coords } });
       map.addSource("river", { type: "geojson", data: fc(B.river.map((c) => line(decode(c, S)))) });
       map.addSource("districts", { type: "geojson", data: fc(B.districts.flatMap((d) => d.rings.map((c) => line(decode(c, S))))) });
+      map.addSource("district-sel", { type: "geojson", data: fc([]) });
       map.addSource("roads", { type: "geojson", data: fc(B.roads.edges.map((e) => ({ type: "Feature", properties: { c: e[0] }, geometry: { type: "LineString", coordinates: decode(e[7], S) } }))), tolerance: 0.4 });
       // Ulice dostępne dla autobusu (graf trasowania), jedna linia na oba kierunki — podświetlane przy rysowaniu.
       const seenPair = new Set();
@@ -830,6 +849,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       map.addLayer({ id: "roads", type: "line", source: "roads", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": css("--road"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, ["match", ["get", "c"], 0, 1.4, 1, 1.2, 2, 0.9, 3, 0.7, 0.3], 16, ["match", ["get", "c"], 0, 8, 1, 7, 2, 5, 3, 4, 2]] } });
       map.addLayer({ id: "busnet", type: "line", source: "busnet", layout: { "line-cap": "round", "line-join": "round", visibility: "none" }, paint: { "line-color": css("--accent"), "line-opacity": 0.45, "line-width": ["interpolate", ["linear"], ["zoom"], 10, 0.8, 16, 3.5] } });
       map.addLayer({ id: "districts", type: "line", source: "districts", paint: { "line-color": css("--district"), "line-width": 1, "line-dasharray": [3, 2] } });
+      map.addLayer({ id: "district-sel", type: "line", source: "district-sel", layout: { "line-join": "round" }, paint: { "line-color": css("--ink"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 2, 15, 4] } });
       map.addLayer({ id: "trams", type: "line", source: "trams", paint: { "line-color": css("--tram"), "line-opacity": 0.6, "line-width": ["interpolate", ["linear"], ["zoom"], 10, 0.8, 16, 2.5] } });
       map.addLayer({ id: "routes-bus", type: "line", source: "routes", filter: ["==", ["get", "typ"], "autobus"], layout: { "line-cap": "round", "line-join": "round", visibility: "none" }, paint: { "line-color": css("--bus"), "line-opacity": 0.55, "line-width": routeWidth(1) } });
       map.addLayer({ id: "routes-tram", type: "line", source: "routes", filter: ["==", ["get", "typ"], "tram"], layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": css("--tram"), "line-opacity": 0.75, "line-width": routeWidth(1) } });
@@ -968,7 +988,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     });
     $("zin").onclick = () => map.zoomIn();
     $("zout").onclick = () => map.zoomOut();
-    $("zall").onclick = () => map.fitBounds(WARSAW, { padding: 24 });
+    $("zall").onclick = () => { clearDistrict(); map.fitBounds(WARSAW, { padding: 24 }); };
   }
 
   // ---------- UI ----------
@@ -1561,7 +1581,7 @@ ${JSON.stringify(describe(r), null, 1)}`;
     if (!map?.getLayer("hex")) return;
     const set = (l, p, v) => map.setPaintProperty(l, p, v);
     set("bg", "background-color", css("--ground")); set("river", "line-color", css("--water")); set("roads", "line-color", css("--road"));
-    set("districts", "line-color", css("--district")); set("trams", "line-color", css("--tram")); set("hex", "fill-color", hexColorExpr());
+    set("districts", "line-color", css("--district")); set("district-sel", "line-color", css("--ink")); set("trams", "line-color", css("--tram")); set("hex", "fill-color", hexColorExpr());
     set("busnet", "line-color", css("--accent"));
     set("rail-metro", "line-color", css("--metro")); set("rail-kolej", "line-color", css("--rail"));
     for (const l of ["pmetro-open", "pmetro-future"]) set(l, "line-color", pmColor());
@@ -1585,6 +1605,79 @@ ${JSON.stringify(describe(r), null, 1)}`;
     set("sim", "circle-color", simColorExpr()); set("sim", "circle-stroke-color", css("--ink")); set("load", "line-color", loadColorExpr()); renderLoadKey();
     set("live", "circle-color", css("--ink")); set("live", "circle-stroke-color", ["case", ["==", ["get", "typ"], 2], css("--tram"), css("--bus")]);
   }
+
+  // ---------- lista dzielnic (prawy górny róg mapy): filtrowanie po wpisanych literach, wybór przybliża mapę ----------
+  const fold = (s) => s.toLocaleLowerCase("pl").replace(/ł/g, "l").normalize("NFD").replace(/\p{M}/gu, "");
+  let DIST = null, distShown = [], distActive = -1;
+  const districtList = () => DIST || (!B ? [] : DIST = B.districts.map((d) => {
+    const rings = d.rings.map((c) => decode(c, B.scale)), b = new maplibregl.LngLatBounds();
+    rings.flat().forEach((p) => b.extend(p));
+    return { name: d.name, pop: d.pop, rings, b };
+  }).sort((a, b) => a.name.localeCompare(b.name, "pl")));
+  function renderDistList() {
+    const raw = $("dpick-in").value.trim(), q = fold(raw), list = $("dpick-list");
+    distShown = districtList().filter((d) => fold(d.name).includes(q));
+    distActive = distShown.length ? Math.min(Math.max(distActive, 0), distShown.length - 1) : -1;
+    list.innerHTML = distShown.length
+      ? distShown.map((d, i) => `<li role="option" id="dp-${i}" data-i="${i}" aria-selected="${i === distActive}">${esc(d.name)}<small>${fmt.format(d.pop)} mieszk.</small></li>`).join("")
+      : `<li class="empty" role="option" aria-disabled="true">${DIST?.length ? `Brak dzielnicy „${esc(raw)}”` : "Wczytywanie…"}</li>`;
+    $("dpick-in").setAttribute("aria-activedescendant", distActive >= 0 ? `dp-${distActive}` : "");
+    list.querySelector('[aria-selected="true"]')?.scrollIntoView({ block: "nearest" });
+  }
+  function openDist(on) {
+    $("dpick-list").hidden = !on; $("dpick-in").setAttribute("aria-expanded", on);
+    if (on) renderDistList();
+  }
+  function syncDistBtn() {
+    const has = !!$("dpick-in").value;
+    $("dpick-btn").textContent = has ? "×" : "▾";
+    $("dpick-btn").setAttribute("aria-label", has ? "Wyczyść wybór dzielnicy" : "Pokaż listę dzielnic");
+  }
+  function pickDistrict(d) {
+    $("dpick-in").value = d.name; openDist(false); syncDistBtn();
+    if (!map) return;
+    map.getSource("district-sel")?.setData(fc(d.rings.map((r) => ({ type: "Feature", properties: {}, geometry: { type: "LineString", coordinates: r } }))));
+    map.fitBounds(d.b, { padding: 40, duration: 700 });
+  }
+  function clearDistrict() {
+    $("dpick-in").value = ""; distActive = 0; syncDistBtn();
+    map?.getSource("district-sel")?.setData(fc([]));
+  }
+  (function wireDistricts() {
+    const inp = $("dpick-in"), list = $("dpick-list");
+    inp.addEventListener("focus", () => openDist(true));
+    inp.addEventListener("click", () => openDist(true));
+    inp.addEventListener("input", () => {
+      distActive = 0; syncDistBtn(); openDist(true);
+      if (!inp.value) map?.getSource("district-sel")?.setData(fc([]));
+    });
+    inp.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        e.preventDefault();
+        if (list.hidden) return openDist(true);
+        if (distShown.length) { distActive = (distActive + (e.key === "ArrowDown" ? 1 : -1) + distShown.length) % distShown.length; renderDistList(); }
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        if (distShown[distActive]) pickDistrict(distShown[distActive]);
+      } else if (e.key === "Escape") {
+        e.stopPropagation();
+        if (!list.hidden) openDist(false); else inp.blur();
+      }
+    });
+    // mousedown zamiast click: wybór zanim pole straci fokus i lista się schowa.
+    list.addEventListener("mousedown", (e) => {
+      e.preventDefault();
+      const li = e.target.closest("li[data-i]"); if (li) pickDistrict(distShown[+li.dataset.i]);
+    });
+    $("dpick-btn").addEventListener("mousedown", (e) => e.preventDefault());
+    $("dpick-btn").addEventListener("click", () => {
+      if (inp.value) { clearDistrict(); inp.focus(); return openDist(true); }
+      const wasFocused = document.activeElement === inp;
+      inp.focus();                                  // fokus sam otwiera listę
+      if (wasFocused) openDist(list.hidden);        // już aktywne pole: przycisk przełącza listę
+    });
+    inp.addEventListener("blur", () => openDist(false));
+  })();
 
   // Tryb jasny / ciemny: domyślnie jak w systemie; wybór z przycisku zapamiętany w przeglądarce.
   const ICON = (d) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
