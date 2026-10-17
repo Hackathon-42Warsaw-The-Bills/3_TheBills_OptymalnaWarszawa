@@ -1,5 +1,6 @@
 <meta charset="utf-8">
 <title>Symulator linii Warszawa 2036</title>
+<script>try { const t = localStorage.getItem("motyw"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch {}</script>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -128,9 +129,14 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
 footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
 
 .zoom { position: absolute; top: calc(12px + env(safe-area-inset-top, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; background: var(--paper); border: 1px solid var(--rule); border-radius: 7px; overflow: hidden; z-index: 2; }
-.zoom button { font: 500 18px/1 var(--f-body); width: 38px; height: 36px; border: 0; background: transparent; color: var(--ink); cursor: pointer; }
+.zoom button { font: 500 18px/1 var(--f-body); width: 44px; height: 36px; padding: 0; border: 0; background: transparent; color: var(--ink); cursor: pointer; display: grid; place-items: center; }
 .zoom button + button { border-top: 1px solid var(--rule); }
-.zoom .all { font-size: 11px; font-family: var(--f-display); letter-spacing: 0.05em; text-transform: uppercase; }
+/* text-indent równoważy odstęp po ostatniej literze (letter-spacing), żeby napis był na środku. */
+.zoom .all { font-size: 11px; font-family: var(--f-display); letter-spacing: 0.05em; text-indent: 0.05em; text-transform: uppercase; }
+.panel header { position: relative; padding-right: 48px; }
+.theme-btn { position: absolute; top: 0; right: 0; width: 36px; height: 36px; padding: 0; display: grid; place-items: center; border: 1px solid var(--rule); border-radius: 7px; background: var(--paper); color: var(--ink); cursor: pointer; }
+.theme-btn:hover { background: var(--chip); }
+.theme-btn svg { width: 18px; height: 18px; }
 .tip { position: absolute; left: 0; top: 0; pointer-events: none; z-index: 3; background: var(--ink); color: var(--paper); font-size: 13px; line-height: 1.4; padding: 7px 10px; border-radius: 6px; max-width: min(340px, calc(100% - 24px)); box-shadow: 0 2px 10px rgb(0 0 0 / 0.18); }
 .tip b { font-weight: 600; }
 .tip .g + .g { margin-top: 5px; padding-top: 5px; border-top: 1px solid color-mix(in srgb, var(--paper) 25%, transparent); }
@@ -156,6 +162,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
 <div class="app">
   <aside class="panel">
     <header>
+      <button class="theme-btn" id="theme" type="button"></button>
       <h1>Symulator linii Warszawa 2036</h1>
       <div class="sub">Narysuj linię autobusową lub wczytaj propozycję algorytmu i zobacz, kogo obsłuży, gdzie utknie w korku i ile pojazdów potrzebuje.</div>
     </header>
@@ -1027,6 +1034,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
   const LAYERS = { hex: ["hex"], roads: ["roads"], bus: ["routes-bus"], tram: ["routes-tram", "trams"], metro: ["rail-metro", "stations-metro"],
                    kolej: ["rail-kolej", "stations-kolej"], ztm: ["ztm"], nb: ["nb"], planned: ["planned", "planned-future"] };
   const routeWidth = (k) => ["interpolate", ["linear"], ["zoom"], 10, ["*", k, ["interpolate", ["linear"], ["get", "kursy"], 20, 0.5, 120, 1.3, 300, 2.6]], 16, ["*", k, ["interpolate", ["linear"], ["get", "kursy"], 20, 1.5, 120, 3.5, 300, 6]]];
+  const SEL_WIDTH = ["interpolate", ["linear"], ["zoom"], 10, 3, 16, 7];   // grubość linii wybranych filtrem
   const lineFilter = () => [...new Set($("line-filter").value.split(/[\s,;]+/).map((x) => x.trim().toUpperCase()).filter(Boolean))];
   function applyLayers() {
     if (!map?.getLayer("hex")) return;
@@ -1037,12 +1045,15 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     for (const id of ["parks", "parks-line"]) map.setLayoutProperty(id, "visibility", vis(groups.includes("park")));
     const known = new Set((D.routes || []).map((r) => r.ref.toUpperCase()));
     if (sel.length) {
-      // Filtr linii: wybrane trasy zawsze widoczne i grubsze, przystanki tylko tych linii (przy każdym zoomie).
+      // Filtr linii — autobusy i tramwaje tak samo: widoczne tylko wybrane trasy (pozostałe linie i tory
+      // tramwajowe ukryte), wszystkie tej samej, dużej grubości (nie zależnej od liczby kursów),
+      // przystanki tylko tych linii (przy każdym zoomie).
       const inSel = ["in", ["upcase", ["get", "ref"]], ["literal", sel]];
       map.setFilter("routes-bus", ["all", ["==", ["get", "typ"], "autobus"], inSel]);
       map.setFilter("routes-tram", ["all", ["==", ["get", "typ"], "tram"], inSel]);
       map.setLayoutProperty("routes-bus", "visibility", "visible"); map.setLayoutProperty("routes-tram", "visibility", "visible");
-      for (const id of ["routes-bus", "routes-tram"]) { map.setPaintProperty(id, "line-width", routeWidth(2.2)); map.setPaintProperty(id, "line-opacity", 0.95); }
+      map.setLayoutProperty("trams", "visibility", "none");
+      for (const id of ["routes-bus", "routes-tram"]) { map.setPaintProperty(id, "line-width", SEL_WIDTH); map.setPaintProperty(id, "line-opacity", 0.95); }
       map.setFilter("ztm-sel", ["any", ...sel.map((x) => ["in", `,${x},`, ["upcase", ["get", "l"]]])]);
       map.setLayoutProperty("ztm-sel", "visibility", "visible"); map.setLayoutProperty("ztm", "visibility", "none");
       const nStops = D.stops.ztm.filter((z) => sel.some((x) => `,${z[4].toUpperCase()},`.includes(`,${x},`))).length;
@@ -1253,6 +1264,7 @@ ${JSON.stringify(describe(r), null, 1)}`;
     const set = (l, p, v) => map.setPaintProperty(l, p, v);
     set("bg", "background-color", css("--ground")); set("river", "line-color", css("--water")); set("roads", "line-color", css("--road"));
     set("districts", "line-color", css("--district")); set("trams", "line-color", css("--tram")); set("hex", "fill-color", hexColorExpr());
+    set("busnet", "line-color", css("--accent"));
     set("rail-metro", "line-color", css("--metro")); set("rail-kolej", "line-color", css("--rail"));
     for (const l of ["pmetro-open", "pmetro-future"]) set(l, "line-color", pmColor());
     set("pmetro-casing", "line-color", css("--paper")); set("pmetro-st", "circle-stroke-color", ["case", ["==", ["get", "ex"], 1], css("--ink"), pmColor()]);
@@ -1272,6 +1284,24 @@ ${JSON.stringify(describe(r), null, 1)}`;
     set("nstops", "circle-color", css("--paper")); set("nstops", "circle-stroke-color", css("--accent"));
     set("live", "circle-color", css("--ink")); set("live", "circle-stroke-color", ["case", ["==", ["get", "typ"], 2], css("--tram"), css("--bus")]);
   }
+
+  // Tryb jasny / ciemny: domyślnie jak w systemie; wybór z przycisku zapamiętany w przeglądarce.
+  const ICON = (d) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+  const SUN = ICON('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>');
+  const MOON = ICON('<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>');
+  const darkNow = () => (document.documentElement.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")) === "dark";
+  function renderThemeBtn() {
+    const b = $("theme"), label = darkNow() ? "Przełącz na tryb jasny" : "Przełącz na tryb ciemny";
+    b.innerHTML = darkNow() ? SUN : MOON; b.title = label; b.setAttribute("aria-label", label);
+  }
+  $("theme").onclick = () => {
+    const t = darkNow() ? "light" : "dark";
+    document.documentElement.dataset.theme = t;
+    try { localStorage.setItem("motyw", t); } catch {}
+    renderThemeBtn();
+  };
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", renderThemeBtn);
+  renderThemeBtn();
 
   // API dla algorytmu zespołu i testów: window.symulator.wczytaj({...}), .propozycja(), .ocena()
   window.symulator = { wczytaj: loadProposal, propozycja: currentProposal, ocena: () => lastEval, _G: () => G, _route: () => route, _map: () => map };
