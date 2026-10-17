@@ -305,7 +305,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
           <button data-v="600" aria-pressed="false">×600</button>
         </div>
       </div>
-      <div class="muted" id="sim-status" style="margin-top:6px">Autobusy, tramwaje, metro i SKM jadą według rozkładu ZTM (dzień roboczy). Linia z piaskownicy jeździ z ustawioną częstotliwością. Filtr linii działa też tutaj.</div>
+      <div class="muted" id="sim-status" style="margin-top:6px">Autobusy, tramwaje, metro i SKM jadą według rozkładu ZTM (dzień roboczy). Linia z piaskownicy jeździ z ustawioną częstotliwością. Filtr linii działa też tutaj, a dzielnica wybrana w prawym górnym rogu mapy zawęża symulację do swoich granic.</div>
 
       <div class="subh" style="margin-top:16px"><label class="check" for="load-on"><input type="checkbox" id="load-on">Obciążenie linii w szczycie</label><span class="note">model pasażerów 7–8</span></div>
       <div id="load-opts" hidden>
@@ -506,7 +506,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     [D, B, vet] = await Promise.all([fetch("frontend/symulator_dane.json", { cache: "no-cache" }).then((r) => r.json()), fetch("frontend/warszawa.json", { cache: "no-cache" }).then((r) => r.json()),
                                      fetch("dane/veturilo_stacje.csv", { cache: "no-cache" }).then((r) => (r.ok ? r.text() : "")).catch(() => "")]);
     VET.stations = parseRows(vet).filter((s) => Number.isFinite(+s.lon) && Number.isFinite(+s.lat))
-      .map((s) => ({ id: s.station_id, name: (s.nazwa || "").trim(), nr: s.numer, lon: +s.lon, lat: +s.lat, cap: +s.stojaki || 0, h3: s.h3, xy: toXY(+s.lon, +s.lat) }));
+      .map((s) => ({ id: s.station_id, name: (s.nazwa || "").trim(), nr: s.numer, lon: +s.lon, lat: +s.lat, cap: +s.stojaki || 0, h3: s.h3 }));
     buildGraph(); buildPeople();
     await loadTop();
   }
@@ -1183,6 +1183,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       d.ends = d.trips.map(([, pi, s]) => s + d.profiles[pi][d.profiles[pi].length - 1]);
       d.maxDur = Math.max(...d.trips.map(([, pi]) => d.profiles[pi][d.profiles[pi].length - 1]));
       d.starts = d.trips.map((t) => t[2]);
+      d.shapeBox = d.shapes.map((s) => { const xs = s.c.map((p) => p[0]), ys = s.c.map((p) => p[1]); return [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)]; });
       return (SIM.data = d);
     });
     return SIM.loading;
@@ -1221,17 +1222,22 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       if (d.ends[i] < t) continue;
       const [si, pi, s0, ri] = d.trips[i], ref = d.routes[ri];
       if (sel.size && !sel.has(ref.toUpperCase())) continue;
+      if (DSEL && !boxesTouch(d.shapeBox[si], DSEL.box)) continue;   // przebieg w całości poza wybraną dzielnicą
+      const pos = pointAt(d.shapes[si], distAt(d.profiles[pi], t - s0));
+      if (!inSelDistrict(pos)) continue;
       const k = d.route_typ[ri]; counts[k]++;
-      feats.push({ type: "Feature", properties: { k, r: ref, id: i }, geometry: { type: "Point", coordinates: pointAt(d.shapes[si], distAt(d.profiles[pi], t - s0)) } });
+      feats.push({ type: "Feature", properties: { k, r: ref, id: i }, geometry: { type: "Point", coordinates: pos } });
     }
     SIM.extra.forEach((x, j) => {
       if (t < x.s || t > x.s + x.dur) return;
+      const pos = pointAt(x.sh, (t - x.s) / x.dur * x.sh.d[x.sh.d.length - 1]);
+      if (!inSelDistrict(pos)) return;
       counts.nowa++;
-      feats.push({ type: "Feature", properties: { k: "nowa", r: "nowa", id: -1 - j }, geometry: { type: "Point", coordinates: pointAt(x.sh, (t - x.s) / x.dur * x.sh.d[x.sh.d.length - 1]) } });
+      feats.push({ type: "Feature", properties: { k: "nowa", r: "nowa", id: -1 - j }, geometry: { type: "Point", coordinates: pos } });
     });
     map.getSource("sim").setData(fc(feats));
     $("sim-clock").textContent = fmtClock(t); $("sim-time").value = Math.round(t);
-    $("sim-status").textContent = `W ruchu: ${fmt.format(counts.autobus)} autobusów, ${fmt.format(counts.tramwaj)} tramwajów, ${fmt.format(counts.metro)} pociągów metra, ${fmt.format(counts.kolej)} SKM` + (counts.nowa ? `, ${counts.nowa} na nowej linii` : "");
+    $("sim-status").textContent = `W ruchu${DSEL ? ` (${DSEL.name})` : ""}: ${fmt.format(counts.autobus)} autobusów, ${fmt.format(counts.tramwaj)} tramwajów, ${fmt.format(counts.metro)} pociągów metra, ${fmt.format(counts.kolej)} SKM` + (counts.nowa ? `, ${counts.nowa} na nowej linii` : "");
   }
   function simTick(ts) {
     if (!SIM.playing) return;
@@ -1267,6 +1273,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     LOAD.data.odcinki.forEach((o, i) => {
       const [l, typ, , x0, y0, x1, y1, , cap, p25, p36, z, d] = o, p = ki === 9 ? p25 : p36;
       if (p == null || (sel.size && !sel.has(l.toUpperCase()))) return;
+      if (DSEL && !inSelDistrict([x0, y0]) && !inSelDistrict([x1, y1])) return;   // odcinek poza wybraną dzielnicą
       const u = cap > 0 ? p / cap : 0;
       if (p > 0) feats.push({ type: "Feature", properties: { i, l, p, u, z, d }, geometry: { type: "LineString", coordinates: [[x0, y0], [x1, y1]] } });
       const m = perLine.get(l); if (!m || u > m.u) perLine.set(l, { l, typ, u, p, z, d });
@@ -1274,7 +1281,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     feats.sort((a, b) => a.properties.u - b.properties.u);   // najbardziej obciążone rysowane na wierzchu
     map.getSource("load").setData(fc(feats));
     const over = feats.filter((f) => f.properties.u > 1).length;
-    $("load-sum").textContent = `${LOAD.year}: ${fmt.format(over)} odcinków przepełnionych (> 100% pojemności w godzinie szczytu).`;
+    $("load-sum").textContent = `${LOAD.year}${DSEL ? ` · ${DSEL.name}` : ""}: ${fmt.format(over)} odcinków przepełnionych (> 100% pojemności w godzinie szczytu).`;
     const top = [...perLine.values()].sort((a, b) => b.u - a.u).slice(0, 8);
     $("load-list").innerHTML = top.map((m) => `<li><button data-l="${esc(m.l)}"><span><b>${esc(m.l)}</b> <small>${esc(m.z)} → ${esc(m.d)}</small></span><span style="color:var(--${m.u > 1 ? "crit" : m.u > 0.8 ? "warn" : "ink-3"});font-weight:600">${Math.round(m.u * 100)}%</span></button></li>`).join("");
     $("load-list").querySelectorAll("button").forEach((b) => (b.onclick = () => { $("line-filter").value = b.dataset.l; applyLayers(); fitToFilter(); }));
@@ -1689,26 +1696,11 @@ ${JSON.stringify(describe(r), null, 1)}`;
       VET.status = new Map(j.data.stations.map((s) => [s.station_id, { bikes: s.num_bikes_available, docks: s.num_docks_available }]));
       VET.updated = new Date((j.last_updated || Date.now() / 1000) * 1000);
       map.getSource("veturilo")?.setData(fc(vetFeatures()));
-      if (CL.i >= 0) renderCluster();
     } catch (e) { console.warn("Veturilo: brak stanu na żywo", e); }
     finally { VET.busy = false; }
     VET.timer = setTimeout(pollVeturilo, 60000);
   }
   document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") ensureVeturilo(); });
-  // Wiersze panelu klastra: stacje w klastrze (stojaki, rowery teraz) albo najbliższa stacja.
-  // Odległość z dane/veturilo_w_klastrach.csv (od środka ciężkości klastra), gdy plik jest; inaczej liczona tutaj.
-  function vetRows(id, h, n, row, distFile) {
-    if (!VET.stations.length) return "";
-    const inHex = VET.stations.filter((s) => s.h3 === id);
-    if (inHex.length) {
-      const bikes = inHex.reduce((a, s) => a + (VET.status.get(s.id)?.bikes ?? 0), 0);
-      return row("Stacje Veturilo · stojaki", `${n(inHex.length)} · ${n(inHex.reduce((a, s) => a + s.cap, 0))}` + (VET.status.size ? ` · ${n(bikes)} rowerów teraz` : ""))
-        + `<div class="cp-note">${inHex.map((s) => esc(s.name)).join(", ")}</div>`;
-    }
-    const ring = h.rings[0], [cx, cy] = toXY(ring.reduce((a, p) => a + p[0], 0) / ring.length, ring.reduce((a, p) => a + p[1], 0) / ring.length);
-    const near = VET.stations.reduce((b, s) => { const d = Math.hypot(s.xy[0] - cx, s.xy[1] - cy); return d < b.d ? { s, d } : b; }, { d: Infinity });
-    return row("Stacje Veturilo", `brak · najbliższa ${n(Number.isFinite(distFile) ? distFile : near.d)} m`) + `<div class="cp-note">Najbliższa: ${esc(near.s.name)}</div>`;
-  }
 
   // ---------- panel statystyk klastra (prawy dolny róg mapy) ----------
   // Dane szczegółowe wczytywane raz, przy pierwszym kliknięciu klastra; brak pliku = brak tej sekcji.
@@ -1735,8 +1727,8 @@ ${JSON.stringify(describe(r), null, 1)}`;
     const csv = (p) => fetch(p, { cache: "no-cache" }).then((r) => (r.ok ? r.text() : "")).then(parseCSV).catch(() => new Map());
     const ml = fetchHeat().then((g) => new Map(g.features.map((f) => [f.properties.h3, f.properties]))).catch(() => new Map());
     CL.loading = Promise.all([csv("dane/cechy_klastrow.csv"), csv("dane/potrzeba_komunikacji.csv"), csv("dane/symulacja/klastry_podroze.csv"),
-                              csv("dane/historia_ludnosci.csv"), csv("dane/kolej/klastry_kolej.csv"), ml, csv("dane/veturilo_w_klastrach.csv")])
-      .then(([cechy, potrzeba, podroze, historia, kolej, ml, vet]) => (CL.data = { cechy, potrzeba, podroze, historia, kolej, ml, vet }));
+                              csv("dane/historia_ludnosci.csv"), csv("dane/kolej/klastry_kolej.csv"), ml])
+      .then(([cechy, potrzeba, podroze, historia, kolej, ml]) => (CL.data = { cechy, potrzeba, podroze, historia, kolej, ml }));
     return CL.loading;
   }
   const inRings = (lon, lat, rings) => rings.some((ring) => {
@@ -1856,8 +1848,7 @@ ${JSON.stringify(describe(r), null, 1)}`;
       row(`Mieszkańcy ≤ 800 m od stacji (w ${year})`, rShare != null ? pct(rShare) : null) +
       row("Metro", metro) +
       row("Kolej (SKM / KM / WKD)", rail) +
-      row("Linie kolejowe i metra w klastrze", v(kol, "linie") ? esc(v(kol, "linie")) : null) +
-      vetRows(id, h, n, row, v(d?.vet.get(id), "odl_do_veturilo_m")));
+      row("Linie kolejowe i metra w klastrze", v(kol, "linie") ? esc(v(kol, "linie")) : null));
 
     // Podróże — symulacja porannego szczytu
     const tc = (x) => (x == null || !Number.isFinite(+x) ? "brak połączenia" : `${n(x)} min`);
@@ -1889,7 +1880,7 @@ ${JSON.stringify(describe(r), null, 1)}`;
   const districtList = () => DIST || (!B ? [] : DIST = B.districts.map((d) => {
     const rings = d.rings.map((c) => decode(c, B.scale)), b = new maplibregl.LngLatBounds();
     rings.flat().forEach((p) => b.extend(p));
-    return { name: d.name, pop: d.pop, rings, b };
+    return { name: d.name, pop: d.pop, rings, b, box: [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()] };
   }).sort((a, b) => a.name.localeCompare(b.name, "pl")));
   function renderDistList() {
     const raw = $("dpick-in").value.trim(), q = fold(raw), list = $("dpick-list");
@@ -1910,8 +1901,19 @@ ${JSON.stringify(describe(r), null, 1)}`;
     $("dpick-btn").textContent = has ? "×" : "▾";
     $("dpick-btn").setAttribute("aria-label", has ? "Wyczyść wybór dzielnicy" : "Pokaż listę dzielnic");
   }
+  // Wybrana dzielnica zawęża symulację ruchu i obciążenie linii do swoich granic (null = całe miasto).
+  let DSEL = null;
+  const boxesTouch = (a, b) => a[0] <= b[2] && a[2] >= b[0] && a[1] <= b[3] && a[3] >= b[1];
+  const inSelDistrict = ([lon, lat]) => !DSEL || (lon >= DSEL.box[0] && lon <= DSEL.box[2] && lat >= DSEL.box[1] && lat <= DSEL.box[3] && inRings(lon, lat, DSEL.rings));
+  function setSelDistrict(d) {
+    if (DSEL === d) return;
+    DSEL = d;
+    if (SIM.data) simFrame();
+    renderLoad();
+  }
   function pickDistrict(d) {
     $("dpick-in").value = d.name; openDist(false); syncDistBtn();
+    setSelDistrict(d);
     if (!map) return;
     map.getSource("district-sel")?.setData(fc(d.rings.map((r) => ({ type: "Feature", properties: {}, geometry: { type: "LineString", coordinates: r } }))));
     map.fitBounds(d.b, { padding: 40, duration: 700 });
@@ -1919,6 +1921,7 @@ ${JSON.stringify(describe(r), null, 1)}`;
   function clearDistrict() {
     $("dpick-in").value = ""; distActive = 0; syncDistBtn();
     map?.getSource("district-sel")?.setData(fc([]));
+    setSelDistrict(null);
   }
   (function wireDistricts() {
     const inp = $("dpick-in"), list = $("dpick-list");
@@ -1926,7 +1929,7 @@ ${JSON.stringify(describe(r), null, 1)}`;
     inp.addEventListener("click", () => openDist(true));
     inp.addEventListener("input", () => {
       distActive = 0; syncDistBtn(); openDist(true);
-      if (!inp.value) map?.getSource("district-sel")?.setData(fc([]));
+      if (!inp.value) { map?.getSource("district-sel")?.setData(fc([])); setSelDistrict(null); }
     });
     inp.addEventListener("keydown", (e) => {
       if (e.key === "ArrowDown" || e.key === "ArrowUp") {
