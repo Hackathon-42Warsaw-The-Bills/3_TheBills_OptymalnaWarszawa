@@ -170,6 +170,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     <header>
       <h1>Symulator linii Warszawa 2036</h1>
       <div class="sub">Narysuj linię autobusową lub wczytaj propozycję algorytmu i zobacz, kogo obsłuży, gdzie utknie w korku i ile pojazdów potrzebuje.</div>
+      <div class="sub"><a href="linie.html" style="color:var(--accent);font-weight:500">Ranking linii ZTM: najlepsze i najgorsze →</a></div>
     </header>
 
     <section>
@@ -864,6 +865,9 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       changed();
       // Link z #przyklad otwiera symulator od razu z przykładową linią (np. na prezentacji).
       if (location.hash === "#przyklad") loadProposal(SAMPLE);
+      // Link z rankingu linii: index.html#linia-523 -> filtr na tę linię (trasa, przystanki, pojazdy)
+      const hashLine = (location.hash.match(/^#linia-(.+)$/) || [])[1];
+      if (hashLine) { $("line-filter").value = decodeURIComponent(hashLine); applyLayers(); fitToFilter(); }
     });
   }
 
