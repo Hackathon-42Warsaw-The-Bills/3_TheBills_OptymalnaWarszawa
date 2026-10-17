@@ -1,0 +1,1447 @@
+kategoria,typ,nazwa,osm_id,geom_typ,pow_ha,dzielnica,h3,lon,lat
+centrum_handlowe,mall,Centrum Handlowe Bemowo,210276753,obszar,0.05,Bemowo,881f523499fffff,20.928222,52.262789
+centrum_handlowe,mall,Galeria Bemowo,22717599,obszar,1.83,Bemowo,881f523499fffff,20.930958,52.263967
+centrum_handlowe,mall,Hala Wola,34988601,obszar,0.49,Bemowo,881f52265dfffff,20.91424,52.22838
+centrum_handlowe,mall,Kaufland,549553102,obszar,0.33,Bemowo,881f522649fffff,20.895482,52.230985
+centrum_handlowe,mall,Park Handlowy City Park Lazurowa,549553117,obszar,0.22,Bemowo,881f522649fffff,20.895516,52.229381
+centrum_handlowe,mall,,29115679,obszar,2.82,Bemowo,881f52266bfffff,20.88388,52.214348
+centrum_handlowe,mall,,34982153,obszar,1.5,Bemowo,881f5234b1fffff,20.906932,52.23978
+centrum_handlowe,mall,,376851836,obszar,0.05,Bemowo,881f523499fffff,20.929329,52.263035
+centrum_handlowe,mall,"Centrum Handlowe ""Białołęcka""",991185170,obszar,0.85,Białołęka,881f53ca2bfffff,21.030266,52.316922
+centrum_handlowe,mall,Czerwona Torebka,995529141,obszar,0.98,Białołęka,881f53ca3bfffff,21.063271,52.312372
+centrum_handlowe,mall,Factory Annopol,228393251,obszar,2.6,Białołęka,881f53ca27fffff,21.025255,52.299748
+centrum_handlowe,mall,Galeria Modlińska,814241797,obszar,1.65,Białołęka,881f53cb57fffff,20.991585,52.302679
+centrum_handlowe,mall,Galeria Północna,513398843,obszar,3.94,Białołęka,881f53d9b7fffff,20.966671,52.317546
+centrum_handlowe,mall,Park Handlowy Marywilska 44,522967711,obszar,1.23,Białołęka,881f53ca67fffff,21.007052,52.319989
+centrum_handlowe,mall,,557937219,obszar,0.28,Białołęka,881f53ca3bfffff,21.062064,52.315952
+centrum_handlowe,mall,Centrum Handlowe Land,935615197,obszar,1.57,Mokotów,881f5226bbfffff,21.025211,52.172017
+centrum_handlowe,mall,Domo Strefa,966786894,obszar,0.26,Mokotów,881f522687fffff,21.006693,52.181866
+centrum_handlowe,mall,Panorama,438217029,obszar,1.89,Mokotów,881f53c9a7fffff,21.049435,52.19745
+centrum_handlowe,mall,Plac Unii,238559058,obszar,0.89,Mokotów,881f5226d9fffff,21.019713,52.212668
+centrum_handlowe,mall,Sadyba Best Mall,120240696,obszar,1.18,Mokotów,881f53534dfffff,21.060882,52.187595
+centrum_handlowe,mall,Westfield Mokotów,25822244,obszar,4.49,Mokotów,881f522687fffff,21.0044,52.179746
+centrum_handlowe,mall,Atrium Reduta,29975740,obszar,3.73,Ochota,881f52261bfffff,20.95143,52.213366
+centrum_handlowe,mall,Blue City,27586344,obszar,2.25,Ochota,881f52261bfffff,20.95587,52.212905
+centrum_handlowe,mall,Home Concept,31004381,obszar,0.52,Ochota,881f52261bfffff,20.951284,52.209293
+centrum_handlowe,mall,Centrum Handlowe Szembeka,551023209,obszar,0.67,Praga-Południe,881f53c9d3fffff,21.102091,52.240699
+centrum_handlowe,mall,Galeria Gocław,62202278,obszar,2.27,Praga-Południe,881f53c9d7fffff,21.093688,52.232595
+centrum_handlowe,mall,Galeria Grochów,30059916,obszar,0.51,Praga-Południe,881f53c9d9fffff,21.085388,52.246424
+centrum_handlowe,mall,Galeria Handlowa Saska Kępa,39230884,obszar,0.1,Praga-Południe,881f53c9c7fffff,21.056827,52.231272
+centrum_handlowe,mall,King Cross Praga,23653206,obszar,2.06,Praga-Południe,881f53c8a5fffff,21.119388,52.235297
+centrum_handlowe,mall,Rondo Wiatraczna,572919520,obszar,0.78,Praga-Południe,881f53c9d9fffff,21.086416,52.244003
+centrum_handlowe,mall,,323884876,obszar,1.07,Praga-Południe,881f53c9ddfffff,21.070269,52.242764
+centrum_handlowe,mall,,1159019143,obszar,3.39,Praga-Południe,881f53c999fffff,21.106112,52.231941
+centrum_handlowe,mall,Galeria Nowa Praga,135731552,obszar,1.81,Praga-Północ,881f53c861fffff,21.017386,52.272786
+centrum_handlowe,mall,Galeria Wileńska,132142886,obszar,2.93,Praga-Północ,881f53c821fffff,21.038014,52.255255
+centrum_handlowe,mall,"Pasaż Handlowy ""Targowa 33A""",15081291,obszar,0.32,Praga-Północ,881f53c827fffff,21.039971,52.250061
+centrum_handlowe,mall,,31331620,obszar,1.38,Praga-Północ,881f53c82bfffff,21.050564,52.263294
+centrum_handlowe,mall,HopStop Rembertów,1489292717,obszar,0.74,Rembertów,881f53c883fffff,21.158609,52.256255
+centrum_handlowe,mall,M Park Rembertów,1452593776,obszar,0.23,Rembertów,881f53c88bfffff,21.155997,52.258563
+centrum_handlowe,mall,Park handlowy Era Park Rembertów,1347814054,obszar,0.8,Rembertów,881f53c88bfffff,21.157211,52.259527
+centrum_handlowe,mall,G City Targówek,24924674,obszar,6.33,Targówek,881f53ca37fffff,21.057832,52.303982
+centrum_handlowe,mall,Galeria Renova,122643939,obszar,0.61,Targówek,881f53c845fffff,21.031011,52.28943
+centrum_handlowe,mall,Galeria Łodygowa,427170598,obszar,0.23,Targówek,881f53c853fffff,21.084523,52.285972
+centrum_handlowe,mall,Homepark Targówek,1288019604,obszar,38.59,Targówek,881f53cae5fffff,21.078837,52.304182
+centrum_handlowe,mall,,362315174,obszar,2.0,Targówek,881f53cae5fffff,21.07775,52.30511
+centrum_handlowe,mall,Centrum Handlowe Skorosze,116569762,obszar,1.31,Ursus,881f522623fffff,20.899896,52.188058
+centrum_handlowe,mall,Factory Ursus,41415064,obszar,2.49,Ursus,881f522605fffff,20.89446,52.201696
+centrum_handlowe,mall,Galeria Ursus,300221865,obszar,0.12,Ursus,881f52275bfffff,20.871488,52.19461
+centrum_handlowe,mall,Centrum Handlowe Ursynów,29300128,obszar,3.66,Ursynów,881f52248bfffff,21.027023,52.141259
+centrum_handlowe,mall,Galeria Ursynów,1483952508,obszar,0.23,Ursynów,881f52249bfffff,21.058763,52.139601
+centrum_handlowe,mall,KEN Center,61190204,obszar,1.82,Ursynów,881f5224d3fffff,21.041065,52.153292
+centrum_handlowe,mall,Ferio Wawer,409153152,obszar,0.9,Wawer,881f53520bfffff,21.16824,52.206476
+centrum_handlowe,mall,K&M Park Radość,300976392,obszar,0.17,Wawer,881f535233fffff,21.189977,52.181696
+centrum_handlowe,mall,MultiBox,744420787,obszar,0.12,Wilanów,881f535315fffff,21.108225,52.164974
+centrum_handlowe,mall,Plac Vogla,7300846,obszar,0.54,Wilanów,881f535315fffff,21.110907,52.165894
+centrum_handlowe,mall,Fort Wola,25914883,obszar,3.05,Wola,881f522651fffff,20.926621,52.223844
+centrum_handlowe,mall,Galeria Platinum Towers,8518890430,punkt,,Wola,881f53c907fffff,20.987489,52.233443
+centrum_handlowe,mall,Klif,92143100,obszar,1.21,Wola,881f53c909fffff,20.979754,52.246793
+centrum_handlowe,mall,Wola Park,22717550,obszar,5.33,Wola,881f53c96dfffff,20.930475,52.242158
+centrum_handlowe,mall,,2144780,obszar,0.19,Wola,881f53c969fffff,20.942548,52.246252
+centrum_handlowe,mall,Centrum Kleszczowa,128969605,obszar,0.17,Włochy,881f522607fffff,20.917532,52.198262
+centrum_handlowe,mall,Centrum Łopuszańska 22,306692173,obszar,5.29,Włochy,881f5226edfffff,20.952084,52.193043
+centrum_handlowe,mall,E.Leclerc,233962761,obszar,1.77,Włochy,881f522615fffff,20.936915,52.199059
+centrum_handlowe,mall,Okęcie Park,34435357,obszar,1.63,Włochy,881f52245dfffff,20.933817,52.169939
+centrum_handlowe,mall,Elektrownia Powiśle,753586996,obszar,0.46,Śródmieście,881f53c913fffff,21.027843,52.240766
+centrum_handlowe,mall,Galeria pod Rondem Czterdziestolatka,1064633350,obszar,0.62,Śródmieście,881f53c939fffff,21.001989,52.227593
+centrum_handlowe,mall,Junior,25911176,obszar,0.29,Śródmieście,881f53c915fffff,21.010322,52.23321
+centrum_handlowe,mall,Mysia 3,30620655,obszar,0.06,Śródmieście,881f53c917fffff,21.020688,52.230496
+centrum_handlowe,mall,Sawa,350962669,obszar,0.31,Śródmieście,881f53c915fffff,21.010942,52.232174
+centrum_handlowe,mall,Vitkac,367587737,obszar,0.21,Śródmieście,881f53c917fffff,21.018769,52.230646
+centrum_handlowe,mall,Wars,350962670,obszar,0.25,Śródmieście,881f53c93bfffff,21.011524,52.2312
+centrum_handlowe,mall,Warszawska Giełda Elektroniczna,18230915,obszar,0.19,Śródmieście,881f53c937fffff,21.005351,52.217369
+centrum_handlowe,mall,Westfield Arkadia,41927532,obszar,8.17,Śródmieście,881f53c95dfffff,20.984583,52.257183
+centrum_handlowe,mall,Złote Tarasy,30611687,obszar,2.62,Śródmieście,881f53c939fffff,21.002437,52.230066
+centrum_handlowe,mall,Defabryka,195232059,obszar,0.46,Żoliborz,881f53c941fffff,20.969675,52.256513
+centrum_handlowe,mall,Galeria Żoliborz,163381031,obszar,0.43,Żoliborz,881f53c949fffff,20.963849,52.267228
+kino,cinema,Cinema City,6835036510,punkt,,Bemowo,881f523499fffff,20.932752,52.26568
+kino,cinema,Kino Akademickie,2612861840,punkt,,Bemowo,881f523481fffff,20.895534,52.254997
+kino,cinema,Cinema City,5106026256,punkt,,Białołęka,881f53d9b7fffff,20.967713,52.317441
+kino,cinema,Kino na Bok-u,5965555600,punkt,,Białołęka,881f53cb4bfffff,20.953426,52.313557
+kino,cinema,Multikino,6497283202,punkt,,Bielany,881f53cb61fffff,20.930054,52.294505
+kino,cinema,Cinema City,3307931456,punkt,,Mokotów,881f522687fffff,21.00404,52.179054
+kino,cinema,Cinema City IMAX Sadyba,344553642,punkt,,Mokotów,881f53534dfffff,21.061615,52.187054
+kino,cinema,Iluzjon,6835979366,punkt,,Mokotów,881f5226d1fffff,21.010924,52.205577
+kino,cinema,Helios,993383270,obszar,0.49,Ochota,881f52261bfffff,20.955625,52.212782
+kino,cinema,Multikino,6410371717,punkt,,Ochota,881f52261bfffff,20.950194,52.212951
+kino,cinema,Cinema City,1159157754,obszar,0.34,Praga-Południe,881f53c999fffff,21.105353,52.231613
+kino,cinema,Kino Świt,2290650535,punkt,,Targówek,881f53c869fffff,21.021599,52.284797
+kino,cinema,Multikino,348943434,punkt,,Targówek,881f53ca37fffff,21.057723,52.302312
+kino,cinema,Kinokawiarnia Stacja Falenica,4796300093,punkt,,Wawer,881f535019fffff,21.210999,52.162161
+kino,cinema,Kinogram,9408767899,punkt,,Wola,881f53c907fffff,20.989825,52.23236
+kino,cinema,Multikino,2943366220,punkt,,Wola,881f53c96dfffff,20.932775,52.241703
+kino,cinema,Amondo,4462150290,punkt,,Śródmieście,881f53c93bfffff,21.015847,52.228678
+kino,cinema,Atlantic,248197976,punkt,,Śródmieście,881f53c917fffff,21.012532,52.231584
+kino,cinema,Cinema City,2934124990,punkt,,Śródmieście,881f53c95dfffff,20.984728,52.257033
+kino,cinema,Kino Kultura,678963604,punkt,,Śródmieście,881f53c911fffff,21.014189,52.243338
+kino,cinema,Kinomuzeum,1186504684,obszar,0.01,Śródmieście,881f53c915fffff,21.008406,52.233527
+kino,cinema,Kinoteka,2096125794,punkt,,Śródmieście,881f53c915fffff,21.006461,52.231323
+kino,cinema,Luna,312892882,punkt,,Śródmieście,881f53c9e5fffff,21.018913,52.218685
+kino,cinema,Multikino,588807906,punkt,,Śródmieście,881f53c939fffff,21.00183,52.229382
+kino,cinema,Muranów,248212391,punkt,,Śródmieście,881f53c91dfffff,20.999629,52.244941
+kino,cinema,U–jazdowski,1453743966,obszar,0.02,Śródmieście,881f53c9e5fffff,21.030688,52.219322
+kino,cinema,Kino Elektronik,6835989340,punkt,,Żoliborz,881f53c95dfffff,20.992079,52.260987
+kino,cinema,Kino Tęcza,192988435,obszar,0.05,Żoliborz,881f53cb37fffff,20.980701,52.268722
+kino,cinema,Wisła,243923693,obszar,0.14,Żoliborz,881f53cb37fffff,20.986841,52.26973
+miejsce_kultu,christian,Kaplica domowa,10860855104,punkt,,Bemowo,881f523495fffff,20.920777,52.254645
+miejsce_kultu,christian,Kaplica domowa,10861589083,punkt,,Bemowo,881f5234b7fffff,20.916863,52.230908
+miejsce_kultu,christian,Kaplica pw. Błogosławionego Honorata Koźmińskiego,10861852881,punkt,,Bemowo,881f522643fffff,20.901189,52.220315
+miejsce_kultu,christian,Kapliczka Jana i Marcyanny Pyć z 1916 r.,1218096961,obszar,0.0,Bemowo,881f5234b9fffff,20.906403,52.246369
+miejsce_kultu,christian,Kościół Zielonoświątkowy,5208099833,punkt,,Bemowo,881f522643fffff,20.907767,52.217662
+miejsce_kultu,christian,Kościół pw. Bogurodzicy Maryi,34982128,obszar,0.12,Bemowo,881f5234b7fffff,20.910793,52.234193
+miejsce_kultu,christian,Kościół pw. Matki Bożej Królowej Aniołów,58401372,obszar,0.18,Bemowo,881f523495fffff,20.921234,52.255113
+miejsce_kultu,christian,Kościół pw. Matki Bożej Ostrobramskiej,115809992,obszar,0.04,Bemowo,881f52348bfffff,20.897837,52.262459
+miejsce_kultu,christian,Kościół pw. Podwyższenia Krzyża Świętego,212402624,obszar,0.12,Bemowo,881f52265dfffff,20.910726,52.225221
+miejsce_kultu,christian,Kościół pw. Świętego Jozafata,228562520,obszar,0.03,Bemowo,881f53c94dfffff,20.951342,52.262102
+miejsce_kultu,christian,Kościół pw. Świętego Łukasza Ewangelisty,783247646,obszar,0.14,Bemowo,881f5234b1fffff,20.915701,52.239818
+miejsce_kultu,christian_evangelical,Społeczność Chrześcijańska Zachód,9938992487,punkt,,Bemowo,881f523499fffff,20.93203,52.263767
+miejsce_kultu,christian,Tymczasowa kaplica parafialna pw. Świętego Łukasza Ewangelisty,783247645,obszar,0.02,Bemowo,881f5234b1fffff,20.916567,52.239914
+miejsce_kultu,christian,Tymczasowa kaplica parafialna pw. św. Jana Pawła II,338769077,obszar,0.06,Bemowo,881f523491fffff,20.930256,52.254996
+miejsce_kultu,christian,Kaplica Wspólnoty Odkupionych Chrześcijan,939368876,obszar,0.05,Białołęka,881f53ca35fffff,21.042381,52.303602
+miejsce_kultu,christian,Kaplica klasztorna,11434832496,punkt,,Białołęka,881f53d989fffff,20.939873,52.351728
+miejsce_kultu,christian,Kaplica pw. Jasnogórskiej Matki Kościoła,946032839,obszar,0.01,Białołęka,881f53d9d5fffff,20.958967,52.360531
+miejsce_kultu,christian,Kaplica pw. Matki Bożej Bolesnej,11228857205,punkt,,Białołęka,881f53d999fffff,20.981282,52.355529
+miejsce_kultu,christian,Kaplica pw. Matki Bożej Bolesnej,11228857207,punkt,,Białołęka,881f53d991fffff,20.989466,52.341681
+miejsce_kultu,christian,Kaplica pw. Matki Bożej Nieustającej Pomocy,11228857208,punkt,,Białołęka,881f53d9bbfffff,20.982437,52.332943
+miejsce_kultu,christian,Kaplica pw. Miłosierdzia Bożego,11228857206,punkt,,Białołęka,881f53d993fffff,20.994475,52.339505
+miejsce_kultu,christian,Kaplica pw. Świętego Daniela Comboni,946052712,obszar,0.02,Białołęka,881f53d989fffff,20.940535,52.351767
+miejsce_kultu,christian,Kaplica pw. Świętego Józefa Oblubieńca,11228857209,punkt,,Białołęka,881f53d9b3fffff,20.979206,52.324567
+miejsce_kultu,christian,Kaplica pw. Świętego Michała Archanioła,1362290955,obszar,0.05,Białołęka,881f53d9b5fffff,20.95689,52.320574
+miejsce_kultu,christian,Kaplica szpitalna,11228857203,punkt,,Białołęka,881f53d983fffff,20.961919,52.344791
+miejsce_kultu,christian,Kaplica więzienna,11228857204,punkt,,Białołęka,881f53ca6bfffff,21.009003,52.334179
+miejsce_kultu,christian,Kościół pw. Chrystusa Najwyższego Kapłana,401557317,obszar,0.03,Białołęka,881f53d8b1fffff,21.045422,52.363359
+miejsce_kultu,christian,Kościół pw. Chrystusa Najwyższego Kapłana,496722443,obszar,0.14,Białołęka,881f53d8b1fffff,21.046105,52.363477
+miejsce_kultu,christian,Kościół pw. Matki Bożej Pompejańskiej,845751671,obszar,0.05,Białołęka,881f53cb55fffff,20.976646,52.304804
+miejsce_kultu,christian,Kościół pw. Najświętszej Maryi Panny Matki Pięknej Miłości,63715267,obszar,0.18,Białołęka,881f53d9b5fffff,20.956783,52.321165
+miejsce_kultu,christian,Kościół pw. Narodzenia Najświętszej Maryi Panny,109532480,obszar,0.11,Białołęka,881f53d995fffff,20.975321,52.335818
+miejsce_kultu,christian,Kościół pw. Świętego Gabriela od Matki Bożej Bolesnej i Młodych Świętych,314797594,obszar,0.13,Białołęka,881f53ca03fffff,21.049287,52.326317
+miejsce_kultu,christian,Kościół pw. Świętego Jakuba Apostoła,89020735,obszar,0.03,Białołęka,881f53cb49fffff,20.940768,52.319407
+miejsce_kultu,christian,Kościół pw. Świętego Mateusza Apostoła i Ewangelisty,171547986,obszar,0.05,Białołęka,881f53ca03fffff,21.049119,52.325795
+miejsce_kultu,christian,Kościół pw. Świętego Michała Archanioła,265593707,obszar,0.02,Białołęka,881f53ca15fffff,21.065961,52.320817
+miejsce_kultu,christian,Kościół pw. Świętego Szczepana Pierwszego Męczennika,496726115,obszar,0.03,Białołęka,881f53ca3bfffff,21.067304,52.313795
+miejsce_kultu,christian,Kościół pw. Świętego Szczepana Pierwszego Męczennika (w budowie),262506106,obszar,0.09,Białołęka,881f53ca3bfffff,21.06768,52.314138
+miejsce_kultu,christian,Kościół pw. Świętego Łukasza Ewangelisty,119444219,obszar,0.11,Białołęka,881f53d985fffff,20.934531,52.341223
+miejsce_kultu,christian,Parafia PNKK Dobrego Pasterza,946616935,obszar,0.03,Białołęka,881f53d9b1fffff,20.969064,52.323964
+miejsce_kultu,christian,Parafia pw. Świętego Franciszka z Asyżu,119744713,obszar,0.09,Białołęka,881f53d9abfffff,20.946419,52.331294
+miejsce_kultu,christian,Społeczność Chrześcijańska Północ,9568932150,punkt,,Białołęka,881f53cb11fffff,21.005199,52.294984
+miejsce_kultu,christian,kaplica cmentarna,150540316,obszar,0.0,Białołęka,881f53d9bdfffff,20.956572,52.329955
+miejsce_kultu,christian,,946408944,obszar,0.02,Białołęka,881f53d9bbfffff,20.975622,52.335466
+miejsce_kultu,christian,Kaplica,127332132,obszar,0.04,Bielany,881f5236bbfffff,20.899281,52.297151
+miejsce_kultu,christian,Kaplica Kościoła Katolickiego Mariawitów pw. Matki Boskiej Nieustającej Pomocy,192361286,obszar,0.01,Bielany,881f53cb07fffff,20.969504,52.284156
+miejsce_kultu,christian,Kaplica Matki Bożej Fatimskiej,1389236324,obszar,0.0,Bielany,881f53cb63fffff,20.940714,52.292165
+miejsce_kultu,christian,Kaplica domowa,10858809497,punkt,,Bielany,881f53cb2dfffff,20.929738,52.280908
+miejsce_kultu,christian,Kaplica domowa,10859862497,punkt,,Bielany,881f53cb63fffff,20.939392,52.291418
+miejsce_kultu,christian,Kaplica pw. Błogosławionego Stefana Kardynała Wyszyńskiego,10856600590,punkt,,Bielany,881f53cb0dfffff,20.95965,52.295275
+miejsce_kultu,christian,Kaplica pw. Matki Bożej Częstochowskiej,10856673235,punkt,,Bielany,881f53cb05fffff,20.950736,52.286999
+miejsce_kultu,christian,Kaplica pw. Ostatniej Wieczerzy,10856701833,punkt,,Bielany,881f5234d3fffff,20.92752,52.270654
+miejsce_kultu,christian,Kaplica rekolekcyjna,10856600589,punkt,,Bielany,881f53cb0dfffff,20.958792,52.296094
+miejsce_kultu,christian,Kościół Matki Bożej Zawierzenia,216930970,obszar,0.11,Bielany,881f5234dbfffff,20.927766,52.280897
+miejsce_kultu,christian,Kościół p.w Matki Bożej Nieustającej Pomocy,408255333,obszar,0.07,Bielany,881f523693fffff,20.923676,52.307848
+miejsce_kultu,christian,Kościół parafialny pw. Matki Bożej Wspomożycielki Wiernych,80851160,obszar,0.16,Bielany,881f5234d3fffff,20.927734,52.271112
+miejsce_kultu,christian,Kościół parafialny pw. Niepokalanego Poczęcia Najświętszej Maryi Panny,146606167,obszar,0.16,Bielany,881f53cb63fffff,20.940097,52.291791
+miejsce_kultu,christian,Kościół parafialny pw. Niepokalanego Poczęcia Najświętszej Maryi Panny,173130486,obszar,0.1,Bielany,881f53cb0dfffff,20.960101,52.295851
+miejsce_kultu,christian,Kościół parafialny pw. św. Krzysztofa,955113313,obszar,0.05,Bielany,881f53cb27fffff,20.942673,52.26731
+miejsce_kultu,christian,Kościół parafialny pw. św. Zygmunta,28411484,obszar,0.15,Bielany,881f53cb29fffff,20.94659,52.279274
+miejsce_kultu,christian,Kościół pw. Redemptoris Mater,1167471308,obszar,0.23,Bielany,881f53cb69fffff,20.927216,52.303721
+miejsce_kultu,christian,Kościół pw. Zesłania Ducha Świętego,168554122,obszar,0.23,Bielany,881f53cb23fffff,20.956915,52.269071
+miejsce_kultu,christian,Kościół pw. Świętego Ignacego Loyoli,127332139,obszar,0.15,Bielany,881f5236bbfffff,20.898982,52.296639
+miejsce_kultu,christian,Kościół rektorski UKSW św. Józefa Oblubieńca NMP,104031624,obszar,0.02,Bielany,881f52369bfffff,20.919047,52.312102
+miejsce_kultu,christian,Kościół św. Marii Magdaleny,237313759,obszar,0.02,Bielany,881f5234dbfffff,20.92903,52.280737
+miejsce_kultu,christian,Parafia Rzymsko-Katolicka Świętych Wyznawców o. Rafała Kalinowskiego i br. Alberta Chmielowskieg,40891621,obszar,0.07,Bielany,881f53cb39fffff,20.980847,52.281516
+miejsce_kultu,christian,Sala Królestwa Świadków Jehowy,6393390605,punkt,,Bielany,881f5236b1fffff,20.899018,52.293391
+miejsce_kultu,christian,kaplica MB Wspomożenia Wiernych,12214925883,punkt,,Bielany,881f53cb2bfffff,20.962803,52.279959
+miejsce_kultu,buddhist,Bukkoin,13131527104,punkt,,Mokotów,881f5226bbfffff,21.020204,52.175843
+miejsce_kultu,christian,Kaplica Karmelitów Bosych pod wezwaniem świętego Józefa,1019007805,obszar,0.03,Mokotów,881f5226d7fffff,21.016129,52.198267
+miejsce_kultu,christian,Kaplica Matki Bożej Królowej Misji,334557179,punkt,,Mokotów,881f5226d7fffff,21.019711,52.199417
+miejsce_kultu,christian,Kaplica Niepokalanego Poczęcia Najświętszej Maryi Panny,11132287141,punkt,,Mokotów,881f52269dfffff,21.025623,52.18822
+miejsce_kultu,christian,Kaplica na miejscu objawień,61239524,obszar,0.02,Mokotów,881f53c9bdfffff,21.081519,52.208215
+miejsce_kultu,christian,Kaplica św Pawła Apostoła,4156160537,punkt,,Mokotów,881f5226b9fffff,21.012237,52.177554
+miejsce_kultu,christian,Kościół Dom,13590622768,punkt,,Mokotów,881f5226bdfffff,21.005555,52.171111
+miejsce_kultu,christian,Kościół NMP Matki Kościoła,966830120,obszar,0.14,Mokotów,881f522695fffff,21.019275,52.183861
+miejsce_kultu,christian,Kościół Najświętszej Maryi Panny Matki Miłosierdzia,953412188,obszar,0.11,Mokotów,881f535369fffff,21.047806,52.178834
+miejsce_kultu,christian_lutheran,Kościół Wniebowstąpienia Pańskiego,30876216,obszar,0.06,Mokotów,881f5226d9fffff,21.018554,52.211843
+miejsce_kultu,christian,Kościół parafialny pw. Matki Bożej Anielskiej,46139995,obszar,0.12,Mokotów,881f52269dfffff,21.014059,52.189946
+miejsce_kultu,christian,Kościół parafialny pw. św. Antoniego Marii Zaccarii,173044120,obszar,0.11,Mokotów,881f53536bfffff,21.062021,52.174563
+miejsce_kultu,christian,Kościół parafialny pw. św. Tadeusza Apostoła,952095847,obszar,0.05,Mokotów,881f535341fffff,21.067234,52.18824
+miejsce_kultu,christian,Kościół pw. Najświętszej Maryi Panny Matki Zbawiciela,947313512,obszar,0.02,Mokotów,881f522689fffff,20.992781,52.19443
+miejsce_kultu,christian,Kościół pw. Świętego Jana z Dukli,368830356,obszar,0.08,Mokotów,881f53534dfffff,21.057236,52.193738
+miejsce_kultu,christian,Kościół pw. św. Kazimierza,965715782,obszar,0.05,Mokotów,881f53c9a5fffff,21.039811,52.201852
+miejsce_kultu,christian,Kościół Św. Stefana,114352274,obszar,0.06,Mokotów,881f53c9a9fffff,21.046966,52.210419
+miejsce_kultu,christian,Kościół Świętego Antoniego Padewskiego,368830325,obszar,0.02,Mokotów,881f53c9a7fffff,21.055998,52.194131
+miejsce_kultu,christian,Kościół Świętego Michała Archanioła,965740877,obszar,0.19,Mokotów,881f5226d7fffff,21.025192,52.199217
+miejsce_kultu,christian,Kościół św. Dominika,28010953,obszar,0.2,Mokotów,881f53536dfffff,21.036216,52.175562
+miejsce_kultu,christian,Kościół św. Maksymiliana Marii Kolbego,953846537,obszar,0.14,Mokotów,881f5226bdfffff,21.006363,52.170344
+miejsce_kultu,christian,Kościół św. Szczepana,947301030,obszar,0.06,Mokotów,881f5226d1fffff,21.017555,52.205951
+miejsce_kultu,christian_evangelical,LIFE Kościół,12480354815,punkt,,Mokotów,881f5226d7fffff,21.020599,52.199649
+miejsce_kultu,christian,Sanktuarium Matki Bożej Nauczycielki Młodzieży,28965976,obszar,0.12,Mokotów,881f53c9b1fffff,21.083041,52.207817
+miejsce_kultu,christian,Sanktuarium Świętego Andrzeja Boboli,139963300,obszar,0.18,Mokotów,881f5226ddfffff,21.001021,52.205726
+miejsce_kultu,christian_evangelical,"Społeczność Chrześcijańska ""Puławska""",3136087104,punkt,,Mokotów,881f5226d7fffff,21.023473,52.194404
+miejsce_kultu,christian,kaplica pw. Miłosierdzia Bożego,12344942315,punkt,,Mokotów,881f53c9adfffff,21.037424,52.204989
+miejsce_kultu,christian,kaplica pw. Miłosierdzia Bożego,12345058893,punkt,,Mokotów,881f522689fffff,20.998293,52.198524
+miejsce_kultu,christian,kaplica pw. Zwiastowania Pańskiego,12345053367,punkt,,Mokotów,881f522681fffff,20.994204,52.190778
+miejsce_kultu,christian,kaplica pw. Św. Rodziny,12346101605,punkt,,Mokotów,881f5226d1fffff,21.017653,52.20387
+miejsce_kultu,christian,kaplica szpitalna,12346083731,punkt,,Mokotów,881f5226d7fffff,21.021338,52.195151
+miejsce_kultu,christian_orthodox,Kaplica prawosławna św. Grzegorza Peradze,12348616291,punkt,,Ochota,881f53c923fffff,20.975129,52.216676
+miejsce_kultu,christian,Kaplica pw. Matki Bożej Częstochowskiej,9398782886,punkt,,Ochota,881f5226cdfffff,20.965669,52.207409
+miejsce_kultu,christian,Kościół Najświętszej Maryi Panny Królowej Świata,129412653,obszar,0.04,Ochota,881f5226cdfffff,20.970386,52.210786
+miejsce_kultu,christian,Kościół Zwiastowania Pańskiego,147254495,obszar,0.12,Ochota,881f5226ebfffff,20.97654,52.195327
+miejsce_kultu,christian,Kościół parafialny pw. Dzieciątka Jezus,961448744,obszar,0.05,Ochota,881f53c931fffff,20.997204,52.225141
+miejsce_kultu,christian,Kościół parafialny pw. Niepokalanego Poczęcia Najświętszej Maryi Panny,907012217,obszar,0.14,Ochota,881f53c935fffff,20.983001,52.219457
+miejsce_kultu,christian,Kościół parafialny pw. Opatrzności Bożej,147285228,obszar,0.14,Ochota,881f5226c1fffff,20.974137,52.204514
+miejsce_kultu,christian,Kościół pw. Świętego Grzegorza Wielkiego,119841908,obszar,0.02,Ochota,881f522613fffff,20.956271,52.202368
+miejsce_kultu,muslim_sunni,Ośrodek Kultury Muzułmańskiej w Warszawie,329329101,obszar,0.05,Ochota,881f53c927fffff,20.959819,52.215169
+miejsce_kultu,christian_orthodox,Prawosławny Punkt Duszpasterski św. Męczennika Archimandryty Grzegorza,5661903212,punkt,,Ochota,881f53c923fffff,20.974942,52.216584
+miejsce_kultu,christian,kaplica pw. MB Nieustającej Pomocy i św. Charbela,12659426449,punkt,,Ochota,881f53c935fffff,20.983384,52.21591
+miejsce_kultu,christian,kaplica pw. Opatrzności Bożej,12305675652,punkt,,Ochota,881f5226cbfffff,20.98479,52.20848
+miejsce_kultu,christian,kaplica pw. św. Anny,12659441493,punkt,,Ochota,881f53c923fffff,20.979233,52.219423
+miejsce_kultu,christian,kaplica pw. św. Antoniego Padewskiego,12305685556,punkt,,Ochota,881f53c923fffff,20.981861,52.219285
+miejsce_kultu,christian,kaplica pw. św. Rafała Archanioła,12305689229,punkt,,Ochota,881f5226c1fffff,20.984228,52.207147
+miejsce_kultu,christian_orthodox,Cerkiew prawosławna Wprowadzenia do Świątyni Przenajświętszej Bogurodzicy,12348654811,punkt,,Praga-Południe,881f53c9c7fffff,21.057226,52.229092
+miejsce_kultu,christian,Ewangeliczny Kościół Baptystyczny,7036271240,punkt,,Praga-Południe,881f53c9cbfffff,21.059831,52.247177
+miejsce_kultu,christian,Kaplica pw. Matki Boskiej Częstochowskiej,197077221,obszar,0.11,Praga-Południe,881f53c9c9fffff,21.049351,52.249102
+miejsce_kultu,christian,Kaplica pw. Matki Bożej Królowej Polskich Męczenników,33684258,obszar,0.03,Praga-Południe,881f53c9ddfffff,21.080542,52.239026
+miejsce_kultu,christian,Kaplica pw. Matki Bożej Nieustającej Pomocy,12305660641,punkt,,Praga-Południe,881f53c9ddfffff,21.07837,52.24229
+miejsce_kultu,christian,Kaplica pw. Miłosierdzia Bożego,9437545319,punkt,,Praga-Południe,881f53c9c3fffff,21.062282,52.234328
+miejsce_kultu,christian,Kaplica pw. Świętego Rafała Kalinowskiego,8394011532,punkt,,Praga-Południe,881f53c9d9fffff,21.088796,52.251039
+miejsce_kultu,christian,Kaplica pw. Świętej Faustyny,964340836,obszar,0.03,Praga-Południe,881f53c981fffff,21.067861,52.225159
+miejsce_kultu,christian,Kaplica pw. Świętej Siostry Faustyny,9437723289,punkt,,Praga-Południe,881f53c8e7fffff,21.111884,52.247118
+miejsce_kultu,christian,Kościół pw. Matki Boskiej Królowej Polski Męczenników,25892402,obszar,0.11,Praga-Południe,881f53c9ddfffff,21.080953,52.239628
+miejsce_kultu,christian,Kościół pw. Matki Boskiej Zwycięskiej,26172472,obszar,0.16,Praga-Południe,881f53c9c9fffff,21.052804,52.246512
+miejsce_kultu,christian,Kościół pw. Matki Bożej Ostrobramskiej,497376058,obszar,0.13,Praga-Południe,881f53c8a5fffff,21.112496,52.235241
+miejsce_kultu,christian,Kościół pw. Miłosierdzia Bożego,964340833,obszar,0.1,Praga-Południe,881f53c981fffff,21.067835,52.224666
+miejsce_kultu,christian,Kościół pw. Najczystszego Serca Maryi,29219714,obszar,0.17,Praga-Południe,881f53c9dbfffff,21.103285,52.244477
+miejsce_kultu,christian,Kościół pw. Nawrócenia Świętego Pawła Apostoła,497371518,obszar,0.13,Praga-Południe,881f53c9d9fffff,21.089666,52.247435
+miejsce_kultu,christian,Kościół pw. Świętego Andrzeja Boboli,30847425,obszar,0.11,Praga-Południe,881f53c9c7fffff,21.059398,52.233843
+miejsce_kultu,christian,Kościół pw. Świętych Apostołów Jana i Pawła,27645429,obszar,0.17,Praga-Południe,881f53c98bfffff,21.085314,52.229612
+miejsce_kultu,christian,Parafia pw. Świętego Patryka,25720025,obszar,0.11,Praga-Południe,881f53c999fffff,21.105937,52.227065
+miejsce_kultu,christian,Sanktuarium pw. Świętego Ojca Pio,964328680,obszar,0.1,Praga-Południe,881f53c983fffff,21.087791,52.220928
+miejsce_kultu,christian,Tymczasowa kaplica parafialna,1023400460,obszar,0.02,Praga-Południe,881f53c831fffff,21.07272,52.254168
+miejsce_kultu,christian,kaplica św. Gabriela od Matki Bożej Bolesnej ojców pasjonistów,12161514520,punkt,,Praga-Południe,881f53c9d3fffff,21.097569,52.235848
+miejsce_kultu,christian,Bazylika Katedralna Świętego Michała Archanioła i Świętego Floriana Męczennika,80428517,obszar,0.22,Praga-Północ,881f53c825fffff,21.030812,52.251763
+miejsce_kultu,christian,Bazylika pw. Najświętszego Serca Jezusowego,26174597,obszar,0.23,Praga-Północ,881f53c83dfffff,21.059573,52.258843
+miejsce_kultu,christian_orthodox,Cerkiew metropolitalna Świętej Równej Apostołom Marii Magdaleny,26174631,obszar,0.07,Praga-Północ,881f53c821fffff,21.033257,52.254811
+miejsce_kultu,christian,II Zbór Kościóła Chrześcijan Baptystów,10891834176,punkt,,Praga-Północ,881f53c829fffff,21.038344,52.266263
+miejsce_kultu,christian_orthodox,Kaplica akademicka św. Cyryla i Metodego,7365233107,punkt,,Praga-Północ,881f53c821fffff,21.032415,52.25492
+miejsce_kultu,christian,Kaplica pw. Przemienienia Pańskiego,8867387141,punkt,,Praga-Północ,881f53c825fffff,21.029291,52.251543
+miejsce_kultu,christian,Kaplica pw. Świętego Brata Alberta,10245541340,punkt,,Praga-Północ,881f53c823fffff,21.051077,52.255609
+miejsce_kultu,christian,Kaplica pw. Świętego Wojciecha,128405341,obszar,0.0,Praga-Północ,881f53c823fffff,21.043942,52.252771
+miejsce_kultu,christian,Kościół pw. Matki Boskiej z Lourdes,164754273,obszar,0.12,Praga-Północ,881f53c82bfffff,21.045872,52.260874
+miejsce_kultu,christian,Kościół pw. Matki Bożej Loretańskiej,39498914,obszar,0.09,Praga-Północ,881f53c82dfffff,21.027686,52.256679
+miejsce_kultu,christian,Kościół pw. Świętej Jadwigi,127325919,obszar,0.05,Praga-Północ,881f53cb11fffff,21.003023,52.291083
+miejsce_kultu,christian,Kaplica przedpogrzebowa,960757014,obszar,0.01,Rembertów,881f53c895fffff,21.169719,52.252449
+miejsce_kultu,christian,Kościół garnizonowy,960839102,obszar,0.04,Rembertów,881f53c899fffff,21.174291,52.266104
+miejsce_kultu,christian,Kościół pw. Matki Boskiej Zwycięskiej,960757171,obszar,0.12,Rembertów,881f53c895fffff,21.169132,52.252436
+miejsce_kultu,christian,Kościół pw. Świętej Łucji Dziewicy i Męczennicy,960995556,obszar,0.06,Rembertów,881f53c88bfffff,21.15847,52.263257
+miejsce_kultu,christian,,960757968,obszar,0.03,Rembertów,881f53c883fffff,21.161896,52.25374
+miejsce_kultu,christian,Kaplica klasztorna,12613525037,punkt,,Targówek,881f53c80bfffff,21.07065,52.27865
+miejsce_kultu,christian,Kaplica pw. bł. Stefana Wyszyńskiego,12449699585,punkt,,Targówek,881f53c843fffff,21.044212,52.290622
+miejsce_kultu,christian,Kaplica pw. Świętego Barnaby Apostoła,124402470,obszar,0.02,Targówek,881f53c853fffff,21.083311,52.285939
+miejsce_kultu,christian,Kaplica pw. Świętego Józefa Oblubieńca Najświętszej Maryi Panny,10245583366,punkt,,Targówek,881f53c851fffff,21.079469,52.291081
+miejsce_kultu,christian,Kościół Zielonoświątkowy,537941260,obszar,0.03,Targówek,881f53c857fffff,21.074747,52.282113
+miejsce_kultu,christian,Kościół pw. Chrystusa Króla,200507454,obszar,0.12,Targówek,881f53c807fffff,21.05252,52.268592
+miejsce_kultu,christian,Kościół pw. Matki Boskiej Częstochowskiej (murowany),169160828,obszar,0.07,Targówek,881f53c80dfffff,21.0425,52.276871
+miejsce_kultu,christian,Kościół pw. Matki Bożej Różańcowej,166918150,obszar,0.13,Targówek,881f53c845fffff,21.02369,52.286761
+miejsce_kultu,christian,Kościół pw. Zmartwychwstania Pańskiego,234776775,obszar,0.04,Targówek,881f53c839fffff,21.069002,52.266436
+miejsce_kultu,christian,Kościół pw. Świętego Marka Ewangelisty,136727880,obszar,0.09,Targówek,881f53c803fffff,21.063549,52.273541
+miejsce_kultu,christian,Kościół pw. Świętego Wincentego à Paulo,169157740,obszar,0.03,Targówek,881f53c80dfffff,21.042537,52.278516
+miejsce_kultu,christian,Kościół pw. Świętego Włodzimierza,149721060,obszar,0.13,Targówek,881f53c84dfffff,21.028466,52.292967
+miejsce_kultu,christian,Kościół pw. Świętej Faustyny Kowalskiej,121793978,obszar,0.09,Targówek,881f53c847fffff,21.042654,52.286239
+miejsce_kultu,christian,Kościół pw. Świętej Marii Magdaleny,496720450,obszar,0.15,Targówek,881f53ca35fffff,21.049129,52.30184
+miejsce_kultu,christian,Kościół pw. Świętej Rodziny,955889345,obszar,0.07,Targówek,881f53c855fffff,21.068091,52.287839
+miejsce_kultu,christian,Sala Królestwa Świadków Jehowy,8846744721,punkt,,Targówek,881f53c851fffff,21.067266,52.291576
+miejsce_kultu,christian,kaplica,12300292492,punkt,,Targówek,881f53c845fffff,21.028033,52.289987
+miejsce_kultu,christian,kaplica domowa,1046529830,obszar,0.01,Targówek,881f53c845fffff,21.02403,52.287203
+miejsce_kultu,christian,,369855362,obszar,0.07,Targówek,881f53c857fffff,21.083358,52.285444
+miejsce_kultu,christian,,746761820,obszar,0.01,Targówek,881f53c845fffff,21.023461,52.287006
+miejsce_kultu,christian,Kościół pw. Świętego Józefa Oblubieńca Najświętszej Maryi Panny,220450822,obszar,0.1,Ursus,881f522629fffff,20.885735,52.193775
+miejsce_kultu,christian,Kościół pw. św. Jana Apostoła i Ewangelisty,257588399,obszar,0.05,Ursus,881f522665fffff,20.864022,52.202924
+miejsce_kultu,christian,Kościół Świętej Rodziny,35001214,obszar,0.09,Ursus,881f522605fffff,20.901874,52.198082
+miejsce_kultu,christian,Parafia Najświętszego Ciała i Krwi Chrystusa,369625530,obszar,0.08,Ursus,881f522667fffff,20.874514,52.195693
+miejsce_kultu,christian,Parafia Najświętszego Serca Pana Jezusa,1139727447,punkt,,Ursus,881f52262dfffff,20.873069,52.188765
+miejsce_kultu,christian,Sala Zgromadzeń Świadków Jehowy,117808928,obszar,0.29,Ursus,881f52266bfffff,20.884403,52.207022
+miejsce_kultu,christian,Sanktuarium Matki Bożej Fatimskiej,369628541,obszar,0.12,Ursus,881f52275bfffff,20.861906,52.192132
+miejsce_kultu,christian_orthodox,Cerkiew św. Sofii Mądrości Bożej,895991472,obszar,0.1,Ursynów,881f535a4bfffff,21.017567,52.10451
+miejsce_kultu,christian,International Christian Fellowship (ICF),14112352682,punkt,,Ursynów,881f522489fffff,21.016987,52.142809
+miejsce_kultu,christian,Kaplica pw. Świętego Ojca Pio,112087528,obszar,0.08,Ursynów,881f522497fffff,21.055137,52.130172
+miejsce_kultu,christian,Kościół Koreański w Warszawie,8781081894,punkt,,Ursynów,881f522485fffff,21.007928,52.129069
+miejsce_kultu,christian,Kościół Wniebowstąpienia Pańskiego,949228006,obszar,0.18,Ursynów,881f5224d9fffff,21.030349,52.157665
+miejsce_kultu,christian,Kościół pw św. Piotra i Pawła,895997746,obszar,0.08,Ursynów,881f522487fffff,21.017153,52.125353
+miejsce_kultu,christian,Kościół pw. Błogosławionego Władysława z Gielnowa,96577299,obszar,0.26,Ursynów,881f53514dfffff,21.065801,52.137329
+miejsce_kultu,christian,Kościół pw. Ofiarowania Pańskiego,61190467,obszar,0.15,Ursynów,881f522491fffff,21.048056,52.137497
+miejsce_kultu,christian,Kościół pw. Świętego Ojca Pio,112087523,obszar,0.11,Ursynów,881f522497fffff,21.055191,52.130838
+miejsce_kultu,christian,Kościół pw. Świętej Katarzyny,117590389,obszar,0.05,Ursynów,881f53536dfffff,21.044854,52.172078
+miejsce_kultu,christian,Kościół pw. św. Zofii Barat,970451432,obszar,0.05,Ursynów,881f5224c3fffff,21.015034,52.148567
+miejsce_kultu,christian,Kościół Świętego Tomasza,948492896,obszar,0.16,Ursynów,881f5224d3fffff,21.043426,52.147765
+miejsce_kultu,christian,Kaplica pw. Matki Bożej Nieustającej Pomocy,10248285549,punkt,,Wawer,881f535211fffff,21.191463,52.206643
+miejsce_kultu,christian,Kaplica pw. Najświętszego Serca Jezusowego,10249636864,punkt,,Wawer,881f535255fffff,21.175412,52.217842
+miejsce_kultu,christian,Kaplica pw. Podwyższenia Krzyża Świętego,10249694282,punkt,,Wawer,881f535011fffff,21.210999,52.153903
+miejsce_kultu,christian,Kaplica pw. Świętego Ojca Pio,10248285550,punkt,,Wawer,881f53521dfffff,21.183116,52.203816
+miejsce_kultu,christian,Kaplica szpitalna,10248285551,punkt,,Wawer,881f53521dfffff,21.180345,52.206195
+miejsce_kultu,christian,Kościół dla Warszawy,11151927106,punkt,,Wawer,881f53c8a3fffff,21.138936,52.239079
+miejsce_kultu,christian,Kościół pw. Dobrego Pasterza,374942497,obszar,0.03,Wawer,881f535041fffff,21.161641,52.171768
+miejsce_kultu,christian,Kościół pw. Imienia Najświętszej Maryi Panny,963450402,obszar,0.07,Wawer,881f53521dfffff,21.182143,52.206416
+miejsce_kultu,christian,Kościół pw. Matki Boskiej Anielskiej,263684330,obszar,0.04,Wawer,881f535233fffff,21.191953,52.185532
+miejsce_kultu,christian,Kościół pw. Matki Bożej Dobrej Rady,963246359,obszar,0.17,Wawer,881f535051fffff,21.200031,52.169517
+miejsce_kultu,christian,Kościół pw. Matki Bożej Królowej Polski,963402078,obszar,0.1,Wawer,881f535255fffff,21.162861,52.218001
+miejsce_kultu,christian,Kościół pw. Najświętszego Serca Pana Jezusa,961680494,obszar,0.06,Wawer,881f5352a5fffff,21.221308,52.163163
+miejsce_kultu,christian,Kościół pw. Niepokalanego Poczęcia Najświętszej Maryi Panny,2025290590,punkt,,Wawer,881f535059fffff,21.192719,52.177545
+miejsce_kultu,christian,Kościół pw. Wieczerzy Pańskiej,104379648,obszar,0.04,Wawer,881f5352a1fffff,21.234051,52.17243
+miejsce_kultu,christian,Kościół pw. Wniebowzięcia Najświętszej Marii Panny,176980268,obszar,0.06,Wawer,881f535229fffff,21.135135,52.196372
+miejsce_kultu,christian,Kościół pw. Świętego Benedykta,245786893,obszar,0.09,Wawer,881f535247fffff,21.152127,52.21447
+miejsce_kultu,christian,Kościół pw. Świętego Feliksa z Kantalicjo,961319399,obszar,0.14,Wawer,881f53c8b1fffff,21.156287,52.236954
+miejsce_kultu,christian,Kościół pw. Świętego Karola Boromeusza,964029963,obszar,0.07,Wawer,881f535269fffff,21.117967,52.21497
+miejsce_kultu,christian,Kościół pw. Świętego Wacława,318863094,obszar,0.1,Wawer,881f53c8a3fffff,21.133818,52.235615
+miejsce_kultu,christian,Sala Królestwa Świadków Jehowy,803103630,obszar,0.04,Wawer,881f53c991fffff,21.109418,52.221668
+miejsce_kultu,christian,Sala Królestwa Świadków Jehowy,4795661491,punkt,,Wawer,881f535019fffff,21.213162,52.158607
+miejsce_kultu,buddhist,Wu Bong Sah,115561347,obszar,0.66,Wawer,881f535057fffff,21.197407,52.162148
+miejsce_kultu,christian,Kaplica szpitalna,10250581347,punkt,,Wesoła,881f53cd41fffff,21.213318,52.2528
+miejsce_kultu,christian,Kościół Najświętszego Serca Pana Jezusa w Starej Miłośnie,958897819,obszar,0.08,Wesoła,881f53cd23fffff,21.222027,52.220821
+miejsce_kultu,christian,Kościół pw. Opatrzności Bożej,440098821,obszar,0.03,Wesoła,881f53cd45fffff,21.212828,52.252175
+miejsce_kultu,christian,Kościół pw. Świętego Antoniego Padewskiego,958897807,obszar,0.02,Wesoła,881f53cd21fffff,21.220682,52.221345
+miejsce_kultu,christian,Kościół pw. Świętego Brata Alberta,497490650,obszar,0.1,Wesoła,881f53cd69fffff,21.190068,52.24602
+miejsce_kultu,christian,Kościół pw. Świętego Hieronima,497507555,obszar,0.09,Wesoła,881f53cd35fffff,21.243193,52.216756
+miejsce_kultu,christian,Kościół pw. Świętego Jana Pawła II,959774176,obszar,0.05,Wesoła,881f53cd43fffff,21.231558,52.256437
+miejsce_kultu,muslim_sunni,Centrum Kultury Islamu,8820587720,punkt,,Wilanów,881f53530dfffff,21.077932,52.174265
+miejsce_kultu,christian_catholic,Kaplica,8922955324,punkt,,Wilanów,881f535067fffff,21.141355,52.144368
+miejsce_kultu,christian,Kaplica cmentarna,187044428,obszar,0.01,Wilanów,881f535301fffff,21.082627,52.167326
+miejsce_kultu,christian,Kościół pw. Posłania Uczniów Pańskich,961948769,obszar,0.07,Wilanów,881f535067fffff,21.141375,52.144866
+miejsce_kultu,christian,Kościół Świętej Anny,63060518,obszar,0.1,Wilanów,881f535307fffff,21.087545,52.166132
+miejsce_kultu,christian,Kościół św. Elżbiety w Powsinie,201844305,obszar,0.06,Wilanów,881f535109fffff,21.102339,52.123753
+miejsce_kultu,christian,Parafia bł. Edmunda Bojanowskiego w Warszawie,349868479,obszar,0.06,Wilanów,881f535321fffff,21.061982,52.152519
+miejsce_kultu,christian,Świątynia Opatrzności Bożej,62343341,obszar,0.67,Wilanów,881f535329fffff,21.072113,52.158613
+miejsce_kultu,buddhist,Buddyjski Ośrodek Medytacyjny Stupa House,330285029,obszar,0.24,Wola,881f53c96bfffff,20.952033,52.246236
+miejsce_kultu,christian,Cerkiew św. Jana Klimaka,274245158,obszar,0.04,Wola,881f53c92dfffff,20.946481,52.22794
+miejsce_kultu,christian,Kaplica Halpertów,243897940,obszar,0.02,Wola,881f53c90dfffff,20.970668,52.241756
+miejsce_kultu,christian,Kaplica Kościoła Baptystów,947215064,obszar,0.05,Wola,881f53c903fffff,20.990934,52.237229
+miejsce_kultu,christian,Kaplica Matki Boskiej Częstochowskiej,12211428479,punkt,,Wola,881f53c901fffff,20.985512,52.240856
+miejsce_kultu,christian,Kaplica pw. Błogosławionego Józefa Stanka,5075240437,punkt,,Wola,881f53c907fffff,20.981284,52.232535
+miejsce_kultu,christian,Kaplica szpitalna,10853277334,punkt,,Wola,881f53c901fffff,20.98688,52.240889
+miejsce_kultu,christian,Kościól Św. Karola Boromeusza,25748457,obszar,0.07,Wola,881f53c903fffff,20.992573,52.238221
+miejsce_kultu,christian,Kościół Jezusa Chrystusa Świętych w Dniach Ostatnich,83698042,obszar,0.1,Wola,881f52265bfffff,20.941742,52.227788
+miejsce_kultu,christian,Kościół Matki Boskiej Nieustającej Pomocy,242797547,obszar,0.04,Wola,881f522651fffff,20.930171,52.224016
+miejsce_kultu,christian,Kościół Zielonoświątkowy,140367327,obszar,0.12,Wola,881f53c939fffff,20.996217,52.23103
+miejsce_kultu,christian,Kościół pw. Dobrego Pasterza,34966180,obszar,0.09,Wola,881f53c965fffff,20.938705,52.236486
+miejsce_kultu,christian,Kościół pw. Matki Boskiej Nieustającej Pomocy,242797558,obszar,0.03,Wola,881f522651fffff,20.931408,52.224127
+miejsce_kultu,christian,Kościół pw. Miłosierdzia Bożego i Świętej Faustyny,227481555,obszar,0.05,Wola,881f53c901fffff,20.983689,52.240236
+miejsce_kultu,christian,Kościół pw. Świętego Augustyna,91942135,obszar,0.2,Wola,881f53c90bfffff,20.988592,52.244593
+miejsce_kultu,christian,Kościół pw. Świętego Józefa Oblubieńca Najświętszej Maryi Panny,34966188,obszar,0.1,Wola,881f53c969fffff,20.947212,52.24444
+miejsce_kultu,christian,Kościół pw. Świętego Karola Boromeusza,193973771,obszar,0.07,Wola,881f53c943fffff,20.977819,52.253217
+miejsce_kultu,christian,Kościół pw. Świętego Klemensa Hofbauera,35071436,obszar,0.09,Wola,881f53c905fffff,20.976543,52.234304
+miejsce_kultu,christian,Kościół pw. Świętego Stanisława Biskupa i Męczennika,99554933,obszar,0.06,Wola,881f53c929fffff,20.958443,52.22761
+miejsce_kultu,christian,Kościół pw. Świętego Wawrzyńca,231957484,obszar,0.05,Wola,881f52265bfffff,20.944193,52.227034
+miejsce_kultu,christian,Kościół pw. Świętego Wojciecha,218704186,obszar,0.19,Wola,881f53c929fffff,20.960982,52.233354
+miejsce_kultu,christian,Kościół świętego Grzegorza Wielkiego,588387418,obszar,0.02,Wola,881f52265bfffff,20.933601,52.225814
+miejsce_kultu,christian,kaplica domowa,12211501140,punkt,,Wola,881f53c901fffff,20.981585,52.240034
+miejsce_kultu,christian,kaplica karmelitanek bosych,12306785555,punkt,,Wola,881f53c905fffff,20.974695,52.234781
+miejsce_kultu,christian,kaplica pw. MB Częstochowskiej,12304683494,punkt,,Wola,881f53c905fffff,20.965685,52.235979
+miejsce_kultu,christian,kaplica pw. MB Nieustającej Pomocy,12304711569,punkt,,Wola,881f53c905fffff,20.971728,52.233506
+miejsce_kultu,christian,kaplica pw. Miłosierdzia Bożego,12305679403,punkt,,Wola,881f53c961fffff,20.949337,52.237467
+miejsce_kultu,christian,kaplica pw. Św. Ducha,12305637465,punkt,,Wola,881f53c92bfffff,20.97037,52.225682
+miejsce_kultu,christian,kaplica pw. Św. Rodziny,12305668627,punkt,,Wola,881f53c92bfffff,20.970675,52.226724
+miejsce_kultu,christian,kaplica św. Hannibala Marii Di Francia,12211496048,punkt,,Wola,881f522659fffff,20.925348,52.232984
+miejsce_kultu,christian,,10868058521,punkt,,Wola,881f53c939fffff,20.994777,52.231097
+miejsce_kultu,sikh,Gurudwara Sri Guru Singh Sabha,13702080641,punkt,,Włochy,881f522455fffff,20.933459,52.16206
+miejsce_kultu,christian,Kościół Matki Bożej Saletyńskiej,35001427,obszar,0.08,Włochy,881f522603fffff,20.924614,52.203193
+miejsce_kultu,christian_lutheran,Kościół Objawienia Pańskiego,35001428,obszar,0.01,Włochy,881f522603fffff,20.923199,52.202999
+miejsce_kultu,christian,Kościół Świętych Teresy od Dzieciątka Jezus i Męczenników Rzymskich,34999847,obszar,0.15,Włochy,881f522601fffff,20.904141,52.207374
+miejsce_kultu,christian,Kościół świętego Franciszka z Asyżu,955776105,obszar,0.12,Włochy,881f5226e1fffff,20.961287,52.190052
+miejsce_kultu,christian_orthodox,Prawosławna Katedra Wojskowa św. Jerzego Zwycięzcy,12348612406,punkt,,Włochy,881f5226e3fffff,20.976891,52.184994
+miejsce_kultu,christian,Sala Królestwa Świadków Jehowy,8855295902,punkt,,Włochy,881f5226e5fffff,20.949966,52.185941
+miejsce_kultu,christian,Archikatedra pw. Świętego Jana Chrzciciela,404052334,obszar,0.2,Śródmieście,881f53c919fffff,21.013648,52.248881
+miejsce_kultu,christian,Cerkiew pw. Zaśnięcia Najświętszej Marii Panny,1355697360,obszar,0.04,Śródmieście,881f53c919fffff,21.008996,52.247756
+miejsce_kultu,christian_orthodox,Cerkiew św. Trójcy,6018362945,punkt,,Śródmieście,881f53c919fffff,21.011414,52.247528
+miejsce_kultu,christian_methodist,Kaplica Kościoła Metodystycznego,343288762,punkt,,Śródmieście,881f53c933fffff,21.018535,52.220141
+miejsce_kultu,christian,Kaplica Matki Bożej Niepokalanie Poczętej,12305689238,punkt,,Śródmieście,881f53c93bfffff,21.0098,52.224545
+miejsce_kultu,christian,Kaplica NMP Objawiającej Cudowny Medal,11981499984,punkt,,Śródmieście,881f53c911fffff,21.023054,52.240825
+miejsce_kultu,christian,Kaplica domowa,10853278873,punkt,,Śródmieście,881f53c957fffff,21.007695,52.247348
+miejsce_kultu,christian,Kaplica domowa,10853797889,punkt,,Śródmieście,881f53c911fffff,21.020963,52.23873
+miejsce_kultu,christian,Kaplica klasztorna,10853787439,punkt,,Śródmieście,881f53c957fffff,21.003724,52.25349
+miejsce_kultu,christian,Kaplica pw. Matki Bożej Nieustającej Pomocy,7314470709,punkt,,Śródmieście,881f53c9edfffff,21.02122,52.225926
+miejsce_kultu,christian,Kaplica pw. Miłosierdzia Bożego,10853787436,punkt,,Śródmieście,881f53c955fffff,20.991762,52.254853
+miejsce_kultu,christian,Kaplica pw. Zwiastowania Pańskiego,10853278864,punkt,,Śródmieście,881f53c911fffff,21.016791,52.243061
+miejsce_kultu,christian,Kaplica pw. Świętej Barbary,118252383,obszar,0.01,Śródmieście,881f53c93bfffff,21.00784,52.226089
+miejsce_kultu,christian,Kaplica pw. św. Joanny Berretta Molla,10853278862,punkt,,Śródmieście,881f53c91bfffff,21.021979,52.24516
+miejsce_kultu,christian,Kaplica szpitalna,10853278863,punkt,,Śródmieście,881f53c919fffff,21.015293,52.245217
+miejsce_kultu,christian,Kaplica szpitalna,12305694314,punkt,,Śródmieście,881f53c911fffff,21.019097,52.237687
+miejsce_kultu,christian,Kaplica zamkowa,10853291712,punkt,,Śródmieście,881f53c919fffff,21.01526,52.247294
+miejsce_kultu,christian,Katedra polowa Wojska Polskiego Najświętszej Maryi Panny Królowej Polski,135770016,obszar,0.09,Śródmieście,881f53c957fffff,21.006969,52.248872
+miejsce_kultu,christian,Katedra Świętego Ducha,28018811,obszar,0.04,Śródmieście,881f53c9e3fffff,21.045031,52.216357
+miejsce_kultu,christian,Kościół Adwentystów Dnia Siódmego,2334226366,punkt,,Śródmieście,881f53c917fffff,21.022875,52.234424
+miejsce_kultu,christian,Kościół Ewangelicko-Reformowany,128808347,obszar,0.1,Śródmieście,881f53c90bfffff,20.9983,52.244025
+miejsce_kultu,christian_evangelical,Kościół Ewangelicznych Chrześcijan,48251219,punkt,,Śródmieście,881f53c9ebfffff,21.040886,52.226834
+miejsce_kultu,christian,Kościół Matki Bożej Jerozolimskiej,329596905,obszar,0.1,Śródmieście,881f53c9e1fffff,21.038436,52.222012
+miejsce_kultu,christian,Kościół Najświętszego Zbawiciela,30241250,obszar,0.16,Śródmieście,881f53c933fffff,21.017868,52.219158
+miejsce_kultu,christian,Kościół Niepokalanego Poczęcia Najświętszej Maryi Panny,858325685,obszar,0.02,Śródmieście,881f53c919fffff,21.014529,52.245232
+miejsce_kultu,christian,Kościół Przemienienia Pańskiego,35008873,obszar,0.08,Śródmieście,881f53c919fffff,21.009637,52.246862
+miejsce_kultu,christian,Kościół Wizytek,320592658,obszar,0.12,Śródmieście,881f53c911fffff,21.017323,52.241186
+miejsce_kultu,christian,Kościół Wniebowzięcia Najświętszej Maryi Panny i świętego Józefa Oblubieńca,30908038,obszar,0.13,Śródmieście,881f53c911fffff,21.015657,52.243445
+miejsce_kultu,christian,Kościół Wszystkich Świętych,27569981,obszar,0.27,Śródmieście,881f53c915fffff,21.003488,52.235188
+miejsce_kultu,christian,Kościół parafialny pw. Narodzenia Najświętszej Maryi Panny,29388101,obszar,0.08,Śródmieście,881f53c90bfffff,20.995149,52.242824
+miejsce_kultu,christian,Kościół parafialny pw. Nawiedzenia Najświętszej Maryi Panny,136396035,obszar,0.1,Śródmieście,881f53c953fffff,21.009016,52.254321
+miejsce_kultu,christian,Kościół pw. Stygmatów św. Franciszka,136396023,obszar,0.11,Śródmieście,881f53c953fffff,21.006316,52.253575
+miejsce_kultu,christian,Kościół pw. Świętego Ducha,135770017,obszar,0.1,Śródmieście,881f53c957fffff,21.009043,52.250519
+miejsce_kultu,christian,Kościół pw. Świętego Jacka,30064563,obszar,0.19,Śródmieście,881f53c957fffff,21.009405,52.25139
+miejsce_kultu,christian,Kościół pw. Świętego Kazimierza Królewicza,10009320842,punkt,,Śródmieście,881f53c913fffff,21.025214,52.235503
+miejsce_kultu,christian,Kościół pw. Świętego Krzyża,28092628,obszar,0.21,Śródmieście,881f53c911fffff,21.016757,52.238744
+miejsce_kultu,christian,Kościół pw. Świętego Marcina,128808348,obszar,0.11,Śródmieście,881f53c919fffff,21.012222,52.248244
+miejsce_kultu,christian,Kościół pw. Świętej Anny,25865144,obszar,0.18,Śródmieście,881f53c919fffff,21.014363,52.246203
+miejsce_kultu,christian,Kościół pw. Świętych Apostołów Piotra i Pawła,25911246,obszar,0.15,Śródmieście,881f53c93bfffff,21.007445,52.22651
+miejsce_kultu,christian,Kościół pw. św. Benona,196700850,obszar,0.04,Śródmieście,881f53c953fffff,21.009583,52.253553
+miejsce_kultu,christian,Kościół pw. św. Kazimierza,250177780,obszar,0.04,Śródmieście,881f53c953fffff,21.008831,52.253206
+miejsce_kultu,christian,Kościół Świętego Aleksandra,238713516,obszar,0.06,Śródmieście,881f53c917fffff,21.022375,52.2291
+miejsce_kultu,christian,Kościół Świętego Antoniego Padewskiego,14175178,obszar,0.17,Śródmieście,881f53c91dfffff,21.006371,52.242868
+miejsce_kultu,christian,Kościół Świętego Jana Bożego,278749643,obszar,0.07,Śródmieście,881f53c957fffff,21.000703,52.253513
+miejsce_kultu,christian_lutheran,Kościół Świętej Trójcy,30064566,obszar,0.12,Śródmieście,881f53c911fffff,21.01145,52.238581
+miejsce_kultu,christian,Kościół Świętej Trójcy,89173216,obszar,0.03,Śródmieście,881f53c9c5fffff,21.039601,52.231612
+miejsce_kultu,christian,Kościół św. Brata Alberta i św. Andrzeja Apostoła,84866908,obszar,0.08,Śródmieście,881f53c91dfffff,21.008179,52.244169
+miejsce_kultu,christian,Matki Bożej Częstochowskiej,151600630,obszar,0.07,Śródmieście,881f53c9ebfffff,21.040568,52.226168
+miejsce_kultu,christian,Parafia Świętej Teresy od Dzieciątka Jezus,152094253,obszar,0.1,Śródmieście,881f53c913fffff,21.029375,52.239194
+miejsce_kultu,christian,Religijne Towarzystwo Przyjaciół w Polsce,13193794426,punkt,,Śródmieście,881f53c911fffff,21.017769,52.239165
+miejsce_kultu,christian,Sala Królestwa Świadków Jehowy,6533909864,punkt,,Śródmieście,881f53c955fffff,20.987776,52.256042
+miejsce_kultu,christian,Sanktuarium Matki Bożej Łaskawej,196756143,obszar,0.08,Śródmieście,881f53c919fffff,21.013161,52.248997
+miejsce_kultu,jewish,Synagoga Nożyków,32792753,obszar,0.06,Śródmieście,881f53c915fffff,21.001075,52.236072
+miejsce_kultu,christian,kaplica sióstr felicjanek,12345065987,punkt,,Śródmieście,881f53c933fffff,21.014149,52.22032
+miejsce_kultu,buddhist,,12124965833,punkt,,Śródmieście,881f53c933fffff,21.013016,52.220596
+miejsce_kultu,christian,Kaplica pw. Ducha Świętego,566380128,obszar,0.01,Żoliborz,881f53c95bfffff,21.004431,52.262204
+miejsce_kultu,christian,Kościół parafialny pw. Matki Bożej Królowej Polski,40855948,obszar,0.05,Żoliborz,881f53cb3dfffff,20.974636,52.274387
+miejsce_kultu,christian,Kościół pw. Dzieciątka Jezus,196558051,obszar,0.04,Żoliborz,881f53cb37fffff,20.990561,52.26574
+miejsce_kultu,christian,Kościół Świętego Jana Kantego,195234050,obszar,0.06,Żoliborz,881f53c94bfffff,20.975872,52.265764
+miejsce_kultu,christian,Kościół Świętego Stanisława Kostki,173062160,obszar,0.12,Żoliborz,881f53cb37fffff,20.983943,52.267587
+miejsce_kultu,christian,kaplica pw. Miłosierdzia Bożego,12312615118,punkt,,Żoliborz,881f53c941fffff,20.964381,52.261444
+muzeum,museum,Muzeum Polskiego Fiata,6857804711,punkt,,Bemowo,881f523499fffff,20.928508,52.265099
+muzeum,museum,Muzeum Geologiczne,238616649,obszar,1.56,Mokotów,881f5226d9fffff,21.012609,52.21003
+muzeum,museum,Muzeum Polskiej Techniki Wojskowej,623291153,obszar,3.63,Mokotów,881f535347fffff,21.066792,52.182347
+muzeum,museum,Muzeum Żołnierzy Wyklętych i Więźniów Politycznych PRL,8869757642,punkt,,Mokotów,881f5226d1fffff,21.010965,52.20766
+muzeum,museum,Muzeum Wodociągów i Kanalizacji,217940835,obszar,0.11,Ochota,881f53c931fffff,20.994399,52.222898
+muzeum,museum,Muzeum Fabryka Czekolady Wedla,1474005018,obszar,0.14,Praga-Południe,881f53c9c9fffff,21.051471,52.24624
+muzeum,museum,Muzeum Polskiej Wódki,6566541885,punkt,,Praga-Północ,881f53c823fffff,21.045988,52.255393
+muzeum,museum,Muzeum Warszawskiej Pragi,1015683299,obszar,0.18,Praga-Północ,881f53c827fffff,21.039451,52.251698
+muzeum,museum,Muzeum Jana Pawła II i Prymasa Wyszyńskiego,2975521950,punkt,,Wilanów,881f535329fffff,21.071839,52.158558
+muzeum,museum,Pałac w Wilanowie,8106732,obszar,0.25,Wilanów,881f535307fffff,21.090473,52.165085
+muzeum,museum,Muzeum Gazowni Warszawskiej,7231266085,punkt,,Wola,881f53c921fffff,20.96628,52.226549
+muzeum,museum,Muzeum Powstania Warszawskiego,167109428,obszar,1.54,Wola,881f53c907fffff,20.981377,52.232115
+muzeum,museum,Muzeum Woli,3137240335,punkt,,Wola,881f53c93dfffff,20.989738,52.227884
+muzeum,museum,Stacja Muzeum,633985900,obszar,1.8,Wola,881f53c93dfffff,20.984776,52.225586
+muzeum,museum,Centrum Nauki Kopernik,504034835,obszar,0.95,Śródmieście,881f53c91bfffff,21.028611,52.241768
+muzeum,museum,Centrum Pieniądza NBP,5961333785,punkt,,Śródmieście,881f53c911fffff,21.014659,52.236194
+muzeum,museum,Kolejkowo,13359444702,punkt,,Śródmieście,881f53c939fffff,21.001892,52.231753
+muzeum,museum,Muzeum Azji i Pacyfiku,11196230956,punkt,,Śródmieście,881f53c9c5fffff,21.036838,52.233398
+muzeum,museum,Muzeum Etnograficzne,312892952,punkt,,Śródmieście,881f53c911fffff,21.012166,52.238149
+muzeum,museum,Muzeum Fryderyka Chopina,981721461,punkt,,Śródmieście,881f53c917fffff,21.02292,52.236473
+muzeum,museum,Muzeum Historii Żydów Polskich Polin,186141946,obszar,0.44,Śródmieście,881f53c955fffff,20.993152,52.249381
+muzeum,museum,Muzeum Literatury,338509181,punkt,,Śródmieście,881f53c919fffff,21.012386,52.250225
+muzeum,museum,Muzeum Marii Skłodowskiej-Curie,338509175,punkt,,Śródmieście,881f53c957fffff,21.00852,52.251531
+muzeum,museum,Muzeum Narodowe w Warszawie,9984134345,punkt,,Śródmieście,881f53c917fffff,21.024771,52.231694
+muzeum,museum,Muzeum Neonów,13043098814,punkt,,Śródmieście,881f53c915fffff,21.006114,52.231878
+muzeum,museum,Muzeum Niepodległości,29735394,obszar,0.1,Śródmieście,881f53c91dfffff,21.004258,52.245397
+muzeum,museum,Muzeum Teatralne,338509200,punkt,,Śródmieście,881f53c91dfffff,21.009371,52.243259
+muzeum,museum,Muzeum Warszawy,338509179,punkt,,Śródmieście,881f53c919fffff,21.011389,52.249973
+muzeum,museum,Muzeum Więzienia Pawiak,116698622,obszar,0.72,Śródmieście,881f53c90bfffff,20.990814,52.246468
+muzeum,museum,Muzeum Ziemi PAN,887085515,obszar,0.36,Śródmieście,881f53c9e9fffff,21.028614,52.22902
+muzeum,museum,Muzeum Życia w PRL,7239067085,punkt,,Śródmieście,881f53c9edfffff,21.016419,52.223456
+muzeum,museum,Narodowe Muzeum Techniki,588708759,punkt,,Śródmieście,881f53c93bfffff,21.005874,52.230573
+muzeum,museum,Pałac na Wyspie,1325609735,obszar,0.14,Śródmieście,881f53c9e7fffff,21.035807,52.215056
+muzeum,museum,Państwowe Muzeum Archeologiczne,8952329575,punkt,,Śródmieście,881f53c91dfffff,21.001423,52.245673
+muzeum,museum,Zamek Królewski w Warszawie,14249670673,punkt,,Śródmieście,881f53c919fffff,21.014158,52.247566
+muzeum,museum,Żydowski Instytut Historyczny,338509152,punkt,,Śródmieście,881f53c91dfffff,21.00277,52.244327
+muzeum,museum,Muzeum Historii Polski,31102954,obszar,1.21,Żoliborz,881f53c959fffff,21.000985,52.265019
+muzeum,museum,Muzeum Katyńskie,9829379605,punkt,,Żoliborz,881f53c95bfffff,21.005607,52.260737
+muzeum,museum,Muzeum Sportu i Turystyki,1793614691,punkt,,Żoliborz,881f53cb33fffff,20.996998,52.274176
+muzeum,museum,Muzeum Wojska Polskiego,31102940,obszar,0.96,Żoliborz,881f53c959fffff,20.999619,52.263923
+muzeum,museum,Muzeum X Pawilonu Cytadeli,6848544957,punkt,,Żoliborz,881f53c959fffff,21.000458,52.266784
+park,park,Park Górczewska,280235097,obszar,21.07,Bemowo,881f5234b7fffff,20.906628,52.233332
+park,park,Polanka,34988640,obszar,4.66,Bemowo,881f52265dfffff,20.920485,52.226009
+park,park,Park Picassa,57902490,obszar,3.63,Białołęka,881f53cb41fffff,20.952531,52.312265
+park,park,Park Żerański,1233035157,obszar,14.19,Białołęka,881f53cb53fffff,20.995719,52.305199
+park,park,Park Harcerskiej Poczty Polowej Powstania Warszawskiego,186788694,obszar,3.42,Bielany,881f53cb39fffff,20.979082,52.280778
+park,park,Park przy Lesie Bielańskim,26020087,obszar,5.29,Bielany,881f53cb01fffff,20.971334,52.292127
+park,park,Serek Bielański,1191610065,obszar,3.22,Bielany,881f53cb2bfffff,20.9609,52.276582
+park,park,Arkadia,113858166,obszar,16.18,Mokotów,881f52269dfffff,21.028237,52.190693
+park,park,Cmentarz Mauzoleum Żołnierzy Radzieckich,883956400,obszar,18.62,Mokotów,881f5226c3fffff,20.987558,52.201833
+park,park,Dolinka Służewska,23518638,obszar,33.34,Mokotów,881f53536dfffff,21.035215,52.169188
+park,park,Park Akcji „Burza”,1231555694,obszar,8.23,Mokotów,881f53c9a9fffff,21.055649,52.211353
+park,park,Park Morskie Oko,1426697668,obszar,6.43,Mokotów,881f5226dbfffff,21.027151,52.207047
+park,park,Park Promenada,1426697669,obszar,6.19,Mokotów,881f5226d3fffff,21.030342,52.203843
+park,park,Park Rzeźby w Królikarnii,23489979,obszar,4.02,Mokotów,881f52269dfffff,21.02717,52.189105
+park,park,Park Sielecki,23762295,obszar,3.09,Mokotów,881f53c9a5fffff,21.040859,52.19916
+park,park,Park Stanisława Dygata,136787889,obszar,7.43,Mokotów,881f53534dfffff,21.056125,52.187203
+park,park,Park Szustrów,5037029,obszar,4.96,Mokotów,881f5226d3fffff,21.02551,52.204151
+park,park,Park nad Stawem Służewieckim,161716377,obszar,5.83,Mokotów,881f5226b1fffff,21.014431,52.169105
+park,park,Fort Rakowiec,28383589,obszar,5.1,Ochota,881f5226c5fffff,20.974846,52.200525
+park,park,Park Pięciu Sióstr,519586588,obszar,8.51,Ochota,881f53c927fffff,20.966233,52.216807
+park,park,Park Szczęśliwicki,5000672,obszar,35.63,Ochota,881f522613fffff,20.959335,52.20532
+park,park,Park Zasława Malickiego,18245533,obszar,4.14,Ochota,881f5226c1fffff,20.979998,52.203535
+park,park,Pole Mokotowskie,8353307,obszar,80.63,Ochota,881f53c937fffff,21.00083,52.211982
+park,park,Kamionkowskie Błonia Elekcyjne,5173797,obszar,21.67,Praga-Południe,881f53c9cbfffff,21.064899,52.243098
+park,park,Park Józefa Polińskiego,23030513,obszar,4.71,Praga-Południe,881f53c9d9fffff,21.090175,52.248872
+park,park,Park Nad Balatonem,173211407,obszar,7.36,Praga-Południe,881f53c9d7fffff,21.088078,52.229463
+park,park,Park Obwodu Praga AK,24925213,obszar,3.13,Praga-Południe,881f53c837fffff,21.073087,52.246691
+park,park,"Park Pułkownika Jana Szypowskiego ""Leśnika""",22965086,obszar,5.0,Praga-Południe,881f53c8adfffff,21.111501,52.241852
+park,park,Park Skaryszewski,9465346,obszar,41.62,Praga-Południe,881f53c9c1fffff,21.05557,52.242266
+park,park,Park Praski,39498915,obszar,18.57,Praga-Północ,881f53c825fffff,21.026421,52.253493
+park,park,Park Bródnowski,24924843,obszar,22.61,Targówek,881f53c841fffff,21.036881,52.290391
+park,park,Park Stefana Wiecheckiego „Wiecha”,29220230,obszar,6.69,Targówek,881f53c801fffff,21.051008,52.271873
+park,park,Park Czechowicki,28333200,obszar,3.96,Ursus,881f522629fffff,20.884604,52.192145
+park,park,Park Jana Pawła II,24017959,obszar,3.53,Ursynów,881f5224d1fffff,21.02837,52.156228
+park,park,Park Olkówek,101363127,obszar,3.16,Ursynów,881f5224d9fffff,21.024263,52.160146
+park,park,Park Polskich Wynalazców,827729404,obszar,7.68,Ursynów,881f53532dfffff,21.051442,52.153
+park,park,Park Romana Kozłowskiego,25706839,obszar,9.65,Ursynów,881f5226b7fffff,21.023077,52.16401
+park,park,Park Rozkosz,888450364,obszar,7.92,Ursynów,881f535367fffff,21.049018,52.164336
+park,park,Park Wyczółki,1530914212,obszar,3.99,Ursynów,881f5224c9fffff,20.99958,52.158843
+park,park,Park im. Cichociemnych Spadochroniarzy AK,96463165,obszar,10.93,Ursynów,881f52249dfffff,21.043307,52.137065
+park,park,Park linearny nad POW,17833421,obszar,9.56,Ursynów,881f522499fffff,21.042061,52.140978
+park,park,Park przy Bażantarni,22987815,obszar,9.1,Ursynów,881f53514dfffff,21.067449,52.137059
+park,park,Ósmy Park,1493463965,obszar,5.34,Ursynów,881f535365fffff,21.038261,52.166347
+park,park,Park Aktywności Rodzinnej,1408535097,obszar,4.15,Wawer,881f53526bfffff,21.139656,52.210259
+park,park,Park Natoliński,96580361,obszar,115.27,Wilanów,881f535149fffff,21.077837,52.142262
+park,park,Park Wilanowski,8106730,obszar,22.12,Wilanów,881f535307fffff,21.09023,52.166108
+park,park,Park Józefa Sowińskiego,34966187,obszar,7.49,Wola,881f53c967fffff,20.94819,52.230744
+park,park,Park Moczydło,5088307,obszar,21.05,Wola,881f53c961fffff,20.950751,52.241077
+park,park,Park Powstańców Warszawy,83823124,obszar,9.39,Wola,881f52265bfffff,20.937927,52.226702
+park,park,Park im. Edwarda Szymańskiego,22719550,obszar,20.79,Wola,881f53c967fffff,20.951856,52.23393
+park,park,Park im. Księcia Janusza,10701217,obszar,8.86,Wola,881f53c969fffff,20.940378,52.248872
+park,park,Skwer Alojzego Pawełka,20136487,obszar,3.03,Wola,881f53c921fffff,20.968398,52.225179
+park,park,Park Kombatantów,23771865,obszar,4.85,Włochy,881f522601fffff,20.912369,52.207194
+park,park,Park ze Stawami Cietrzewia,128988589,obszar,8.01,Włochy,881f522603fffff,20.923684,52.200968
+park,park,Park ze Stawem Koziorożca,970621543,obszar,4.84,Włochy,881f522609fffff,20.911395,52.20985
+park,park,Ogród Krasińskich,18467869,obszar,7.87,Śródmieście,881f53c957fffff,21.00233,52.248132
+park,park,Ogród Saski,4943389,obszar,15.55,Śródmieście,881f53c91dfffff,21.008649,52.240643
+park,park,Park Agrykola,390489497,obszar,4.59,Śródmieście,881f53c9e1fffff,21.032298,52.219483
+park,park,Park Janiny Porazińskiej,89173277,obszar,4.27,Śródmieście,881f53c9e9fffff,21.033514,52.232271
+park,park,Park Jazdów,390489496,obszar,4.66,Śródmieście,881f53c9e5fffff,21.029296,52.219139
+park,park,Park Kazimierzowski,20933417,obszar,4.36,Śródmieście,881f53c911fffff,21.020731,52.241402
+park,park,Park Mirowski,34627264,obszar,3.74,Śródmieście,881f53c903fffff,20.999674,52.238299
+park,park,Park Tadeusza Mazowieckiego,30859479,obszar,5.1,Śródmieście,881f53c9e1fffff,21.031668,52.222627
+park,park,Park Traugutta,15992521,obszar,12.11,Śródmieście,881f53c951fffff,21.006826,52.257594
+park,park,Park Ujazdowski,5081164,obszar,5.13,Śródmieście,881f53c9edfffff,21.025755,52.222209
+park,park,Park im. Marszałka Edwarda Rydza-Śmigłego,13057766,obszar,27.63,Śródmieście,881f53c9ebfffff,21.0392,52.228888
+park,park,Park na Książęcem,23041563,obszar,9.69,Śródmieście,881f53c9e9fffff,21.028857,52.231698
+park,park,Park Świętokrzyski,7306721,obszar,3.61,Śródmieście,881f53c915fffff,21.004756,52.233852
+park,park,Skwer 1 Dywizji Pancernej WP,26020105,obszar,4.92,Śródmieście,881f53c953fffff,21.01084,52.254095
+park,park,Skwer Tadeusza Kahla,8584743,obszar,3.15,Śródmieście,881f53c913fffff,21.032666,52.238725
+park,park,Szkolny Park Sportowy imienia Janusza Kusocińskiego,38790605,obszar,4.27,Śródmieście,881f53c951fffff,20.998852,52.257244
+park,park,Łazienki Królewskie,19860651,obszar,74.33,Śródmieście,881f53c9e7fffff,21.03392,52.212577
+park,park,Kępa Potocka,23501397,obszar,32.8,Żoliborz,881f53cb39fffff,20.986453,52.281428
+park,park,Park Fosa,326736657,obszar,9.68,Żoliborz,881f53c959fffff,20.995989,52.264788
+park,park,Park Kaskada,14430691,obszar,5.32,Żoliborz,881f53cb35fffff,20.969922,52.27343
+park,park,Park Sady Żoliborskie,48166420,obszar,4.92,Żoliborz,881f53cb35fffff,20.971738,52.267602
+park,park,Park Żeromskiego,28124,obszar,4.82,Żoliborz,881f53cb37fffff,20.988661,52.268304
+szkola,school,Gaudeamus szkoła podstawowa,813946048,obszar,0.35,Bemowo,881f52264bfffff,20.895511,52.228706
+szkola,school,Goldwings Flight Academy,12176965847,punkt,,Bemowo,881f523489fffff,20.89594,52.267361
+szkola,school,Koncertowe Centrum Edukacji Muzycznej,1074633716,obszar,0.65,Bemowo,881f522643fffff,20.906133,52.2183
+szkola,school,LXXVIII Liceum Ogólnokształcące im. Marii Pawlikowskiej-Jasnorzewskiej,34988643,obszar,1.63,Bemowo,881f52265dfffff,20.917538,52.226599
+szkola,school,Liceum Ogólnokształcące Niepubliczne nr 29,10266058985,punkt,,Bemowo,881f53c94dfffff,20.951121,52.261851
+szkola,school,Społeczne Liceum Ogólnokształcące nr 99 Społecznego Towarzystwa Oświatowego w Warszawie,10575020833,punkt,,Bemowo,881f5234b7fffff,20.911662,52.234228
+szkola,school,Szkoła Podstawowa nr 150,1044483713,obszar,1.28,Bemowo,881f52348bfffff,20.901932,52.260742
+szkola,school,Szkoła Podstawowa nr 306 im. ks. Jana Twardowskiego,35079347,obszar,1.19,Bemowo,881f522643fffff,20.906196,52.222798
+szkola,school,Szkoła Podstawowa nr 321,59691787,obszar,1.84,Bemowo,881f523495fffff,20.920568,52.252164
+szkola,school,Szkoła Podstawowa nr 350 im. Armii Krajowej,34988626,obszar,2.52,Bemowo,881f52264bfffff,20.903038,52.230772
+szkola,school,Szkoła Podstawowa nr 357 im. Mikołaja Kopernika,431248868,obszar,1.79,Bemowo,881f52349dfffff,20.91643,52.260274
+szkola,school,Szkoła Podstawowa nr 362 im. Tadeusza Kotarbińskiego,987175047,obszar,2.03,Bemowo,881f5234b7fffff,20.910621,52.236057
+szkola,school,Szkoła Podstawowa nr 363 im. prof. Witolda Doroszewskiego,35275144,obszar,1.89,Bemowo,881f522643fffff,20.901985,52.223283
+szkola,school,Szkoła Podstawowa nr 364 im. Konstancji Markiewicz,438044073,obszar,2.35,Bemowo,881f523497fffff,20.928718,52.251221
+szkola,school,Szkoła Podstawowa nr 407,919437378,obszar,2.05,Bemowo,881f52264dfffff,20.882574,52.225679
+szkola,school,Szkoła Podstawowa z Oddziałami Integracyjnymi nr 341 im. Twórców Literatury Dziecięcej,307723121,obszar,2.69,Bemowo,881f523491fffff,20.926174,52.258984
+szkola,school,Szkoła Podstawowa z Oddziałami Integracyjnymi nr 82 im. Jana Pawła II,34982237,obszar,1.18,Bemowo,881f5234b3fffff,20.918803,52.240523
+szkola,school,Wojskowe Ogólnokształcące Liceum Informatyczne im. Polskich Kryptologów,314659952,obszar,0.12,Bemowo,881f523481fffff,20.895176,52.25673
+szkola,school,Zespół Szkolno-Przedszkolny nr 2,34988663,obszar,1.86,Bemowo,881f52265dfffff,20.912903,52.225639
+szkola,school,Zespół Szkolno-Przedszkolny nr 6,34982148,obszar,2.22,Bemowo,881f5234b5fffff,20.901176,52.235551
+szkola,school,,146434,obszar,0.34,Bemowo,881f52265dfffff,20.918551,52.226831
+szkola,school,,775586234,obszar,1.41,Bemowo,881f523481fffff,20.894716,52.256319
+szkola,school,British School Szkoła Języków Obcych,2369794662,punkt,,Białołęka,881f53ca39fffff,21.050252,52.317754
+szkola,school,CLXV Liceum Ogólnokształcące,175874220,obszar,2.69,Białołęka,881f53ca03fffff,21.046711,52.327077
+szkola,school,CV Liceum Ogólnokształcące im. Zbigniewa Herberta,63526191,obszar,2.33,Białołęka,881f53cb4bfffff,20.952887,52.31379
+szkola,school,Centrum Kształcenia Ustawicznego w Warszawie - Białołęce,10236335518,punkt,,Białołęka,881f53ca6bfffff,21.009002,52.334297
+szkola,school,Creativo,10172256319,punkt,,Białołęka,881f53d9abfffff,20.946194,52.330623
+szkola,school,Filia Szkoły Podstawowej z Oddziałami Integracyjnymi nr 154 im. Pawła Edmunda Strzeleckiego,990534998,obszar,0.52,Białołęka,881f53d981fffff,20.949084,52.343788
+szkola,school,Liceum Ogólnokształcące dla Dorosłych,10236335517,punkt,,Białołęka,881f53ca6bfffff,21.009006,52.334073
+szkola,school,"Niepubliczna Szkoła Podstawowa ""Europejska Szkoła Przyszłości""",939381663,obszar,0.11,Białołęka,881f53ca2bfffff,21.030345,52.311072
+szkola,school,"Niepubliczna Szkoła Podstawowa ""Inspiracja""",1765495559,punkt,,Białołęka,881f53d9b9fffff,20.963992,52.336257
+szkola,school,Niepubliczna Szkoła Podstawowa „Nasza Szkoła” im. Janusza Korczaka,970100266,obszar,0.36,Białołęka,881f53cb59fffff,20.980166,52.313595
+szkola,school,"Niepubliczna Terapeutyczna Szkoła Podstawowa ""Dobry Start""Z Oddziałami Przedszkolnymi",10222377259,punkt,,Białołęka,881f53d9a3fffff,20.937687,52.32431
+szkola,school,Niepubliczne Liceum Ogólnokształcące dla Dorosłych w Warszawie,10236269833,punkt,,Białołęka,881f53d9abfffff,20.944658,52.330628
+szkola,school,"Polsko-Angielska Szkoła Podstawowa Mentis ""Piwoniowa""",10236355155,punkt,,Białołęka,881f53d9d7fffff,20.975438,52.354276
+szkola,school,Prywatna Szkoła Podstawowa Akademia Myśli Przyszłości,1510603027,obszar,0.22,Białołęka,881f53d8b7fffff,21.036944,52.355674
+szkola,school,Społeczna Szkoła Podstawowa nr 2 im. Polskich Matematyków Zwycięzców Enigmy,992289093,obszar,0.18,Białołęka,881f53d9b1fffff,20.969233,52.330727
+szkola,school,Szkoła Filialna Szkoły Podstawowej z Oddziałami Integracyjnymi nr 154 im. Edmunda Strzeleckiego,310507136,obszar,0.24,Białołęka,881f53d981fffff,20.945223,52.342015
+szkola,school,Szkoła Podstawowa dla Dorosłych,10236335516,punkt,,Białołęka,881f53ca6bfffff,21.009017,52.333847
+szkola,school,Szkoła Podstawowa nr 110 im. Kazimierza Jeżewskiego,116145996,obszar,1.3,Białołęka,881f53d993fffff,20.993419,52.340434
+szkola,school,Szkoła Podstawowa nr 112 z Oddziałami Integracyjnymi,995662974,obszar,0.26,Białołęka,881f53ca03fffff,21.05015,52.321017
+szkola,school,Szkoła Podstawowa nr 118 im. Przyjaciół Mazowsza,759401152,obszar,2.16,Białołęka,881f53cb55fffff,20.977059,52.302418
+szkola,school,Szkoła Podstawowa nr 118 imienia Przyjaciół Mazowsza,116146007,obszar,1.05,Białołęka,881f53cb55fffff,20.980866,52.305644
+szkola,school,Szkoła Podstawowa nr 231 im. gen. Mariusza Zaruskiego,843232068,obszar,1.89,Białołęka,881f53ca2bfffff,21.034124,52.31651
+szkola,school,Szkoła Podstawowa nr 257 im. Profesora Mariana Falskiego,115893317,obszar,2.06,Białołęka,881f53d9b3fffff,20.974078,52.326507
+szkola,school,Szkoła Podstawowa nr 31 im. Kardynała Stefana Wyszyńskiego,129212259,obszar,1.81,Białołęka,881f53d8b1fffff,21.046247,52.362257
+szkola,school,Szkoła Podstawowa nr 314 im. Przyjaciół Ziemi,64445598,obszar,2.13,Białołęka,881f53cb4bfffff,20.958953,52.314945
+szkola,school,Szkoła Podstawowa nr 342 z Oddziałami Integracyjnymi im. Jana Marcina Szancera (filia),931807610,obszar,0.62,Białołęka,881f53d9bdfffff,20.953099,52.332736
+szkola,school,Szkoła Podstawowa nr 355 im. Jana Wedla,254904645,obszar,2.5,Białołęka,881f53d9b5fffff,20.960899,52.320815
+szkola,school,Szkoła Podstawowa nr 356 im. Ryszarda Kaczorowskiego,262504718,obszar,3.11,Białołęka,881f53ca3bfffff,21.067045,52.311731
+szkola,school,Szkoła Podstawowa nr 361 im. Papcia Chmiela,11568667,obszar,3.16,Białołęka,881f53ca51fffff,21.056685,52.344028
+szkola,school,Szkoła Podstawowa nr 365 im. Wojciecha Zawadzkiego,115893312,obszar,1.28,Białołęka,881f53cb5dfffff,20.973712,52.312166
+szkola,school,Szkoła Podstawowa nr 366 im. Jana Pawła II,9139841306,punkt,,Białołęka,881f53d9abfffff,20.944726,52.330458
+szkola,school,Szkoła Podstawowa nr 367 im. Polskich Noblistów,931567203,obszar,0.97,Białołęka,881f53d9d3fffff,20.982793,52.357147
+szkola,school,Szkoła Podstawowa nr 368 im. Polskich Olimpijczyków,421918174,obszar,3.74,Białołęka,881f53ca01fffff,21.037934,52.327158
+szkola,school,Szkoła Podstawowa nr 406,1175108512,obszar,1.97,Białołęka,881f53cb49fffff,20.949403,52.315969
+szkola,school,Szkoła Podstawowa z Oddziałami Integracyjnymi nr 112,178567030,obszar,2.08,Białołęka,881f53ca1dfffff,21.066848,52.327312
+szkola,school,Szkoła Podstawowa z Oddziałami Integracyjnymi nr 154 im. Edmunda Strzeleckiego,115893311,obszar,0.86,Białołęka,881f53d985fffff,20.945111,52.338021
+szkola,school,Szkoła Podstawowa z Oddziałami Integracyjnymi nr 342 im. Jana Marcina Szancera,9139841305,punkt,,Białołęka,881f53d9abfffff,20.943831,52.331097
+szkola,school,Szkoła Podstawowa z Oddziałami Integracyjnymi nr 344 im. Powstania Warszawskiego,1249535157,obszar,1.15,Białołęka,881f53d9b5fffff,20.948967,52.321764
+szkola,school,Szkoła Przysposabiająca do Pracy Przy Fundacji Pomocy Ludziom z Niepełnosprawnościami,10236347649,punkt,,Białołęka,881f53d9bbfffff,20.974972,52.330318
+szkola,school,CXLIII Liceum Ogólnokształcące dla Dorosłych w Warszawie,10243162833,punkt,,Bielany,881f53cb23fffff,20.953745,52.273046
+szkola,school,CXXII Liceum Ogólnokształcące im. Ignacego Domeyki,316549907,obszar,1.29,Bielany,881f53cb23fffff,20.961531,52.273193
+szkola,school,Educhata,5333558148,punkt,,Bielany,881f53cb39fffff,20.97679,52.281311
+szkola,school,Europejska Akademia Estetyki Artystycznej,6742156634,punkt,,Bielany,881f53cb03fffff,20.976553,52.287489
+szkola,school,I Liceum w Chmurze,10237656749,punkt,,Bielany,881f53cb23fffff,20.958515,52.275406
+szkola,school,Katolicka Szkoła Podstawowa nr 109 Fundacji Na Rzecz Rodziny,10237753046,punkt,,Bielany,881f52369bfffff,20.921112,52.3125
+szkola,school,LIX Liceum Ogólnokształcące Mistrzostwa Sportowego im. Janusza Kusocińskiego,10596731782,punkt,,Bielany,881f53cb63fffff,20.944741,52.288267
+szkola,school,"Liceum Ogólnokształcące dla Dorosłych ""Expertus"" w Warszawie",10243284731,punkt,,Bielany,881f53cb23fffff,20.953568,52.272803
+szkola,school,Liceum Ogólnokształcące nr 13,10237735372,punkt,,Bielany,881f5234d3fffff,20.927805,52.270798
+szkola,school,Liceum Ogólnokształcące nr 50,10243228306,punkt,,Bielany,881f53cb3dfffff,20.968645,52.275415
+szkola,school,Niepubliczna Szkoła Podstawowa,10237735371,punkt,,Bielany,881f5234d3fffff,20.927765,52.270713
+szkola,school,Niepubliczna Szkoła Podstawowa Fundacji Scolar,10243401074,punkt,,Bielany,881f53cb29fffff,20.944244,52.279389
+szkola,school,Niepubliczna Szkoła Podstawowa im. Juliusza Verne'a,1083833613,obszar,0.18,Bielany,881f53cb05fffff,20.955338,52.285909
+szkola,school,"Prywatne Technikum Handlowo-Menedżerskie ""Hermes""",10245502676,punkt,,Bielany,881f53c949fffff,20.955495,52.265856
+szkola,school,Przymierze Rodzin nr 3 im. bł. ks. J. Popieluszki,379685471,obszar,1.14,Bielany,881f53cb6bfffff,20.938449,52.296101
+szkola,school,Publiczne Liceum Ogólnokształcące im. bł. ks. Romana Archutowskiego,10243253589,punkt,,Bielany,881f53cb09fffff,20.959758,52.296706
+szkola,school,Sealart - Szkoła rysunku,8978019860,punkt,,Bielany,881f5234dbfffff,20.924876,52.280628
+szkola,school,Społeczna Szkoła Podstawowa Integracyjna nr 100 Społecznego Towarzystwa Oświatowego,10243210212,punkt,,Bielany,881f53cb29fffff,20.939368,52.284384
+szkola,school,Społeczna Szkoła Podstawowa nr 13 z Oddziałami Dwujęzycznymi,10237753048,punkt,,Bielany,881f52369bfffff,20.919438,52.313127
+szkola,school,Społeczna Szkoła Podstawowa nr 13 z Oddziałami Dwujęzycznymi im. Lotników Amerykańskich,10237753047,punkt,,Bielany,881f52369bfffff,20.921118,52.312655
+szkola,school,Szkoła Języków Obcych Empik School,6171646397,punkt,,Bielany,881f53cb2dfffff,20.937752,52.274477
+szkola,school,Szkoła Podstawowa Niepubliczna nr 74,10243294287,punkt,,Bielany,881f53cb2bfffff,20.962944,52.279861
+szkola,school,Szkoła Podstawowa Specjalna nr 346 w Szpitalu Bielańskim im. ks. Jerzego Popiełuszki w SPZOZ,7171378775,punkt,,Bielany,881f53cb05fffff,20.950471,52.287287
+szkola,school,Szkoła Podstawowa nr 133 im. Stefana Czarnieckiego,304201746,obszar,0.96,Bielany,881f53cb21fffff,20.949387,52.278461
+szkola,school,Szkoła Podstawowa nr 187 im. Adama Mickiewicza,303007293,obszar,1.13,Bielany,881f53cb23fffff,20.956714,52.273876
+szkola,school,Szkoła Podstawowa nr 209 im. Hanki Ordonówny,43536078,obszar,1.42,Bielany,881f53cb29fffff,20.939422,52.283372
+szkola,school,Szkoła Podstawowa nr 263 im. Powstańców Wielkopolskich,359564229,obszar,1.06,Bielany,881f53cb63fffff,20.94284,52.291488
+szkola,school,Szkoła Podstawowa nr 273 im. dr. Aleksandra Landy,322111188,obszar,1.12,Bielany,881f53cb61fffff,20.933874,52.292407
+szkola,school,Szkoła Podstawowa nr 289 im. Henryka Sienkiewicza,296941617,obszar,1.17,Bielany,881f53cb25fffff,20.938387,52.272056
+szkola,school,Szkoła Podstawowa nr 293 im. Jana Kochanowskiego,80858648,obszar,1.22,Bielany,881f53cb27fffff,20.954163,52.267174
+szkola,school,Szkoła Podstawowa nr 352 im. Jerzego Huberta Wagnera,80851265,obszar,2.48,Bielany,881f5234d3fffff,20.929558,52.272313
+szkola,school,Szkoła Podstawowa nr 369 im. Antoniego Bolesława Dobrowolskiego,352184246,obszar,1.39,Bielany,881f53cb21fffff,20.940603,52.276126
+szkola,school,Szkoła Podstawowa nr 408 im. Zygmunta Sokołowskiego,422598798,obszar,0.65,Bielany,881f5236b5fffff,20.877328,52.287677
+szkola,school,Szkoła Podstawowa nr 53 im. Mariusza Zaruskiego,47193445,obszar,1.62,Bielany,881f53cb3dfffff,20.974193,52.280628
+szkola,school,Szkoła Podstawowa nr 77 im. Wandy Chotomskiej,414442894,obszar,1.25,Bielany,881f523691fffff,20.919996,52.310766
+szkola,school,Szkoła Podstawowa nr 80 im. Marii Kownackiej,80851282,obszar,1.04,Bielany,881f53cb2dfffff,20.931414,52.275732
+szkola,school,Szkoła Podstawowa nr 86,10243228307,punkt,,Bielany,881f53cb3dfffff,20.968468,52.275535
+szkola,school,Szkoła Podstawowa z Oddziałami Integracyjnymi nr 214 im. Henryka Jerzego Chmielewskiego,70977554,obszar,1.12,Bielany,881f53cb21fffff,20.947779,52.27409
+szkola,school,Szkoła Podstawowa z Oddziałami Integracyjnymi nr 223 im. Partyzantów Ziemi Kieleckiej,43536105,obszar,1.25,Bielany,881f53cb29fffff,20.942032,52.284505
+szkola,school,"Szkoła Podstawowa z Oddziałami Integracyjnymi nr 247 im. Kazimierza Lisieckiego ""Dziadka""",379729288,obszar,1.11,Bielany,881f53cb63fffff,20.937635,52.289301
+szkola,school,Technikum nr 25 im. Stanisława Staszica,9355354331,punkt,,Bielany,881f53cb23fffff,20.953874,52.273153
+szkola,school,XCIV Liceum Ogólnokształcące im. gen. Stanisława Maczka,117519670,obszar,2.4,Bielany,881f53cb03fffff,20.97623,52.286035
+szkola,school,XLI Liceum Ogólnokształcące im. Joachima Lelewela,169313481,obszar,1.24,Bielany,881f53cb07fffff,20.970645,52.28312
+szkola,school,XXII Liceum Ogólnokształcące z Oddziałami Dwujęzycznymi im. José Martí,70980317,obszar,0.9,Bielany,881f53cb21fffff,20.948099,52.275008
+szkola,school,XXXIX Liceum Ogólnokształcące im. Lotnictwa Polskiego,337096756,obszar,0.76,Bielany,881f53cb2bfffff,20.954501,52.281893
+szkola,school,Zespół Placówek Opiekuńczo-Wychowawczych,398013643,obszar,0.79,Bielany,881f53cb2dfffff,20.939665,52.275835
+szkola,school,Zespół Szkół nr 18,1120196670,obszar,0.8,Bielany,881f53cb2dfffff,20.939906,52.27714
+szkola,school,Zespół Szkół nr 35,304201747,obszar,1.01,Bielany,881f53cb21fffff,20.948903,52.277525
+szkola,school,Zespół Szkół nr 49,43536095,obszar,2.52,Bielany,881f53cb67fffff,20.932955,52.284213
+szkola,school,American Elite School,12051573131,punkt,,Mokotów,881f5226b7fffff,21.012395,52.165997
+szkola,school,Autorska Szkoła Muzyczna,1505791030,punkt,,Mokotów,881f535345fffff,21.060636,52.186234
+szkola,school,Branżowa Szkoła I Stopnia nr 31,11137256163,punkt,,Mokotów,881f522687fffff,21.002986,52.177292
+szkola,school,Branżowa Szkoła I Stopnia nr 4,11134920219,punkt,,Mokotów,881f5226d1fffff,21.014151,52.205569
+szkola,school,CLI Liceum Ogólnokształcące dla Dorosłych,11137286019,punkt,,Mokotów,881f522681fffff,20.999237,52.189835
+szkola,school,CLII Liceum Ogólnokształcące dla Dorosłych,11137256162,punkt,,Mokotów,881f522687fffff,21.002983,52.177131
+szkola,school,CLIII Liceum Ogólnokształcące dla Dorosłych,11134920217,punkt,,Mokotów,881f5226d1fffff,21.014238,52.205393
+szkola,school,CLV Liceum Ogólnokształcące im. Bohaterek Powstania Warszawskiego,437095695,obszar,1.0,Mokotów,881f52269dfffff,21.026019,52.191652
+szkola,school,CLVI Liceum Ogólnokształcące Integracyjne Przy Łazienkach Królewskich w Warszawie,402793292,obszar,0.74,Mokotów,881f53c9adfffff,21.039986,52.209334
+szkola,school,CLXIV Liceum Ogólnokształcące Mistrzostwa Sportowego,107220275,obszar,0.8,Mokotów,881f53c9a5fffff,21.038592,52.201719
+szkola,school,CXXI Liceum Ogólnokształcące Specjalne w Instytucie Psychiatrii i Neurologii,11132432150,punkt,,Mokotów,881f53536bfffff,21.06354,52.17305
+szkola,school,I Katolickie Liceum Społeczne,11126293871,punkt,,Mokotów,881f53c9a5fffff,21.045787,52.201094
+szkola,school,"I Społeczna Szkoła Podstawowa Specjalna ""Dać Szansę""",11137276471,punkt,,Mokotów,881f522681fffff,21.000961,52.190218
+szkola,school,Kanadyjska Szkoła Podstawowa nr 84,338028343,obszar,0.08,Mokotów,881f522681fffff,20.998748,52.191645
+szkola,school,LXV Liceum Ogólnokształcące im. Gen. Józefa Bema,34444087,obszar,1.36,Mokotów,881f522687fffff,20.999091,52.179573
+szkola,school,LXVIII Liceum Ogólnokształcące im. Tytusa Chałubińskiego,1155916146,obszar,0.25,Mokotów,881f5226d1fffff,21.015008,52.205807
+szkola,school,LXXX Liceum Ogólnokształcące im. Leopolda Staffa,11134870248,punkt,,Mokotów,881f5226d9fffff,21.013997,52.210473
+szkola,school,Liceum Ogólnokształcące,11134868195,punkt,,Mokotów,881f522687fffff,21.00011,52.180884
+szkola,school,Liceum Ogólnokształcące Niepubliczne nr 6,8102919269,punkt,,Mokotów,881f53536dfffff,21.032229,52.172411
+szkola,school,Lighthouse Edukacja,14191847528,punkt,,Mokotów,881f52268bfffff,21.013118,52.192747
+szkola,school,Lycée français de Varsovie,137318802,obszar,0.98,Mokotów,881f53534dfffff,21.057452,52.188315
+szkola,school,Monnet International School,7264835729,punkt,,Mokotów,881f5226d3fffff,21.035346,52.203035
+szkola,school,Multischool International School,686578676,obszar,0.08,Mokotów,881f5226bbfffff,21.020097,52.177256
+szkola,school,MyVinci School & Preschool,1020661397,obszar,0.18,Mokotów,881f53c9a1fffff,21.046061,52.204408
+szkola,school,Ogólnokształcąca Szkoła Muzyczna II St. im. Mariana Sawy,11134863085,punkt,,Mokotów,881f5226d1fffff,21.016158,52.208575
+szkola,school,Ogólnokształcąca Szkoła Muzyczna II St. im. Zenona Brzewskiego,11134863088,punkt,,Mokotów,881f5226d1fffff,21.016292,52.208597
+szkola,school,Państwowa Ogólnokształcąca Szkoła Muzyczna I St. im. Emila Młynarskiego,11134863087,punkt,,Mokotów,881f5226d1fffff,21.015997,52.20855
+szkola,school,Prywatne Liceum Ogólnokształcące Sióstr Nazaretanek z Oddziałami Międzynarodowymi,1295501395,punkt,,Mokotów,881f53c9a9fffff,21.046927,52.210974
+szkola,school,Specjalny Ośrodek Szkolno-Wychowawczy nr 12,11137288052,punkt,,Mokotów,881f522681fffff,20.998719,52.191244
+szkola,school,Społeczna Szkoła Podstawowa nr 14 im. Dzieci Zjednoczonej Europy,283140308,obszar,0.45,Mokotów,881f52268bfffff,21.004554,52.193817
+szkola,school,Społeczna Szkoła Podstawowa nr 26,1200685744,obszar,0.21,Mokotów,881f5226d7fffff,21.025648,52.198823
+szkola,school,Społeczna Szkoła Podstawowa nr 26 STO im. prof. Jigoro Kano,9727844851,punkt,,Mokotów,881f5226ddfffff,21.00266,52.207686
+szkola,school,"Społeczna Szkoła Specjalna Przysposabiająca do Pracy ""Dać Szansę""",11137276470,punkt,,Mokotów,881f522681fffff,21.000625,52.190219
+szkola,school,Szkoła Podstawowa Chocimska,1283709871,obszar,0.09,Mokotów,881f5226ddfffff,21.005048,52.206229
+szkola,school,Szkoła Podstawowa Integracyjna nr 339 im. Raoula Wallenberga,25724371,obszar,1.59,Mokotów,881f535369fffff,21.049465,52.1773
+szkola,school,Szkoła Podstawowa Niepubliczna nr 49,1969474139,punkt,,Mokotów,881f53536dfffff,21.031695,52.172408
+szkola,school,Szkoła Podstawowa Rozwojowa „Chocimska”,1289202308,obszar,0.04,Mokotów,881f5226d1fffff,21.020893,52.203656
+szkola,school,Szkoła Podstawowa Sióstr Nazaretanek z Oddziałami Dwujęzycznymi,7816030400,punkt,,Mokotów,881f53c9a9fffff,21.046751,52.2109
+szkola,school,Szkoła Podstawowa Specjalna Nr 302 w Ośrodku Terapii Dziecka w Środowisku,2845293865,punkt,,Mokotów,881f53c9a5fffff,21.039444,52.196144
+szkola,school,Szkoła Podstawowa Specjalna nr 167,137278992,obszar,1.34,Mokotów,881f535345fffff,21.058809,52.184413
+szkola,school,Szkoła Podstawowa Specjalna nr 22 im. prof. dr hab. med. Eleonory Reicher,11137279927,punkt,,Mokotów,881f522681fffff,20.994191,52.190896
+szkola,school,Szkoła Podstawowa Specjalna nr 251,11137288051,punkt,,Mokotów,881f522681fffff,20.998749,52.191133
+szkola,school,Szkoła Podstawowa Specjalna nr 294 w Instytucie Psychiatrii i Neurologii,11132432149,punkt,,Mokotów,881f53536bfffff,21.063679,52.173094
+szkola,school,Szkoła Podstawowa Sportowa nr 272 im. Eugeniusza Lokajskiego,101854217,obszar,1.04,Mokotów,881f522699fffff,21.033616,52.198257
+szkola,school,Szkoła Podstawowa Zakonu Pijarów im. o. Onufrego Kopczyńskiego,901614388,obszar,0.75,Mokotów,881f53c9bdfffff,21.082225,52.207212
+szkola,school,Szkoła Podstawowa im. Komisji Edukacji Narodowej,11134868196,punkt,,Mokotów,881f522687fffff,20.99968,52.180875
+szkola,school,Szkoła Podstawowa im. Św. Franciszka,701418677,obszar,0.82,Mokotów,881f53c9a5fffff,21.047017,52.200646
+szkola,school,Szkoła Podstawowa nr 103,34505178,obszar,1.33,Mokotów,881f53534dfffff,21.062715,52.190404
+szkola,school,Szkoła Podstawowa nr 103 im. Bohaterów Warszawy,892867399,obszar,1.06,Mokotów,881f535341fffff,21.070936,52.187521
+szkola,school,Szkoła Podstawowa nr 115 im. Wandy Turowskiej,30987571,obszar,1.3,Mokotów,881f535345fffff,21.064195,52.183156
+szkola,school,Szkoła Podstawowa nr 119 im. 3 Berlińskiego Pułku Piechoty,512683105,obszar,0.7,Mokotów,881f522685fffff,20.990956,52.185902
+szkola,school,Szkoła Podstawowa nr 146 im. Janusza Korczaka,228051817,obszar,1.29,Mokotów,881f522683fffff,21.010172,52.18257
+szkola,school,Szkoła Podstawowa nr 157 im. Adama Mickiewicza,25129002,obszar,0.57,Mokotów,881f5226d7fffff,21.018736,52.199903
+szkola,school,Szkoła Podstawowa nr 157 im. Adama Mickiewicza w Warszawie,337389852,obszar,0.77,Mokotów,881f52269dfffff,21.022072,52.193482
+szkola,school,Szkoła Podstawowa nr 190 im. Orła Białego,47271675,obszar,1.34,Mokotów,881f53c9a9fffff,21.050937,52.20947
+szkola,school,Szkoła Podstawowa nr 191 im. Józefa Ignacego Kraszewskiego,968506472,obszar,1.04,Mokotów,881f5226b5fffff,21.005738,52.168193
+szkola,school,Szkoła Podstawowa nr 20 im. Jana Gutenberga Fundacji Szkolnej,374373146,obszar,0.32,Mokotów,881f5226bdfffff,21.000333,52.172107
+szkola,school,Szkoła Podstawowa nr 201,11126355643,punkt,,Mokotów,881f5226d3fffff,21.030319,52.200611
+szkola,school,Szkoła Podstawowa nr 202 im. Kazimierza Górskiego,35017914,obszar,1.17,Mokotów,881f52268bfffff,21.005381,52.19045
+szkola,school,Szkoła Podstawowa nr 202 im. Kazimierza Górskiego,35017916,obszar,1.18,Mokotów,881f52268bfffff,21.006434,52.192189
+szkola,school,Szkoła Podstawowa nr 205 im. Żołnierzy Powstania Warszawskiego,320121724,obszar,1.24,Mokotów,881f522681fffff,20.996411,52.19154
+szkola,school,Szkoła Podstawowa nr 212 im. Krystyny Krahelskiej,428800818,obszar,1.38,Mokotów,881f522693fffff,21.048833,52.183158
+szkola,school,Szkoła Podstawowa nr 271 im. 11 Listopada,30667167,obszar,1.2,Mokotów,881f5226bdfffff,21.008706,52.173753
+szkola,school,Szkoła Podstawowa nr 3 im. Dzieci Powstania Warszawskiego,11126386546,punkt,,Mokotów,881f53c987fffff,21.073625,52.211847
+szkola,school,Szkoła Podstawowa nr 307 im. Króla Jana III Sobieskiego,25724373,obszar,2.05,Mokotów,881f53536bfffff,21.055338,52.176303
+szkola,school,Szkoła Podstawowa nr 33 im. Wojsk Obrony Powietrznej Kraju,240089458,obszar,1.2,Mokotów,881f522695fffff,21.027658,52.184183
+szkola,school,Szkoła Podstawowa nr 394,220537261,obszar,0.57,Mokotów,881f52268bfffff,21.008303,52.193508
+szkola,school,Szkoła Podstawowa nr 46 im. Stefana Starzyńskiego,34869675,obszar,2.41,Mokotów,881f5226bbfffff,21.028585,52.172534
+szkola,school,Szkoła Podstawowa nr 46 im. Stefana Starzyńskiego,34870212,obszar,1.71,Mokotów,881f5226bbfffff,21.028728,52.174565
+szkola,school,Szkoła Podstawowa nr 69 im. Marii Skłodowskiej-Curie,283749917,obszar,1.33,Mokotów,881f5226d5fffff,21.009835,52.197966
+szkola,school,Szkoła Podstawowa nr 70 im. Bohaterów Monte Cassino,116932157,obszar,0.62,Mokotów,881f5226ddfffff,21.001943,52.208394
+szkola,school,Szkoła Podstawowa nr 85 im. Benito Juareza,977732942,obszar,0.6,Mokotów,881f5226d1fffff,21.018705,52.207307
+szkola,school,Szkoła Podstawowa nr 98 im. Lucy Maud Montgomery,316386071,obszar,0.99,Mokotów,881f5226d3fffff,21.02746,52.205188
+szkola,school,Szkoła Specjalna Przysposabiająca do Pracy nr 7,11137288050,punkt,,Mokotów,881f522681fffff,20.998779,52.191018
+szkola,school,Technikum Ekonomiczne nr 8 im. prof. Witolda Kieżuna,35017911,obszar,0.74,Mokotów,881f52268bfffff,21.009365,52.192697
+szkola,school,Technikum Hotelarsko-Turystyczno-Gastronomiczne nr 21,154400552,obszar,1.19,Mokotów,881f53c9a5fffff,21.04426,52.203216
+szkola,school,Technikum Mechatroniczne nr 1 im. Piotra Drzewieckiego,11134870246,punkt,,Mokotów,881f5226d9fffff,21.014144,52.210079
+szkola,school,Technikum Odzieżowe i Fryzjerskie im. Marii Bratkowskiej,11134920220,punkt,,Mokotów,881f5226d1fffff,21.014072,52.205731
+szkola,school,Technikum Ogrodnicze,11137286021,punkt,,Mokotów,881f522681fffff,20.999177,52.190104
+szkola,school,The British School Warsaw,137318801,obszar,1.69,Mokotów,881f53534dfffff,21.05577,52.189081
+szkola,school,The Canadian Middle School of Warsaw,338028344,obszar,0.08,Mokotów,881f522689fffff,20.997501,52.193041
+szkola,school,VI Liceum Ogólnokształcące im. Tadeusza Reytana,34871215,obszar,1.81,Mokotów,881f5226d7fffff,21.015284,52.200101
+szkola,school,X Liceum Ogólnokształcące im. Królowej Jadwigi,34573226,obszar,0.99,Mokotów,881f52269dfffff,21.022657,52.190352
+szkola,school,XLII Liceum Ogólnokształcące im. Marii Konopnickiej,46194281,obszar,0.94,Mokotów,881f5226d1fffff,21.017008,52.205046
+szkola,school,XLIII Liceum Ogólnokształcące im. Kazimierza Wielkiego,222770925,obszar,1.03,Mokotów,881f522695fffff,21.018582,52.184598
+szkola,school,XLIV Liceum Ogólnokształcące im. Stefana Banacha,101854234,obszar,0.97,Mokotów,881f5226d3fffff,21.032746,52.20218
+szkola,school,XLIX Liceum Ogólnokształcące im. Johanna Wolfganga Goethego,46142151,obszar,0.9,Mokotów,881f52268bfffff,21.010708,52.190331
+szkola,school,XXVIII Liceum Ogólnokształcące im. Jana Kochanowskiego,25354207,obszar,1.36,Mokotów,881f5226d5fffff,21.003984,52.196904
+szkola,school,Zespół Szkolno-Przedszkolny nr 11,118024922,obszar,1.35,Mokotów,881f53536dfffff,21.039321,52.173594
+szkola,school,Zespół Szkół Specjalnych nr 96 w Instytucie Psychiatrii i Neurologii,11132432151,punkt,,Mokotów,881f53536bfffff,21.06342,52.173009
+szkola,school,Zespół Szkół nr 59,137276930,obszar,1.37,Mokotów,881f535345fffff,21.055038,52.184659
+szkola,school,,46193541,obszar,1.32,Mokotów,881f5226d1fffff,21.017047,52.203075
+szkola,school,,107236998,obszar,2.13,Mokotów,881f53c9adfffff,21.0409,52.204645
+szkola,school,,374372553,obszar,1.57,Mokotów,881f5226bdfffff,21.001656,52.171394
+szkola,school,,1176666356,obszar,0.07,Mokotów,881f535369fffff,21.049006,52.177199
+szkola,school,Akademickie Liceum Ogólnokształcące przy PJATK,11167756988,punkt,,Ochota,881f53c927fffff,20.970578,52.214414
+szkola,school,Branżowa Szkoła Samochodowa I stopnia nr 2,9067088679,punkt,,Ochota,881f53c927fffff,20.966674,52.214045
+szkola,school,"CLX Liceum Ogólnokształcące im. gen. dyw. Stefana Roweckiego ""Grota""",30322650,obszar,1.17,Ochota,881f5226c1fffff,20.975575,52.206693
+szkola,school,Centrum Kształcenia Ustawicznego nr 2,94558405,obszar,1.06,Ochota,881f53c927fffff,20.967582,52.21552
+szkola,school,Cosinus,9917378901,punkt,,Ochota,881f53c93dfffff,20.990528,52.224759
+szkola,school,I Społeczne Liceum Ogólnokształcące z Oddziałami Międzynarodowymi imienia Jam Saheba Digvijay,30613994,obszar,0.59,Ochota,881f53c935fffff,20.988968,52.221128
+szkola,school,KIBERone,9155099790,punkt,,Ochota,881f522613fffff,20.956902,52.201759
+szkola,school,LXIX Liceum Ogólnokształcące z Oddziałami Integracyjnymi im. Bohaterów Powstania Warszawskiego,30322623,obszar,1.17,Ochota,881f5226cdfffff,20.971217,52.208122
+szkola,school,Niepubliczny Ośrodek Rewalidacyjno Wychowawczy dla Dzieci i Młodzieży Niewidomej i Słabowidzące,30300273,obszar,0.55,Ochota,881f53c923fffff,20.979817,52.217455
+szkola,school,Prywatna Szkoła Podstawowa nr 51 im. Jana Brzechwy,1003260213,obszar,0.17,Ochota,881f5226c5fffff,20.965203,52.200239
+szkola,school,Szkoła Baristów Colours of Coffee,7190820567,punkt,,Ochota,881f5226c7fffff,20.981524,52.199398
+szkola,school,"Szkoła Podstawowa Niepubliczna nr 81 Fundacji ""Rodzice Dzieciom""",28550811,obszar,0.47,Ochota,881f53c931fffff,21.000633,52.21959
+szkola,school,Szkoła Podstawowa Specjalna nr 177,1003743343,obszar,0.79,Ochota,881f53c927fffff,20.967685,52.211797
+szkola,school,Szkoła Podstawowa Specjalna nr 287 im. Józefa Polikarpa Brudzińskiego,11166984137,punkt,,Ochota,881f5226c1fffff,20.984056,52.20718
+szkola,school,Szkoła Podstawowa Specjalna nr 302,11167015767,punkt,,Ochota,881f53c931fffff,21.001477,52.222422
+szkola,school,Szkoła Podstawowa Specjalna nr 327 im. dr Anny Lechowicz,28431049,obszar,0.6,Ochota,881f53c923fffff,20.97716,52.216557
+szkola,school,Szkoła Podstawowa Thames British School,45107983,obszar,0.29,Ochota,881f53c935fffff,20.984397,52.216573
+szkola,school,Szkoła Podstawowa nr 10 im. Grzegorza Piramowicza,34876973,obszar,0.92,Ochota,881f5226c7fffff,20.981058,52.201031
+szkola,school,Szkoła Podstawowa nr 152 im. Marii Dąbrowskiej w Warszawie,1003661946,obszar,1.72,Ochota,881f5226cdfffff,20.968312,52.20491
+szkola,school,Szkoła Podstawowa nr 174,11166985128,punkt,,Ochota,881f53c923fffff,20.981852,52.219388
+szkola,school,Szkoła Podstawowa nr 175 im. Heleny Marusarzówny,30831253,obszar,1.08,Ochota,881f5226cdfffff,20.966481,52.208509
+szkola,school,Szkoła Podstawowa nr 23 imienia Edwarda Szymańskiego,28407895,obszar,0.63,Ochota,881f53c935fffff,20.992904,52.216998
+szkola,school,Szkoła Podstawowa nr 264 im. Gabrieli Mistral,147283857,obszar,1.23,Ochota,881f5226c5fffff,20.972557,52.203073
+szkola,school,Szkoła Podstawowa nr 280 im. Tytusa Chałubinskiego,63514602,obszar,1.29,Ochota,881f5226c7fffff,20.978329,52.194962
+szkola,school,Szkoła Podstawowa nr 97 im. Polskich Noblistek,382223472,obszar,1.18,Ochota,881f53c93dfffff,20.983192,52.221845
+szkola,school,Szkoła Podstawowa z Oddziałami Integracyjnymi nr 61 im. Juliana Przybosia,1114716915,obszar,0.6,Ochota,881f5226c9fffff,20.973941,52.215278
+szkola,school,Szkoła Policealna nr 16,13130816057,punkt,,Ochota,881f53c927fffff,20.967039,52.213915
+szkola,school,Technikum Samochodowe nr 1 im. Romana Macieja Pijanowskiego,9067088682,punkt,,Ochota,881f53c927fffff,20.966287,52.214164
+szkola,school,Technikum nr 7,9067088680,punkt,,Ochota,881f53c927fffff,20.967387,52.213805
+szkola,school,VII Liceum Ogólnokształcące im. Juliusza Słowackiego,28407899,obszar,1.25,Ochota,881f53c937fffff,20.997102,52.217353
+szkola,school,XIV Liceum Ogólnokształcące imienia Stanisława Staszica,28407940,obszar,1.36,Ochota,881f53c931fffff,21.003086,52.219596
+szkola,school,XLVIII Liceum Ogólnokształcące im. Edwarda Dembowskiego,381668288,obszar,1.08,Ochota,881f53c923fffff,20.975553,52.219671
+szkola,school,XXI Liceum Ogólnokształcące im. Hugona Kołłątaja,178146056,obszar,2.08,Ochota,881f5226c9fffff,20.978384,52.209681
+szkola,school,Zespół Szkół Samochodowych i Licealnych nr 1,13130816059,punkt,,Ochota,881f53c927fffff,20.966473,52.214112
+szkola,school,Zespół Szkół im. inż. Stanisława Wysockiego,13130816058,punkt,,Ochota,881f53c927fffff,20.967211,52.213857
+szkola,school,Zespół Szkół nr 26,450307512,obszar,1.5,Ochota,881f5226cdfffff,20.965525,52.205982
+szkola,school,Zespół Szkół nr 4 im. Eugeniusza Kwiatkowskiego,429938507,obszar,0.86,Ochota,881f53c927fffff,20.969518,52.216359
+szkola,school,"""Wonderful Years School"" Prywatna Szkoła Podstawowa",7813600063,punkt,,Praga-Południe,881f53c981fffff,21.067984,52.225504
+szkola,school,Branżowa Szkoła I Stopnia Specjalna nr 63,9631543568,punkt,,Praga-Południe,881f53c9dbfffff,21.094188,52.246502
+szkola,school,Branżowa Szkoła I Stopnia nr 20,9631555429,punkt,,Praga-Południe,881f53c9d1fffff,21.092348,52.242272
+szkola,school,Branżowa Szkoła Spożywczo-Gastronomiczna I Stopnia,9631906586,punkt,,Praga-Południe,881f53c9d3fffff,21.100452,52.237087
+szkola,school,CXLVII Liceum Ogólnokształcące dla Dorosłych,9631906585,punkt,,Praga-Południe,881f53c9d3fffff,21.100343,52.23689
+szkola,school,Centrum Kształcenia Ustawicznego nr 5,28937096,obszar,0.68,Praga-Południe,881f53c9c9fffff,21.055867,52.247705
+szkola,school,Centrum Kształcenia Zawodowego i Ustawicznego w Warszawie,30774903,obszar,0.75,Praga-Południe,881f53c9ddfffff,21.081188,52.242253
+szkola,school,Centrum Kształcenia Zawodowego nr 1,1047063910,obszar,2.62,Praga-Południe,881f53c9c9fffff,21.054939,52.248655
+szkola,school,Dwujęzyczna Społeczna Szkoła Podstawowa nr 5,1047199151,obszar,0.09,Praga-Południe,881f53c9c7fffff,21.057169,52.228843
+szkola,school,IV Liceum Ogólnokształcące im. Adama Mickiewicza,30683432,obszar,1.16,Praga-Południe,881f53c9c7fffff,21.061006,52.230065
+szkola,school,Korczak. Szkoła Podstawowa Montessori,9629109855,punkt,,Praga-Południe,881f53c835fffff,21.059883,52.248898
+szkola,school,Krajowe Centrum Metodyczne Kształcenia i Egzaminowania Spawaczy,1052681092,obszar,0.07,Praga-Południe,881f53c8e5fffff,21.10181,52.250196
+szkola,school,LXXII Liceum Ogólnokształcące im. gen. Jakuba Jasińskiego,26172468,obszar,1.0,Praga-Południe,881f53c9c9fffff,21.054234,52.247837
+szkola,school,Liceum Ogólnokształcące dla Dorosłych Elita,9631478831,punkt,,Praga-Południe,881f53c9d5fffff,21.079248,52.237534
+szkola,school,Lycée français de Varsovie,35014644,obszar,0.78,Praga-Południe,881f53c9c5fffff,21.048598,52.233436
+szkola,school,"Niepubliczna Szkoła Podstawowa ""International Trilingual School Of Warsaw""",497451850,obszar,0.03,Praga-Południe,881f53c9c7fffff,21.059882,52.233657
+szkola,school,"Niepubliczna Szkoła Podstawowa ""International Trilingual School Of Warsaw""",1047494354,obszar,0.17,Praga-Południe,881f53c9c7fffff,21.05516,52.234346
+szkola,school,"Niepubliczna Szkoła Podstawowa ""Trampoline""",1047200550,obszar,0.2,Praga-Południe,881f53c9c7fffff,21.052075,52.233148
+szkola,school,Prywatna Szkoła Podstawowa nr 114,1047482631,obszar,0.03,Praga-Południe,881f53c9dbfffff,21.103188,52.245548
+szkola,school,Społeczna Szkoła Podstawowa nr 10,566371258,obszar,0.04,Praga-Południe,881f53c8a5fffff,21.111791,52.235393
+szkola,school,Szkoła Otwarta - Niepubliczna Szkoła Podstawowa w Warszawie,1117677732,obszar,0.11,Praga-Południe,881f53c9c7fffff,21.055796,52.228739
+szkola,school,Szkoła Podstawowa Integracyjna nr 135 im. Marii Kownackiej,35014316,obszar,1.26,Praga-Południe,881f53c98bfffff,21.080904,52.229185
+szkola,school,Szkoła Podstawowa Specjalna nr 240,1047204777,obszar,1.14,Praga-Południe,881f53c837fffff,21.072057,52.248476
+szkola,school,Szkoła Podstawowa Specjalna nr 282,9629329516,punkt,,Praga-Południe,881f53c9c3fffff,21.062506,52.234643
+szkola,school,Szkoła Podstawowa Specjalna nr 348,9631543569,punkt,,Praga-Południe,881f53c9d9fffff,21.093855,52.246511
+szkola,school,Szkoła Podstawowa nr 120 z Oddziałami Integracyjnymi,30774960,obszar,0.11,Praga-Południe,881f53c9ddfffff,21.079191,52.240382
+szkola,school,Szkoła Podstawowa nr 141 im. majora Henryka Sucharskiego,26182090,obszar,0.94,Praga-Południe,881f53c8e5fffff,21.095383,52.248252
+szkola,school,Szkoła Podstawowa nr 143 im. Stefana Starzyńskiego,29560435,obszar,0.95,Praga-Południe,881f53c989fffff,21.063965,52.229475
+szkola,school,Szkoła Podstawowa nr 163,29219722,obszar,0.83,Praga-Południe,881f53c9d3fffff,21.105233,52.237423
+szkola,school,Szkoła Podstawowa nr 168 im. Czesława Niemena,380812145,obszar,0.99,Praga-Południe,881f53c989fffff,21.065836,52.232714
+szkola,school,Szkoła Podstawowa nr 185 im. UNICEF,25620430,obszar,0.98,Praga-Południe,881f53c99dfffff,21.087222,52.224729
+szkola,school,Szkoła Podstawowa nr 215 im. Piotra Wysockiego,33686466,obszar,1.32,Praga-Południe,881f53c8adfffff,21.113202,52.243992
+szkola,school,Szkoła Podstawowa nr 246 im. Tadeusza Kościuszki,29275879,obszar,1.23,Praga-Południe,881f53c9d1fffff,21.092974,52.237785
+szkola,school,Szkoła Podstawowa nr 255 im. Cypriana Kamila Norwida,26172458,obszar,0.8,Praga-Południe,881f53c9cbfffff,21.065124,52.246983
+szkola,school,"Szkoła Podstawowa nr 279 im. Batalionów AK ""Gustaw"" I ""Harnaś""",35014344,obszar,1.05,Praga-Południe,881f53c9d5fffff,21.07971,52.231525
+szkola,school,Szkoła Podstawowa nr 312 im. Ewy Szelburg-Zarembiny,25720027,obszar,2.35,Praga-Południe,881f53c999fffff,21.100562,52.227201
+szkola,school,Szkoła Podstawowa nr 312 im. Ewy Szelburg-Zarembiny,30168482,obszar,0.95,Praga-Południe,881f53c99dfffff,21.098094,52.225971
+szkola,school,Szkoła Podstawowa nr 373 im. Ignacego Jana Paderewskiego,30683646,obszar,0.61,Praga-Południe,881f53c9c1fffff,21.058062,52.237619
+szkola,school,Szkoła Podstawowa nr 374,30215512,obszar,0.89,Praga-Południe,881f53c8e7fffff,21.108733,52.247448
+szkola,school,Szkoła Podstawowa nr 397 im. Bohaterów Olszynki Grochowskiej,35014273,obszar,1.05,Praga-Południe,881f53c989fffff,21.068847,52.227347
+szkola,school,Szkoła Podstawowa nr 401 im. Jadwigi Andegaweńskiej,31059994,obszar,1.19,Praga-Południe,881f53c9d3fffff,21.106384,52.236059
+szkola,school,Szkoła Podstawowa nr 402 im. Haliny Konopackiej,995961838,obszar,0.29,Praga-Południe,881f53c9d7fffff,21.097343,52.231553
+szkola,school,Szkoła Podstawowa nr 60 im. Powstania Listopadowego,28227348,obszar,0.11,Praga-Południe,881f53c9ddfffff,21.072361,52.244054
+szkola,school,Szkoła Podstawowa nr 72 im. Przyjaciół Grochowa,35050465,obszar,0.68,Praga-Południe,881f53c9d9fffff,21.082092,52.249522
+szkola,school,Technikum Gastronomiczno-Hotelarskie nr 2,9631555428,punkt,,Praga-Południe,881f53c9d1fffff,21.091933,52.242076
+szkola,school,Technikum Spożywczo-Gastronomiczne,9631906587,punkt,,Praga-Południe,881f53c9d3fffff,21.100562,52.237285
+szkola,school,XCIX Liceum Ogólnokształcące z Oddziałami Dwujęzycznymi im. Zbigniewa Herberta,31060125,obszar,1.04,Praga-Południe,881f53c9d5fffff,21.082403,52.23793
+szkola,school,XIX Liceum Ogólnokształcące im. Powstańców Warszawy,28227347,obszar,0.11,Praga-Południe,881f53c9ddfffff,21.071353,52.243986
+szkola,school,XLVII Liceum Ogólnokształcące,30774958,obszar,0.11,Praga-Południe,881f53c9ddfffff,21.079004,52.240937
+szkola,school,XXIII Liceum Ogólnokształcące im. Marii Skłodowskiej-Curie,1288112282,obszar,1.15,Praga-Południe,881f53c8a1fffff,21.126114,52.238717
+szkola,school,XXXV Liceum Ogólnokształcące im. Bolesława Prusa,30678639,obszar,1.12,Praga-Południe,881f53c9c7fffff,21.051675,52.231054
+szkola,school,Zespół Szkół Specjalnych nr 89,328841813,obszar,0.35,Praga-Południe,881f53c9c9fffff,21.048588,52.248674
+szkola,school,Zespół Szkół Specjalnych nr 90,933451941,obszar,0.42,Praga-Południe,881f53c9dbfffff,21.097424,52.244846
+szkola,school,Zespół Szkół nr 12,317237681,obszar,1.09,Praga-Południe,881f53c837fffff,21.077067,52.2472
+szkola,school,Zespół Szkół nr 21,30683647,obszar,1.18,Praga-Południe,881f53c9c3fffff,21.05934,52.236412
+szkola,school,Zespół Szkół nr 5,31060085,obszar,0.62,Praga-Południe,881f53c9d1fffff,21.087251,52.239616
+szkola,school,Zespół Szkół Łączności w Warszawie,35014281,obszar,1.97,Praga-Południe,881f53c989fffff,21.067002,52.228798
+szkola,school,,28227346,obszar,1.91,Praga-Południe,881f53c9ddfffff,21.072028,52.244295
+szkola,school,,30957329,obszar,1.34,Praga-Południe,881f53c98bfffff,21.087633,52.226964
+szkola,school,,441864703,obszar,1.0,Praga-Południe,881f53c9ddfffff,21.079803,52.240674
+szkola,school,,1047423306,obszar,0.13,Praga-Południe,881f53c9d9fffff,21.080733,52.246119
+szkola,school,,1415726157,obszar,2.47,Praga-Południe,881f53c9d7fffff,21.097147,52.231976
+szkola,school,Akademickie Liceum Ogólnokształcące Akademii Finansów i Biznesu Vistula,9633255676,punkt,,Praga-Północ,881f53c83dfffff,21.057106,52.257457
+szkola,school,Dwujęzyczne Liceum Ogólnokształcące Wyspa JP2,12357035867,punkt,,Praga-Północ,881f53c861fffff,21.01462,52.272793
+szkola,school,Filia Szkoły Podstawowej nr 258 w Warszawie,102319653,obszar,0.61,Praga-Północ,881f53c821fffff,21.035838,52.261025
+szkola,school,Inventorium,952192535,punkt,,Praga-Północ,881f53c827fffff,21.0379,52.249686
+szkola,school,LXXVI Liceum Ogólnokształcące,238871486,obszar,0.87,Praga-Północ,881f53c82bfffff,21.039725,52.261963
+szkola,school,Liceum Ogólnokształcące dla Dorosłych,9644366655,punkt,,Praga-Północ,881f53c821fffff,21.03244,52.258381
+szkola,school,Niepubliczna Szkoła Podstawowa Promitis,9646785945,punkt,,Praga-Północ,881f53c82bfffff,21.045913,52.259859
+szkola,school,Niepubliczna Szkoła Podstawowa Wyspa JP2,12357072520,punkt,,Praga-Północ,881f53c861fffff,21.014447,52.273059
+szkola,school,Państwowa Szkoła Muzyczna I st. nr 2,245608389,obszar,0.5,Praga-Północ,881f53c829fffff,21.035692,52.262786
+szkola,school,Prywatne Centrum Kształcenia Zawodowego,9633349475,punkt,,Praga-Północ,881f53c827fffff,21.044432,52.250698
+szkola,school,Prywatne Technikum Weterynarii nr 1,9633349474,punkt,,Praga-Północ,881f53c827fffff,21.044359,52.250745
+szkola,school,Sportowe Liceum Ogólnokształcące Nr 67 MGM,13728076703,punkt,,Praga-Północ,881f53cb17fffff,21.006356,52.288248
+szkola,school,Społeczna Szkoła Podstawowa,5795676836,punkt,,Praga-Północ,881f53c821fffff,21.037765,52.253679
+szkola,school,Społeczne Liceum Ogólnokształcące nr 3,5795676834,punkt,,Praga-Północ,881f53c827fffff,21.03754,52.25359
+szkola,school,Szkoła Podstawowa nr 127,238868057,obszar,0.87,Praga-Północ,881f53c82bfffff,21.041572,52.263103
+szkola,school,Szkoła Podstawowa nr 258,1049140678,obszar,0.57,Praga-Północ,881f53c821fffff,21.032297,52.259342
+szkola,school,Szkoła Podstawowa nr 395,1092147609,obszar,0.51,Praga-Północ,881f53c825fffff,21.030574,52.250363
+szkola,school,Szkoła Podstawowa nr 50,131641817,obszar,0.96,Praga-Północ,881f53c827fffff,21.036163,52.250017
+szkola,school,Szkoła Podstawowa z Oddziałami Integracyjnymi nr 30,126236011,obszar,0.4,Praga-Północ,881f53c823fffff,21.049895,52.255046
+szkola,school,Szkoła Podstawowa z Oddziałami Integracyjnymi nr 354,237087861,obszar,0.54,Praga-Północ,881f53c83dfffff,21.057251,52.259404
+szkola,school,Szkoła Podstawowa z Oddziałami Integracyjnymi nr 73,126236009,obszar,0.78,Praga-Północ,881f53c821fffff,21.03915,52.253857
+szkola,school,VIII Liceum Ogólnokształcące,126238286,obszar,0.54,Praga-Północ,881f53c821fffff,21.033717,52.25362
+szkola,school,Wielokulturowe Liceum Humanistyczne im. Jacka Kuronia,1084344546,punkt,,Praga-Północ,881f53c827fffff,21.035682,52.252234
+szkola,school,Zespół Szkolno-Przedszkolny nr 10,36312282,obszar,0.55,Praga-Północ,881f53c823fffff,21.0486,52.255738
+szkola,school,Zespół Szkoł nr 14,242865457,obszar,1.04,Praga-Północ,881f53c829fffff,21.030965,52.264447
+szkola,school,Zespół Szkół Muzycznych I st. im. Stanisława Moniuszki,126351730,obszar,0.42,Praga-Północ,881f53c823fffff,21.054202,52.257045
+szkola,school,Zespół Szkół Specjalnych nr 38,242865467,obszar,0.77,Praga-Północ,881f53c829fffff,21.032173,52.265511
+szkola,school,Zespół Szkół nr 11,1049140677,obszar,0.58,Praga-Północ,881f53c821fffff,21.033207,52.259084
+szkola,school,Zespół Szkół nr 14 w Warszawie,1049455567,obszar,1.44,Praga-Północ,881f53c82dfffff,21.026618,52.262385
+szkola,school,Zespół Szkół nr 33 w Warszawie,229059786,obszar,1.57,Praga-Północ,881f53c821fffff,21.033422,52.257891
+szkola,school,Zespół Szkół nr 40,237838616,obszar,1.14,Praga-Północ,881f53c83dfffff,21.06078,52.257703
+szkola,school,Zespół Szkół nr 73 w Warszawie,1049455568,obszar,0.49,Praga-Północ,881f53c82dfffff,21.025335,52.262377
+szkola,school,LI Liceum Ogólnokształcące,9622472994,punkt,,Rembertów,881f53c8d7fffff,21.166739,52.265421
+szkola,school,Ogólnokształcąca Szkoła Muzyczna I stopnia im. Ignacego Jana Paderewskiego,7171248363,punkt,,Rembertów,881f53c8abfffff,21.135611,52.246836
+szkola,school,Prywatna Szkoła Podstawowa im. Zofii i Jędrzeja Moraczewskich,1046348755,obszar,0.18,Rembertów,881f53c89dfffff,21.167,52.25763
+szkola,school,Publiczna Szkoła Podstawowa STO im. rtm. Witolda Pileckiego,960839076,obszar,1.0,Rembertów,881f53c8d7fffff,21.170454,52.266313
+szkola,school,Szkoła Podstawowa Specjalna nr 131,7170380727,punkt,,Rembertów,881f53c88dfffff,21.132407,52.259461
+szkola,school,Szkoła Podstawowa nr 189 im. Marszałka Józefa Piłsudskiego,931065451,obszar,0.49,Rembertów,881f53c895fffff,21.163966,52.252938
+szkola,school,Szkoła Podstawowa nr 217 im. Obrońców Radiostacji Armii Krajowej,960898718,obszar,0.85,Rembertów,881f53c88bfffff,21.156433,52.263151
+szkola,school,Szkoła Podstawowa nr 254 im. Gen Franciszka Żymirskiego,7171248362,punkt,,Rembertów,881f53c8abfffff,21.1359,52.246889
+szkola,school,Szkoła Podstawowa nr 376 im. Bohaterów Westrplatte,960881449,obszar,1.22,Rembertów,881f53c891fffff,21.177211,52.258574
+szkola,school,CXXXVII Liceum Ogólnokształcące z Oddziałami Dwujęzycznymi im Roberta Schumana,30775677,obszar,1.14,Targówek,881f53c805fffff,21.044719,52.272075
+szkola,school,Centrum Kwalifikacji Zawodowych Zacisze,9719135198,punkt,,Targówek,881f53c857fffff,21.074416,52.285139
+szkola,school,Liceum Ogólnokształcące dla Dorosłych Zacisze,9719135199,punkt,,Targówek,881f53c857fffff,21.074391,52.285107
+szkola,school,Niepubliczna Integracyjna Szkoła Podstawowa,9669661698,punkt,,Targówek,881f53c839fffff,21.06826,52.266177
+szkola,school,Polonijne Liceum Ogólnokształcące Niepubliczne „Klasyk”,9669663848,punkt,,Targówek,881f53c83bfffff,21.084973,52.261795
+szkola,school,Prywatna Szkoła Podstawowa nr 108,9719055648,punkt,,Targówek,881f53c851fffff,21.079171,52.290925
+szkola,school,Prywatna Szkoła Podstawowa nr 62 im. Joanny Kolasińskiej,149583123,obszar,0.13,Targówek,881f53c84dfffff,21.02021,52.293887
+szkola,school,Szkoła Podstawowa Niepubliczna nr 38 z Oddziałami Integracyjnymi im. Ireny Sendlerowej,149583124,obszar,0.2,Targówek,881f53c84dfffff,21.020624,52.294052
+szkola,school,Szkoła Podstawowa Zielona Szkoła w Folwarku,9984029737,punkt,,Targówek,881f53c843fffff,21.051066,52.288154
+szkola,school,Szkoła Podstawowa nr 114 im. Jędrzeja Cierniaka,135622763,obszar,0.96,Targówek,881f53c801fffff,21.05394,52.272222
+szkola,school,Szkoła Podstawowa nr 277 im. Elizy Orzeszkowej,301018065,obszar,1.18,Targówek,881f53c841fffff,21.037962,52.295334
+szkola,school,Szkoła Podstawowa nr 28 im. Stefana Żeromskiego,135622762,obszar,1.35,Targówek,881f53c80dfffff,21.045403,52.274033
+szkola,school,Szkoła Podstawowa nr 285 im. Jana Marcina Szancera,301105976,obszar,1.21,Targówek,881f53c849fffff,21.040741,52.298245
+szkola,school,Szkoła Podstawowa nr 298 im. Jana Kasprowicza,334930689,obszar,1.28,Targówek,881f53c84dfffff,21.02532,52.291648
+szkola,school,"Szkoła Podstawowa nr 377 im. mjr. Henryka Dobrzańskiego ""Hubala""",29448125,obszar,1.8,Targówek,881f53c801fffff,21.060829,52.274488
+szkola,school,Szkoła Podstawowa nr 378 im. Ignacego Jana Paderewskiego,166934788,obszar,1.36,Targówek,881f53c845fffff,21.02966,52.287425
+szkola,school,Szkoła Podstawowa nr 380 im. Jana Pawła II,1047272787,obszar,2.68,Targówek,881f53c84bfffff,21.046836,52.294816
+szkola,school,Szkoła Podstawowa nr 398 im. Magdaleny Abakanowicz,720625953,obszar,2.0,Targówek,881f53c809fffff,21.050763,52.282051
+szkola,school,Szkoła Podstawowa nr 42 im. Konstantego Ildefonsa Gałczyńskiego,335761047,obszar,1.32,Targówek,881f53c847fffff,21.037648,52.28594
+szkola,school,Szkoła Podstawowa nr 52 im. Macieja Aleksego Dawidowskiego “Alka”,381319829,obszar,1.13,Targówek,881f53c809fffff,21.057465,52.280976
+szkola,school,Szkoła Podstawowa nr 58 im. Tadeusza Gajcego,390603591,obszar,1.66,Targówek,881f53c839fffff,21.068269,52.267607
+szkola,school,Szkoła Podstawowa nr 84 im. Waleriana Łukasińskiego,381317220,obszar,1.23,Targówek,881f53c857fffff,21.071955,52.284463
+szkola,school,Szkoła Podstawowa z Oddziałami Integracyjnymi nr 275 im. Artura Oppmana,1075123743,obszar,1.2,Targówek,881f53c84dfffff,21.024133,52.293459
+szkola,school,XIII Liceum Ogólnokształcące z Oddziałami Dwujęzycznymi im. Pułkownika Leopolda Lisa-Kuli,390524214,obszar,1.0,Targówek,881f53c805fffff,21.041885,52.26869
+szkola,school,XLVI Liceum Ogólnokształcące im. Stefana Czarnieckiego,394995182,obszar,1.19,Targówek,881f53c847fffff,21.044547,52.28666
+szkola,school,"Zespół Szkół ""Toruńska""",750696303,obszar,0.52,Targówek,881f53cb1bfffff,21.016595,52.29588
+szkola,school,Zespół Szkół nr 128,102357576,obszar,1.13,Targówek,881f53c84dfffff,21.030531,52.296493
+szkola,school,Zespół Szkół nr 34 im. Mieszka I,1563880528,obszar,1.39,Targówek,881f53cb13fffff,21.015387,52.292013
+szkola,school,Zespół Szkół z Oddziałami Integracyjnymi nr 41,166918147,obszar,1.02,Targówek,881f53c845fffff,21.023894,52.285963
+szkola,school,,1038852440,obszar,0.98,Targówek,881f53c86bfffff,21.026303,52.278509
+szkola,school,Branżowa Szkoła I Stopnia nr 37 im. Jana Karskiego,11148154091,punkt,,Ursus,881f52262bfffff,20.89952,52.195945
+szkola,school,KIBERone,9155099791,punkt,,Ursus,881f522623fffff,20.90565,52.189136
+szkola,school,LVI Liceum Ogólnokształcące im. Rotmistrza Witolda Pileckiego,9680928361,punkt,,Ursus,881f52262bfffff,20.898626,52.196259
+szkola,school,Niepubliczna Podstawowa Szkoła Montessori,11148229070,punkt,,Ursus,881f522665fffff,20.866333,52.199563
+szkola,school,Niepubliczna Szkoła Podstawowa z Oddziałami Dwujęzycznymi H2H,1202586288,obszar,0.19,Ursus,881f52263dfffff,20.909518,52.19321
+szkola,school,Niepubliczne Liceum Ogólnokształcące Montessori w Warszawie,10882907645,punkt,,Ursus,881f522629fffff,20.887949,52.193542
+szkola,school,Społeczna Szkoła Podstawowa nr 4 im. Wł. Grabskiego STO w Warszawie,970076419,obszar,0.27,Ursus,881f522629fffff,20.88917,52.19829
+szkola,school,Szkoła Podstawowa nr 11 im. Żołnierzy I Dywizji Kościuszkowskiej,998013134,obszar,1.19,Ursus,881f52275bfffff,20.868322,52.196644
+szkola,school,Szkoła Podstawowa nr 360 im. Polskich Noblistek,9680928360,punkt,,Ursus,881f522605fffff,20.899914,52.197184
+szkola,school,Szkoła Podstawowa nr 381 im. Krzysztofa Kamila Baczyńskiego,35002594,obszar,0.86,Ursus,881f522621fffff,20.887583,52.187214
+szkola,school,Szkoła Podstawowa nr 382 im. Warszawskich Dzieci,441153157,obszar,1.01,Ursus,881f52262bfffff,20.895037,52.194765
+szkola,school,Szkoła Podstawowa nr 383 im. Księdza Stefana Kardynała Wyszyńskiego,97819348,obszar,1.19,Ursus,881f52275bfffff,20.861355,52.193645
+szkola,school,Szkoła Podstawowa nr 4 im. Władysława Broniewskiego,113871673,obszar,0.97,Ursus,881f52262bfffff,20.895765,52.192909
+szkola,school,Szkoła Podstawowa nr 409,758313272,obszar,1.31,Ursus,881f522663fffff,20.888729,52.202318
+szkola,school,Szkoła Podstawowa z Oddziałami Integracyjnymi nr 14 im. Bohaterów Warszawy,35002587,obszar,1.69,Ursus,881f522621fffff,20.890577,52.18948
+szkola,school,Szkoła Podstawowa z Oddziałami Integracyjnymi nr 2 im. Jana Pawła II,119422337,obszar,2.07,Ursus,881f522665fffff,20.869017,52.200804
+szkola,school,Technikum nr 8 im. Jana Karskiego,11148154092,punkt,,Ursus,881f52262bfffff,20.899279,52.196029
+szkola,school,Zespół Szkół nr 42,11148154093,punkt,,Ursus,881f52262bfffff,20.899047,52.196116
+szkola,school,CLVIII Liceum Ogólnokształcące im. Księżnej Izabeli Czartoryskiej,31878000,obszar,1.37,Ursynów,881f535325fffff,21.053814,52.149045
+szkola,school,Chrześcijańska Szkoła Podstawowa Daniel,9572445569,punkt,,Ursynów,881f53532dfffff,21.056771,52.1541
+szkola,school,International American School of Warsaw,297889463,obszar,0.16,Ursynów,881f535145fffff,21.073276,52.132878
+szkola,school,International American School of Warsaw,8907849043,punkt,,Ursynów,881f535145fffff,21.07598,52.131497
+szkola,school,Katolicka Szkoła Podstawowa Fundacji na Rzecz Rodziny,12150537961,punkt,,Ursynów,881f53514dfffff,21.065852,52.137542
+szkola,school,LXIII Liceum Ogólnokształcące im. Lajosa Kossutha,726002851,obszar,1.89,Ursynów,881f5224d7fffff,21.040171,52.14515
+szkola,school,LXX Liceum Ogólnokształcące im. Aleksandra Kamińskiego,100670608,obszar,2.52,Ursynów,881f5224d1fffff,21.033948,52.153267
+szkola,school,Liceum Ogólnokształcące Niepubliczne nr 40,8102919270,punkt,,Ursynów,881f522491fffff,21.04764,52.137823
+szkola,school,Liceum Ogólnokształcące Przymierza Rodzin im. Jana Pawła II,6794163117,punkt,,Ursynów,881f53532dfffff,21.05603,52.151649
+szkola,school,Niepubliczne Liceum Ogólnokształcące nr 61 im. Stefana Kisielewskiego,6514996260,punkt,,Ursynów,881f53514dfffff,21.065251,52.13698
+szkola,school,Nowatorska Szkoła Podstawowa,1039316461,obszar,0.05,Ursynów,881f522483fffff,21.020907,52.132184
+szkola,school,Nowatorskie Liceum Ogólnokształcące,9570785395,punkt,,Ursynów,881f52248bfffff,21.020133,52.140891
+szkola,school,Podstawowa Szkoła Międzynarodowa/The International School,900727518,obszar,0.57,Ursynów,881f5224b3fffff,21.040061,52.112096
+szkola,school,Prywatna Szkoła Podstawowa Active School,9572646427,punkt,,Ursynów,881f522493fffff,21.06449,52.13203
+szkola,school,Prywatna Szkoła Podstawowa nr 83,4597658716,punkt,,Ursynów,881f5224dbfffff,21.041184,52.15775
+szkola,school,Społeczna Szkoła Podstawowa nr 1 im. Jana Nowaka-Jeziorańskiego,11184388412,punkt,,Ursynów,881f535325fffff,21.060112,52.150023
+szkola,school,Społeczne Liceum Ogólnokształcące nr 1 im. Jana Nowaka-Jeziorańskiego,11184251282,punkt,,Ursynów,881f5224d3fffff,21.045336,52.152101
+szkola,school,Społeczne Liceum Ogólnokształcące nr 4 im. Batalionu AK „Parasol”,29022769,obszar,0.39,Ursynów,881f5224d3fffff,21.041466,52.150881
+szkola,school,Szkoła Podstawowa Aurus,962898841,obszar,0.25,Ursynów,881f5224c3fffff,21.013628,52.153276
+szkola,school,Szkoła Podstawowa Kosmos,6721093866,punkt,,Ursynów,881f5224d1fffff,21.032072,52.156188
+szkola,school,Szkoła Podstawowa nr 100 im. płk. Francesco Nullo,47271601,obszar,1.07,Ursynów,881f5224d5fffff,21.016284,52.146521
+szkola,school,Szkoła Podstawowa nr 112 Przymierza Rodzin im. Jana Pawła II,279142259,punkt,,Ursynów,881f53532dfffff,21.055701,52.151504
+szkola,school,Szkoła Podstawowa nr 16 im. Tony Halika,159103092,obszar,1.4,Ursynów,881f522497fffff,21.058196,52.128525
+szkola,school,Szkoła Podstawowa nr 310 im. Michała Byliny,68578902,obszar,1.4,Ursynów,881f5224d3fffff,21.041119,52.14906
+szkola,school,Szkoła Podstawowa nr 313 im. Polskich Odkrywców,36775488,obszar,1.03,Ursynów,881f5224ddfffff,21.025608,52.154275
+szkola,school,Szkoła Podstawowa nr 318 im. Jana Christiana Andersena,31878003,obszar,1.36,Ursynów,881f5224d3fffff,21.047017,52.152423
+szkola,school,Szkoła Podstawowa nr 319 im. Marii Kann,25706827,obszar,0.84,Ursynów,881f5224d9fffff,21.033171,52.160905
+szkola,school,Szkoła Podstawowa nr 319 im. Marii Kann,36775303,obszar,1.22,Ursynów,881f5224dbfffff,21.039314,52.157709
+szkola,school,Szkoła Podstawowa nr 322 im. Jana Brzechwy,25724384,obszar,0.79,Ursynów,881f5224d1fffff,21.031932,52.151695
+szkola,school,Szkoła Podstawowa nr 323 im. Polskich Olimpijczyków,27338971,obszar,0.86,Ursynów,881f5224d7fffff,21.040495,52.144096
+szkola,school,Szkoła Podstawowa nr 323 im. Polskich Olimpijczyków,29300160,obszar,1.3,Ursynów,881f522499fffff,21.047034,52.14478
+szkola,school,Szkoła Podstawowa nr 330 im. Nauczycieli Tajnego Nauczania,25354445,obszar,1.84,Ursynów,881f535325fffff,21.060659,52.145504
+szkola,school,"Szkoła Podstawowa nr 336 im. Janka Bytnara ""Rudego""",736324505,obszar,1.75,Ursynów,881f522491fffff,21.056342,52.135777
+szkola,school,Szkoła Podstawowa nr 340 im. Profesora Bogusława Molskiego,25354441,obszar,2.3,Ursynów,881f52249bfffff,21.062899,52.139789
+szkola,school,Szkoła Podstawowa nr 343 im. Matki Teresy z Kalkuty,25709261,obszar,1.21,Ursynów,881f53532dfffff,21.053617,52.156567
+szkola,school,Szkoła Podstawowa nr 384 im. Stanisława Staszica,742153580,obszar,1.42,Ursynów,881f522487fffff,21.02079,52.130619
+szkola,school,Szkoła Podstawowa nr 399,900742661,obszar,0.4,Ursynów,881f535145fffff,21.073084,52.128442
+szkola,school,Szkoła Podstawowa nr 405,25354467,obszar,1.84,Ursynów,881f522499fffff,21.04886,52.139541
+szkola,school,Szkoła Podstawowa nr 81 im. Juliana Ursyna Niemcewicza,445805547,obszar,1.27,Ursynów,881f5224ddfffff,21.02492,52.157827
+szkola,school,Szkoła Podstawowa nr 9 STO,6757662037,punkt,,Ursynów,881f5224d9fffff,21.027636,52.160569
+szkola,school,Szkoła Podstawowa nr 9 STO,10945977731,punkt,,Ursynów,881f5224d9fffff,21.027743,52.159134
+szkola,school,Szkoła Podstawowa nr 96 im. Ireny Kosmowskiej,737423265,obszar,1.35,Ursynów,881f5224b5fffff,21.014352,52.1137
+szkola,school,Wolna Szkoła Demokratyczna Ursynów,1560520295,obszar,0.13,Ursynów,881f5224bdfffff,21.021522,52.122827
+szkola,school,Zespół Edukacyjny Sióstr Niepokalanek,110343396,obszar,1.13,Ursynów,881f535145fffff,21.075554,52.128125
+szkola,school,Zespół Placówek Oświatowych Fundacji Ewangelickie Towarzystwo Oświatowe,351829637,obszar,0.91,Ursynów,881f535145fffff,21.076637,52.134225
+szkola,school,Zespół Szkół Fundacji Primus im. Roberta Schumana,462427206,obszar,1.56,Ursynów,881f522493fffff,21.060911,52.132854
+szkola,school,Zespół Szkół nr 129,25706824,obszar,1.32,Ursynów,881f5226b3fffff,21.030556,52.164798
+szkola,school,Zespół Szkół nr 129,25706835,obszar,1.66,Ursynów,881f5224d9fffff,21.0301,52.163108
+szkola,school,,704290259,obszar,0.33,Ursynów,881f5224b7fffff,21.033609,52.108955
+szkola,school,,821983494,obszar,0.22,Ursynów,881f522481fffff,21.019406,52.134511
+szkola,school,"""Żagle"" Liceum Ogólnokształcące",9522300153,punkt,,Wawer,881f53521dfffff,21.176944,52.206924
+szkola,school,"""Żagle"" Szkoła Podstawowa",9522300152,punkt,,Wawer,881f53521dfffff,21.176981,52.206836
+szkola,school,Academy International,745940631,obszar,0.18,Wawer,881f535249fffff,21.142085,52.22592
+szkola,school,Branżowa Szkoła I Stopnia nr 68,9621260667,punkt,,Wawer,881f53501dfffff,21.204641,52.153039
+szkola,school,CXXIII Liceum Ogólnokształcące Specjalne,9482317429,punkt,,Wawer,881f535211fffff,21.191876,52.205271
+szkola,school,Chrześcijańska Szkoła Podstawowa Samuel,12554512345,punkt,,Wawer,881f53521dfffff,21.178635,52.210248
+szkola,school,Chrześcijańskie Liceum Samuel,9522300149,punkt,,Wawer,881f53521dfffff,21.178899,52.210296
+szkola,school,Dwujęzyczna Prywatna Szkoła Podstawowa nr 63 im. Wisławy Szymborskiej,802715482,obszar,0.61,Wawer,881f535047fffff,21.165768,52.161256
+szkola,school,Integracyjna Podstawowa Szkoła Montessori Wawer,9522580908,punkt,,Wawer,881f53522bfffff,21.149051,52.191897
+szkola,school,Katolickie Liceum Ogólnokształcące,4796329235,punkt,,Wawer,881f535057fffff,21.201653,52.158762
+szkola,school,Liceum Ogólnokształcące Niepubliczne Nr 76,1033827631,obszar,0.2,Wawer,881f535201fffff,21.163353,52.204759
+szkola,school,Prywatna Szkoła Podstawowa nr 105 im. Astrid Lindgren,498865867,obszar,0.53,Wawer,881f53505bfffff,21.205444,52.174067
+szkola,school,Prywatna Szkoła Podstawowa nr 92,120514210,obszar,0.35,Wawer,881f535209fffff,21.162001,52.209821
+szkola,school,Szkoła Podstawowa Niepubliczna Przy Fundacji Pomocy Ludziom z Niepełnosprawnościami,1033344490,obszar,0.14,Wawer,881f535267fffff,21.124508,52.200407
+szkola,school,Szkoła Podstawowa Sióstr Felicjanek Nr 28,961319402,obszar,0.18,Wawer,881f53c8b5fffff,21.153742,52.237143
+szkola,school,Szkoła Podstawowa Specjalna Nr 137,963015634,obszar,0.02,Wawer,881f53505bfffff,21.203125,52.17074
+szkola,school,Szkoła Podstawowa Specjalna Nr 349,963027316,obszar,0.14,Wawer,881f5352e3fffff,21.225992,52.186773
+szkola,school,Szkoła Podstawowa Specjalna nr 106,9482317430,punkt,,Wawer,881f535211fffff,21.191868,52.205368
+szkola,school,Szkoła Podstawowa Specjalna nr 179,9483945670,punkt,,Wawer,881f535053fffff,21.205118,52.165138
+szkola,school,Szkoła Podstawowa Specjalna nr 244 im. Odkrywców Przyrody,963442535,obszar,0.19,Wawer,881f535219fffff,21.191801,52.213766
+szkola,school,Szkoła Podstawowa Specjalna nr 393,9482173025,punkt,,Wawer,881f535255fffff,21.169155,52.216728
+szkola,school,Szkoła Podstawowa Towarzystwa Edukacyjnego Vizja,1033343760,obszar,0.47,Wawer,881f535233fffff,21.192705,52.18192
+szkola,school,Szkoła Podstawowa nr 109 im. Batalionów Chłopskich,289920210,obszar,0.86,Wawer,881f535267fffff,21.133641,52.197951
+szkola,school,Szkoła Podstawowa nr 124 im. Stanisława Jachowicza,141649935,obszar,1.51,Wawer,881f5352a5fffff,21.222355,52.164151
+szkola,school,Szkoła Podstawowa nr 128 im. Marii Skłodowskiej-Curie,962991044,obszar,0.2,Wawer,881f53c997fffff,21.110496,52.213253
+szkola,school,Szkoła Podstawowa nr 138 im. Józefa Horsta,1028484132,obszar,0.9,Wawer,881f535203fffff,21.180415,52.202738
+szkola,school,Szkoła Podstawowa nr 140 im. Kazimierza Jeżewskiego,263718221,obszar,1.04,Wawer,881f535233fffff,21.19384,52.186032
+szkola,school,Szkoła Podstawowa nr 195 im. Króla Maciusia I,115204984,obszar,1.16,Wawer,881f53c8a3fffff,21.142635,52.238515
+szkola,school,Szkoła Podstawowa nr 204 im. 19 Pułku Ułanów Wołyńskich,488464134,obszar,1.51,Wawer,881f535231fffff,21.175976,52.18837
+szkola,school,Szkoła Podstawowa nr 218 im. Michała Kajki,912419191,obszar,1.63,Wawer,881f53525dfffff,21.164371,52.221044
+szkola,school,Szkoła Podstawowa nr 235,9621260666,punkt,,Wawer,881f53501dfffff,21.204674,52.152904
+szkola,school,Szkoła Podstawowa nr 404 im. Wielkiej Orkiestry Świątecznej Pomocy,843243851,obszar,1.23,Wawer,881f535221fffff,21.143373,52.18476
+szkola,school,Szkoła Podstawowa nr 76 im. 13 Dywizji Piechoty Strzelców Kresowych,319856969,obszar,1.31,Wawer,881f53501dfffff,21.202209,52.156104
+szkola,school,Szkoła Podstawowa nr 86 im. Bronisława Czecha,520661734,obszar,1.59,Wawer,881f535241fffff,21.144116,52.218876
+szkola,school,"Szkoła Podstawowa z Oddziałami Integracyjnymi nr 216 ""Klonowego Liścia""",269843160,obszar,1.7,Wawer,881f5352adfffff,21.21584,52.170738
+szkola,school,Szkoła Specjalna Przysposabiająca do Pracy nr 8,9483945669,punkt,,Wawer,881f535053fffff,21.205344,52.164956
+szkola,school,Wawerska Szkoła Realna,9621281185,punkt,,Wawer,881f535057fffff,21.19869,52.163117
+szkola,school,XXV Liceum Ogólnokształcące im. Józefa Wybickiego,409989420,obszar,1.96,Wawer,881f535057fffff,21.201039,52.164028
+szkola,school,Zespół Szkolno - Przedszkolny nr 9,61242385,obszar,1.35,Wawer,881f53c997fffff,21.110348,52.213366
+szkola,school,Zespół Szkół Specjalnych nr 78 im. Ewy Szelburg-Zarembiny,9482317432,punkt,,Wawer,881f535211fffff,21.19185,52.205583
+szkola,school,,398628111,obszar,1.16,Wawer,881f535255fffff,21.168974,52.217653
+szkola,school,,961685284,obszar,2.47,Wawer,881f5352adfffff,21.216626,52.169612
+szkola,school,Autorska Szkoła Podstawowa nr 12,959753632,obszar,0.14,Wesoła,881f53cd47fffff,21.216818,52.251025
+szkola,school,Autorskie Liceum Kultura i Nauka,1046639072,obszar,0.48,Wesoła,881f53cd3dfffff,21.234348,52.2241
+szkola,school,CLXIII Liceum Ogólnokształcące im. Czesława Niemena,959853240,obszar,1.43,Wesoła,881f53cd6bfffff,21.210097,52.24316
+szkola,school,Dwujęzyczna Szkoła Podstawowa nr 1,1046619562,obszar,0.18,Wesoła,881f53cd69fffff,21.19462,52.248646
+szkola,school,"Liceum Ogólnokształcące Niepubliczne nr 27 ""Szkoła Rodzinna""",9623168371,punkt,,Wesoła,881f53cd27fffff,21.215591,52.216985
+szkola,school,Niepubliczne Liceum Ogólnokształcące Zaoczne dla Dorosłych w Wesołej,9623162890,punkt,,Wesoła,881f53cd27fffff,21.215673,52.217018
+szkola,school,Prywatna Szkoła Podstawowa im. Zofii i Jędrzeja Moraczewskich,1046609028,obszar,0.18,Wesoła,881f53cd55fffff,21.245984,52.24978
+szkola,school,Prywatne Liceum Ogólnokształcące im. Zofii i Jędrzeja Moraczewskich,958975238,obszar,0.09,Wesoła,881f53cd15fffff,21.254172,52.235347
+szkola,school,"Szkoła Podstawowa Niepubliczna nr 90 ""Szkoła Rodzinna""",9623162889,punkt,,Wesoła,881f53cd27fffff,21.215673,52.216983
+szkola,school,Szkoła Podstawowa nr 171 im. Stanisława Staszica,556494755,obszar,1.0,Wesoła,881f53cd43fffff,21.226523,52.2508
+szkola,school,Szkoła Podstawowa nr 172 im. Polskiej Organizacji Wojskowej,116484429,obszar,1.34,Wesoła,881f53cd61fffff,21.190932,52.239223
+szkola,school,Szkoła Podstawowa nr 173 im. Górników Polskich,100145564,obszar,1.21,Wesoła,881f53cd2bfffff,21.2215,52.223335
+szkola,school,Szkoła Podstawowa nr 174 im. Tadeusza Kościuszki,959774080,obszar,0.62,Wesoła,881f53cd43fffff,21.230438,52.255679
+szkola,school,"Szkoła Podstawowa nr 353 im. ""Wielkich Odkrywców""",585483574,obszar,0.71,Wesoła,881f53cd35fffff,21.2352,52.218546
+szkola,school,,100145647,obszar,2.33,Wesoła,881f53cd35fffff,21.240965,52.217033
+szkola,school,Akademeia High School,704961975,obszar,1.46,Wilanów,881f535329fffff,21.066661,52.157264
+szkola,school,British Primary School of Wilanów,953169922,obszar,0.73,Wilanów,881f535329fffff,21.065608,52.158935
+szkola,school,Joy Primary School,1204280450,obszar,0.11,Wilanów,881f53531dfffff,21.106349,52.175854
+szkola,school,Międzynarodowa Europejska Szkoła Podstawowa,11161899870,punkt,,Wilanów,881f535347fffff,21.075732,52.177376
+szkola,school,Międzynarodowe Europejskie Liceum Ogólnokształcące,11161899869,punkt,,Wilanów,881f535347fffff,21.075978,52.177465
+szkola,school,"Niepubliczna Specjalna Szkoła Podstawowa ""Krok Po Kroku""",11161931312,punkt,,Wilanów,881f535321fffff,21.063225,52.152498
+szkola,school,Polish British Academy of Warsaw,952963942,obszar,0.11,Wilanów,881f53530dfffff,21.080052,52.172186
+szkola,school,Polsko-Angielska Szkoła Podstawowa Edison,1204296526,obszar,0.17,Wilanów,881f53530dfffff,21.071996,52.174936
+szkola,school,"Polsko-Francuska Niepubliczna Szkoła Podstawowa ""La Fontaine""",953312289,obszar,0.26,Wilanów,881f53530dfffff,21.067705,52.172966
+szkola,school,Polsko-Niemiecka Szkoła Spotkań i Dialogu im. Willy'ego Brandta - Liceum Ogólnokształcące,11161782600,punkt,,Wilanów,881f535329fffff,21.069214,52.157516
+szkola,school,Polsko-Niemiecka Szkoła Spotkań i Dialogu im. Willy'ego Brandta - Szkoła Podstawowa,11161782601,punkt,,Wilanów,881f535329fffff,21.069041,52.157632
+szkola,school,Szkoła Podstawowa Niepubliczna im. Wiktorii Wiedeńskiej,62352662,obszar,1.35,Wilanów,881f535301fffff,21.087784,52.167066
+szkola,school,Szkoła Podstawowa im. A. Einsteina,648645193,obszar,1.05,Wilanów,881f535329fffff,21.063597,52.157251
+szkola,school,Szkoła Podstawowa nr 104 im. Macieja Rataja,432709498,obszar,0.99,Wilanów,881f535101fffff,21.10212,52.120791
+szkola,school,Szkoła Podstawowa nr 169 im. Orła Białego,62343730,obszar,1.21,Wilanów,881f53533dfffff,21.09173,52.157147
+szkola,school,Szkoła Podstawowa nr 261 im. Stanisława Kostki Potockiego,11161749435,punkt,,Wilanów,881f535301fffff,21.085403,52.169063
+szkola,school,Szkoła Podstawowa nr 300 im. Wandy Rutkiewicz,15611861,obszar,2.32,Wilanów,881f53530dfffff,21.069356,52.173735
+szkola,school,Szkoła Podstawowa nr 358 im. hetmana Jana Zamoyskiego,530304804,obszar,2.12,Wilanów,881f535321fffff,21.068711,52.156072
+szkola,school,Szkoła Podstawowa nr 400 im. Marii Skłodowskiej-Curie,704735475,obszar,1.44,Wilanów,881f535329fffff,21.065602,52.163689
+szkola,school,XXXVIII Liceum Ogólnokształcące im. Stanisława Kostki Potockiego,11161749434,punkt,,Wilanów,881f535301fffff,21.085114,52.168962
+szkola,school,Academy International,9643258270,punkt,,Wola,881f53c905fffff,20.97644,52.234078
+szkola,school,Akademia Dobrej Edukacji,9643162074,punkt,,Wola,881f53c905fffff,20.968564,52.236446
+szkola,school,Branżowa Szkoła I Stopnia Specjalna nr 67,2364845992,punkt,,Wola,881f53c96dfffff,20.937367,52.241571
+szkola,school,CXIX Liceum Ogólnokształcące im. Jacka Kuronia,846977927,obszar,0.12,Wola,881f53c939fffff,20.999306,52.230569
+szkola,school,CXXV Liceum Ogólnokształcące im. Waldemara Milewicza,1443527382,punkt,,Wola,881f53c901fffff,20.985869,52.236761
+szkola,school,Centrum Kształcenia Zawodowego i Ustawicznego nr 1,34967436,obszar,2.0,Wola,881f53c96dfffff,20.938667,52.244658
+szkola,school,Cosinus,947219683,obszar,0.04,Wola,881f53c907fffff,20.988051,52.232225
+szkola,school,I Społeczne Liceum Ogólnokształcące im. Maharadży Jam Saheba Digvijay Sinhji,427700797,obszar,0.93,Wola,881f53c96bfffff,20.959718,52.243023
+szkola,school,III Liceum Ogólnokształcące im. gen. Józefa Sowińskiego,35074366,obszar,1.76,Wola,881f53c92bfffff,20.972294,52.230693
+szkola,school,Katolicki Zespół Edukacyjny Federacji Sodalicji Mariańskich,379015214,obszar,0.27,Wola,881f53c903fffff,20.994155,52.239646
+szkola,school,Katolicki Zespół Edukacyjny imienia Księdza Piotra Skargi,431275900,obszar,0.43,Wola,881f53c929fffff,20.958705,52.227148
+szkola,school,LXXXVI Liceum Ogólnokształcące im. Batalionu „Zośka”,34966174,obszar,0.79,Wola,881f53c967fffff,20.942967,52.234965
+szkola,school,Liceum Ogólnokształcące Towarzystwa Edukacyjnego Vizja,9520507781,punkt,,Wola,881f53c909fffff,20.978661,52.250673
+szkola,school,Liceum Ogólnokształcące im. Mikołaja Kopernika,322583665,obszar,0.76,Wola,881f53c929fffff,20.960084,52.231141
+szkola,school,"Niepubliczna Szkoła Podstawowa ""W kontakcie""",9563096195,punkt,,Wola,881f53c901fffff,20.975925,52.238086
+szkola,school,Niepubliczna Szkoła Podstawowa EduArt im. Leonarda da Vinci,9643160042,punkt,,Wola,881f53c947fffff,20.967584,52.246713
+szkola,school,Niepubliczna Szkoła Podstawowa „W Kontakcie”,1774804324,punkt,,Wola,881f53c905fffff,20.972131,52.235192
+szkola,school,Ośrodek Szkolno-Wychowawczy dla Głuchych im. Jana Siestrzyńskiego,165819834,obszar,0.94,Wola,881f53c907fffff,20.987044,52.231651
+szkola,school,Szkoła Podstawowa Integracyjna nr 317 im. Edmunda Bojanowskiego,34966160,obszar,0.91,Wola,881f53c961fffff,20.947409,52.243086
+szkola,school,Szkoła Podstawowa Nr 25 im. Komisji Edukacji Narodowej,430573487,obszar,0.66,Wola,881f53c903fffff,20.995208,52.234823
+szkola,school,Szkoła Podstawowa Nr 387 im. Szarych Szeregów,32793611,obszar,1.56,Wola,881f53c92bfffff,20.977578,52.228283
+szkola,school,Szkoła Podstawowa Specjalna nr 331,2364845994,punkt,,Wola,881f53c96dfffff,20.937106,52.241932
+szkola,school,Szkoła Podstawowa Towarzystwa Edukacyjnego Vizja,9643239720,punkt,,Wola,881f53c909fffff,20.978901,52.250663
+szkola,school,Szkoła Podstawowa nr 132 im. Sándora Petőfiego,96592057,obszar,1.12,Wola,881f53c92dfffff,20.953236,52.228514
+szkola,school,Szkoła Podstawowa nr 139 imienia Ludwiki Wawrzyńskiej,35071363,obszar,0.94,Wola,881f53c929fffff,20.961927,52.23412
+szkola,school,Szkoła Podstawowa nr 147,421279228,obszar,0.34,Wola,881f53c905fffff,20.97696,52.236476
+szkola,school,Szkoła Podstawowa nr 148 im. Hugona Kołłątaja,331153523,obszar,0.79,Wola,881f53c96bfffff,20.950558,52.245953
+szkola,school,Szkoła Podstawowa nr 166 im. Żwirki i Wigury,505934398,obszar,1.25,Wola,881f53c90dfffff,20.973959,52.240127
+szkola,school,Szkoła Podstawowa nr 221 im. Barbary Bronisławy Czarnowskiej,42489123,obszar,0.47,Wola,881f53c903fffff,20.989289,52.236071
+szkola,school,Szkoła Podstawowa nr 221 im. Barbary Bronisławy Czarnowskiej,844799447,obszar,0.57,Wola,881f53c901fffff,20.986888,52.238613
+szkola,school,Szkoła Podstawowa nr 222 im. Jana Brzechwy,95003799,obszar,0.73,Wola,881f53c909fffff,20.97919,52.245555
+szkola,school,Szkoła Podstawowa nr 225 im. Józefa Gardeckiego,34966199,obszar,0.86,Wola,881f53c96dfffff,20.939281,52.24203
+szkola,school,Szkoła Podstawowa nr 234 im. Juliana Tuwima,114072565,obszar,1.0,Wola,881f53c909fffff,20.979836,52.243856
+szkola,school,Szkoła Podstawowa nr 236 im. Ireny Sendlerowej,34966140,obszar,0.89,Wola,881f53c967fffff,20.947261,52.234062
+szkola,school,Szkoła Podstawowa nr 238 im. Christo Botewa,169102669,obszar,1.11,Wola,881f53c965fffff,20.940248,52.233636
+szkola,school,Szkoła Podstawowa nr 26 im. Mirosława Biernackiego,1021514429,obszar,0.33,Wola,881f53c939fffff,20.991733,52.228789
+szkola,school,Szkoła Podstawowa nr 351 im. Bolesława Prusa,656565640,obszar,1.14,Wola,881f53c965fffff,20.936338,52.235342
+szkola,school,Szkoła Podstawowa nr 388 im. Jana Pawła II,220699635,obszar,1.18,Wola,881f53c961fffff,20.947327,52.242271
+szkola,school,Szkoła Podstawowa nr 403 im. Powstańców Warszawy,12720205,obszar,0.98,Wola,881f522651fffff,20.934442,52.22342
+szkola,school,Szkoła Podstawowa nr 63 im. Zawiszy Czarnego,117968798,obszar,0.78,Wola,881f53c905fffff,20.966658,52.238168
+szkola,school,Szkoła Rysunku,1147358534,obszar,0.01,Wola,881f522651fffff,20.927057,52.224223
+szkola,school,Technikum nr 3 im. Ludwika Krzywickiego,2361998397,punkt,,Wola,881f53c901fffff,20.986393,52.236822
+szkola,school,Waldorfska Szkoła Podstawowa,1135897795,obszar,0.08,Wola,881f53c901fffff,20.984437,52.241881
+szkola,school,XII Liceum Ogólnokształcące im. Henryka Sienkiewicza,846977926,obszar,0.19,Wola,881f53c939fffff,20.999012,52.231005
+szkola,school,XL Liceum Ogólnokształcące z Oddziałami Dwujęzycznymi im. Stefana Żeromskiego,256289132,obszar,0.78,Wola,881f53c93dfffff,20.990574,52.226371
+szkola,school,XLV Liceum Ogólnokształcące im. Romualda Traugutta,141217551,obszar,1.15,Wola,881f53c909fffff,20.980107,52.248855
+szkola,school,XXIV Liceum Ogólnokształcące im. Cypriana Norwida w Warszawie,336645782,obszar,1.07,Wola,881f53c96bfffff,20.954727,52.248102
+szkola,school,XXX Liceum Ogólnokształcące im. Jana Śniadeckiego,98668294,obszar,0.94,Wola,881f53c901fffff,20.982431,52.240632
+szkola,school,Zespół Państwowych Ogólnokształcących Szkół Muzycznych I i II stopnia nr 3 imienia Grażyny,419520205,obszar,1.0,Wola,881f53c90dfffff,20.968073,52.241918
+szkola,school,Zespół Państwowych Szkół Plastycznych im. Wojciecha Gersona,95003778,obszar,0.57,Wola,881f53c90bfffff,20.988665,52.242881
+szkola,school,Zespół Szkół Fototechnicznych,397123157,obszar,1.37,Wola,881f53c943fffff,20.976956,52.251321
+szkola,school,Zespół Szkół Lauder-Morasha,1155862633,obszar,0.21,Wola,881f53c905fffff,20.969705,52.236057
+szkola,school,Zespół Szkół Samochodowych i Licealnych nr 2,144780653,obszar,2.19,Wola,881f53c955fffff,20.983478,52.25166
+szkola,school,Zespół Szkół Stenotypii i Języków Obcych,1039574864,obszar,0.49,Wola,881f53c903fffff,20.991018,52.240115
+szkola,school,Zespół Szkół im. Michała Konarskiego,258746505,obszar,2.93,Wola,881f53c909fffff,20.977414,52.248638
+szkola,school,Zespół Szkół nr 127 w Warszawie,25588026,obszar,0.97,Wola,881f53c909fffff,20.983316,52.247122
+szkola,school,Zespół Szkół nr 32 im. K. K. Baczyńskiego,331153524,obszar,0.72,Wola,881f53c969fffff,20.949214,52.245953
+szkola,school,Zespół Szkół nr 36 im. Marcina Kasprzaka,35074350,obszar,1.82,Wola,881f53c92bfffff,20.970113,52.22802
+szkola,school,,427700795,obszar,1.6,Wola,881f53c963fffff,20.960051,52.24074
+szkola,school,CLIX Liceum Ogólnokształcące im. Króla Jana III Sobieskiego,35001182,obszar,1.17,Włochy,881f522607fffff,20.909958,52.200549
+szkola,school,Dwujęzyczna Szkoła Podstawowa im. prof. Władysława Bartoszewskiego,1202365693,obszar,0.09,Włochy,881f5226e1fffff,20.965667,52.191349
+szkola,school,Integracyjna Podstawowa Szkoła Montessori Elipsoida,1202326397,obszar,0.09,Włochy,881f522601fffff,20.90705,52.206562
+szkola,school,"LXXIII Liceum Ogólnokształcące im. Zawiszaków Proporca ""Victoria""",2367001802,punkt,,Włochy,881f522609fffff,20.904134,52.210003
+szkola,school,LXXXIV Liceum Ogólnokształcące im. Bohaterów Narwiku,2366236514,punkt,,Włochy,881f5226e1fffff,20.960182,52.187618
+szkola,school,Liceum Civitas,12205416622,punkt,,Włochy,881f52268dfffff,20.982415,52.191413
+szkola,school,Międzynarodowe Liceum Ogólnokształcące Thames British School,11146435049,punkt,,Włochy,881f5226e1fffff,20.960287,52.189124
+szkola,school,Niebieska Szkoła Podstawowa,1460104547,obszar,0.1,Włochy,881f5226edfffff,20.955522,52.191553
+szkola,school,"Niepubliczna Polsko-Angielska Szkoła Podstawowa ""Vancouver Schools""",1202357640,obszar,0.07,Włochy,881f52260bfffff,20.912828,52.210279
+szkola,school,Niepubliczna Szkoła Podstawowa Tosi i Franka,11146411129,punkt,,Włochy,881f52260dfffff,20.894658,52.205933
+szkola,school,Niepubliczne Liceum Eduventura,11146180750,punkt,,Włochy,881f52240bfffff,20.938194,52.160394
+szkola,school,Społeczna Szkoła Podstawowa nr 30 STO,63325568,obszar,0.34,Włochy,881f5226e3fffff,20.97399,52.182738
+szkola,school,Społeczne Liceum Startowa 4K,700221192,obszar,0.12,Włochy,881f5226edfffff,20.95324,52.188982
+szkola,school,Szkoła Podstawowa Eduventura,11146180749,punkt,,Włochy,881f52240bfffff,20.938149,52.160293
+szkola,school,Szkoła Podstawowa Mikroszkoła Włochy,1202329187,obszar,0.08,Włochy,881f52261dfffff,20.931747,52.209197
+szkola,school,Szkoła Podstawowa nr 227 im. Lotników Polskich,63325298,obszar,0.92,Włochy,881f5226e3fffff,20.973084,52.184565
+szkola,school,Szkoła Podstawowa nr 359,2367001794,punkt,,Włochy,881f522609fffff,20.903902,52.210032
+szkola,school,Szkoła Podstawowa nr 66 im. ks. Juliana Chrościckiego,35000627,obszar,0.77,Włochy,881f522605fffff,20.900726,52.204253
+szkola,school,Szkoła Podstawowa nr 88 im. Gabriela Narutowicza,35023467,obszar,0.96,Włochy,881f5226ebfffff,20.965767,52.192399
+szkola,school,Szkoła Podstawowa nr 94 im. I Marszałka Polski Józefa Piłsudskiego,119516209,obszar,1.11,Włochy,881f522603fffff,20.924302,52.202208
+szkola,school,"Szkoła Podstawowa z Oddziałami Integracyjnymi nr 87 im. 7 PP AK ""Garłuch""",34433979,obszar,1.59,Włochy,881f522459fffff,20.939744,52.177066
+szkola,school,TE Vizja,1350605793,obszar,0.66,Włochy,881f52268dfffff,20.982819,52.192091
+szkola,school,Technikum nr 9 Lotnicze im. Bohaterów Narwiku,2366236525,punkt,,Włochy,881f5226e1fffff,20.95995,52.187327
+szkola,school,2 Społeczne Liceum Ogólnokształcące STO imienia Pawła Jasienicy,393667918,obszar,0.16,Śródmieście,881f53c933fffff,21.01436,52.219394
+szkola,school,2 Społeczne Liceum Ogólnokształcące im. Pawła Jasienicy,10075606487,punkt,,Śródmieście,881f53c913fffff,21.030296,52.236272
+szkola,school,Branżowa Szkoła Gastronomiczna I Stopnia,11057416155,punkt,,Śródmieście,881f53c933fffff,21.01306,52.223667
+szkola,school,Branżowa Szkoła I Stopnia Specjalna nr 62,11117418051,punkt,,Śródmieście,881f53c9e1fffff,21.037031,52.22466
+szkola,school,CLVII Liceum Ogólnokształcące im. Marii Skłodowskiej-Curie,50228654,obszar,0.75,Śródmieście,881f53c915fffff,21.011665,52.236808
+szkola,school,CXXXVI Liceum Ogólnokształcące Specjalne,11117418052,punkt,,Śródmieście,881f53c9e1fffff,21.036993,52.224789
+szkola,school,II Liceum Ogólnokształcące im. S. Batorego,31091201,obszar,2.21,Śródmieście,881f53c9e1fffff,21.034365,52.222846
+szkola,school,IX Liceum Ogólnokształcące im. Klementyny Hoffmanowej,572191510,obszar,0.88,Śródmieście,881f53c93bfffff,21.00555,52.224798
+szkola,school,Instytut Głuchoniemych,462253950,obszar,1.53,Śródmieście,881f53c9edfffff,21.024635,52.228692
+szkola,school,LIII Liceum Ogólnokształcące dla Dorosłych,10704942651,punkt,,Śródmieście,881f53c933fffff,21.01143,52.220712
+szkola,school,LVIII Liceum Ogólnokształcące im. Krzysztofa Kamila Baczyńskiego,2366252351,punkt,,Śródmieście,881f53c9e1fffff,21.0342,52.22464
+szkola,school,LXII Liceum Ogólnokształcące Mistrzostwa Sportowego im. gen. broni Władysława Andersa,337996348,obszar,1.08,Śródmieście,881f53c951fffff,21.003743,52.254554
+szkola,school,LXVII Liceum Ogólnokształcące im. Jana Nowaka-Jeziorańskiego,989039158,obszar,0.5,Śródmieście,881f53c9edfffff,21.019309,52.226762
+szkola,school,LXXV Liceum Ogólnokształcące im. Jana III Sobieskiego,436166345,obszar,0.51,Śródmieście,881f53c9e3fffff,21.046723,52.21805
+szkola,school,LXXXI Liceum Ogólnokształcące im. Aleksandra Fredry,221521958,obszar,0.47,Śródmieście,881f53c955fffff,20.991675,52.250721
+szkola,school,Liceum Astrid,11060476736,punkt,,Śródmieście,881f53c9e5fffff,21.021991,52.219373
+szkola,school,Liceum Chocimska,10582658108,punkt,,Śródmieście,881f53c957fffff,21.006959,52.247772
+szkola,school,Liceum Ogólnokształcące,10582688562,punkt,,Śródmieście,881f53c919fffff,21.009636,52.247982
+szkola,school,"Liceum Ogólnokształcące ""Multimedia""",10592300901,punkt,,Śródmieście,881f53c915fffff,21.006315,52.231551
+szkola,school,Liceum Ogólnokształcące Społeczne nr 17,5006877586,punkt,,Śródmieście,881f53c933fffff,21.017767,52.220744
+szkola,school,Liceum Ogólnokształcące dla Dorosłych w Warszawie,10587657842,punkt,,Śródmieście,881f53c955fffff,20.991688,52.251254
+szkola,school,Niepubliczne Technikum Usługowe,10582688559,punkt,,Śródmieście,881f53c919fffff,21.009914,52.248126
+szkola,school,Nova Niepubliczne Liceum Ogólnokształcące dla Dorosłych,10616499714,punkt,,Śródmieście,881f53c917fffff,21.015062,52.23166
+szkola,school,Nova Technikum Kluczowych Kompetencji Młodzieży w Warszawie,10616499713,punkt,,Śródmieście,881f53c917fffff,21.015175,52.231633
+szkola,school,Ogólnokształcąca Szkoła Baletowa im. Romana Turczynowicza,2361977333,punkt,,Śródmieście,881f53c919fffff,21.011834,52.243957
+szkola,school,Prywatna Męska Szkoła Podstawowa,11057365513,punkt,,Śródmieście,881f53c9edfffff,21.017867,52.223813
+szkola,school,Prywatna Szkoła Podstawowa nr 41 Edu Bene,9004861506,punkt,,Śródmieście,881f53c957fffff,20.999452,52.249595
+szkola,school,Prywatna Żeńska Szkoła Podstawowa z Oddziałami Dwujęzycznymi,11057365510,punkt,,Śródmieście,881f53c9edfffff,21.018057,52.223851
+szkola,school,Prywatne Liceum Ogólnokształcące,11057365511,punkt,,Śródmieście,881f53c9edfffff,21.01821,52.223883
+szkola,school,Przedszkole nr 1,460635768,obszar,0.25,Śródmieście,881f53c903fffff,20.999705,52.237708
+szkola,school,"Przedszkole nr 16 ""Zaczarowany Zakątek""",907159622,obszar,0.25,Śródmieście,881f53c917fffff,21.016285,52.233202
+szkola,school,Przedszkole nr 33,11057404803,punkt,,Śródmieście,881f53c933fffff,21.010433,52.22332
+szkola,school,SKK Warszawa,6345071009,punkt,,Śródmieście,881f53c90bfffff,20.993195,52.24589
+szkola,school,Specjalny Ośrodek Szkolno-Wychowawczy dla Dzieci Słabosłyszących nr 15 im. Ottona Lipkowskiego,842857329,obszar,0.55,Śródmieście,881f53c915fffff,21.000477,52.235072
+szkola,school,Społeczna Szkoła Podstawowa nr 16,1039589044,obszar,0.25,Śródmieście,881f53c90bfffff,20.995715,52.241705
+szkola,school,Społeczne Liceum Ogólnokształcące nr 25 im. Marzenny Okońskiej,10587696710,punkt,,Śródmieście,881f53c90bfffff,20.997113,52.242533
+szkola,school,Szkoła Podstawowa Specjalna nr 51,11117418053,punkt,,Śródmieście,881f53c9e1fffff,21.036962,52.224913
+szkola,school,Szkoła Podstawowa nr 1 im. Gustawa Morcinka,118132605,obszar,0.37,Śródmieście,881f53c933fffff,21.011322,52.223414
+szkola,school,Szkoła Podstawowa nr 12 im. Powstańców Śląskich,194449006,obszar,0.56,Śródmieście,881f53c9e1fffff,21.02912,52.223938
+szkola,school,Szkoła Podstawowa nr 158 imienia Jana Kilińskiego,368472165,obszar,0.73,Śródmieście,881f53c957fffff,21.004996,52.251648
+szkola,school,Szkoła Podstawowa nr 203,30258356,obszar,0.6,Śródmieście,881f53c9edfffff,21.017095,52.226066
+szkola,school,Szkoła Podstawowa nr 210 im. Bohaterów Pawiaka,93742652,obszar,0.69,Śródmieście,881f53c90bfffff,20.991831,52.246877
+szkola,school,Szkoła Podstawowa nr 211 im. Janusza Korczaka,29975378,obszar,0.54,Śródmieście,881f53c917fffff,21.018769,52.232095
+szkola,school,Szkoła Podstawowa nr 220 im. Stanisława Kopczyńskiego,34627277,obszar,0.77,Śródmieście,881f53c903fffff,20.998368,52.237368
+szkola,school,Szkoła Podstawowa nr 29 im. Giuseppe Garibaldiego,248801784,obszar,1.19,Śródmieście,881f53c9e1fffff,21.038492,52.223981
+szkola,school,Szkoła Podstawowa nr 32 im. Małego Powstańca,33740623,obszar,0.98,Śródmieście,881f53c955fffff,20.990124,52.251275
+szkola,school,Szkoła Podstawowa nr 32 im. Małego Powstańca,95039103,obszar,0.86,Śródmieście,881f53c955fffff,20.993852,52.252462
+szkola,school,Szkoła Podstawowa nr 34,10608963127,punkt,,Śródmieście,881f53c913fffff,21.02809,52.236198
+szkola,school,"Szkoła Podstawowa nr 41 im. Żołnierzy AK Grupy Bojowej ""Krybar""",377704349,obszar,0.67,Śródmieście,881f53c913fffff,21.025704,52.240038
+szkola,school,Szkoła Podstawowa nr 48 im. Adama Próchnika,30962334,obszar,0.42,Śródmieście,881f53c9e5fffff,21.020623,52.21897
+szkola,school,Szkoła Podstawowa nr 75 im. Marii Konopnickiej,35008876,obszar,0.66,Śródmieście,881f53c91dfffff,21.007273,52.242241
+szkola,school,Szkoła Policealna nr 25,11057416156,punkt,,Śródmieście,881f53c933fffff,21.013006,52.223782
+szkola,school,Słoneczna Szkoła Podstawowa Fundacji Alteredu,13705991111,punkt,,Śródmieście,881f53c957fffff,20.997894,52.247525
+szkola,school,Technikum Budownictwa i Architektury nr 1 im. Prof. Zdzisława Mączeńskiego,2366252352,punkt,,Śródmieście,881f53c9e1fffff,21.033672,52.224609
+szkola,school,Technikum Gastronomiczno-Hotelarskie nr 1,11057416157,punkt,,Śródmieście,881f53c933fffff,21.012862,52.224062
+szkola,school,Technikum Kinematograficzno-Komputerowe im. Krzysztofa Kieślowskiego,1394246869,obszar,0.26,Śródmieście,881f5226d9fffff,21.017861,52.215563
+szkola,school,V Liceum Ogólnokształcące im. księcia Józefa Poniatowskiego,128808349,obszar,0.8,Śródmieście,881f53c90bfffff,20.995511,52.245071
+szkola,school,Warsaw Montessori School,1077267949,obszar,0.19,Śródmieście,881f53c9e7fffff,21.042808,52.216869
+szkola,school,XI Liceum Ogólnokształcące im. Mikołaja Reja,221757310,obszar,0.29,Śródmieście,881f53c911fffff,21.010597,52.238878
+szkola,school,XV Liceum Ogólnokształcące im. Narcyzy Żmichowskiej,873293226,obszar,0.23,Śródmieście,881f5226dbfffff,21.023085,52.212841
+szkola,school,XVII Liceum Ogólnokształcące im. Andrzeja Frycza Modrzewskiego,220562280,obszar,0.86,Śródmieście,881f53c91dfffff,21.001665,52.240914
+szkola,school,XVIII Liceum Ogólnokształcące im. Jana Zamoyskiego,30621652,obszar,0.82,Śródmieście,881f53c917fffff,21.02287,52.233451
+szkola,school,XXVII Liceum Ogólnokształcące im. Tadeusza Czackiego,371875278,obszar,0.7,Śródmieście,881f5226d9fffff,21.018071,52.215046
+szkola,school,XXXVII Liceum Ogólnokształcące im. Jarosława Dąbrowskiego,29975374,obszar,0.52,Śródmieście,881f53c911fffff,21.01953,52.236659
+szkola,school,Zespół Państwowych Szkół Muzycznych im. Fryderyka Chopina,35009315,obszar,0.15,Śródmieście,881f53c919fffff,21.018757,52.244952
+szkola,school,Zespół Szkół Architektoniczno-Budowlanych I Licealnych,404032364,obszar,0.29,Śródmieście,881f53c953fffff,21.007797,52.254998
+szkola,school,Zespół Szkół Licealnych i Ekonomicznych nr 1,370069191,obszar,0.72,Śródmieście,881f53c955fffff,20.989433,52.252804
+szkola,school,Zespół Szkół Poligraficznych im. Marszałka Józefa Piłsudskiego,147217630,obszar,1.86,Śródmieście,881f53c955fffff,20.986411,52.252216
+szkola,school,Zespół Szkół Specjalnych nr 105,135770021,obszar,0.5,Śródmieście,881f53c957fffff,21.007851,52.249286
+szkola,school,Zespół Szkół Specjalnych nr 85,1039589021,obszar,1.27,Śródmieście,881f53c903fffff,20.9979,52.241163
+szkola,school,Zespół Szkół nr 22 im. Emiliana Konopczyńskiego,894708567,obszar,0.13,Śródmieście,881f53c911fffff,21.021416,52.237273
+szkola,school,,390483342,obszar,0.44,Śródmieście,881f53c9e7fffff,21.039747,52.217764
+szkola,school,Academy of Language,3690557344,punkt,,Żoliborz,881f53c94bfffff,20.977957,52.260548
+szkola,school,Branżowa Szkoła Elektroniczna I Stopnia nr 2,9476260854,punkt,,Żoliborz,881f53c95dfffff,20.992644,52.260302
+szkola,school,Branżowa Szkoła I Stopnia nr 11,10266019373,punkt,,Żoliborz,881f53cb23fffff,20.965548,52.270904
+szkola,school,Branżowa Szkoła I Stopnia nr 61,9471736641,punkt,,Żoliborz,881f53c95dfffff,20.992373,52.261095
+szkola,school,Branżowa Szkoła Rzemiosł Artystycznych I Stopnia nr 65,2366982927,punkt,,Żoliborz,881f53c95dfffff,20.987423,52.260855
+szkola,school,CL Liceum Ogólnokształcące dla Dorosłych,10266019376,punkt,,Żoliborz,881f53cb23fffff,20.964171,52.270532
+szkola,school,CXIV Liceum Ogólnokształcące im. Jana Kilińskiego,2366982925,punkt,,Żoliborz,881f53c95dfffff,20.987986,52.261204
+szkola,school,CXLIX Liceum Ogólnokształcące dla Dorosłych,9476260851,punkt,,Żoliborz,881f53c95dfffff,20.992807,52.259825
+szkola,school,I Liceum Ogólnokształcące im. Bolesława Limanowskiego,169348405,obszar,1.52,Żoliborz,881f53c95dfffff,20.987348,52.261906
+szkola,school,KIBERone,9155099789,punkt,,Żoliborz,881f53c94bfffff,20.972494,52.259845
+szkola,school,LXIV Liceum Ogólnokształcące im. Stanisława I. Witkiewicza,354301051,obszar,1.2,Żoliborz,881f53c949fffff,20.960706,52.263411
+szkola,school,Liceum Filmowe z Oddziałami Dwujęzycznymi przy WSF,9471776899,punkt,,Żoliborz,881f53c95dfffff,20.991983,52.260173
+szkola,school,Liceum Ogólnokształcące Kreacji Gier Wideo przy WSF,7874575427,punkt,,Żoliborz,881f53c95dfffff,20.991906,52.260488
+szkola,school,Ogólnokształcąca Szkoła Muzyczna I St. w Warszawie,10253754060,punkt,,Żoliborz,881f53cb33fffff,20.996847,52.270137
+szkola,school,Ogólnokształcąca Szkoła Muzyczna II St. w Warszawie,10253754059,punkt,,Żoliborz,881f53cb33fffff,20.996705,52.270048
+szkola,school,Prywatne Liceum Ogólnokształcące Zgromadzenia Sióstr Zmartwychwstania Pańskiego,10253731554,punkt,,Żoliborz,881f53c94bfffff,20.976839,52.265944
+szkola,school,Publiczna Szkoła Podstawowa Sióstr Zmartwychwstanek,3619853800,punkt,,Żoliborz,881f53c94bfffff,20.976889,52.265865
+szkola,school,Specjalny Ośrodek Szkolno-Wychowawczy nr 9,48166431,obszar,1.41,Żoliborz,881f53cb31fffff,20.976674,52.274474
+szkola,school,Szkoła Podstawowa Specjalna nr 123,306127519,obszar,0.52,Żoliborz,881f53cb37fffff,20.990742,52.268283
+szkola,school,Szkoła Podstawowa Specjalna nr 291,10253795686,punkt,,Żoliborz,881f53cb3dfffff,20.975041,52.274764
+szkola,school,Szkoła Podstawowa nr 267 im. Juliusza Słowackiego,48166421,obszar,1.18,Żoliborz,881f53cb35fffff,20.968988,52.266618
+szkola,school,"Szkoła Podstawowa nr 391 im. Macieja Aleksego Dawidowskiego ps. ""Alek""",305172914,obszar,0.6,Żoliborz,881f53cb37fffff,20.983355,52.268786
+szkola,school,"Szkoła Podstawowa nr 392 im. Jana Bytnara ps. ""Rudy""",256802355,obszar,0.93,Żoliborz,881f53c959fffff,20.995522,52.263113
+szkola,school,Szkoła Podstawowa nr 396 im. Andrzeja Wajdy,680577450,obszar,1.39,Żoliborz,881f53c94bfffff,20.971861,52.261167
+szkola,school,Szkoła Podstawowa nr 65 im. Władysława Orkana,316523220,obszar,1.94,Żoliborz,881f53cb31fffff,20.98483,52.275766
+szkola,school,Szkoła Podstawowa nr 68 im. Artura Oppmana,48089056,obszar,1.18,Żoliborz,881f53c95dfffff,20.983871,52.262391
+szkola,school,Szkoła Podstawowa nr 92 im. Jana Brzechwy,228046211,obszar,1.38,Żoliborz,881f53c949fffff,20.964289,52.264819
+szkola,school,"Technikum Elektroniczne nr 3 im. Żołnierzy Armii Krajowej ""Żywiciel""",9476260853,punkt,,Żoliborz,881f53c95dfffff,20.992698,52.260143
+szkola,school,Technikum Elektryczne nr 2 im. Synów Pułku,9471736639,punkt,,Żoliborz,881f53c95dfffff,20.992482,52.260778
+szkola,school,Technikum Mechaniczne nr 7 im. Jana Kilińskiego,2366982926,punkt,,Żoliborz,881f53c95dfffff,20.988086,52.260889
+szkola,school,Technikum Samochodowe nr 3,10266019374,punkt,,Żoliborz,881f53cb23fffff,20.965207,52.27072
+szkola,school,XVI Liceum Ogólnokształcące z Oddziałami Dwujęzycznymi im. Stefanii Sempołowskiej,352999490,obszar,1.25,Żoliborz,881f53c94bfffff,20.975551,52.264224
+szkola,school,Zespół Szkół Elektronicznych i Licealnych,9484537898,punkt,,Żoliborz,881f53c95dfffff,20.99259,52.26046
+szkola,school,Zespół Szkół nr 28,9484537899,punkt,,Żoliborz,881f53c95dfffff,20.992536,52.260619
+szpital,hospital,Szpital Psychiatryczny MindHealth,11747825856,punkt,,Białołęka,881f53cb55fffff,20.975022,52.306794
+szpital,hospital,Warszawskie Centrum Opieki Medycznej „Kopernik”,12514172862,punkt,,Białołęka,881f53ca2bfffff,21.027834,52.317393
+szpital,hospital,Szpital Bielański,288525189,obszar,6.67,Bielany,881f53cb05fffff,20.950265,52.286569
+szpital,hospital,"Instytut Geriatrii, Reumatologii i Rehabilitacji",66266351,obszar,4.93,Mokotów,881f522681fffff,20.994218,52.190901
+szpital,hospital,Instytut Psychiatrii i Neurologii,317632985,obszar,7.09,Mokotów,881f53536bfffff,21.063386,52.172591
+szpital,hospital,Państwowy Instytut Medyczny MSWiA,66266360,obszar,10.79,Mokotów,881f522689fffff,20.998372,52.19903
+szpital,hospital,Szpital Czerniakowski,402794261,obszar,1.25,Mokotów,881f53c9adfffff,21.037071,52.20533
+szpital,hospital,Szpital Świętej Elżbiety,220544130,obszar,1.15,Mokotów,881f5226d7fffff,21.021257,52.195259
+szpital,hospital,Szpital Świętej Rodziny,224402671,obszar,1.36,Mokotów,881f5226d1fffff,21.017533,52.203979
+szpital,hospital,Instytut Onkologii,978556487,obszar,1.29,Ochota,881f5226c9fffff,20.983689,52.215009
+szpital,hospital,Państwowy Szpital Kliniczny Dzieciątka Jezus,342051367,punkt,,Ochota,881f53c931fffff,20.997779,52.22406
+szpital,hospital,Szpital Kliniczny Dzieciątka Jezus,280726068,punkt,,Ochota,881f53c931fffff,21.002476,52.22584
+szpital,hospital,Uniwersyteckie Centrum Kliniczne WUM,28797295,obszar,7.4,Ochota,881f5226c1fffff,20.98362,52.208948
+szpital,hospital,Wojewódzki Szpital Chirurgii Urazowej,381668317,obszar,1.05,Ochota,881f53c923fffff,20.979245,52.219279
+szpital,hospital,Centralny Szpital Kliniczny MON,317570420,obszar,21.51,Praga-Południe,881f53c833fffff,21.089176,52.252154
+szpital,hospital,Szpital Dziecięcy im. Profesora dr. med. Jana Bogdanowicza,30847375,obszar,2.88,Praga-Południe,881f53c9c3fffff,21.062984,52.234177
+szpital,hospital,Szpital Grochowski,318632055,obszar,1.66,Praga-Południe,881f53c9ddfffff,21.0788,52.242165
+szpital,hospital,Samodzielny Publiczny Kliniczny Szpital Okulistyczny w Warszawie,1472493283,obszar,0.27,Praga-Północ,881f53c825fffff,21.029448,52.251136
+szpital,hospital,Szpital Praski,20150947,obszar,2.18,Praga-Północ,881f53c825fffff,21.028164,52.25095
+szpital,hospital,Magodent Szpital Onkologiczny,579416725,obszar,0.33,Targówek,881f53c84bfffff,21.05418,52.296295
+szpital,hospital,Mazowiecki Szpital Bródnowski,334924030,obszar,7.9,Targówek,881f53c843fffff,21.04437,52.290965
+szpital,hospital,Luxmed,111554521,obszar,0.07,Ursynów,881f52248bfffff,21.018837,52.138207
+szpital,hospital,NZOZ Szpital Mazovia,2179899852,punkt,,Ursynów,881f522499fffff,21.052409,52.142455
+szpital,hospital,Narodowy Instytut Onkologii,70540116,obszar,14.41,Ursynów,881f5224d7fffff,21.031756,52.146572
+szpital,hospital,Szpital Południowy,567924949,obszar,1.65,Ursynów,881f5224d7fffff,21.035331,52.146447
+szpital,hospital,Centrum Zdrowia Dziecka,40370104,obszar,18.09,Wawer,881f535211fffff,21.192362,52.206023
+szpital,hospital,Międzyleski Szpital Specjalistyczny,318996834,obszar,5.01,Wawer,881f53521dfffff,21.183731,52.203874
+szpital,hospital,Narodowy Instytut Kardiologii,170287320,obszar,6.14,Wawer,881f535255fffff,21.17479,52.217693
+szpital,hospital,Medicover,62343717,obszar,2.61,Wilanów,881f53532bfffff,21.078034,52.155115
+szpital,hospital,Oddział Dzienny Psychiatryczny dla Dzieci i Młodzieży,13540281024,punkt,,Wilanów,881f53536bfffff,21.064778,52.174927
+szpital,hospital,Instytut Gruźlicy i Chorób Płuc,35071394,obszar,1.39,Wola,881f53c905fffff,20.965909,52.235993
+szpital,hospital,Instytut Matki i Dziecka,98455258,obszar,2.07,Wola,881f53c92bfffff,20.970052,52.226783
+szpital,hospital,Szpital Wolski im. doktor Anny Gostyńskiej,98455264,obszar,5.19,Wola,881f53c92bfffff,20.972334,52.226135
+szpital,hospital,Szpital Świętej Zofii,963741030,obszar,0.38,Wola,881f53c901fffff,20.986973,52.240844
+szpital,hospital,Wojewódzki Szpital Zakaźny,35071440,obszar,2.15,Wola,881f53c905fffff,20.971768,52.233717
+szpital,hospital,Samodzielny Szpital Kliniczny im. prof. Witolda Orłowskiego,152192937,obszar,1.28,Śródmieście,881f53c9e9fffff,21.032565,52.229362
+szpital,hospital,Szpital Kliniczny im. ks. Anny Mazowieckiej,318202477,obszar,1.19,Śródmieście,881f53c91bfffff,21.02183,52.245052
+szpital,hospital,Szpital Nowowiejski,943488787,obszar,1.39,Śródmieście,881f53c933fffff,21.008138,52.219393
+szpital,hospital,Warszawski Instytut Zdrowia Kobiet,497390671,obszar,1.21,Śródmieście,881f53c955fffff,20.991573,52.255044
+szpital,hospital,Warszawski Szpital Dla Dzieci,891309425,obszar,0.45,Śródmieście,881f53c911fffff,21.019309,52.237602
+szpital,hospital,Luxmed Onkologia,91935125,obszar,1.39,Żoliborz,881f53c941fffff,20.960171,52.257869
+szpital,hospital,Wojskowy Instytut Medycyny Lotniczej,217911796,obszar,5.29,Żoliborz,881f53c949fffff,20.964514,52.262022
+targowisko,marketplace,Targowisko Hala Wola,1169720935,obszar,0.3,Bemowo,881f52265dfffff,20.91311,52.228426
+targowisko,marketplace,Targowisko Tarbem,59003577,obszar,0.63,Bemowo,881f523495fffff,20.918045,52.25527
+targowisko,marketplace,Bazarek Ćmielowska,57984444,obszar,0.34,Białołęka,881f53cb49fffff,20.951619,52.319509
+targowisko,marketplace,Ryneczek Poraje,57903080,obszar,0.37,Białołęka,881f53cb4bfffff,20.957628,52.313719
+targowisko,marketplace,,1311021424,obszar,2.44,Białołęka,881f53ca67fffff,21.008047,52.322707
+targowisko,marketplace,Bazarek na Broniewskiego,133607755,obszar,0.7,Bielany,881f53cb27fffff,20.951736,52.269642
+targowisko,marketplace,Targowisko Wolumen,43536092,obszar,0.89,Bielany,881f53cb67fffff,20.938569,52.285533
+targowisko,marketplace,,1275381084,obszar,0.07,Bielany,881f5234d3fffff,20.92222,52.275558
+targowisko,marketplace,,1426725318,obszar,0.23,Bielany,881f53cb29fffff,20.940156,52.285137
+targowisko,marketplace,Bazar,220536876,obszar,0.05,Mokotów,881f52268bfffff,21.009512,52.193415
+targowisko,marketplace,Bazar Lotników,24635936,obszar,1.07,Mokotów,881f5226b1fffff,21.019032,52.172477
+targowisko,marketplace,Bazar Olkuska,11758612065,punkt,,Mokotów,881f5226d7fffff,21.02154,52.199138
+targowisko,marketplace,Bazar Wałbrzyska,24635940,obszar,0.26,Mokotów,881f5226bbfffff,21.020715,52.173901
+targowisko,marketplace,Bazarek Pod Kopcem,692286279,obszar,0.23,Mokotów,881f53c9a1fffff,21.053283,52.208399
+targowisko,marketplace,Bazarek Racławicka,117936487,obszar,0.15,Mokotów,881f5226d7fffff,21.013861,52.197985
+targowisko,marketplace,Centrum Budownictwa i Wyposażenia Wnętrz,436157617,obszar,7.57,Mokotów,881f53c9a9fffff,21.055027,52.214556
+targowisko,marketplace,Centrum Wyposażenia Wnętrz DOM,1441845479,obszar,6.25,Mokotów,881f53c985fffff,21.058863,52.214548
+targowisko,marketplace,Giełda Narciarska przy Torze Stegny,8443596983,punkt,,Mokotów,881f522693fffff,21.044618,52.188426
+targowisko,marketplace,Pasaż Handlowy Wołoska,178769610,obszar,0.18,Mokotów,881f52268bfffff,21.002407,52.194475
+targowisko,marketplace,Targ śniadaniowy Mokotów,4314555489,punkt,,Mokotów,881f52269dfffff,21.023014,52.189302
+targowisko,marketplace,Bazar przy Racławickiej,66266362,obszar,0.38,Ochota,881f5226c7fffff,20.977195,52.198102
+targowisko,marketplace,Rynek Włodarzy,692396248,obszar,0.26,Ochota,881f522613fffff,20.954942,52.202656
+targowisko,marketplace,Targowisko Zastępcze,12800805049,punkt,,Ochota,881f5226c1fffff,20.976165,52.207399
+targowisko,marketplace,Zieleniak,1382640613,obszar,0.51,Ochota,881f5226c9fffff,20.975786,52.208839
+targowisko,marketplace,,381668267,obszar,0.12,Ochota,881f53c923fffff,20.976324,52.218393
+targowisko,marketplace,,381668286,obszar,0.11,Ochota,881f53c923fffff,20.97715,52.218828
+targowisko,marketplace,Bazarek,317366049,obszar,0.11,Praga-Południe,881f53c9d1fffff,21.086022,52.242951
+targowisko,marketplace,Bazarek,18064598,obszar,0.74,Praga-Południe,881f53c9d9fffff,21.087586,52.244274
+targowisko,marketplace,Bazarek Egipska,175197020,obszar,0.06,Praga-Południe,881f53c981fffff,21.070528,52.225456
+targowisko,marketplace,Pozostałość Jarmarku Europa,165518895,obszar,0.13,Praga-Południe,881f53c9c9fffff,21.044627,52.247279
+targowisko,marketplace,Targowisko na Szembeka,24279875,obszar,1.17,Praga-Południe,881f53c9d3fffff,21.102252,52.240924
+targowisko,marketplace,Bazar Namysłowska,920927913,obszar,0.3,Praga-Północ,881f53c829fffff,21.033406,52.264392
+targowisko,marketplace,Bazar Różyckiego,43280800,obszar,0.91,Praga-Północ,881f53c827fffff,21.040081,52.252305
+targowisko,marketplace,Bazar Szmulki,36312280,obszar,0.14,Praga-Północ,881f53c823fffff,21.05032,52.256044
+targowisko,marketplace,Bazar Szwedzka,1009945894,obszar,0.1,Praga-Północ,881f53c82bfffff,21.045935,52.261659
+targowisko,marketplace,Giełda Namysłowska,920927914,obszar,3.09,Praga-Północ,881f53c829fffff,21.034072,52.265604
+targowisko,marketplace,Nowy Bazar Różyckiego,1462441571,obszar,0.43,Praga-Północ,881f53c827fffff,21.040438,52.252032
+targowisko,marketplace,Bazar,121679364,obszar,0.25,Targówek,881f53c849fffff,21.040615,52.300147
+targowisko,marketplace,Bazarek Trocka,462061068,obszar,0.39,Targówek,881f53c801fffff,21.058284,52.275073
+targowisko,marketplace,,227353134,obszar,0.21,Targówek,881f53c845fffff,21.031989,52.285783
+targowisko,marketplace,Bazarek Ursus,419649457,obszar,1.18,Ursus,881f522667fffff,20.875481,52.199902
+targowisko,marketplace,"Bazarek ""Na Dołku""",817599234,obszar,0.53,Ursynów,881f535325fffff,21.052913,52.14634
+targowisko,marketplace,Nasz Bazarek,951499984,obszar,0.24,Ursynów,881f5224d7fffff,21.03581,52.145884
+targowisko,marketplace,Targowisko w Falenicy,409103677,obszar,1.01,Wawer,881f5352a5fffff,21.215584,52.161857
+targowisko,marketplace,Bazar Olimpia,1126110631,obszar,1.62,Wola,881f53c963fffff,20.956002,52.239984
+targowisko,marketplace,Bazar na Kole,136286646,obszar,0.68,Wola,881f53c969fffff,20.941087,52.246109
+targowisko,marketplace,BioBazar,9227092017,punkt,,Wola,881f53c907fffff,20.990134,52.232543
+targowisko,marketplace,Ryneczek Osiedlowy,458160872,obszar,0.01,Wola,881f53c961fffff,20.941726,52.238796
+targowisko,marketplace,Giełda Kwiatowa,2025674809,punkt,,Włochy,881f5226e9fffff,20.958592,52.194091
+targowisko,marketplace,"Targowisko ""Bakalarska""",35023413,obszar,1.98,Włochy,881f5226e9fffff,20.957783,52.192866
+targowisko,marketplace,Targowisko kwiatowe Bakalarska,592852095,obszar,0.91,Włochy,881f5226e9fffff,20.960289,52.194181
+targowisko,marketplace,Corso Kwiatowe,461021496,obszar,0.04,Śródmieście,881f53c903fffff,20.996583,52.238347
+targowisko,marketplace,Forteca Kręgliccy,1292930033,obszar,0.04,Śródmieście,881f53c951fffff,21.006662,52.257296
+targowisko,marketplace,"Pasaż handlowy ""Hale Mirowskie""",461021493,obszar,0.88,Śródmieście,881f53c903fffff,20.998415,52.238718
+targowisko,marketplace,,166014267,obszar,0.03,Śródmieście,881f53c903fffff,20.996088,52.239306
+targowisko,marketplace,,1513659980,obszar,0.01,Śródmieście,881f53c903fffff,20.996242,52.23947
+targowisko,marketplace,Bazarek,165443312,obszar,0.48,Żoliborz,881f53cb35fffff,20.967428,52.271481
+targowisko,marketplace,Targ Śniadaniowy,4314559389,punkt,,Żoliborz,881f53c959fffff,20.993678,52.26426
+targowisko,marketplace,,165443310,obszar,0.44,Żoliborz,881f53cb35fffff,20.971103,52.27142
+teatr,theatre,Amfiteatr Bemowo,182574395,obszar,0.19,Bemowo,881f5234b7fffff,20.905673,52.233603
+teatr,theatre,Teatr IMKA,9241059111,punkt,,Bemowo,881f523487fffff,20.890491,52.250111
+teatr,theatre,Bielańska Scena Kameralna,3364647005,punkt,,Bielany,881f53cb21fffff,20.947834,52.276231
+teatr,theatre,Teatr WAM,8853557617,punkt,,Bielany,881f53cb61fffff,20.929955,52.294452
+teatr,theatre,Amfiteatr Służew,935615199,obszar,0.07,Mokotów,881f5226b3fffff,21.02321,52.169853
+teatr,theatre,Druga Strefa,2272639028,punkt,,Mokotów,881f522683fffff,21.005564,52.186184
+teatr,theatre,Guliwer,397701767,obszar,0.04,Mokotów,881f5226d1fffff,21.019794,52.203278
+teatr,theatre,Nowy Teatr,337200513,obszar,0.88,Mokotów,881f5226d1fffff,21.019199,52.205438
+teatr,theatre,Scena 07,13333653457,punkt,,Mokotów,881f522683fffff,21.005253,52.183834
+teatr,theatre,Scena Przodownik,766916571,punkt,,Mokotów,881f5226d1fffff,21.019393,52.20414
+teatr,theatre,Teatr Baza,8262680946,punkt,,Mokotów,881f53c9adfffff,21.043784,52.208897
+teatr,theatre,Och-Teatr,30060794,obszar,0.15,Ochota,881f5226c9fffff,20.980151,52.214183
+teatr,theatre,Teatr Ochoty,28407885,obszar,0.04,Ochota,881f53c935fffff,20.988994,52.217163
+teatr,theatre,Amfiteatr,133669475,obszar,0.21,Praga-Południe,881f53c9cbfffff,21.057318,52.24354
+teatr,theatre,Teatr Akt,1008701200,punkt,,Praga-Południe,881f53c8e1fffff,21.111687,52.255433
+teatr,theatre,Teatr Powszechny,6204299,obszar,0.27,Praga-Południe,881f53c9c9fffff,21.048311,52.247117
+teatr,theatre,teatr niewielki,1159184444,obszar,0.02,Praga-Południe,881f53c999fffff,21.106255,52.232422
+teatr,theatre,Amfiteatr w Parku Praskim,131478889,obszar,0.03,Praga-Północ,881f53c825fffff,21.025451,52.254459
+teatr,theatre,Baj,448435616,punkt,,Praga-Północ,881f53c827fffff,21.034624,52.252496
+teatr,theatre,Centrum Sztuki Włączającej / Teatr 21,12468960385,punkt,,Praga-Północ,881f53c82dfffff,21.026584,52.260572
+teatr,theatre,Mazowiecki Teatr Muzyczny im. Jana Kiepury,11076989018,punkt,,Praga-Północ,881f53c827fffff,21.035659,52.25155
+teatr,theatre,Teatr XL,8634977586,punkt,,Praga-Północ,881f53c82dfffff,21.028996,52.261237
+teatr,theatre,,921666758,obszar,0.05,Praga-Północ,881f53c829fffff,21.028862,52.265352
+teatr,theatre,Scena Metro,1376320926,obszar,0.02,Targówek,881f53c84dfffff,21.028433,52.293836
+teatr,theatre,Teatr Rampa,29734240,obszar,0.13,Targówek,881f53c801fffff,21.049495,52.272662
+teatr,theatre,Amfiteatr,867479813,obszar,0.03,Ursus,881f522621fffff,20.885911,52.191273
+teatr,theatre,Mały amfiteatr,1296670508,obszar,0.02,Ursynów,881f535105fffff,21.089293,52.115832
+teatr,theatre,TR Warszawa/ATM Studio,6398263317,punkt,,Wawer,881f53522dfffff,21.124244,52.191559
+teatr,theatre,Amfiteatr,624255849,obszar,0.03,Wilanów,881f535105fffff,21.091356,52.114449
+teatr,theatre,Amfiteatr,83936339,obszar,0.35,Wola,881f53c967fffff,20.947759,52.231708
+teatr,theatre,Ateneum,263810162,punkt,,Śródmieście,881f53c913fffff,21.032906,52.237196
+teatr,theatre,Filharmonia Narodowa,29090530,obszar,0.25,Śródmieście,881f53c915fffff,21.01125,52.234413
+teatr,theatre,Garnizon Sztuki,11915997459,punkt,,Śródmieście,881f53c9e9fffff,21.026356,52.228442
+teatr,theatre,Klub Komediowy,2784843781,punkt,,Śródmieście,881f53c933fffff,21.017033,52.219723
+teatr,theatre,Komuna Warszawa,118252397,obszar,0.09,Śródmieście,881f53c93bfffff,21.005234,52.226886
+teatr,theatre,Opera Narodowa,8839947745,punkt,,Śródmieście,881f53c91dfffff,21.010346,52.243632
+teatr,theatre,Palladium,5250754692,punkt,,Śródmieście,881f53c915fffff,21.01176,52.232718
+teatr,theatre,PolkLore & History. Folk & Heritage Show,13997794485,punkt,,Śródmieście,881f53c919fffff,21.01314,52.246848
+teatr,theatre,Polonia,1777913771,punkt,,Śródmieście,881f53c9edfffff,21.015925,52.223631
+teatr,theatre,Potem o Tem,11850799247,punkt,,Śródmieście,881f53c957fffff,20.998069,52.24738
+teatr,theatre,Resort Komedii,10021315664,punkt,,Śródmieście,881f53c91dfffff,21.007134,52.243904
+teatr,theatre,Sala Kongresowa,588708775,punkt,,Śródmieście,881f53c915fffff,21.00497,52.2315
+teatr,theatre,Scena Letnia w Lapidarium,448025912,punkt,,Śródmieście,881f53c919fffff,21.011213,52.250205
+teatr,theatre,Scena Relax,463022488,obszar,0.09,Śródmieście,881f53c915fffff,21.011026,52.23313
+teatr,theatre,Stand up Lokal,426709850,punkt,,Śródmieście,881f53c933fffff,21.009956,52.221667
+teatr,theatre,Studio Buffo,263810164,punkt,,Śródmieście,881f53c9edfffff,21.026563,52.228053
+teatr,theatre,Syrena,316120167,punkt,,Śródmieście,881f53c9e5fffff,21.022079,52.216448
+teatr,theatre,TR Warszawa,316120170,punkt,,Śródmieście,881f53c9e5fffff,21.021045,52.215031
+teatr,theatre,Teatr Ateneum - Scena 20,8098596003,punkt,,Śródmieście,881f53c913fffff,21.031902,52.238193
+teatr,theatre,Teatr Capitol,327614614,punkt,,Śródmieście,881f53c91dfffff,21.002987,52.241137
+teatr,theatre,Teatr Collegium Nobilium,10176270798,punkt,,Śródmieście,881f53c957fffff,21.007882,52.248156
+teatr,theatre,Teatr Dramatyczny,263810170,punkt,,Śródmieście,881f53c915fffff,21.007497,52.231329
+teatr,theatre,Teatr Kamienica,2460317246,punkt,,Śródmieście,881f53c91dfffff,20.998579,52.243228
+teatr,theatre,Teatr Kwadrat,263810168,punkt,,Śródmieście,881f53c915fffff,21.00869,52.235879
+teatr,theatre,Teatr Lalka,704803547,punkt,,Śródmieście,881f53c915fffff,21.006537,52.232917
+teatr,theatre,Teatr Malabar Hotel,13280472182,punkt,,Śródmieście,881f53c9e5fffff,21.029728,52.215431
+teatr,theatre,Teatr Małego Widza,5275539434,punkt,,Śródmieście,881f53c919fffff,21.013963,52.249694
+teatr,theatre,"Teatr Muzyczny ""Roma""",264588401,punkt,,Śródmieście,881f53c93bfffff,21.007812,52.227411
+teatr,theatre,Teatr Narodowy,758727499,obszar,0.28,Śródmieście,881f53c91dfffff,21.009577,52.242585
+teatr,theatre,Teatr Narodowy,8839947746,punkt,,Śródmieście,881f53c91dfffff,21.009684,52.243355
+teatr,theatre,Teatr Polski,61052514,obszar,0.28,Śródmieście,881f53c911fffff,21.019915,52.238568
+teatr,theatre,Teatr Sabat,338664858,punkt,,Śródmieście,881f53c917fffff,21.020652,52.233787
+teatr,theatre,Teatr Stanisławowski (Królewski),13137161153,punkt,,Śródmieście,881f53c9e5fffff,21.030417,52.216656
+teatr,theatre,Teatr Studio,588729545,punkt,,Śródmieście,881f53c915fffff,21.006738,52.232637
+teatr,theatre,Teatr na Wyspie,1736885,obszar,0.09,Śródmieście,881f53c9e7fffff,21.036219,52.213752
+teatr,theatre,Teatr Żydowski,2976004742,punkt,,Śródmieście,881f53c91dfffff,21.005365,52.242695
+teatr,theatre,Warszawska Opera Kameralna,29388100,obszar,0.05,Śródmieście,881f53c90bfffff,20.997394,52.244009
+teatr,theatre,Współczesny,263796901,punkt,,Śródmieście,881f53c933fffff,21.01715,52.218994
+teatr,theatre,,423196570,obszar,0.02,Śródmieście,881f53c953fffff,21.012121,52.252218
+teatr,theatre,Komedia,14084150318,punkt,,Żoliborz,881f53cb35fffff,20.978615,52.269149
+teatr,theatre,Well Art,4411762295,punkt,,Żoliborz,881f53c959fffff,20.993048,52.264936
+teatr,theatre,,1432332138,obszar,0.04,Żoliborz,881f53c959fffff,21.001439,52.265777
+urzad_dzielnicy,town_hall,Urząd Dzielnicy Bemowo,3437699569,punkt,,Bemowo,881f5234b1fffff,20.91406,52.238728
+urzad_dzielnicy,town_hall,Urząd Dzielnicy Białołęka,239762892,obszar,0.17,Białołęka,881f53d9b7fffff,20.970762,52.321045
+urzad_dzielnicy,town_hall,Urząd Dzielnicy Bielany,1131128822,obszar,0.32,Bielany,881f53cb21fffff,20.948057,52.27632
+urzad_dzielnicy,town_hall,Urząd Dzielnicy Mokotów,113796039,obszar,0.15,Mokotów,881f5226d1fffff,21.014536,52.208424
+urzad_dzielnicy,town_hall,Urząd Dzielnicy Ochota,561287191,punkt,,Ochota,881f53c93dfffff,20.98658,52.221639
+urzad_dzielnicy,town_hall,Urząd Dzielnicy Praga-Południe,4907393023,punkt,,Praga-Południe,881f53c9cbfffff,21.068654,52.246612
+urzad_dzielnicy,town_hall,Urząd Dzielnicy Praga-Północ,9528196292,punkt,,Praga-Północ,881f53c825fffff,21.03179,52.250793
+urzad_dzielnicy,town_hall,Urząd Dzielnicy Rembertów,200067640,obszar,0.11,Rembertów,881f53c89dfffff,21.161907,52.258907
+urzad_dzielnicy,town_hall,Urząd Dzielnicy Targówek,121657760,obszar,0.14,Targówek,881f53c843fffff,21.049014,52.291187
+urzad_dzielnicy,town_hall,Urząd Dzielnicy Ursus,9446482769,punkt,,Ursus,881f522605fffff,20.893542,52.200787
+urzad_dzielnicy,town_hall,Urząd Dzielnicy Ursynów,5857805,obszar,0.21,Ursynów,881f5224d3fffff,21.045563,52.149007
+urzad_dzielnicy,town_hall,Urząd Dzielnicy Wawer,963418767,obszar,0.06,Wawer,881f53520bfffff,21.171096,52.206215
+urzad_dzielnicy,town_hall,Urząd Dzielnicy Wesoła,959744366,obszar,0.08,Wesoła,881f53cd09fffff,21.223431,52.245749
+urzad_dzielnicy,town_hall,Urząd Dzielnicy Wilanów,62343373,obszar,0.13,Wilanów,881f535305fffff,21.082584,52.164577
+urzad_dzielnicy,town_hall,Urząd Dzielnicy Wola,10589378100,punkt,,Wola,881f53c901fffff,20.987356,52.240395
+urzad_dzielnicy,town_hall,Urząd Dzielnicy Włochy,34428200,obszar,0.1,Włochy,881f5226e9fffff,20.95925,52.192237
+urzad_dzielnicy,town_hall,Urząd Dzielnicy Śródmieście,28823435,obszar,0.17,Śródmieście,881f53c93bfffff,21.010886,52.227848
+urzad_dzielnicy,town_hall,Urząd Dzielnicy Żoliborz,14415814,obszar,0.1,Żoliborz,881f53cb37fffff,20.983505,52.270085
