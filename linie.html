@@ -6,7 +6,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: nagłówek z nawigacją, zakładki rankingów, tabela linii po lewej i karta wybranej linii (mapka obciążenia) po prawej; na telefonie karta pod tabelą. */
+/* Jasny motyw jak w symulatorze (index.html): te same kolory, czcionki i kontrolki.
+   Układ: przyklejony nagłówek (tytuł, nawigacja, zakładki rankingów), narzędzia, tabela linii po lewej
+   i karta wybranej linii (mapka obciążenia) po prawej; na telefonie karta pod tabelą. */
 :root {
   --paper: #fbfcfb; --ground: #eceeed; --ink: #15201b; --ink-2: #46534d; --ink-3: #6f7b76;
   --rule: #d8dddb; --chip: #e5e9e7; --water: #bcd6e8; --accent: #256abf;
@@ -15,92 +17,96 @@
   --f-display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
   --f-body: "Barlow", system-ui, -apple-system, "Segoe UI", sans-serif;
   --f-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
-}
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
-  --paper: #161b19; --ground: #0f1312; --ink: #e6ebe8; --ink-2: #a9b4af; --ink-3: #7d8984;
-  --rule: #2b3330; --chip: #222a27; --water: #1d3546; --accent: #6da7ec;
-  --bus: #ff9a4d; --tram: #e163a8; --metro: #ff6b6b; --rail: #8f9cf0;
-  --good: #3fc16b; --warn: #f0b429; --hot: #ff8c42; --crit: #f06464;
-  color-scheme: dark;
-} }
-:root[data-theme="dark"] {
-  --paper: #161b19; --ground: #0f1312; --ink: #e6ebe8; --ink-2: #a9b4af; --ink-3: #7d8984;
-  --rule: #2b3330; --chip: #222a27; --water: #1d3546; --accent: #6da7ec;
-  --bus: #ff9a4d; --tram: #e163a8; --metro: #ff6b6b; --rail: #8f9cf0;
-  --good: #3fc16b; --warn: #f0b429; --hot: #ff8c42; --crit: #f06464;
-  color-scheme: dark;
+  color-scheme: light;
 }
 html, body { margin: 0; }
 [hidden] { display: none !important; }
 body { background: var(--paper); color: var(--ink); font: 15px/1.45 var(--f-body); }
-.wrap { max-width: 1320px; margin: 0 auto; padding-block: 18px 40px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; gap: 18px; }
-header { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
-h1 { font: 600 32px/1.05 var(--f-display); margin: 0; text-wrap: balance; }
-.sub { color: var(--ink-3); font-size: 13.5px; margin-top: 6px; max-width: 70ch; }
 a { color: var(--accent); }
-.nav { display: flex; gap: 8px; }
-.nav a { font: 500 13.5px var(--f-body); text-decoration: none; color: var(--ink); background: var(--chip); padding: 8px 12px; border-radius: 6px; }
-.nav a[aria-current="page"] { background: var(--ink); color: var(--paper); }
-.nav a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.wrap { --pad-l: max(18px, env(safe-area-inset-left, 0px)); --pad-r: max(18px, env(safe-area-inset-right, 0px));
+        max-width: 1320px; margin: 0 auto; padding: 0 var(--pad-r) 40px var(--pad-l); display: flex; flex-direction: column; gap: 18px; }
 
-.tabs { display: flex; gap: 6px; flex-wrap: wrap; }
-.tabs button { font: 500 14px var(--f-body); color: var(--ink-2); background: var(--chip); border: 1px solid transparent; border-radius: 99px; padding: 8px 14px; cursor: pointer; }
-.tabs button[aria-pressed="true"] { background: var(--paper); color: var(--ink); border-color: var(--ink); }
-.tabs .bad[aria-pressed="true"] { border-color: var(--crit); color: var(--crit); }
-.tabnote { color: var(--ink-2); font-size: 14px; }
+/* ===== Nagłówek (przyklejony, jak w panelu symulatora) ===== */
+.head { position: sticky; top: 0; z-index: 3; background: var(--paper); border-bottom: 1px solid var(--rule);
+        margin: 0 calc(-1 * var(--pad-r)) 0 calc(-1 * var(--pad-l)); padding: 18px var(--pad-r) 0 var(--pad-l); }
+.head-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+h1 { font: 600 28px/1.05 var(--f-display); margin: 0; text-wrap: balance; }
+.sub { color: var(--ink-3); font-size: 13px; margin-top: 6px; max-width: 75ch; }
+.nav { display: flex; gap: 6px; }
+.nav a { font: 500 13px/1 var(--f-body); text-decoration: none; color: var(--ink); background: var(--paper); border: 1px solid var(--rule); padding: 8px 12px; border-radius: 6px; }
+.nav a:hover { background: var(--chip); }
+.nav a[aria-current="page"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.tabs { display: flex; gap: 4px; margin-top: 12px; overflow-x: auto; scrollbar-width: none; }
+.tabs button { flex: none; font: 600 13.5px/1 var(--f-body); color: var(--ink-3); background: transparent; border: 0; border-bottom: 2.5px solid transparent; padding: 10px 10px 9px; cursor: pointer; white-space: nowrap; }
+.tabs button:hover { color: var(--ink); }
+.tabs button[aria-pressed="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+.tabs .bad[aria-pressed="true"] { color: var(--crit); border-bottom-color: var(--crit); }
+.tabnote { color: var(--ink-2); font-size: 14px; max-width: 95ch; }
+
+/* ===== Narzędzia: wyszukiwarka, rodzaj linii ===== */
 .tools { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-.tools input[type="search"] { font: inherit; color: var(--ink); background: var(--chip); border: 1px solid transparent; border-radius: 6px; padding: 8px 10px; min-width: 220px; }
+.tools input[type="search"] { font: 13.5px var(--f-body); color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 8px 10px; min-width: 240px; }
 .seg { display: inline-grid; grid-auto-flow: column; background: var(--chip); border-radius: 7px; padding: 3px; gap: 3px; }
-.seg button { font: 500 13px var(--f-body); color: var(--ink-2); background: transparent; border: 0; border-radius: 5px; padding: 6px 10px; cursor: pointer; }
+.seg button { font: 500 13.5px/1 var(--f-body); color: var(--ink-2); background: transparent; border: 0; border-radius: 5px; padding: 8px 10px; cursor: pointer; }
 .seg button[aria-pressed="true"] { background: var(--paper); color: var(--ink); box-shadow: 0 1px 2px rgb(0 0 0 / 0.12); }
 .muted { color: var(--ink-3); font-size: 12.5px; }
 
+/* ===== Tabela linii ===== */
 .main { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 22px; align-items: start; }
 .main > * { min-width: 0; }
-.tablewrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 8px; }
+.tablewrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 8px; background: var(--paper); }
 table { border-collapse: collapse; width: 100%; font-size: 14px; font-variant-numeric: tabular-nums; }
-th { position: sticky; top: 0; background: var(--paper); text-align: right; font: 600 12px/1.2 var(--f-display); text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-2); padding: 10px 8px; border-bottom: 1px solid var(--rule); white-space: nowrap; cursor: pointer; user-select: none; }
+th { position: sticky; top: 0; background: var(--ground); text-align: right; font: 600 12px/1.2 var(--f-display); text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-2); padding: 10px 8px; border-bottom: 1px solid var(--rule); white-space: nowrap; cursor: pointer; user-select: none; }
+th:hover { color: var(--ink); }
 th.l, td.l { text-align: left; }
 th[aria-sort] { color: var(--ink); }
 th[aria-sort="descending"]::after { content: " ↓"; } th[aria-sort="ascending"]::after { content: " ↑"; }
 td { padding: 8px; border-bottom: 1px solid var(--rule); text-align: right; white-space: nowrap; }
+tbody tr:last-child td { border-bottom: 0; }
 td.route { white-space: normal; min-width: 180px; max-width: 320px; color: var(--ink-2); font-size: 13px; }
 tbody tr { cursor: pointer; }
 tbody tr:hover { background: var(--chip); }
-tbody tr[aria-selected="true"] { background: color-mix(in srgb, var(--accent) 12%, var(--paper)); }
+tbody tr[aria-selected="true"] { background: color-mix(in srgb, var(--accent) 10%, var(--paper)); box-shadow: inset 3px 0 0 var(--accent); }
 td.sortcol { font-weight: 600; }
 .badge { display: inline-block; min-width: 38px; text-align: center; font: 600 14px/1 var(--f-display); color: #fff; border-radius: 4px; padding: 5px 6px; }
-.bar { display: inline-block; vertical-align: middle; height: 6px; border-radius: 3px; margin-left: 6px; background: var(--rule); width: 46px; position: relative; overflow: hidden; }
+.bar { display: inline-block; vertical-align: middle; height: 6px; border-radius: 3px; margin-left: 6px; background: var(--chip); width: 46px; position: relative; overflow: hidden; }
 .bar i { position: absolute; inset: 0 auto 0 0; border-radius: 3px; }
 .pct-good { color: var(--good); } .pct-warn { color: var(--warn); } .pct-hot { color: var(--hot); } .pct-crit { color: var(--crit); font-weight: 600; }
 .more { margin-top: 8px; }
-.btn { font: 500 13px var(--f-body); color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 8px 12px; cursor: pointer; }
+.btn { font: 500 13px/1 var(--f-body); color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 8px 12px; cursor: pointer; }
+.btn:hover { background: var(--chip); }
 
-.card { position: sticky; top: 12px; border: 1px solid var(--rule); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+/* ===== Karta wybranej linii ===== */
+.card { position: sticky; top: 150px; background: var(--paper); border: 1px solid var(--rule); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
 .card h2 { margin: 0; font: 600 26px/1 var(--f-display); display: flex; align-items: center; gap: 10px; }
 .card .name { color: var(--ink-2); font-size: 13.5px; }
 .card svg { width: 100%; height: auto; display: block; background: var(--ground); border-radius: 8px; }
-.kv { display: grid; grid-template-columns: 1fr auto; gap: 5px 12px; font-size: 14px; font-variant-numeric: tabular-nums; }
+.card a { font-weight: 500; }
+.kv { display: grid; grid-template-columns: 1fr auto; gap: 5px 12px; font-size: 14px; font-variant-numeric: tabular-nums; margin: 0; }
 .kv dt { color: var(--ink-3); } .kv dd { margin: 0; text-align: right; }
 .legend { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
 .legend i { height: 6px; border-radius: 2px; }
 .legend-l { display: grid; grid-template-columns: repeat(4, 1fr); font: 11px var(--f-mono); color: var(--ink-3); }
 .score { font: 600 40px/1 var(--f-display); }
-footer { color: var(--ink-3); font-size: 12.5px; max-width: 90ch; }
+footer { color: var(--ink-3); font-size: 12.5px; max-width: 90ch; border-top: 1px solid var(--rule); padding-top: 14px; }
 
-@media (max-width: 980px) { .main { grid-template-columns: minmax(0, 1fr); } .card { position: static; } .tools input[type="search"] { min-width: 0; flex: 1 1 200px; } }
+@media (max-width: 980px) { .main { grid-template-columns: minmax(0, 1fr); } .card { position: static; } .tools input[type="search"] { min-width: 0; flex: 1 1 200px; } .head { position: relative; } }
+@media (max-width: 560px) { .seg { display: grid; grid-auto-columns: 1fr; width: 100%; } .seg button { padding: 8px 4px; } .nav { width: 100%; } }
 </style>
 
 <div class="wrap">
-  <header>
-    <div>
-      <h1>Ranking linii ZTM</h1>
-      <div class="sub">Które linie autobusowe, tramwajowe, metra i SKM działają najlepiej, a które najgorzej: przepełnienie w porannym szczycie, wypełnienie, prędkość, korki i to, jak zmieni się obciążenie do 2036 r.</div>
+  <header class="head">
+    <div class="head-top">
+      <div>
+        <h1>Ranking linii ZTM</h1>
+        <div class="sub">Które linie autobusowe, tramwajowe, metra i SKM działają najlepiej, a które najgorzej: przepełnienie w porannym szczycie, wypełnienie, prędkość, korki i to, jak zmieni się obciążenie do 2036 r.</div>
+      </div>
+      <nav class="nav"><a href="index.html">← Symulator</a><a href="linie.html" aria-current="page">Ranking linii</a></nav>
     </div>
-    <nav class="nav"><a href="index.html">Symulator</a><a href="linie.html" aria-current="page">Ranking linii</a></nav>
+    <div class="tabs" id="tabs" role="tablist"></div>
   </header>
 
-  <div class="tabs" id="tabs" role="tablist"></div>
   <div class="tabnote" id="tabnote"></div>
   <div class="tools">
     <input type="search" id="q" placeholder="Szukaj linii lub przystanku końcowego…" aria-label="Szukaj linii">
