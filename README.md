@@ -7,13 +7,15 @@ linii autobusowych z oceną na żywo (nowy popyt, korki, tabor, przesiadki), lin
 Dane aplikacji: `frontend/symulator_dane.json` i `frontend/warszawa.json`.
 
 **GitHub Pages:** Settings → Pages → *Deploy from a branch* → gałąź, folder `/ (root)`.
-Wszystko działa statycznie oprócz pojazdów na żywo (API ZTM wymaga tokenu i nie pozwala na zapytania z przeglądarki).
+Wszystko działa statycznie oprócz pojazdów na żywo i oceny przez asystenta AI — oba API wymagają kluczy, których nie wolno
+wkładać do strony (na GitHub Pages „Oceń propozycję” pokazuje opis automatyczny z wyliczeń).
 
-**Lokalnie (z pojazdami na żywo):**
+**Lokalnie (z pojazdami na żywo i asystentem AI):**
 
 ```bash
 python3 -m venv .venv && .venv/bin/pip install -r requirements.txt   # raz
 echo "ZTM_API_KEY=token-z-dane.um.warszawa.pl" > .env                 # .env jest w .gitignore
+echo "ANTHROPIC_API_KEY=klucz-z-console.anthropic.com" >> .env        # asystent AI (model: ANTHROPIC_MODEL, domyślnie claude-opus-5-5)
 .venv/bin/python frontend/serwer.py                                   # http://localhost:8765/
 ```
 

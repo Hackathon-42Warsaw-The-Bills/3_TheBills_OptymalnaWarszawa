@@ -2461,7 +2461,27 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
   const SAMPLE = { nazwa: "przykład", trasa: [[20.8770, 52.2005], [20.8897, 52.2275]], przystanki: "auto" };
 
   // ---------- asystent ----------
-  let samplePromise = window.claude?.use ? window.claude.use("sample") : Promise.resolve(null), aiCtl = null;
+  // Ocena przez asystenta AI działa tylko lokalnie: frontend/serwer.py przekazuje polecenie do API Anthropic z kluczem
+  // ANTHROPIC_API_KEY z .env (klucza nie wolno wkładać do strony). Bez serwera z kluczem — np. na GitHub Pages —
+  // „Oceń propozycję” pokazuje opis automatyczny z wyliczeń.
+  async function aiAvailable() {
+    try { const r = await fetch("api/status", { cache: "no-store" }); return r.ok && !!(await r.json()).ai; } catch { return false; }
+  }
+  // Odpowiedź modelu przychodzi kawałkami; onText dostaje cały dotychczasowy tekst.
+  async function sampleLocal(prompt, { signal, onText }) {
+    let text = "";
+    try {
+      const r = await fetch("api/ocena", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ prompt }), signal });
+      if (!r.ok) throw Object.assign(new Error((await r.json().catch(() => ({}))).blad || `HTTP ${r.status}`), { code: "server" });
+      const rd = r.body.getReader(), dec = new TextDecoder();
+      for (;;) { const { done, value } = await rd.read(); if (done) break; text += dec.decode(value, { stream: true }); onText({ text }); }
+      return text;
+    } catch (e) {
+      if (e.name === "AbortError") throw Object.assign(new Error("Zatrzymano."), { code: "cancelled", text });
+      throw e;
+    }
+  }
+  let samplePromise = aiAvailable().then((ok) => (ok ? sampleLocal : null)), aiCtl = null;
   function describe(r) {
     return {
       rok: year, scenariusz: scenario, dlugosc_km: +(r.len / 1000).toFixed(1), przystanki: r.nStops,
@@ -2501,7 +2521,7 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
   async function askAI() {
     const r = lastEval; if (!r) return;
     const out = $("ai-out"), note = $("ai-note"), sample = await samplePromise;
-    if (!sample) { out.textContent = templateComment(r); note.textContent = "Opis automatyczny z wyliczeń. Asystent AI działa w opublikowanej wersji aplikacji."; return; }
+    if (!sample) { out.textContent = templateComment(r); note.textContent = "Opis automatyczny z wyliczeń. Ocena przez asystenta AI działa lokalnie: .venv/bin/python frontend/serwer.py z kluczem ANTHROPIC_API_KEY w .env."; return; }
     aiCtl = new AbortController(); $("ai-stop").hidden = false; $("ai-btn").disabled = true;
     out.textContent = "Asystent analizuje propozycję…"; note.textContent = "";
     const prompt = `Jesteś planistą transportu w Warszawie (ZTM). ${LE ? `Oceń zmianę istniejącej linii autobusowej ${LE.ref} (porównanie przed/po w polu edycja_linii)` : "Oceń propozycję nowej linii autobusowej"} na podstawie wyliczeń symulatora (rok prognozy ${year}).
@@ -2516,11 +2536,8 @@ ${JSON.stringify(describe(r), null, 1)}`;
     try {
       await sample(prompt, { signal: aiCtl.signal, onText: ({ text }) => { out.textContent = text; } });
     } catch (e) {
-      if (e.text) out.textContent = e.text;
-      if (["not_granted", "sampling_disabled", "not_declared", "capability_disabled", "capability_removed"].includes(e.code)) {
-        samplePromise = Promise.resolve(null); out.textContent = templateComment(r); note.textContent = "Asystent AI jest niedostępny — pokazuję opis automatyczny.";
-      } else if (e.code === "rate_limited") note.textContent = "Za dużo zapytań do asystenta. Spróbuj za chwilę.";
-      else if (e.code !== "cancelled") note.textContent = "Asystent nie odpowiedział. Spróbuj ponownie.";
+      if (e.code === "cancelled") { if (e.text) out.textContent = e.text; note.textContent = "Zatrzymano."; }
+      else { out.textContent = templateComment(r); note.textContent = `Asystent AI nie odpowiedział (${e.message}) — pokazuję opis automatyczny.`; }
     } finally { $("ai-stop").hidden = true; $("ai-btn").disabled = !lastEval; }
   }
 
