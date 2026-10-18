@@ -21,8 +21,8 @@
    Osobno: najlepszy punkt na każdej linii ZTM przejeżdżającej przez klaster (dołożenie przystanku do linii).
 
 Wynik:
-  dane/przystanki_top30.csv          — proponowane przystanki (1–3 na klaster)
-  dane/przystanki_top30_na_liniach.csv — najlepszy punkt na każdej istniejącej linii w klastrze
+  dane/przystanki/przystanki_top30.csv          — proponowane przystanki (1–3 na klaster)
+  dane/przystanki/przystanki_top30_na_liniach.csv — najlepszy punkt na każdej istniejącej linii w klastrze
   data/cache/budynki_mieszkalne.parquet — budynki z OSM w Warszawie (cache, pierwszy przebieg kilka minut)
 
 Uruchomienie:  .venv/bin/python mapping/przystanki_top30.py
@@ -112,7 +112,7 @@ def demand_points(hexes: gpd.GeoDataFrame, area_hex: set) -> gpd.GeoDataFrame:
     b = osm_buildings(tuple(hexes.total_bounds)).copy()   # cała Warszawa — cache przyda się też dla innych klastrów
     b["h3"] = [h3.latlng_to_cell(y, x, 8) for x, y in zip(b["lon"], b["lat"])]
     b = b[b["h3"].isin(area_hex)]
-    prog = pd.read_csv(DANE / "prognoza_ludnosci.csv", encoding="utf-8-sig").set_index("h3")
+    prog = pd.read_csv(DANE / "ludnosc" / "prognoza_ludnosci.csv", encoding="utf-8-sig").set_index("h3")
 
     # mieszkańcy 2025 na budynki mieszkalne
     res = b[(b["kind"] == "dom") | ((b["kind"] == "yes") & b["pow_zabudowy"].between(*YES_AREA))].copy()
@@ -141,7 +141,7 @@ def demand_points(hexes: gpd.GeoDataFrame, area_hex: set) -> gpd.GeoDataFrame:
     # praca i cele podróży
     work = b[b["kind"] == "praca"]
     parts.append(pd.DataFrame({"lon": work["lon"], "lat": work["lat"], "h3": work["h3"], "rodzaj": "praca", "osoby": work["m2"] / M2_PER_JOB}))
-    inf = gpd.read_file(DANE / "warszawa_infrastruktura.geojson")
+    inf = gpd.read_file(DANE / "infrastruktura" / "warszawa_infrastruktura.geojson")
     inf = inf[inf["h3"].isin(area_hex)]
     parts.append(pd.DataFrame({"lon": inf["lon"], "lat": inf["lat"], "h3": inf["h3"], "rodzaj": "cele",
                                "osoby": inf["kategoria"].map(INFRA_EQ).fillna(50)}))
@@ -221,19 +221,19 @@ def weight(d: np.ndarray) -> np.ndarray:
 
 def main() -> None:
     top = pd.read_csv(ML_DIR / "lista_heksagonow_top30.csv")
-    hexes = gpd.read_file(DANE / "kontury_400m" / "warszawa_h3_400m_pelna.geojson")[["h3", "dzielnica", "geometry"]]
+    hexes = gpd.read_file(DANE / "klastry" / "kontury_400m" / "warszawa_h3_400m_pelna.geojson")[["h3", "dzielnica", "geometry"]]
     polys = hexes[hexes["h3"].isin(top["h3"])].to_crs(CRS)
     # popyt także z sąsiednich klastrów — zasięg dojścia wychodzi poza heksagon
     area = set().union(*(h3.grid_disk(h, 1) for h in top["h3"])) & set(hexes["h3"])
     app = json.loads((ROOT / "frontend" / "symulator_dane.json").read_text(encoding="utf-8"))
-    routes = gpd.read_file(DANE / "warszawa_linie_trasy.geojson")
+    routes = gpd.read_file(DANE / "komunikacja" / "warszawa_linie_trasy.geojson")
     routes = routes[routes["typ"].isin(["autobus", "tramwaj"])].to_crs(CRS)   # przystanek dokładamy do autobusu/tramwaju
 
     print("== popyt (budynki OSM, GUNB, infrastruktura)")
     dem = demand_points(hexes, area)
     ztm = gpd.GeoSeries(gpd.points_from_xy([s[0] for s in app["stops"]["ztm"]], [s[1] for s in app["stops"]["ztm"]]), crs=4326).to_crs(CRS)
     rail = gpd.GeoSeries(gpd.points_from_xy([s[0] for s in app["stops"]["rail"]], [s[1] for s in app["stops"]["rail"]]), crs=4326).to_crs(CRS)
-    bike = pd.read_csv(DANE / "veturilo_stacje.csv")
+    bike = pd.read_csv(DANE / "infrastruktura" / "veturilo_stacje.csv")
     bike = gpd.GeoSeries(gpd.points_from_xy(bike["lon"], bike["lat"]), crs=4326).to_crs(CRS)
     covered = np.zeros(len(dem), bool)
     covered[np.unique(shapely.STRtree(ztm.values).query(dem.geometry.values, predicate="dwithin", distance=COVER_R)[0])] = True
@@ -301,9 +301,9 @@ def main() -> None:
                              "odl_do_przystanku_ztm_m": r.odl_do_przystanku_ztm_m})
 
     o = pd.DataFrame(out)
-    o.to_csv(DANE / "przystanki_top30.csv", index=False, encoding="utf-8")
+    o.to_csv(DANE / "przystanki" / "przystanki_top30.csv", index=False, encoding="utf-8")
     pl = pd.DataFrame(per_line).sort_values(["rank", "ocena"], ascending=[True, False])
-    pl.to_csv(DANE / "przystanki_top30_na_liniach.csv", index=False, encoding="utf-8")
+    pl.to_csv(DANE / "przystanki" / "przystanki_top30_na_liniach.csv", index=False, encoding="utf-8")
     print(f"== {len(c)} kandydatów, {int((o['nr'] > 0).sum())} przystanków w {o.loc[o['nr'] > 0, 'h3'].nunique()} klastrach; "
           f"klastry bez ulicy dla autobusu: {int((o['nr'] == 0).sum())}; punktów na liniach: {len(pl)}")
     show = ["rank", "dzielnica", "nr", "ulica", "ocena", "nowo_obsluzeni", "mieszkancy_2025", "nowi_2036", "odl_do_przystanku_ztm_m", "linie_ztm_na_ulicy"]

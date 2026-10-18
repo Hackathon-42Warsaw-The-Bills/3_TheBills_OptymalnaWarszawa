@@ -5,8 +5,8 @@
   station_status      — rowery i wolne stojaki w chwili pobrania (migawka, zmienia się co minutę)
 
 Wynik:
-  dane/veturilo_stacje.csv       — jedna stacja na wiersz (tylko w granicach Warszawy), z h3 i dzielnicą
-  dane/veturilo_w_klastrach.csv  — indeks h3, wszystkie 848 klastrów:
+  dane/infrastruktura/veturilo_stacje.csv       — jedna stacja na wiersz (tylko w granicach Warszawy), z h3 i dzielnicą
+  dane/infrastruktura/veturilo_w_klastrach.csv  — indeks h3, wszystkie 848 klastrów:
       stacje_veturilo, stojaki_veturilo, rowery_teraz, ma_veturilo, odl_do_veturilo_m (od środka klastra)
 
 Uruchomienie:  .venv/bin/python mapping/veturilo.py
@@ -39,7 +39,7 @@ def main() -> None:
     st = info.merge(status[["station_id", "num_bikes_available", "num_docks_available"]], on="station_id", how="left")
     st = st[~st.get("is_virtual_station", False).fillna(False).astype(bool)]
 
-    hexes = gpd.read_file(DANE / "kontury_400m" / "warszawa_h3_400m_pelna.geojson")[["h3", "dzielnica", "geometry"]]
+    hexes = gpd.read_file(DANE / "klastry" / "kontury_400m" / "warszawa_h3_400m_pelna.geojson")[["h3", "dzielnica", "geometry"]]
     pts = gpd.GeoDataFrame(st, geometry=gpd.points_from_xy(st["lon"], st["lat"]), crs=4326)
     pts = gpd.sjoin(pts, hexes, predicate="within", how="inner").drop(columns="index_right")
     pts["h3"] = [h3.latlng_to_cell(y, x, 8) for x, y in zip(pts["lon"], pts["lat"])]
@@ -50,7 +50,7 @@ def main() -> None:
         "rowery_teraz": pts["num_bikes_available"], "wolne_stojaki_teraz": pts["num_docks_available"],
         "h3": pts["h3"], "dzielnica": pts["dzielnica"], "pobrano": stamp,
     }).sort_values(["dzielnica", "nazwa"])
-    out.to_csv(DANE / "veturilo_stacje.csv", index=False, encoding="utf-8")
+    out.to_csv(DANE / "infrastruktura" / "veturilo_stacje.csv", index=False, encoding="utf-8")
 
     # Zestawienie na wszystkie klastry (indeks h3), odległość od środka klastra do najbliższej stacji
     g = out.groupby("h3").agg(stacje_veturilo=("station_id", "size"), stojaki_veturilo=("stojaki", "sum"),
@@ -62,7 +62,7 @@ def main() -> None:
     near = gpd.sjoin_nearest(gpd.GeoDataFrame(geometry=c.values, crs=CRS), gpd.GeoDataFrame(geometry=sp.values, crs=CRS), distance_col="d")
     k["odl_do_veturilo_m"] = near.groupby(level=0)["d"].min().round().astype(int).values
     k.index.name = "h3"
-    k.to_csv(DANE / "veturilo_w_klastrach.csv", encoding="utf-8")
+    k.to_csv(DANE / "infrastruktura" / "veturilo_w_klastrach.csv", encoding="utf-8")
 
     print(f"== {len(info)} stacji w feedzie, w granicach Warszawy: {len(out)}, stojaków: {out['stojaki'].sum()}, "
           f"rowerów teraz ({stamp}): {int(out['rowery_teraz'].sum())}")

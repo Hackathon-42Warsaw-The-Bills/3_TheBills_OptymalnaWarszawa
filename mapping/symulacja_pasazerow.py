@@ -389,9 +389,9 @@ def metro_validation(seg: pd.DataFrame, board: pd.DataFrame) -> None:
 
 def main():
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    hexes = gpd.read_file(DANE / "kontury_400m" / "warszawa_h3_400m_pelna.geojson")[["h3", "geometry"]]
-    feats = pd.read_csv(DANE / "cechy_klastrow.csv").set_index("h3").reindex(hexes["h3"]).fillna(0)
-    prog = pd.read_csv(DANE / "prognoza_ludnosci.csv").set_index("h3").reindex(hexes["h3"])
+    hexes = gpd.read_file(DANE / "klastry" / "kontury_400m" / "warszawa_h3_400m_pelna.geojson")[["h3", "geometry"]]
+    feats = pd.read_csv(DANE / "klastry" / "cechy_klastrow.csv").set_index("h3").reindex(hexes["h3"]).fillna(0)
+    prog = pd.read_csv(DANE / "ludnosc" / "prognoza_ludnosci.csv").set_index("h3").reindex(hexes["h3"])
     stops = pd.read_csv(GTFS / "stops.txt", dtype={"stop_id": str}, usecols=["stop_id", "stop_name", "stop_code", "stop_lat", "stop_lon"])
     stops = stops.rename(columns={"stop_lat": "lat", "stop_lon": "lon"})
 

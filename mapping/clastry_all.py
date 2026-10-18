@@ -8,8 +8,8 @@ Kolumna o tej samej nazwie w kilku plikach: jeśli wartości są takie same — 
 druga dostaje przyrostek ze źródłem (np. population__cechy). Brak obiektów w klastrze = 0 (liczniki).
 
 Wynik:
-  dane/clastry_all.csv          — h3 + wszystkie kolumny
-  dane/clastry_all_kolumny.csv  — słownik: kolumna -> plik źródłowy
+  dane/klastry/clastry_all.csv          — h3 + wszystkie kolumny
+  dane/klastry/clastry_all_kolumny.csv  — słownik: kolumna -> plik źródłowy
 
 Uruchomienie (po skryptach, które tworzą pliki źródłowe):  .venv/bin/python mapping/clastry_all.py
 """
@@ -24,20 +24,20 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parent.parent
 DANE = ROOT / "dane"
 ML_DIR = DANE / "wskaznik_wykluczenia" / "output_run3"   # wyniki modelu wskaźnika wykluczenia (heatmapa + lista top 30)
-OUT, OUT_COLS = DANE / "clastry_all.csv", DANE / "clastry_all_kolumny.csv"
+OUT, OUT_COLS = DANE / "klastry" / "clastry_all.csv", DANE / "klastry" / "clastry_all_kolumny.csv"
 
 # (plik, krótka nazwa źródła, kolumny do pominięcia, czy brak wiersza = 0)
 TABLES = [
-    ("kontury_400m/warszawa_h3_400m_pelna.csv", "kontury", [], False),
-    ("kontury_400m_clean/warszawa_h3_400m_pelna_clean.csv", "kontury_clean", ["district", "district_slug"], False),
-    ("historia_ludnosci.csv", "historia", [], False),
-    ("prognoza_ludnosci.csv", "prognoza", [], False),
-    ("wspolczynnik_przyrostu_ludnosci.csv", "wspolczynnik", [], False),
+    ("klastry/kontury_400m/warszawa_h3_400m_pelna.csv", "kontury", [], False),
+    ("klastry/kontury_400m_clean/warszawa_h3_400m_pelna_clean.csv", "kontury_clean", ["district", "district_slug"], False),
+    ("ludnosc/historia_ludnosci.csv", "historia", [], False),
+    ("ludnosc/prognoza_ludnosci.csv", "prognoza", [], False),
+    ("ludnosc/wspolczynnik_przyrostu_ludnosci.csv", "wspolczynnik", [], False),
     ("kolej/klastry_kolej.csv", "kolej", [], False),
-    ("cechy_klastrow.csv", "cechy", [], False),
-    ("infrastruktura_w_klastrach.csv", "infrastruktura", [], True),
-    ("veturilo_w_klastrach.csv", "veturilo", [], False),
-    ("potrzeba_komunikacji.csv", "potrzeba", [], False),
+    ("klastry/cechy_klastrow.csv", "cechy", [], False),
+    ("infrastruktura/infrastruktura_w_klastrach.csv", "infrastruktura", [], True),
+    ("infrastruktura/veturilo_w_klastrach.csv", "veturilo", [], False),
+    ("komunikacja/potrzeba_komunikacji.csv", "potrzeba", [], False),
     ("symulacja/klastry_podroze.csv", "symulacja", [], False),
 ]
 
@@ -63,22 +63,22 @@ def derived() -> list[tuple[str, pd.DataFrame]]:
     out.append(("wykluczenie", pd.DataFrame({"pred_wykluczenie": heat["pred"].where(analiza), "rank_wykluczenie": heat["rank"].where(analiza),
                                              "top30": heat["top30"], "top30_etykieta": top["etykieta_final"]})))
 
-    p = read("przystanki_top30.csv")
+    p = read("przystanki/przystanki_top30.csv")
     p = p[p["nr"] > 0]
     best = p.sort_values("nr").drop_duplicates("h3").set_index("h3")
     agg = p.groupby("h3").agg(nowe_przystanki_liczba=("nr", "size"), nowe_przystanki_obsluzeni=("nowo_obsluzeni", "sum"))
     agg["nowy_przystanek_lon"], agg["nowy_przystanek_lat"] = best["lon"], best["lat"]
     agg["nowy_przystanek_ocena"] = best["ocena"]
     agg["nowy_przystanek_odl_ztm_m"] = best["odl_do_przystanku_ztm_m"]
-    pl = read("przystanki_top30_na_liniach.csv")
+    pl = read("przystanki/przystanki_top30_na_liniach.csv")
     agg["linie_ztm_do_dolozenia_przystanku"] = pl.groupby("h3")["linia"].nunique()
     out.append(("przystanki_top30", agg))
 
     # wsiadający w porannym szczycie (symulacja) — przystanki przypisane do klastra po położeniu
-    st = read("linie_dostepne_na_przystanku.csv").drop_duplicates("stop_id")
+    st = read("komunikacja/linie_dostepne_na_przystanku.csv").drop_duplicates("stop_id")
     st["h3"] = [h3.latlng_to_cell(la, lo, 8) for la, lo in zip(st["stop_lat"], st["stop_lon"])]
     w = read("symulacja/przystanki_wsiadania.csv").merge(st[["stop_id", "h3"]], on="stop_id")
-    lines = read("linie_dostepne_na_przystanku.csv").astype({"linia": str})
+    lines = read("komunikacja/linie_dostepne_na_przystanku.csv").astype({"linia": str})
     lines["h3"] = lines["stop_id"].map(st.set_index("stop_id")["h3"])
     wagg = w.groupby("h3")[["wsiadajacy_h_2025", "wsiadajacy_h_2036"]].sum().round()
     wagg["slupki_ztm"] = st.groupby("h3").size()

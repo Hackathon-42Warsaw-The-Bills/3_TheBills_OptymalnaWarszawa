@@ -7,12 +7,12 @@ Wynik: viz/symulator_dane.json
   people  — punkty ludności 100 m (GHSL), każdy z udziałem w ludności swojego klastra
             -> ludność punktu w roku t = udział × ludność zabudowy istniejącej klastra w roku t
   newbuild— nowe budynki (pozwolenia GUNB): punkt + liczba nowych mieszkańców w każdym roku
-  stops   — przystanki ZTM z liniami (dane/linie_dostepne_na_przystanku.csv) i stacje kolei/metra
+  stops   — przystanki ZTM z liniami (dane/komunikacja/linie_dostepne_na_przystanku.csv) i stacje kolei/metra
   rail    — linie metra/SKM/KM/WKD do wyświetlenia
-  routes  — trasy linii autobusowych i tramwajowych ZTM (dane/warszawa_linie_trasy.geojson) z liczbą kursów
+  routes  — trasy linii autobusowych i tramwajowych ZTM (dane/komunikacja/warszawa_linie_trasy.geojson) z liczbą kursów
   boundary— granica miasta (do maski „poza Warszawą”)
   planned_metro — planowane linie metra (M2 zachód, M3, M4): stacje w kolejności, rok otwarcia
-  infra   — cele podróży z dane/warszawa_infrastruktura.geojson (szpitale, szkoły, handel, kultura, parki…)
+  infra   — cele podróży z dane/infrastruktura/warszawa_infrastruktura.geojson (szpitale, szkoły, handel, kultura, parki…)
   Wszystko przycięte do granic Warszawy.
   params  — parametry modelu (osoby/mieszkanie, dryf, lata)
 
@@ -91,7 +91,7 @@ def road_class(highway: str) -> str:
 
 def on_bus_routes(e: gpd.GeoDataFrame) -> np.ndarray:
     """Czy odcinek leży (w ZTM_ROUTE_SHARE długości) w korytarzu obecnej linii autobusowej ZTM."""
-    path = DANE / "warszawa_linie_trasy.geojson"
+    path = DANE / "komunikacja" / "warszawa_linie_trasy.geojson"
     if not path.exists():
         return np.zeros(len(e), dtype=bool)
     routes = gpd.read_file(path)
@@ -203,7 +203,7 @@ def export_people(hexes: gpd.GeoDataFrame, inputs: dict) -> tuple[list, list, di
 
 
 def export_hexes(hexes: gpd.GeoDataFrame) -> list:
-    prog = pd.read_csv(DANE / "prognoza_ludnosci.csv").set_index("h3")
+    prog = pd.read_csv(DANE / "ludnosc" / "prognoza_ludnosci.csv").set_index("h3")
     kolej = pd.read_csv(DANE / "kolej" / "klastry_kolej.csv").set_index("h3")
     out = []
     for r in hexes.itertuples():
@@ -238,10 +238,10 @@ def parts_of(geom, tol: float) -> list:
 
 
 def export_stops(boundary) -> dict:
-    # Przystanki ZTM z liniami (dane/linie_dostepne_na_przystanku.csv), tylko w granicach miasta.
-    st = pd.read_csv(DANE / "linie_dostepne_na_przystanku.csv", dtype={"stop_id": str, "linia": str})
-    routes = gpd.read_file(DANE / "warszawa_linie_trasy.geojson", columns=["route_short_name", "typ"]) \
-        if (DANE / "warszawa_linie_trasy.geojson").exists() else pd.DataFrame(columns=["route_short_name", "typ"])
+    # Przystanki ZTM z liniami (dane/komunikacja/linie_dostepne_na_przystanku.csv), tylko w granicach miasta.
+    st = pd.read_csv(DANE / "komunikacja" / "linie_dostepne_na_przystanku.csv", dtype={"stop_id": str, "linia": str})
+    routes = gpd.read_file(DANE / "komunikacja" / "warszawa_linie_trasy.geojson", columns=["route_short_name", "typ"]) \
+        if (DANE / "komunikacja" / "warszawa_linie_trasy.geojson").exists() else pd.DataFrame(columns=["route_short_name", "typ"])
     tram_lines = set(routes.loc[routes["typ"] == "tram", "route_short_name"].astype(str))
     g = st.groupby("stop_id").agg(lon=("stop_lon", "first"), lat=("stop_lat", "first"), name=("stop_name", "first"),
                                   nr=("busstopNr", "first"), linie=("linia", lambda x: sorted(set(x), key=lambda v: (len(v), v))))
@@ -280,7 +280,7 @@ def export_routes(boundary) -> list:
     """Trasy linii autobusowych i tramwajowych ZTM, przycięte do granic Warszawy.
     Oba kierunki osobno (drugi kierunek często jedzie inną ulicą: jednokierunkowe ulice, pętle),
     po jednym — najdłuższym — przebiegu na kierunek; kursy = na ten kierunek."""
-    path = DANE / "warszawa_linie_trasy.geojson"
+    path = DANE / "komunikacja" / "warszawa_linie_trasy.geojson"
     if not path.exists():
         return []
     r = gpd.read_file(path)
@@ -299,7 +299,7 @@ def export_routes(boundary) -> list:
     return out
 
 
-# Kategorie z dane/warszawa_infrastruktura.* -> grupy pokazywane w aplikacji.
+# Kategorie z dane/infrastruktura/warszawa_infrastruktura.* -> grupy pokazywane w aplikacji.
 INFRA_GROUPS = {"szpital": "szpital", "szkola": "szkola", "centrum_handlowe": "handel", "park": "park",
                 "kino": "kultura", "teatr": "kultura", "muzeum": "kultura", "urzad_dzielnicy": "urzad",
                 "targowisko": "targowisko", "miejsce_kultu": "kult"}
@@ -307,7 +307,7 @@ INFRA_GROUPS = {"szpital": "szpital", "szkola": "szkola", "centrum_handlowe": "h
 
 def export_infra(boundary) -> dict:
     """Cele podróży: punkty (środek obiektu) wszystkich kategorii + obrysy parków."""
-    path = DANE / "warszawa_infrastruktura.geojson"
+    path = DANE / "infrastruktura" / "warszawa_infrastruktura.geojson"
     if not path.exists():
         return {"points": [], "parks": []}
     g = gpd.read_file(path).to_crs("EPSG:4326")
@@ -376,7 +376,7 @@ def main() -> None:
         OUT.write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
         print(f"== {OUT.relative_to(ROOT)}: {OUT.stat().st_size / 1e6:.1f} MB")
         return
-    hexes = gpd.read_file(DANE / "kontury_400m" / "warszawa_h3_400m_pelna.geojson")
+    hexes = gpd.read_file(DANE / "klastry" / "kontury_400m" / "warszawa_h3_400m_pelna.geojson")
     inputs = pl.load_inputs()
     print("== graf ulic")
     graph = export_graph()

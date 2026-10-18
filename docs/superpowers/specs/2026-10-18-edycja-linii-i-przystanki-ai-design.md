@@ -2,7 +2,7 @@
 
 Zastępuje specyfikację `2026-10-18-przedluzanie-linii-design.md` (tryb „Przedłuż linię” → „Edytuj linię”).
 
-## 1. Przystanki AI (`dane/propozycje_przystankow.geojson`, `mapping/propozycje_przystankow.py`)
+## 1. Przystanki AI (`dane/przystanki/propozycje_przystankow.geojson`, `mapping/propozycje_przystankow.py`)
 
 - Zastępują propozycje z `przystanki_top30.csv` (warstwa `prop-st`, romb z numerem = `priorytet` 1–3).
 - Nazwa w UI: **„Przystanki AI”** (przełącznik w „Problem” i „Mapa”, panel klastra).

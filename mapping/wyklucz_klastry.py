@@ -1,6 +1,6 @@
 """Usuwa wskazane klastry H3 z wyników modelu wskaźnika wykluczenia (heatmapa + lista top 30).
 
-Model (wskaznik_wykluczenia/colab_ww_hackathon.ipynb) liczy wskaźnik dla każdego klastra z mieszkańcami, także
+Model (notebooki/colab_ww_hackathon.ipynb) liczy wskaźnik dla każdego klastra z mieszkańcami, także
 dla takich, gdzie wynik nie ma sensu — np. teren lotniska z kilkunastoma mieszkańcami trafiał do top 30.
 Tu klastry z WYKLUCZONE dostają status jak pozostałe spoza analizy (pred = rank = −1, top30 = 0); miejsca
 w rankingu pozostałych klastrów są przeliczane, a lista top 30 uzupełniana kolejnymi klastrami z rankingu.

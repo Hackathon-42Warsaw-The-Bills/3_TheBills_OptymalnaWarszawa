@@ -10,7 +10,7 @@ try:
 except ImportError:
     h3 = None
 
-DANE = Path(__file__).resolve().parent.parent
+DANE = Path(__file__).resolve().parent.parent / "dane"   # skrypt w wskaznik_wykluczenia/, dane w dane/wskaznik_wykluczenia/
 WK = DANE / "wskaznik_wykluczenia"
 H3RES = 8
 
@@ -23,12 +23,12 @@ def load(path, key="h3"):
 
 def main():
     base = load(WK.relative_to(DANE) / "h3_merged_clean.csv")
-    cechy = load("cechy_klastrow.csv")
+    cechy = load("klastry/cechy_klastrow.csv")
     kolej = load("kolej/klastry_kolej.csv")
-    vet = load("veturilo_w_klastrach.csv")
+    vet = load("infrastruktura/veturilo_w_klastrach.csv")
     pod = load("symulacja/klastry_podroze.csv")
-    pot = load("potrzeba_komunikacji.csv")
-    prog = load("prognoza_ludnosci.csv")
+    pot = load("komunikacja/potrzeba_komunikacji.csv")
+    prog = load("ludnosc/prognoza_ludnosci.csv")
 
     CECHY_COLS = ["kursy_dzien_autobus", "kursy_dzien_tramwaj", "kursy_dzien_metro",
                  "kursy_dzien_kolej", "kursy_szczyt_bus_tram", "linie_ztm",
@@ -45,7 +45,7 @@ def main():
     nomap = 0
     with open(DANE / "symulacja/przystanki_wsiadania.csv", encoding="utf-8-sig") as f:
         wsiad_rows = list(csv.DictReader(f))
-    with open(DANE / "linie_dostepne_na_przystanku.csv", encoding="utf-8-sig") as f:
+    with open(DANE / "komunikacja" / "linie_dostepne_na_przystanku.csv", encoding="utf-8-sig") as f:
         coords = {r["stop_id"]: (float(r["stop_lat"]), float(r["stop_lon"]))
                   for r in csv.DictReader(f)}
     for r in wsiad_rows:

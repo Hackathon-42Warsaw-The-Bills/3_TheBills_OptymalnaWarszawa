@@ -20,10 +20,10 @@ stan modelu ok. 2020), więc `population` liczymy od nowa:
 Kolumny: population (= 2025, GUS), population_2021 (NSP), population_kontur (oryginał),
 gestosc_os_km2 (2025, na powierzchnię heksagonu w granicach miasta), pow_km2.
 
-Wejście:  dane/kontury_400m/warszawa_h3_400m_kontur2023.geojson
+Wejście:  dane/klastry/kontury_400m/warszawa_h3_400m_kontur2023.geojson
           dane_warszawa/warszawa_dzielnice.geojson (granica miasta = suma dzielnic, GUS 2021/2025)
           dane_warszawa/warszawa_siatka_1km_NSP2021.geojson
-Wynik:    dane/kontury_400m/warszawa_h3_400m_pelna.geojson / .csv
+Wynik:    dane/klastry/kontury_400m/warszawa_h3_400m_pelna.geojson / .csv
 
 Uruchomienie:  .venv/bin/python mapping/h3_siatka.py
 """
@@ -37,7 +37,7 @@ import pandas as pd
 from shapely.geometry import Polygon
 
 ROOT = Path(__file__).resolve().parent.parent
-KONTUR_DIR = ROOT / "dane" / "kontury_400m"
+KONTUR_DIR = ROOT / "dane" / "klastry" / "kontury_400m"
 SRC = KONTUR_DIR / "warszawa_h3_400m_kontur2023.geojson"
 OUT = KONTUR_DIR / "warszawa_h3_400m_pelna"
 EXTERNAL_DIR = Path(os.environ.get("DANE_WARSZAWA", Path.home() / "Downloads" / "dane_warszawa"))

@@ -679,7 +679,7 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     const txt = (p) => fetch(p, { cache: "no-cache" }).then((r) => (r.ok ? r.text() : "")).catch(() => "");
     let vet, mpp, prop, propL, propT;
     [D, B, vet, mpp, prop, propL, propT] = await Promise.all([fetch("frontend/symulator_dane.json", { cache: "no-cache" }).then((r) => r.json()), fetch("frontend/warszawa.json", { cache: "no-cache" }).then((r) => r.json()),
-                                     txt("dane/veturilo_stacje.csv"), txt("dane/infrastruktura_w_klastrach.csv"), txt("dane/propozycje_przystankow.geojson"), txt("dane/przystanki_top30_na_liniach.csv"), txt("dane/przystanki_top30.csv")]);
+                                     txt("dane/infrastruktura/veturilo_stacje.csv"), txt("dane/infrastruktura/infrastruktura_w_klastrach.csv"), txt("dane/przystanki/propozycje_przystankow.geojson"), txt("dane/przystanki/przystanki_top30_na_liniach.csv"), txt("dane/przystanki/przystanki_top30.csv")]);
     const mppBy = parseCSV(mpp);
     D.hexes.forEach((h) => { const r = mppBy.get(h.h3); h.mpp = r ? +r.liczba_mpp || 0 : 0; h.mppCat = r || null; });
     const pt = (r) => Number.isFinite(+r.lon) && Number.isFinite(+r.lat) && +r.lon !== 0;
@@ -1008,7 +1008,7 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     pop: { ramp: "p", steps: [500, 2000, 4000, 7000, 10000], note: "mieszkańców klastra", value: (h) => hexPop(h), div: false },
     growth: { steps: [-500, -100, 100, 500, 2000], note: "zmiana liczby mieszkańców od 2025", value: (h) => hexPop(h) - h.pop[0], div: true },
     trips: { ramp: "t", steps: [500, 2000, 4000, 7000, 10000], note: "podróży komunikacją miejską dziennie (start w klastrze)", value: (h) => hexPop(h) * (+$("trips").value || 2) * (+$("share").value || 45) / 100, div: false },
-    // Miejsca pożytku publicznego (dane/infrastruktura_w_klastrach.csv): szkoły, szpitale, urzędy, kultura, parki, handel…
+    // Miejsca pożytku publicznego (dane/infrastruktura/infrastruktura_w_klastrach.csv): szkoły, szpitale, urzędy, kultura, parki, handel…
     mpp: { ramp: "s", min: 1, steps: [1, 2, 4, 8, 12], labels: ["1", "2–3", "4–7", "8–11", "12+"], noYear: true,
            note: "miejsc pożytku publicznego w klastrze (szkoły, szpitale, urzędy, kultura, parki, handel)", value: (h) => h.mpp || 0, div: false },
   };
@@ -1768,9 +1768,9 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     return g.getImageData(0, 0, S, S);
   }
   // ---------- propozycje przystanków: Przystanki AI i przystanki top 30 ----------
-  // st: Przystanki AI (dane/propozycje_przystankow.geojson; etap A — słupki na trasie, B — zmiana trasy / przedłużenie linii),
-  // ln: top 30 na trasie istniejących linii (dane/przystanki_top30_na_liniach.csv),
-  // top: top 30 poza trasą (dane/przystanki_top30.csv) — oba tylko w 30 klastrach priorytetowych modelu ML.
+  // st: Przystanki AI (dane/przystanki/propozycje_przystankow.geojson; etap A — słupki na trasie, B — zmiana trasy / przedłużenie linii),
+  // ln: top 30 na trasie istniejących linii (dane/przystanki/przystanki_top30_na_liniach.csv),
+  // top: top 30 poza trasą (dane/przystanki/przystanki_top30.csv) — oba tylko w 30 klastrach priorytetowych modelu ML.
   // Każdy zbiór: znaczniki na mapie, przełącznik w „Problem” i w „Mapa”, lista, karta wybranego punktu, „Edytuj linię”.
   const PROP = { st: [], ln: [], top: [], sel: null };
   const MPP_KAT = { school: "szkoły", hospital: "szpitale", town_hall: "urzędy", mall: "centra handlowe", marketplace: "targowiska",
@@ -1808,7 +1808,7 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
         + (r.propozycja_obslugi && !String(r.uzasadnienie || "").includes(r.propozycja_obslugi) ? `<p><b>Obsługa:</b> ${esc(r.propozycja_obslugi)}</p>` : ""),
       noteText: (rows) => { const a = rows.filter((r) => r.typ === "A").length;
         return rows.length ? `${rows.length} propozycji algorytmu: ${a} od razu (słupki na trasie istniejącej linii), ${rows.length - a} ze zmianą trasy lub przedłużeniem linii. Romb = priorytet 1–3. Kliknij, aby zobaczyć uzasadnienie.`
-          : "Brak pliku dane/propozycje_przystankow.geojson."; } },
+          : "Brak pliku dane/przystanki/propozycje_przystankow.geojson."; } },
     ln: { list: "propl-list", card: "propl-detail", note: "propl-note", layer: "prop-line", lay: "lay-propl", chk: "propl-on", color: () => css("--accent"),
       badge: (r) => `<span class="rk ln">${esc(r.linia)}</span>`,
       item: (r) => [r.ulica || "ulica bez nazwy", `${r.dzielnica} · klaster #${r.rank}`, n0(r.ocena)],
@@ -1818,7 +1818,7 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
       html: (r) => `<div class="k">Na trasie linii ${esc(r.linia)} · klaster #${esc(r.rank)}</div><b>${esc(r.ulica || "ulica bez nazwy")}</b> · ${esc(r.dzielnica)}`
         + `<p>Nowy przystanek na trasie istniejącej linii ${esc(r.linia)} — wystarczy dostawić słupki. Ocena (popyt w zasięgu ok. 400 m pieszo): <b>${n0(r.ocena)}</b>; najbliższy przystanek ZTM ${n0(r.odl_do_przystanku_ztm_m)} m.</p>`,
       noteText: (rows) => rows.length ? `${rows.length} miejsc w 30 klastrach priorytetowych (${new Set(rows.map((r) => r.linia)).size} linii): gdzie dołożyć przystanek na trasie istniejącej linii. Liczba = ocena (popyt w zasięgu).`
-        : "Brak pliku dane/przystanki_top30_na_liniach.csv." },
+        : "Brak pliku dane/przystanki/przystanki_top30_na_liniach.csv." },
     top: { list: "propt-list", card: "propt-detail", note: "propt-note", layer: "prop-top", lay: "lay-propt", chk: "propt-on", color: () => TOP_STOP_COLOR,
       badge: (r) => `<span class="rk sq">${topNr(r)}</span>`,
       item: (r) => [r.ulica || "ulica bez nazwy", `${r.dzielnica} · klaster #${r.rank}`, `+${n0(r.nowo_obsluzeni)}`],
@@ -1832,7 +1832,7 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
           + (extra.length ? `<p>${extra.join(" · ")}</p>` : "") + (r.uwaga ? `<p>${esc(r.uwaga)}</p>` : "")
           + (refsOf(r.linie_ztm_na_ulicy).length ? "" : `<p>Żadna linia tędy nie jedzie — najbliższe linie autobusowe można przedłużyć albo poprowadzić objazdem:</p>`); },
       noteText: (rows) => rows.length ? `${rows.length} nowych przystanków (1–3 na klaster) w 30 klastrach priorytetowych. Kwadrat = numer propozycji w klastrze, liczba = nowo obsłużeni.`
-        : "Brak pliku dane/przystanki_top30.csv." },
+        : "Brak pliku dane/przystanki/przystanki_top30.csv." },
   };
   const propFeatures = (k) => PROP[k].map((r, i) => ({ type: "Feature", properties: { i, nr: k === "st" ? propPrio(r) : topNr(r), l: String(r.linia || "").toUpperCase() }, geometry: { type: "Point", coordinates: [+r.lon, +r.lat] } }));
   const propTip = (k, i) => PSETS[k].tip(PROP[k][i]);
@@ -2120,7 +2120,7 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     }
     liveTimer = setTimeout(pollLive, 15000);
   }
-  // ---------- cele podróży (dane/warszawa_infrastruktura) ----------
+  // ---------- cele podróży (dane/infrastruktura/warszawa_infrastruktura) ----------
   // [etykieta, kolor ikony, znak]; kolory stałe — biały znak czyta się na nich w obu motywach.
   const INFRA = {
     szpital: ["Szpitale", "#d03b3b", "+"], szkola: ["Szkoły", "#2a78d6", "S"], handel: ["Centra handlowe", "#e0620d", "H"],
@@ -2513,7 +2513,7 @@ ${JSON.stringify(describe(r), null, 1)}`;
     set("live", "circle-color", css("--ink")); set("live", "circle-stroke-color", ["case", ["==", ["get", "typ"], 2], css("--tram"), css("--bus")]);
   }
 
-  // ---------- stacje Veturilo (dane/veturilo_stacje.csv z mapping/veturilo.py) + stan na żywo z GBFS Nextbike ----------
+  // ---------- stacje Veturilo (dane/infrastruktura/veturilo_stacje.csv z mapping/veturilo.py) + stan na żywo z GBFS Nextbike ----------
   // Kanał GBFS jest otwarty (CC0) i pozwala na zapytania z przeglądarki, więc działa też na GitHub Pages.
   const VET = { stations: [], status: new Map(), updated: null, timer: 0, busy: false };
   const VET_STATUS = "https://gbfs.nextbike.net/maps/gbfs/v2/nextbike_vw/pl/station_status.json";
@@ -2562,8 +2562,8 @@ ${JSON.stringify(describe(r), null, 1)}`;
     if (CL.loading) return CL.loading;
     const csv = (p) => fetch(p, { cache: "no-cache" }).then((r) => (r.ok ? r.text() : "")).then(parseCSV).catch(() => new Map());
     const ml = fetchHeat().then((g) => { HEAT.analyzed = g.features.filter((f) => +f.properties.pred >= 0).length; return new Map(g.features.map((f) => [f.properties.h3, f.properties])); }).catch(() => new Map());
-    CL.loading = Promise.all([csv("dane/cechy_klastrow.csv"), csv("dane/potrzeba_komunikacji.csv"), csv("dane/symulacja/klastry_podroze.csv"),
-                              csv("dane/historia_ludnosci.csv"), csv("dane/kolej/klastry_kolej.csv"), ml])
+    CL.loading = Promise.all([csv("dane/klastry/cechy_klastrow.csv"), csv("dane/komunikacja/potrzeba_komunikacji.csv"), csv("dane/symulacja/klastry_podroze.csv"),
+                              csv("dane/ludnosc/historia_ludnosci.csv"), csv("dane/kolej/klastry_kolej.csv"), ml])
       .then(([cechy, potrzeba, podroze, historia, kolej, ml]) => (CL.data = { cechy, potrzeba, podroze, historia, kolej, ml }));
     return CL.loading;
   }

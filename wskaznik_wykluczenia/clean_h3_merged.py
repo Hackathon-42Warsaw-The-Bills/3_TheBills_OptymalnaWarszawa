@@ -4,7 +4,7 @@ przystanki_autobusowe i czy_metro sa jednoczesnie rowne 0."""
 import csv
 from pathlib import Path
 
-BASE = Path(__file__).resolve().parent
+BASE = Path(__file__).resolve().parent.parent / "dane" / "wskaznik_wykluczenia"
 SRC = BASE / "h3_merged.csv"
 DST = BASE / "h3_merged_clean.csv"
 ZERO_COLS = ["gestosc_os_km2", "pracownicy_szac", "przystanki_tramwajowe",
