@@ -445,6 +445,7 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
         <div class="clock"><b id="sim-clock">7:00</b><input type="range" id="sim-time" min="14400" max="88200" step="60" value="25200" aria-label="Godzina symulacji"></div>
         <div class="row" style="margin-top:8px">
           <button class="btn primary" id="sim-play">▶ Start</button>
+          <button class="btn" id="sim-reset" type="button" title="Zatrzymaj, usuń pojazdy z mapy i wróć do 7:00">Resetuj</button>
           <div class="seg" id="sim-speed" style="flex:1">
             <button data-v="30" aria-pressed="false">×30</button>
             <button data-v="120" aria-pressed="true">×120</button>
@@ -1375,7 +1376,9 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
   }
 
   // ---------- symulacja ruchu według rozkładu (frontend/symulacja_dane.json) ----------
-  const SIM = { data: null, t: 7 * 3600, playing: false, speed: 120, last: 0, drawn: 0, extra: [], loading: null };
+  // on: czy pojazdy są na mapie — po „Resetuj” nic ich nie rysuje, dopóki nie klikniesz Start ani nie przesuniesz zegara.
+  const SIM = { data: null, t: 7 * 3600, playing: false, on: false, speed: 120, last: 0, drawn: 0, extra: [], loading: null };
+  const SIM_HINT = $("sim-status").textContent;
   const SIM_LABEL = { autobus: "Autobus", tramwaj: "Tramwaj", metro: "Metro", kolej: "SKM", nowa: "Nowa linia" };
   const simColorExpr = () => ["match", ["get", "k"], "tramwaj", css("--tram"), "metro", css("--metro"), "kolej", css("--rail"), "nowa", css("--accent"), css("--bus")];
   const fmtClock = (t) => { const m = Math.floor(t / 60) % 1440; return `${Math.floor(m / 60)}:${String(m % 60).padStart(2, "0")}`; };
@@ -1417,7 +1420,7 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     for (let s0 = 5 * 3600; s0 <= 23 * 3600; s0 += head) for (const sh of [fwd, back]) SIM.extra.push({ sh, s: s0, dur });
   }
   function simFrame() {
-    const d = SIM.data; if (!d || !map?.getSource("sim")) return;
+    const d = SIM.data; if (!d || !SIM.on || !map?.getSource("sim")) return;
     const t = SIM.t, sel = new Set(lineFilter()), feats = [], counts = { autobus: 0, tramwaj: 0, metro: 0, kolej: 0, nowa: 0 };
     const from = lowerBound(d.starts, t - d.maxDur), to = lowerBound(d.starts, t + 1);
     for (let i = from; i < to; i++) {
@@ -1453,8 +1456,16 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     if (SIM.playing) { SIM.playing = false; $("sim-play").textContent = "▶ Start"; return; }
     $("sim-play").textContent = "Wczytywanie…"; await simLoad();
     simExtraTrips();
-    SIM.playing = true; SIM.last = 0; $("sim-play").textContent = "❚❚ Pauza";
+    SIM.playing = true; SIM.on = true; SIM.last = 0; $("sim-play").textContent = "❚❚ Pauza";
     requestAnimationFrame(simTick);
+  }
+  // Resetuj: zatrzymuje symulację, usuwa wszystkie pojazdy z mapy i wraca do 7:00.
+  function simReset() {
+    SIM.playing = false; SIM.on = false; SIM.t = 7 * 3600; SIM.last = 0;
+    map?.getSource("sim")?.setData(fc([]));
+    $("sim-play").textContent = "▶ Start";
+    $("sim-clock").textContent = fmtClock(SIM.t); $("sim-time").value = SIM.t;
+    $("sim-status").textContent = SIM_HINT;
   }
 
   // ---------- obciążenie linii w szczycie (frontend/pasazerowie_dane.json) ----------
@@ -1838,7 +1849,8 @@ ${JSON.stringify(describe(r), null, 1)}`;
     $("board-year").querySelectorAll("button").forEach((b) => (b.onclick = () => { BOARD.year = +b.dataset.y; $("board-year").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x === b)); renderBoard(); }));
     $("heat-btn").onclick = toggleHeat;
     $("sim-play").onclick = simToggle;
-    $("sim-time").oninput = async (e) => { SIM.t = +e.target.value; $("sim-clock").textContent = fmtClock(SIM.t); if (!SIM.data) { await simLoad(); simExtraTrips(); } simFrame(); };
+    $("sim-reset").onclick = simReset;
+    $("sim-time").oninput = async (e) => { SIM.t = +e.target.value; SIM.on = true; $("sim-clock").textContent = fmtClock(SIM.t); if (!SIM.data) { await simLoad(); simExtraTrips(); } simFrame(); };
     $("sim-speed").querySelectorAll("button").forEach((b) => (b.onclick = () => { SIM.speed = +b.dataset.v; $("sim-speed").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x === b)); }));
     $("load-on").onchange = (e) => setLoad(e.target.checked);
     $("load-year").querySelectorAll("button").forEach((b) => (b.onclick = () => { LOAD.year = +b.dataset.y; $("load-year").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x === b)); renderLoad(); }));
