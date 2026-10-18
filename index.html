@@ -110,16 +110,26 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
 
 .tools { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
 /* Przedłużanie linii: znacznik aktywnego przedłużenia, nagłówek oceny, lista linii przy kliknięciu na mapie. */
-.ext-chip { display: flex; align-items: center; gap: 8px; margin-top: 8px; padding: 6px 6px 6px 10px; border-radius: 7px; background: var(--chip); font-size: 13px; color: var(--ink); }
-.ext-chip span { flex: 1; min-width: 0; }
-.ext-chip button { flex: none; width: 26px; height: 26px; padding: 0; border: 0; border-radius: 5px; background: transparent; color: var(--ink-2); font-size: 18px; cursor: pointer; }
-.ext-chip button:hover { background: var(--paper); color: var(--ink); }
-.ext-head { font-size: 13.5px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
-.ext-pick { position: absolute; z-index: 4; min-width: 220px; max-width: 320px; max-height: 260px; overflow-y: auto; padding: 4px; background: var(--paper); border: 1px solid var(--rule); border-radius: 8px; box-shadow: 0 6px 20px rgb(0 0 0 / 0.2); }
-.ext-pick .k { font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-3); padding: 6px 8px 4px; }
-.ext-pick button { display: block; width: 100%; text-align: left; padding: 7px 8px; border: 0; border-radius: 5px; background: transparent; color: var(--ink); font: 400 13.5px/1.3 var(--f-body); cursor: pointer; }
-.ext-pick button:hover, .ext-pick button:focus-visible { background: var(--chip); }
-.ext-pick b { font-weight: 600; margin-right: 6px; }
+.le { margin-top: 2px; }
+.le-title { display: flex; align-items: center; gap: 8px; }
+.le-ref { flex: none; min-width: 34px; padding: 5px 8px; border-radius: 6px; background: var(--bus); color: #fff; font: 700 16px/1 var(--f-display); text-align: center; }
+.le-name { flex: 1; min-width: 0; font-size: 13.5px; font-weight: 600; color: var(--ink); }
+.le-title .btn { flex: none; }
+#le-quality { margin-top: 6px; }
+#le-quality.warn { color: var(--warn); }
+.le-cmp-h { margin-top: 14px; font: 600 12px/1 var(--f-display); text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); }
+.le-cmp { width: 100%; margin-top: 6px; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+.le-cmp th { padding: 4px 0 4px 8px; text-align: right; font: 600 11px/1 var(--f-body); text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-3); }
+.le-cmp td { padding: 5px 0 5px 8px; text-align: right; border-top: 1px solid var(--rule); white-space: nowrap; }
+.le-cmp th:first-child, .le-cmp td:first-child { padding-left: 0; text-align: left; white-space: normal; color: var(--ink-2); }
+.le-cmp td:nth-child(3) { font-weight: 600; color: var(--ink); }
+.le-cmp .up { color: var(--good); } .le-cmp .down { color: var(--crit); } .le-cmp .same { color: var(--ink-3); }
+.le-head { font-size: 13.5px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+.line-pick { position: absolute; z-index: 4; min-width: 220px; max-width: 320px; max-height: 260px; overflow-y: auto; padding: 4px; background: var(--paper); border: 1px solid var(--rule); border-radius: 8px; box-shadow: 0 6px 20px rgb(0 0 0 / 0.2); }
+.line-pick .k { font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-3); padding: 6px 8px 4px; }
+.line-pick button { display: block; width: 100%; text-align: left; padding: 7px 8px; border: 0; border-radius: 5px; background: transparent; color: var(--ink); font: 400 13.5px/1.3 var(--f-body); cursor: pointer; }
+.line-pick button:hover, .line-pick button:focus-visible { background: var(--chip); }
+.line-pick b { font-weight: 600; margin-right: 6px; }
 .tool { font: 500 13.5px/1.1 var(--f-body); color: var(--ink); background: var(--chip); border: 1px solid transparent; border-radius: 7px; padding: 10px 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 5px; }
 .tool svg { width: 18px; height: 18px; }
 .tool[aria-pressed="true"] { border-color: var(--accent); background: var(--paper); color: var(--accent); }
@@ -178,6 +188,18 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
 .toplist button:hover, .toplist button:focus-visible { background: var(--chip); }
 .toplist .rk { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--top); color: #fff; font: 600 11.5px/1 var(--f-body); }
 .toplist small { color: var(--ink-3); }
+.toplist .rk.dia { border-radius: 3px; width: 17px; height: 17px; margin: 2px; transform: rotate(45deg); background: #e8175d; box-shadow: 0 0 0 1.5px #fff; }
+.toplist .rk.sq { border-radius: 4px; background: #7048e8; box-shadow: 0 0 0 1.5px #fff; }
+.toplist .rk.ln { width: auto; min-width: 22px; padding: 0 5px; border-radius: 5px; background: var(--accent); color: var(--paper); font-size: 11px; }
+.toplist.wide button { grid-template-columns: 38px 1fr auto; }
+.toplist.wide .rk { justify-self: start; }
+.toplist .rk.dia > b { transform: rotate(-45deg); font-weight: 600; }
+.toplist button[aria-current="true"] { background: var(--chip); box-shadow: inset 3px 0 0 #e8175d; }
+.prop-card { margin-top: 8px; padding: 10px 12px; border-radius: 8px; background: var(--chip); font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+.prop-card .k { font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-3); }
+.prop-card b { color: var(--ink); font-weight: 600; }
+.prop-card p { margin: 6px 0 0; }
+.prop-card .row { margin-top: 8px; }
 .btn.small { padding: 6px 9px; font-size: 12.5px; }
 .legend { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
 .ramp { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; }
@@ -304,9 +326,6 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
         <label class="check" for="top-on"><input type="checkbox" id="top-on" checked>30 klastrów o najwyższym wskaźniku wykluczenia</label>
         <div class="muted" id="top-note" style="margin-top:6px"></div>
         <ul class="list toplist" id="top-list" style="max-height:290px;overflow-y:auto"></ul>
-        <label class="check" for="prop-on" style="margin-top:10px"><input type="checkbox" id="prop-on" checked><svg class="sw" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M8 1.5 14.5 8 8 14.5 1.5 8z" fill="#e8175d" stroke="#fff" stroke-width="1.5"/></svg>Proponowane lokalizacje przystanków</label>
-        <label class="check" for="propl-on"><input type="checkbox" id="propl-on"><i class="sw" style="height:8px;width:8px;border-radius:50%;background:var(--accent)"></i>Najlepsze miejsca na istniejących liniach</label>
-        <div class="muted" id="prop-note" style="margin-top:4px"></div>
         <button class="btn" id="heat-btn" type="button" aria-pressed="false" style="margin-top:12px">Pokaż heatmapę wykluczenia</button>
         <div id="heat-legend" hidden style="margin-top:10px">
           <div class="ramp"><i style="background:var(--h1)"></i><i style="background:var(--h2)"></i><i style="background:var(--h3)"></i><i style="background:var(--h4)"></i><i style="background:var(--h5)"></i></div>
@@ -315,8 +334,33 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
         </div>
         <details class="how">
           <summary>Jak to liczymy?</summary>
-          <p class="muted">Wskaźnik (0–100%) pochodzi z modelu ML zespołu: wysoki tam, gdzie mieszka i pracuje dużo osób, przybywa mieszkańców, a przystanków ZTM i metra jest mało. To ranking potrzeb, a nie szansa, że ktoś zostanie wykluczony. Proponowane przystanki to miejsca, gdzie nowy przystanek obejmie najwięcej osób bez dojścia do ZTM.</p>
+          <p class="muted">Wskaźnik (0–100%) pochodzi z modelu ML zespołu: wysoki tam, gdzie mieszka i pracuje dużo osób, przybywa mieszkańców, a przystanków ZTM i metra jest mało. To ranking potrzeb, a nie szansa, że ktoś zostanie wykluczony.</p>
         </details>
+      </section>
+      <section>
+        <h2>Przystanki AI</h2>
+        <label class="check" for="prop-on"><input type="checkbox" id="prop-on" checked><svg class="sw" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M8 1.5 14.5 8 8 14.5 1.5 8z" fill="#e8175d" stroke="#fff" stroke-width="1.5"/></svg>Przystanki AI na mapie</label>
+        <div class="muted" id="prop-note" style="margin-top:6px"></div>
+        <ul class="list toplist" id="prop-list" style="max-height:290px;overflow-y:auto"></ul>
+        <div class="prop-card" id="prop-detail" hidden></div>
+        <details class="how">
+          <summary>Jak to liczymy?</summary>
+          <p class="muted">Algorytm szuka miejsc, gdzie nowy przystanek najbardziej skraca dojście do standardu ZTM (300, 400 lub 500 m pieszo zależnie od strefy). Etap A: wystarczy dostawić słupki na trasie istniejącej linii. Etap B: potrzebna zmiana trasy albo przedłużenie linii — przycisk „Edytuj linię” otwiera ją w edytorze.</p>
+        </details>
+      </section>
+      <section>
+        <h2>Przystanki top 30</h2>
+        <div class="muted">Propozycje w 30 klastrach priorytetowych modelu ML.</div>
+        <div class="subh">Na trasie istniejących linii</div>
+        <label class="check" for="propl-on" style="margin-top:6px"><input type="checkbox" id="propl-on"><i class="sw" style="height:10px;width:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 1.5px #fff"></i>Na mapie</label>
+        <div class="muted" id="propl-note" style="margin-top:6px"></div>
+        <ul class="list toplist wide" id="propl-list" style="max-height:250px;overflow-y:auto"></ul>
+        <div class="prop-card" id="propl-detail" hidden></div>
+        <div class="subh">Poza trasą</div>
+        <label class="check" for="propt-on" style="margin-top:6px"><input type="checkbox" id="propt-on"><i class="sw" style="height:11px;width:11px;border-radius:3px;background:#7048e8;box-shadow:0 0 0 1.5px #fff"></i>Na mapie</label>
+        <div class="muted" id="propt-note" style="margin-top:6px"></div>
+        <ul class="list toplist" id="propt-list" style="max-height:250px;overflow-y:auto"></ul>
+        <div class="prop-card" id="propt-detail" hidden></div>
       </section>
     </div>
 
@@ -328,11 +372,30 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
           <button class="tool" data-mode="view" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l14 9-6 1-3 6z"/></svg>Przeglądaj</button>
           <button class="tool" data-mode="route" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19c4-1 3-8 8-8s4 7 8-6"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="5" r="2"/></svg>Rysuj trasę</button>
           <button class="tool" data-mode="stop" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="10" r="5"/><path d="M12 15v6"/></svg>Przystanki</button>
-          <button class="tool" data-mode="extend" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18h9"/><circle cx="12" cy="18" r="2"/><path d="M14 17c3-1 4-5 7-9"/><path d="M17 8h4v4"/></svg>Przedłuż linię</button>
+          <button class="tool" data-mode="edit" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18h9"/><circle cx="12" cy="18" r="2"/><path d="M14 17c3-1 4-5 7-9"/><path d="M17 8h4v4"/></svg>Edytuj linię</button>
         </div>
         <div class="hint" id="hint" style="margin-top:8px"></div>
-        <div class="ext-chip" id="ext-chip" hidden><span id="ext-chip-text"></span><button type="button" id="ext-cancel" aria-label="Zakończ przedłużanie linii" title="Zakończ przedłużanie">×</button></div>
-        <div class="row" style="margin-top:8px">
+        <!-- Menu trybu edycji istniejącej linii (zastępuje narzędzia, gdy linia jest wczytana) -->
+        <div class="le" id="le-panel" hidden>
+          <div class="le-title"><span class="le-ref" id="le-ref"></span><span class="le-name" id="le-name"></span><button class="btn small" type="button" id="le-dir" title="Edytuj drugi kierunek tej linii">⇄ kierunek</button></div>
+          <div class="muted" id="le-quality"></div>
+          <div class="seg" id="le-tools" style="margin-top:8px">
+            <button type="button" data-t="draw" aria-pressed="true">Przedłuż / objazd</button>
+            <button type="button" data-t="stop" aria-pressed="false">Przystanki</button>
+            <button type="button" data-t="view" aria-pressed="false">Podgląd</button>
+          </div>
+          <div class="hint" id="le-hint" style="margin-top:8px"></div>
+          <div class="row" style="margin-top:8px">
+            <button class="btn primary" type="button" id="le-finish" hidden>Zakończ odcinek</button>
+            <button class="btn" type="button" id="le-undo">Cofnij</button>
+            <button class="btn" type="button" id="le-reset">Przywróć oryginał</button>
+            <button class="btn danger" type="button" id="le-close">Zamknij edycję</button>
+          </div>
+          <div class="le-cmp-h">Cała linia: przed i po zmianach</div>
+          <table class="le-cmp" id="le-cmp"></table>
+          <div class="muted" id="le-cmp-note"></div>
+        </div>
+        <div class="row" id="draw-row" style="margin-top:8px">
           <button class="btn" id="undo">Cofnij</button>
           <button class="btn danger" id="clear">Usuń linię</button>
           <button class="btn" id="reset">Resetuj</button>
@@ -343,7 +406,7 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
         <h2>Ocena linii <span class="muted" id="eval-year"></span></h2>
         <div id="eval-empty" class="empty">Narysuj trasę albo postaw przystanki — ocena przelicza się przy każdej zmianie. Możesz też kliknąć „Przykładowa linia”.</div>
         <div id="eval" hidden>
-          <div class="ext-head" id="ext-head" hidden></div>
+          <div class="le-head" id="le-head" hidden></div>
           <div class="score">
             <div><b id="e-new">–</b><span>nowy popyt w zasięgu 400 m (mieszkańcy)</span></div>
             <div><b id="e-pax">–</b><span>pasażerów dziennie z nowego popytu</span></div>
@@ -437,7 +500,9 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
           <label class="check" for="lay-ztm"><input type="checkbox" id="lay-ztm" checked>Przystanki ZTM</label>
           <label class="check" for="lay-nb"><input type="checkbox" id="lay-nb" checked><i class="sw" style="height:9px;width:9px;border-radius:50%;background:var(--sel)"></i>Nowe osiedla</label>
           <label class="check" for="lay-veturilo"><input type="checkbox" id="lay-veturilo" checked><i class="sw" style="height:9px;width:9px;border-radius:50%;background:var(--bike)"></i>Stacje Veturilo</label>
-          <label class="check" for="lay-prop"><input type="checkbox" id="lay-prop" checked><svg class="sw" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M8 1.5 14.5 8 8 14.5 1.5 8z" fill="#e8175d" stroke="#fff" stroke-width="1.5"/></svg>Proponowane przystanki</label>
+          <label class="check" for="lay-prop"><input type="checkbox" id="lay-prop" checked><svg class="sw" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M8 1.5 14.5 8 8 14.5 1.5 8z" fill="#e8175d" stroke="#fff" stroke-width="1.5"/></svg>Przystanki AI</label>
+          <label class="check" for="lay-propl"><input type="checkbox" id="lay-propl"><i class="sw" style="height:10px;width:10px;border-radius:50%;background:var(--accent)"></i>Top 30: na trasie linii</label>
+          <label class="check" for="lay-propt"><input type="checkbox" id="lay-propt"><i class="sw" style="height:10px;width:10px;border-radius:3px;background:#7048e8"></i>Top 30: poza trasą</label>
           <label class="check" for="lay-planned"><input type="checkbox" id="lay-planned" checked>Planowane tramwaje i kolej</label>
         </div>
         <div class="subh"><label class="check" for="sec-pmetro"><input type="checkbox" id="sec-pmetro">Planowane metro</label><span class="note">linia przerywana = jeszcze nieotwarta w wybranym roku</span></div>
@@ -527,7 +592,7 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
       </div>
       <div class="cp-body" id="cp-body"></div>
     </section>
-    <div class="ext-pick" id="ext-pick" role="listbox" aria-label="Wybierz linię do przedłużenia" hidden></div>
+    <div class="line-pick" id="line-pick" role="listbox" aria-label="Wybierz linię do edycji" hidden></div>
     <div class="tip" id="tip" hidden></div>
   </div>
 </div>
@@ -544,9 +609,10 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
   //    5. ocena
   //    6. mapa
   //    7. UI
+  //    7a. edycja istniejącej linii autobusowej
   //    8. zakładki panelu: Problem · Projektuj · Mapa · Symulacja
   //    9. priorytety z modelu ML
-  //   10. proponowane przystanki w 30 klastrach priorytetowych
+  //   10. Przystanki AI
   //   11. wsiadający na przystankach w szczycie
   //   12. heatmapa wykluczenia
   //   13. symulacja ruchu według rozkładu
@@ -611,14 +677,20 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     // cache: "no-cache" — przeglądarka zawsze sprawdza, czy dane się zmieniły (po przeliczeniu prognozy nie pokaże starej kopii).
     // Małe pliki z dane/ — brak któregoś nie blokuje aplikacji (pusta tabela).
     const txt = (p) => fetch(p, { cache: "no-cache" }).then((r) => (r.ok ? r.text() : "")).catch(() => "");
-    let vet, mpp, prop, propL;
-    [D, B, vet, mpp, prop, propL] = await Promise.all([fetch("frontend/symulator_dane.json", { cache: "no-cache" }).then((r) => r.json()), fetch("frontend/warszawa.json", { cache: "no-cache" }).then((r) => r.json()),
-                                     txt("dane/veturilo_stacje.csv"), txt("dane/infrastruktura_w_klastrach.csv"), txt("dane/przystanki_top30.csv"), txt("dane/przystanki_top30_na_liniach.csv")]);
+    let vet, mpp, prop, propL, propT;
+    [D, B, vet, mpp, prop, propL, propT] = await Promise.all([fetch("frontend/symulator_dane.json", { cache: "no-cache" }).then((r) => r.json()), fetch("frontend/warszawa.json", { cache: "no-cache" }).then((r) => r.json()),
+                                     txt("dane/veturilo_stacje.csv"), txt("dane/infrastruktura_w_klastrach.csv"), txt("dane/propozycje_przystankow.geojson"), txt("dane/przystanki_top30_na_liniach.csv"), txt("dane/przystanki_top30.csv")]);
     const mppBy = parseCSV(mpp);
     D.hexes.forEach((h) => { const r = mppBy.get(h.h3); h.mpp = r ? +r.liczba_mpp || 0 : 0; h.mppCat = r || null; });
     const pt = (r) => Number.isFinite(+r.lon) && Number.isFinite(+r.lat) && +r.lon !== 0;
-    PROP.st = parseRows(prop).filter(pt); PROP.ln = parseRows(propL).filter(pt);
-    renderPropNote();
+    let ai = []; try { ai = JSON.parse(prop).features || []; } catch {}
+    // Przystanki AI: najpierw priorytet 1, w nim największy zysk dostępności.
+    PROP.st = ai.map((f) => ({ ...f.properties, lon: f.geometry.coordinates[0], lat: f.geometry.coordinates[1] })).filter(pt)
+      .sort((a, b) => (a.priorytet || 9) - (b.priorytet || 9) || (b.zysk_dostepnosci || 0) - (a.zysk_dostepnosci || 0));
+    const byScore = (a, b) => (+b.ocena || 0) - (+a.ocena || 0);   // top 30: najpierw najwyżej ocenione miejsca
+    PROP.ln = parseRows(propL).filter(pt).sort(byScore);
+    PROP.top = parseRows(propT).filter(pt).filter((r) => +r.nr > 0).sort(byScore);
+    renderPropLists();
     VET.stations = parseRows(vet).filter((s) => Number.isFinite(+s.lon) && Number.isFinite(+s.lat))
       .map((s) => ({ id: s.station_id, name: (s.nazwa || "").trim(), nr: s.numer, lon: +s.lon, lat: +s.lat, cap: +s.stojaki || 0, h3: s.h3 }));
     buildGraph(); buildPeople();
@@ -734,35 +806,39 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     history.push({ t: "wp", n: nodes.length });
     changed();
   }
-  function addNodeWaypoint(n) {
-    if (n < 0) return flash("Za daleko od ulicy, po której może jechać autobus.");
-    if (!route.wps.length) return pushWaypoints([n], []);
-    const leg = shortest(route.wps[route.wps.length - 1], n);
-    if (!leg) return flash("Nie da się tu dojechać (ulice jednokierunkowe albo zakaz dla autobusów).");
-    pushWaypoints([n], [leg]);
-  }
-  // Klik na ulicy: trasa przejeżdża przez kliknięty odcinek (np. konkretną łącznicę węzła),
-  // a nie tylko przez najbliższe skrzyżowanie. Klik przy końcu odcinka = punkt na skrzyżowaniu.
-  function addWaypoint(x, y) {
+  // Kolejny punkt trasy od węzła `last` (−1 = pierwszy punkt). Klik na ulicy: trasa przejeżdża przez kliknięty odcinek
+  // (np. konkretną łącznicę węzła), a nie tylko przez najbliższe skrzyżowanie. Klik przy końcu odcinka = skrzyżowanie.
+  // Zwraca { nodes, legs } (nowe punkty i odcinki do nich) albo { err }.
+  function stepTo(last, x, y) {
+    const NO_WAY = "Nie da się tu dojechać (ulice jednokierunkowe albo zakaz dla autobusów).";
+    const toNode = (n) => {
+      if (n < 0) return { err: "Za daleko od ulicy, po której może jechać autobus." };
+      if (last < 0) return { nodes: [n], legs: [] };
+      const leg = shortest(last, n);
+      return leg ? { nodes: [n], legs: [leg] } : { err: NO_WAY };
+    };
     const mpp = metersPerPx(), hits = edgesAt(x, y, SNAP_PX * mpp);
-    if (!hits.length) return addNodeWaypoint(nearestNode(x, y));
+    if (!hits.length) return toNode(nearestNode(x, y));
     const h = hits[0], e = G.edges[h.ei], nodeR = NODE_PX * mpp;
-    if (h.along <= nodeR) return addNodeWaypoint(e.u);
-    if (h.total - h.along <= nodeR) return addNodeWaypoint(e.v);
+    if (h.along <= nodeR) return toNode(e.u);
+    if (h.total - h.along <= nodeR) return toNode(e.v);
     // Kandydaci: ten sam odcinek w obu kierunkach i jezdnie leżące równie blisko (do 6 m dalej).
     const near = hits.filter((c) => c.d <= h.d + 6).map((c) => c.ei);
-    if (!route.wps.length) {
+    if (last < 0) {
       const twoWay = near.some((ei) => G.edges[ei].u === e.v && G.edges[ei].v === e.u);
       // Start na drodze jednokierunkowej: od początku odcinka; na dwukierunkowej — kierunek nieznany, więc bliższy koniec.
-      if (!twoWay) return pushWaypoints([e.u, e.v], [[h.ei]]);
-      return pushWaypoints([h.along < h.total / 2 ? e.u : e.v], []);
+      return twoWay ? toNode(h.along < h.total / 2 ? e.u : e.v) : { nodes: [e.u, e.v], legs: [[h.ei]] };
     }
-    const last = route.wps[route.wps.length - 1];
     const { dist, prev } = dijkstra(last, near.map((ei) => G.edges[ei].u));
     let pick = -1, cost = Infinity;
     for (const ei of near) { const c = (dist.get(G.edges[ei].u) ?? Infinity) + edgeTime(G.edges[ei]); if (c < cost) { cost = c; pick = ei; } }
-    if (pick < 0) return flash("Nie da się tu dojechać (ulice jednokierunkowe albo zakaz dla autobusów).");
-    pushWaypoints([G.edges[pick].v], [[...pathTo(prev, last, G.edges[pick].u), pick]]);
+    if (pick < 0) return { err: NO_WAY };
+    return { nodes: [G.edges[pick].v], legs: [[...pathTo(prev, last, G.edges[pick].u), pick]] };
+  }
+  function addWaypoint(x, y) {
+    const s = stepTo(route.wps.length ? route.wps[route.wps.length - 1] : -1, x, y);
+    if (s.err) return flash(s.err);
+    pushWaypoints(s.nodes, s.legs);
   }
 
   // Przystanek tylko na trasie linii: najbliższy punkt narysowanej trasy, nie dalej niż STOP_SNAP_M.
@@ -778,23 +854,30 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     }
     return best && best.d <= STOP_SNAP_M ? best : null;
   }
-  function addStop(x, y) {
-    const hit = stops.findIndex((s) => Math.hypot(s.x - x, s.y - y) < 40);
-    if (hit >= 0) { history.push({ t: "rmstop", s: stops[hit], i: hit }); stops.splice(hit, 1); return changed(); }
-    if (!routeEdges().length) return flash("Najpierw narysuj trasę — przystanki stawiamy tylko na linii.");
+  // Nowy przystanek przy trasie (po prawej stronie jezdni) albo { err } z powodem.
+  function makeStop(x, y) {
+    if (!routeEdges().length) return { err: "Najpierw narysuj trasę — przystanki stawiamy tylko na linii." };
     const q = snapStop(x, y);
-    if (!q) return flash(`Przystanek musi stać przy trasie linii (do ${STOP_SNAP_M} m od niej).`);
+    if (!q) return { err: `Przystanek musi stać przy trasie linii (do ${STOP_SNAP_M} m od niej).` };
     const e = G.edges[q.ei];
-    if (!e.stopOk) return flash(`Tu nie postawimy przystanku: ${e.name || "odcinek"} to wiadukt, tunel, łącznica lub droga ekspresowa.`);
+    if (!e.stopOk) return { err: `Tu nie postawimy przystanku: ${e.name || "odcinek"} to wiadukt, tunel, łącznica lub droga ekspresowa.` };
     // Przesunięcie na prawą stronę jezdni (ruch prawostronny) — 4 m od osi.
     const [ax, ay] = e.xy[q.k], [bx, by] = e.xy[q.k + 1], L = Math.hypot(bx - ax, by - ay) || 1;
     const sx = q.x + (by - ay) / L * 4, sy = q.y - (bx - ax) / L * 4;
     const [lon, lat] = toLL(sx, sy);
-    stops.push({ x: sx, y: sy, lon, lat, edge: e.id, street: e.name });
+    return { x: sx, y: sy, lon, lat, edge: e.id, street: e.name };
+  }
+  function addStop(x, y) {
+    const hit = stops.findIndex((s) => Math.hypot(s.x - x, s.y - y) < 40);
+    if (hit >= 0) { history.push({ t: "rmstop", s: stops[hit], i: hit }); stops.splice(hit, 1); return changed(); }
+    const s = makeStop(x, y);
+    if (s.err) return flash(s.err);
+    stops.push(s);
     history.push({ t: "stop" });
     changed();
   }
   function undo() {
+    if (LE) return leUndo();
     const h = history.pop(); if (!h) return;
     if (h.t === "wp") { route.wps.length -= Math.min(h.n || 1, route.wps.length); route.legs.length = Math.max(0, route.wps.length - 1); }
     else if (h.t === "stop") stops.pop();
@@ -803,7 +886,8 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     changed();
   }
   function clearAll() {
-    if (EXT || EXT_SEL) cancelExtension();
+    if (LE) return endEdit();
+    hidePick();
     if (!route.wps.length && !stops.length) return;
     history.push({ t: "all", wps: route.wps, legs: route.legs, stops });
     route.wps = []; route.legs = []; stops = [];
@@ -811,8 +895,9 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
   }
 
   // ---------- ocena ----------
-  function evaluate() {
-    const edges = routeEdges().map((i) => G.edges[i]);
+  // Ocena trasy (indeksy krawędzi) z przystankami; domyślnie — linia z piaskownicy.
+  function evaluate(edgeIdx = routeEdges(), st = stops) {
+    const edges = edgeIdx.map((i) => G.edges[i]);
     const headway = Math.max(2, +$("headway").value || 10), dwell = +$("dwell").value || 25, layover = +$("layover").value || 0;
     const cap = +$("vehicle").value, trips = +$("trips").value || 2, share = (+$("share").value || 45) / 100;
 
@@ -820,7 +905,7 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     const seen = new Set(), seenNb = new Set();
     let all = 0, fresh = 0, freshNew = 0, nbAll = 0;
     const nbHits = [];
-    for (const s of stops) {
+    for (const s of st) {
       for (const i of P.ptGrid.near(s.x, s.y, WALK)) {
         if (seen.has(i)) continue; const p = P.pts[i];
         if (Math.hypot(p.x - s.x, p.y - s.y) > WALK) continue;
@@ -853,9 +938,9 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
         o.len += e.len; o.t += e.len / (e.vp / 3.6); byStreet.set(k, o);
       }
     }
-    const nStops = stops.length;
+    const nStops = st.length;
     const runPeak = tPeak + nStops * dwell, runFree = tFree + nStops * dwell;
-    const cycle = 2 * runPeak + (EXT ? 0 : 2 * layover * 60);   // przedłużenie: pętla już istnieje, dochodzi tylko przejazd
+    const cycle = 2 * runPeak + 2 * layover * 60;
     const fleet = len ? Math.ceil(cycle / (headway * 60)) : 0;
     const jamShare = len ? jamLen / len : 0;
     const risk = !len ? ["none", "brak trasy"] : jamShare < 0.15 ? ["good", "niskie"] : jamShare < 0.35 ? ["warn", "średnie"] : ["crit", "wysokie"];
@@ -865,13 +950,13 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     const peakDir = pax * PEAK_SHARE * 0.6, perRun = peakDir / (60 / headway);
     // Przesiadki: stacje ≤ 400 m od przystanków, otwarte do roku t.
     const railHits = new Map();
-    for (const s of stops) for (const i of P.railGrid.near(s.x, s.y, WALK)) {
+    for (const s of st) for (const i of P.railGrid.near(s.x, s.y, WALK)) {
       const r = P.rail[i]; if (r.open > year || Math.hypot(r.x - s.x, r.y - s.y) > WALK) continue;
       railHits.set(r.name, r);
     }
     // Cele podróży w 400 m od przystanków (szpitale, szkoły, handel…), bez powtórzeń.
     const infraHit = new Map();
-    for (const s of stops) for (const i of P.infraGrid.near(s.x, s.y, WALK)) {
+    for (const s of st) for (const i of P.infraGrid.near(s.x, s.y, WALK)) {
       const o = P.infra[i]; if (Math.hypot(o.x - s.x, o.y - s.y) <= WALK) infraHit.set(i, o);
     }
     const infraHits = [...infraHit.values()];
@@ -892,9 +977,8 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     $("e-pax").textContent = fmt.format(Math.round(r.pax / 10) * 10);
     $("e-all").textContent = fmt.format(Math.round(r.all));
     $("e-fleet").textContent = r.len ? `${r.fleet}` : "–";
-    $("e-fleet").nextElementSibling.textContent = EXT ? "pojazdów do dołożenia w szczycie" : "pojazdów w szczycie";
-    $("ext-head").hidden = !EXT;
-    if (EXT) $("ext-head").textContent = `${EXT.end ? "Przedłużenie" : "Odgałęzienie"} linii ${EXT.line.ref} od przystanku ${EXT.stop.name} ${EXT.stop.nr} — liczony tylko nowy odcinek`;
+    $("le-head").hidden = !LE;
+    if (LE) { $("le-head").textContent = `Cała linia ${LE.ref} → ${LE.kierunek || LE.nazwa} po zmianach`; renderLeCmp(r); }
     $("e-len").textContent = r.len ? `${fmt1.format(r.len / 1000)} km` : "–";
     $("e-time").textContent = r.len ? `${Math.round(r.tPeak / 60)} min` : "–";
     const pill = $("e-risk"); pill.className = `pill ${r.risk[0]}`; pill.textContent = r.risk[1];
@@ -952,8 +1036,10 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     if (!map || !map.getSource("route")) return;
     map.getSource("route").setData(fc(routeFeatures()));
     map.getSource("wps").setData(fc(route.wps.map((n, i) => ({ type: "Feature", properties: { end: i === 0 || i === route.wps.length - 1 }, geometry: { type: "Point", coordinates: toLL(G.nx[n], G.ny[n]) } }))));
-    map.getSource("nstops").setData(fc(stops.map((s) => ({ type: "Feature", properties: { street: s.street || "" }, geometry: { type: "Point", coordinates: [s.lon, s.lat] } }))));
+    // Przystanki edytowanej linii (old) rysuje warstwa le-stops — tu tylko nowe.
+    map.getSource("nstops").setData(fc(stops.filter((s) => !s.old).map((s) => ({ type: "Feature", properties: { street: s.street || "" }, geometry: { type: "Point", coordinates: [s.lon, s.lat] } }))));
     map.getSource("catch").setData(fc(stops.map((s) => ({ type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [circle(s.x, s.y, WALK)] } }))));
+    renderLeLayers();
   }
   function updateYearLayers() {
     if (!map || !map.getSource("hex")) return;
@@ -1046,10 +1132,16 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
       map.addLayer({ id: "top-fill", type: "fill", source: "top", paint: { "fill-color": css("--top"), "fill-opacity": 0.14 } });
       map.addLayer({ id: "top-line", type: "line", source: "top", paint: { "line-color": css("--top"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 2, 15, 4] } });
       map.addLayer({ id: "top-pt", type: "symbol", source: "top-pt", layout: { "icon-image": ["concat", "rank-", ["to-string", ["get", "rank"]]], "icon-size": ["interpolate", ["linear"], ["zoom"], 10, 0.75, 14, 1], "icon-allow-overlap": true, "symbol-sort-key": ["get", "rank"] } });
-      map.addSource("prop-line", { type: "geojson", data: fc(propLineFeatures()) });
-      map.addSource("prop-st", { type: "geojson", data: fc(propFeatures()) });
-      map.addLayer({ id: "prop-line", type: "circle", source: "prop-line", layout: { visibility: "none" }, paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 3, 15, 6], "circle-color": css("--accent"), "circle-stroke-width": 1.5, "circle-stroke-color": css("--paper") } });
+      map.addSource("prop-line", { type: "geojson", data: fc(propFeatures("ln")) });
+      map.addSource("prop-top", { type: "geojson", data: fc(propFeatures("top")) });
+      map.addSource("prop-st", { type: "geojson", data: fc(propFeatures("st")) });
+      map.addLayer({ id: "prop-line", type: "circle", source: "prop-line", layout: { visibility: "none" }, paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 5, 15, 9], "circle-color": css("--accent"), "circle-stroke-width": 2.5, "circle-stroke-color": "#ffffff" } });
+      for (const k of [1, 2, 3]) map.addImage(`propt-${k}`, propIcon(k, true, TOP_STOP_COLOR), { pixelRatio: 2 });
+      map.addLayer({ id: "prop-top", type: "symbol", source: "prop-top", layout: { visibility: "none", "icon-image": ["concat", "propt-", ["to-string", ["get", "nr"]]],
+        "icon-size": ["interpolate", ["linear"], ["zoom"], 10, 0.6, 13, 0.8, 16, 1], "icon-allow-overlap": true, "icon-ignore-placement": true, "symbol-sort-key": ["get", "nr"] } });
       for (const k of [1, 2, 3]) map.addImage(`prop-${k}`, propIcon(k), { pixelRatio: 2 });
+      map.addSource("prop-sel", { type: "geojson", data: fc([]) });   // obwódka wybranej propozycji przystanku
+      map.addLayer({ id: "prop-sel", type: "circle", source: "prop-sel", paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 16, 16, 26], "circle-color": "rgba(0,0,0,0)", "circle-stroke-width": 3, "circle-stroke-color": PROP_COLOR } });
       map.addLayer({ id: "prop-st", type: "symbol", source: "prop-st", layout: { "icon-image": ["concat", "prop-", ["to-string", ["get", "nr"]]],
         "icon-size": ["interpolate", ["linear"], ["zoom"], 10, 0.7, 13, 0.9, 16, 1.15], "icon-allow-overlap": true, "icon-ignore-placement": true, "symbol-sort-key": ["get", "nr"] } });
       map.addImage("airport", airportIcon(), { pixelRatio: 2 });
@@ -1059,13 +1151,21 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
       map.addLayer({ id: "mask", type: "fill", source: "mask", paint: { "fill-color": css("--ground"), "fill-opacity": 0.92 } });
       map.addLayer({ id: "catch", type: "fill", source: "catch", paint: { "fill-color": css("--accent"), "fill-opacity": 0.12 } });
       map.addLayer({ id: "catch-line", type: "line", source: "catch", paint: { "line-color": css("--accent"), "line-width": 1, "line-opacity": 0.6 } });
-      map.addSource("ext-line", { type: "geojson", data: fc([]) });
-      map.addSource("ext-stops", { type: "geojson", data: fc([]) });
-      map.addLayer({ id: "ext-line", type: "line", source: "ext-line", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": css("--bus"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 3, 16, 8], "line-opacity": 0.85 } });
-      map.addLayer({ id: "ext-stops", type: "circle", source: "ext-stops", paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, ["case", ["get", "end"], 5, 3.5], 16, ["case", ["get", "end"], 9, 7]], "circle-color": css("--paper"), "circle-stroke-width": ["case", ["get", "end"], 3, 2], "circle-stroke-color": css("--bus") } });
+      // Edycja linii: oryginalny przebieg (pogrubiony, pod nową trasą), podgląd objazdu i przystanki linii.
+      for (const id of ["le-orig", "le-draft", "le-stops"]) map.addSource(id, { type: "geojson", data: fc([]) });
+      map.addLayer({ id: "le-orig", type: "line", source: "le-orig", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": css("--bus"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 9, 16, 18], "line-opacity": 0.75 } });
       map.addLayer({ id: "route-casing", type: "line", source: "route", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": css("--ink"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 6, 16, 12] } });
       map.addLayer({ id: "route", type: "line", source: "route", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": ["match", ["get", "j"], 2, css("--crit"), 1, css("--warn"), css("--good")], "line-width": ["interpolate", ["linear"], ["zoom"], 10, 3.5, 16, 8] } });
       map.addLayer({ id: "wps", type: "circle", source: "wps", paint: { "circle-radius": ["case", ["get", "end"], 6, 3.5], "circle-color": css("--ink"), "circle-stroke-width": 2, "circle-stroke-color": css("--paper") } });
+      map.addLayer({ id: "le-draft", type: "line", source: "le-draft", filter: ["==", ["geometry-type"], "LineString"], layout: { "line-cap": "butt", "line-join": "round" }, paint: { "line-color": css("--ink"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 3, 16, 6], "line-dasharray": [1.6, 1.2] } });
+      map.addLayer({ id: "le-draft-pt", type: "circle", source: "le-draft", filter: ["==", ["geometry-type"], "Point"], paint: { "circle-radius": 4, "circle-color": css("--ink"), "circle-stroke-width": 2, "circle-stroke-color": css("--paper") } });
+      // st: on — na trasie, off — usunięty, skip — poza nową trasą (pominięty objazdem / obcięty).
+      map.addLayer({ id: "le-stops", type: "circle", source: "le-stops", paint: {
+        "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, ["case", ["get", "sel"], 6, 3.5], 16, ["case", ["get", "sel"], 11, 7.5]],
+        "circle-color": ["match", ["get", "st"], "off", css("--crit"), css("--paper")],
+        "circle-stroke-width": ["case", ["get", "sel"], 4, 2.5],
+        "circle-stroke-color": ["match", ["get", "st"], "on", css("--bus"), "off", css("--paper"), css("--ink-3")],
+        "circle-opacity": ["match", ["get", "st"], "skip", 0.5, 1], "circle-stroke-opacity": ["match", ["get", "st"], "skip", 0.6, 1] } });
       map.addLayer({ id: "load", type: "line", source: "load", layout: { "line-cap": "round", visibility: "none" }, paint: {
         // Lekko obciążone odcinki cienkie i przejrzyste, pełne i przepełnione — grube i wyraźne.
         "line-color": loadColorExpr(), "line-opacity": ["interpolate", ["linear"], ["get", "u"], 0, 0.18, 0.5, 0.35, 0.8, 0.85, 1, 1],
@@ -1152,13 +1252,13 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
       if (f.properties.cluster) groups.push(`<div class="k">Nowe osiedla</div>${f.properties.point_count} inwestycji · <b>+${fmt.format(Math.round(f.properties.sum))} os.</b> w ${year} (przybliż, aby rozdzielić)`);
       else { const b = P.nb[f.properties.i]; groups.push(`<div class="k">Nowe osiedle</div><b>${esc(b.adres || "pozwolenie GUNB")}</b> (pozwolenie ${b.rok}) · +${fmt.format(Math.round(nbPop(b)))} os. w ${year}`); }
     }
-    const es = uniq(by((id) => id === "ext-stops"), (f) => f.properties.i);
-    if (es.length && EXT_SEL) groups.push(`<div class="k">Linia ${esc(EXT_SEL.ref)} · kliknij, aby zacząć od tego przystanku</div>` + es.slice(0, 3).map((f) => `<b>${esc(f.properties.n)} ${esc(f.properties.nr)}</b> · ${f.properties.end ? "końcówka (przedłużenie)" : "odgałęzienie"}`).join("<br>"));
-    const ps = uniq(by((id) => id === "prop-st"), (f) => f.properties.i);
-    if (ps.length) { const r = PROP.st[ps[0].properties.i]; groups.push(`<div class="k">Proponowany przystanek · klaster #${esc(r.rank)} ${esc(r.dzielnica)}</div>${propHTML(r)}`); }
-    const pl = uniq(by((id) => id === "prop-line"), (f) => f.properties.i);
-    if (pl.length) groups.push(`<div class="k">Nowy przystanek na istniejącej linii</div>` + pl.slice(0, 4).map((f) => { const r = PROP.ln[f.properties.i];
-      return `Linia <b>${esc(r.linia)}</b> · ${esc(r.ulica || "ulica bez nazwy")} · ocena ${n0(r.ocena)} · ${n0(r.odl_do_przystanku_ztm_m)} m od przystanku ZTM (klaster #${esc(r.rank)})`; }).join("<br>"));
+    const es = uniq(by((id) => id === "le-stops"), (f) => f.properties.i);
+    if (es.length && LE) groups.push(`<div class="k">Przystanek linii ${esc(LE.ref)}</div>` + es.slice(0, 3).map((f) => `<b>${esc(f.properties.n)}</b> · ${LE_ST[f.properties.st]}`).join("<br>")
+      + `<br><span style="opacity:0.8">${esc(leStopTip(es[0].properties))}</span>`);
+    for (const [k, id] of [["st", "prop-st"], ["top", "prop-top"], ["ln", "prop-line"]]) {
+      const ps = uniq(by((l) => l === id), (f) => f.properties.i);
+      if (ps.length) groups.push(ps.slice(0, k === "ln" ? 3 : 1).map((f) => propTip(k, f.properties.i)).join("<br>"));
+    }
     const bd = uniq(by((id) => id === "board"), (f) => f.properties.n + f.properties.nr);
     if (bd.length) groups.push(`<div class="k">Wsiadający w szczycie 7–8 · model</div>` + bd.slice(0, 3).map((f) => { const p = f.properties;
       return `<b>${esc(p.n)}${p.nr ? " " + esc(p.nr) : ""}</b> · 2025: ${n0(p.b25)}/h → 2036: ${n0(p.b36)}/h`; }).join("<br>"));
@@ -1173,7 +1273,7 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
 
   function wireMap() {
     const tip = $("tip");
-    const HIT = ["ext-stops", "prop-st", "prop-line", "top-pt", "top-fill", "board", "sim", "load", "live", "infra", "parks", "nstops", "pmetro-st", "pmetro-open", "pmetro-future", "stations-metro", "stations-kolej", "planned", "veturilo", "ztm-sel", "ztm", "nb", "routes-bus", "routes-tram", "heat", "hex"];
+    const HIT = ["le-stops", "prop-st", "prop-top", "prop-line", "top-pt", "top-fill", "board", "sim", "load", "live", "infra", "parks", "nstops", "pmetro-st", "pmetro-open", "pmetro-future", "stations-metro", "stations-kolej", "planned", "veturilo", "ztm-sel", "ztm", "nb", "routes-bus", "routes-tram", "heat", "hex"];
     map.on("mousemove", (e) => {
       const r = 6, layers = HIT.filter((l) => map.getLayoutProperty(l, "visibility") !== "none");
       const fs = map.queryRenderedFeatures([[e.point.x - r, e.point.y - r], [e.point.x + r, e.point.y + r]], { layers });
@@ -1187,8 +1287,14 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
       const [x, y] = toXY(e.lngLat.lng, e.lngLat.lat);
       if (mode === "route") addWaypoint(x, y);
       else if (mode === "stop") addStop(x, y);
-      else if (mode === "extend") extendClick(e);
-      else openCluster(hexAt(e.lngLat.lng, e.lngLat.lat));   // przeglądanie: statystyki klikniętego klastra
+      else if (mode === "edit") editClick(e);
+      else {
+        // Przeglądanie: znacznik propozycji przystanku → karta z opisem, inaczej statystyki klikniętego klastra.
+        const ids = { "prop-st": "st", "prop-top": "top", "prop-line": "ln" }, layers = Object.keys(ids).filter((l) => map.getLayoutProperty(l, "visibility") !== "none");
+        const pf = layers.length && map.queryRenderedFeatures([[e.point.x - 6, e.point.y - 6], [e.point.x + 6, e.point.y + 6]], { layers })[0];
+        if (pf) { showTab("problem"); selectProp(ids[pf.layer.id], pf.properties.i, { fly: false }); }
+        else openCluster(hexAt(e.lngLat.lng, e.lngLat.lat));
+      }
     });
     $("zin").onclick = () => map.zoomIn();
     $("zout").onclick = () => map.zoomOut();
@@ -1197,17 +1303,20 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
 
   // ---------- UI ----------
   const HINTS = {
-    extend: "Kliknij przebieg linii autobusowej (pomarańczowe), którą chcesz przedłużyć. Jeśli w tym miejscu jedzie kilka linii, wybierzesz z listy.",
+    edit: "Kliknij przebieg linii autobusowej (pomarańczowe), którą chcesz zmienić. Jeśli w tym miejscu jedzie kilka linii, wybierzesz z listy.",
     view: "Najedź na klaster, żeby zobaczyć prognozę. Wybierz „Rysuj trasę” albo „Przystanki”, żeby testować pomysł.",
     route: "Klikaj kolejne ulice na mapie — trasa przejedzie przez kliknięty odcinek (np. wybraną łącznicę węzła). Niebieskie są ulice, którymi może jechać autobus (wysokość, szerokość, kierunek ruchu); klik przy skrzyżowaniu wybiera skrzyżowanie.",
     stop: "Kliknij przy narysowanej trasie (do 80 m od niej), żeby postawić przystanek po prawej stronie jezdni. Poza trasą linii przystanku nie postawisz. Kliknij istniejący nowy przystanek, żeby go usunąć.",
   };
-  // ---------- przedłużanie / odgałęzianie istniejącej linii autobusowej ----------
-  // Tryb „Przedłuż linię”: klik w przebieg linii (kilka linii → lista), potem klik w jej przystanek → trasa startuje
-  // w tym przystanku i dalej rysuje się zwykłym narzędziem. EXT_SEL = wybrana linia (czeka na przystanek), EXT = aktywne przedłużenie.
-  let EXT = null, EXT_SEL = null;
-  const EXT_PX = 14;
-  const lineStopKey = (s) => `${s.name}|${s.nr}`;
+  // ---------- edycja istniejącej linii autobusowej ----------
+  // Tryb „Edytuj linię”: klik w przebieg linii (kilka linii → lista) wczytuje jeden jej kierunek na graf ulic. Potem:
+  // przedłużenie od pierwszego / ostatniego przystanku, objazd od przystanku w środku — zamykany kliknięciem przystanku
+  // dalej na trasie, zastępuje odcinek między nimi — oraz usuwanie, przywracanie i dodawanie przystanków. Ocena: cała linia.
+  // LE = { ref, nazwa, kier, kierunek, ndirs, headway, quality, poly: przebieg ZTM, path: krawędzie trasy, old: przystanki linii,
+  //        added: nowe przystanki, draft: rysowany odcinek, tool, hist: migawki do „Cofnij”, orig: migawka z wczytania, base: ocena „przed” }.
+  let LE = null;
+  const LINE_PX = 14, LE_STOP_M = 40;
+  const LE_ST = { on: "na trasie", off: "usunięty", skip: "poza nową trasą" };
   function busLinesNear(x, y, r) {
     const hit = new Map();
     for (const rt of D.routes || []) {
@@ -1221,80 +1330,304 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     }
     return [...hit.values()].sort((a, b) => a.ref.localeCompare(b.ref, "pl", { numeric: true }));
   }
-  // Linia: przebiegi obu kierunków, jej przystanki ZTM, przystanki końcowe i średnia częstotliwość z rozkładu.
-  function lineInfo(ref) {
-    const dirs = (D.routes || []).filter((r) => r.ref === ref && r.typ === "autobus");
-    const stopsOf = D.stops.ztm.filter((z) => `,${z[4]},`.includes(`,${ref},`))
-      .map(([lon, lat, name, , , nr]) => { const [x, y] = toXY(lon, lat); return { name, nr, lon, lat, x, y }; });
-    const ends = new Set();
-    for (const d of dirs) for (const [lon, lat] of [d.parts[0][0], d.parts.at(-1).at(-1)]) {
+  // Przebieg (lista łamanych) → ciąg krawędzi grafu. Co 150 m najbliższy odcinek ≤ 30 m o zgodnym kierunku (cos ≥ 0,5);
+  // kolejne łączy najkrótsza ścieżka. Punkt pomijany, gdy dojazd do niego > 2 × odległość w linii prostej + 250 m
+  // (przyciągnięcie do równoległej jezdni). Kawałki przebiegu dopasowywane osobno, przerwy między nimi — najkrótszą drogą.
+  function matchPath(parts, STEP = 150, R = 30) {
+    const path = []; let polyLen = 0;
+    for (const coords of parts) {
+      const poly = coords.map(([lo, la]) => toXY(lo, la)), cum = [0];
+      for (let i = 1; i < poly.length; i++) cum.push(cum[i - 1] + Math.hypot(poly[i][0] - poly[i - 1][0], poly[i][1] - poly[i - 1][1]));
+      polyLen += cum[cum.length - 1];
+      const picks = [];
+      for (let d = 0, i = 1; poly.length > 1 && d <= cum[cum.length - 1]; d += STEP) {
+        while (i < poly.length - 1 && cum[i] < d) i++;
+        const [ax, ay] = poly[i - 1], [bx, by] = poly[i], f = (d - cum[i - 1]) / ((cum[i] - cum[i - 1]) || 1);
+        const px = ax + f * (bx - ax), py = ay + f * (by - ay), dx = bx - ax, dy = by - ay, dl = Math.hypot(dx, dy) || 1;
+        let best = null;
+        for (const ei of new Set(G.edgeGrid.near(px, py, R))) {
+          const xy = G.edges[ei].xy;
+          for (let k = 0; k < xy.length - 1; k++) {
+            const [cx, cy] = xy[k], [ex, ey] = xy[k + 1], q = segProject(px, py, cx, cy, ex, ey);
+            if (q.d > R || (best && q.d >= best.d)) continue;
+            if (((ex - cx) * dx + (ey - cy) * dy) / ((Math.hypot(ex - cx, ey - cy) || 1) * dl) >= 0.5) best = { ei, d: q.d };
+          }
+        }
+        if (best && picks[picks.length - 1] !== best.ei) picks.push(best.ei);
+      }
+      picks.forEach((ei, n) => {
+        const e = G.edges[ei], last = path.length ? G.edges[path[path.length - 1]] : null;
+        if (last && last.v !== e.u) {
+          const sp = shortest(last.v, e.u);
+          if (!sp && n > 0) return;
+          if (sp) {
+            const spLen = sp.reduce((a, j) => a + G.edges[j].len, 0), straight = Math.hypot(G.nx[e.u] - G.nx[last.v], G.ny[e.u] - G.ny[last.v]);
+            if (n > 0 && spLen > 2 * straight + 250) return;
+            path.push(...sp);
+          }
+        }
+        if (path[path.length - 1] !== ei) path.push(ei);
+      });
+    }
+    return { path, polyLen };
+  }
+  // Przystanki linii w kolejności jazdy: słupki ZTM z tą linią ≤ 35 m od przebiegu, jeden na nazwę zespołu —
+  // po prawej stronie jezdni (ruch prawostronny), a gdy takiego nie ma, najbliższy.
+  function lineStops(ref, parts) {
+    const segs = []; let run = 0;
+    for (const p of parts) for (let k = 1; k < p.length; k++) {
+      const a = toXY(...p[k - 1]), b = toXY(...p[k]), L = Math.hypot(b[0] - a[0], b[1] - a[1]);
+      segs.push({ a, b, L, at: run }); run += L;
+    }
+    const best = new Map();
+    for (const [lon, lat, name, , lines, nr] of D.stops.ztm) {
+      if (!`,${lines},`.includes(`,${ref},`)) continue;
       const [x, y] = toXY(lon, lat);
-      const s = stopsOf.reduce((b, s) => { const dd = Math.hypot(s.x - x, s.y - y); return dd < b.d ? { s, d: dd } : b; }, { d: Infinity }).s;
-      if (s) ends.add(lineStopKey(s));
+      let m = null;
+      for (const s of segs) {
+        const q = segProject(x, y, s.a[0], s.a[1], s.b[0], s.b[1]);
+        if (!m || q.d < m.d) m = { d: q.d, at: s.at + q.t * s.L, right: (s.b[0] - s.a[0]) * (y - s.a[1]) - (s.b[1] - s.a[1]) * (x - s.a[0]) < 0 };
+      }
+      if (!m || m.d > 35) continue;
+      const score = m.d + (m.right ? 0 : 1000), cur = best.get(name);
+      if (!cur || score < cur.score) best.set(name, { key: `${name} ${nr}`, name: `${name} ${nr}`, x, y, lon, lat, at: m.at, score, removed: false });
     }
-    const kursy = Math.max(0, ...dirs.map((d) => d.kursy || 0));
-    return { ref, nazwa: dirs[0]?.nazwa || "", dirs, stops: stopsOf, ends, kursy, headway: kursy ? Math.min(60, Math.max(2, Math.round(1140 / kursy))) : 10 };
+    return [...best.values()].sort((a, b) => a.at - b.at);
   }
-  function renderExtLayers() {
-    if (!map?.getSource("ext-line")) return;
-    const L = EXT_SEL || EXT?.line;
-    map.getSource("ext-line").setData(fc(L ? L.dirs.flatMap((d) => d.parts.map((p) => ({ type: "Feature", properties: {}, geometry: { type: "LineString", coordinates: p } }))) : []));
-    map.getSource("ext-stops").setData(fc(EXT_SEL && !EXT ? EXT_SEL.stops.map((s, i) => ({ type: "Feature", properties: { i, n: s.name, nr: s.nr, end: EXT_SEL.ends.has(lineStopKey(s)) }, geometry: { type: "Point", coordinates: [s.lon, s.lat] } })) : []));
+  // Położenie punktu względem trasy: indeks krawędzi w trasie (k), odległość od trasy (d) i od jej początku (at).
+  function pathLocator(path) {
+    const segs = []; let run = 0;
+    path.forEach((ei, k) => {
+      const xy = G.edges[ei].xy;
+      for (let j = 0; j < xy.length - 1; j++) { const L = Math.hypot(xy[j + 1][0] - xy[j][0], xy[j + 1][1] - xy[j][1]); segs.push([xy[j], xy[j + 1], L, run, k]); run += L; }
+    });
+    return (x, y) => {
+      let m = { k: -1, d: Infinity, at: 0 };
+      for (const [a, b, L, at, k] of segs) { const q = segProject(x, y, a[0], a[1], b[0], b[1]); if (q.d < m.d) m = { k, d: q.d, at: at + q.t * L }; }
+      return m;
+    };
   }
-  function renderExtUi() {
-    $("ext-chip").hidden = !EXT;
-    if (EXT) $("ext-chip-text").textContent = `${EXT.end ? "Przedłużenie" : "Odgałęzienie"} linii ${EXT.line.ref} od przystanku ${EXT.stop.name} ${EXT.stop.nr}`;
-  }
-  function hideExtPick() { $("ext-pick").hidden = true; }
-  function selectExtLine(ref) {
-    hideExtPick();
-    EXT_SEL = lineInfo(ref);
-    renderExtLayers();
-    $("hint").textContent = `Linia ${ref}: kliknij przystanek, od którego ma pojechać nowym odcinkiem (końcówka = przedłużenie, przystanek w środku = odgałęzienie).`;
-    const b = new maplibregl.LngLatBounds(); EXT_SEL.dirs.forEach((d) => d.parts.flat().forEach((c) => b.extend(c)));
-    if (!b.isEmpty()) map.fitBounds(b, { padding: 60, maxZoom: 15, duration: 600 });
-  }
-  function startExtension(stop) {
-    const n = nearestNode(stop.x, stop.y);
-    if (n < 0) return flash("Ten przystanek leży za daleko od ulic dostępnych dla autobusu.");
-    if (route.wps.length || stops.length) history.push({ t: "all", wps: route.wps, legs: route.legs, stops });
-    route.wps = [n]; route.legs = []; stops = [];
-    EXT = { line: EXT_SEL, stop, end: EXT_SEL.ends.has(lineStopKey(stop)) };
-    EXT_SEL = null;
-    $("headway").value = EXT.line.headway;   // domyślnie jak linia; można zmienić (np. co drugi kurs)
-    renderExtLayers(); renderExtUi();
-    setMode("route");
-    changed();
-  }
-  function cancelExtension() {
-    EXT = null; EXT_SEL = null; hideExtPick();
-    renderExtLayers(); renderExtUi(); changed();
-  }
-  // Klik na mapie w trybie „Przedłuż linię”.
-  function extendClick(e) {
-    const [x, y] = toXY(e.lngLat.lng, e.lngLat.lat), r = EXT_PX * metersPerPx();
-    if (EXT_SEL) {
-      const s = EXT_SEL.stops.reduce((b, s) => { const d = Math.hypot(s.x - x, s.y - y); return d < b.d ? { s, d } : b; }, { d: Infinity });
-      if (s.d <= Math.max(r, 25)) return startExtension(s.s);
+  // Stan przystanków linii wobec bieżącej trasy (on / off / skip) i przystanki do oceny: aktywne stare + nowe przy trasie.
+  // Przystanek jest „na trasie” do LE_STOP_M od niej albo niewiele dalej niż przy wczytaniu (d0 — np. słupek na pętli obok jezdni).
+  function leStops() {
+    const loc = pathLocator(LE.path), on = [];
+    for (const s of LE.old) {
+      const m = loc(s.x, s.y); s.k = m.k; s.pos = m.at;
+      if (s.d0 === undefined) s.d0 = m.d;
+      s.st = s.removed ? "off" : m.d <= Math.max(LE_STOP_M, s.d0 + 15) ? "on" : "skip";
+      if (s.st === "on") on.push(s);
     }
+    on.sort((a, b) => a.pos - b.pos);
+    const sandbox = [...on.map((s) => ({ x: s.x, y: s.y, lon: s.lon, lat: s.lat, edge: G.edges[LE.path[s.k]].id, street: s.name, old: true, key: s.key })),
+                     ...LE.added.filter((s) => loc(s.x, s.y).d <= LE_STOP_M)];
+    return { on, sandbox };
+  }
+  // Piaskownica = edytowana linia: jedna noga trasy, przystanki z leStops().
+  function leSync() {
+    route.legs = LE.path.length ? [LE.path] : [];
+    route.wps = LE.path.length ? [G.edges[LE.path[0]].u, G.edges[LE.path[LE.path.length - 1]].v] : [];
+    stops = leStops().sandbox;
+    renderLeLayers(); renderLeUi(); changed();
+  }
+  const leSnap = () => ({ path: LE.path.slice(), removed: LE.old.map((s) => s.removed), added: LE.added.slice(),
+                          draft: LE.draft && { ...LE.draft, nodes: LE.draft.nodes.slice(), legs: LE.draft.legs.slice() } });
+  function leApply(sn) {
+    LE.path = sn.path.slice(); LE.old.forEach((s, i) => (s.removed = sn.removed[i])); LE.added = sn.added.slice();
+    LE.draft = sn.draft && { ...sn.draft, nodes: sn.draft.nodes.slice(), legs: sn.draft.legs.slice() };
+  }
+  const lePush = () => LE.hist.push(leSnap());
+  function leUndo() { const sn = LE.hist.pop(); if (!sn) return flash("Nie ma czego cofnąć."); leApply(sn); leSync(); }
+  function leRestoreOrig() { lePush(); leApply(LE.orig); leSync(); flash("Przywrócono oryginalny przebieg i przystanki linii.", true); }
+
+  // Wczytanie linii: kierunek `kier` albo ten, którego przebieg leży najbliżej (x, y); `also` — punkt do pokazania obok linii.
+  function startEdit(ref, x, y, kier, also) {
+    hidePick();
+    const dirs = (D.routes || []).filter((r) => r.ref === ref && r.typ === "autobus");
+    if (!dirs.length) { flash(`Brak przebiegu linii ${ref} w danych.`); return false; }
+    const distTo = (d) => Math.min(...d.parts.flatMap((p) => p.slice(1).map((c, k) => { const a = toXY(...p[k]), b = toXY(...c); return segProject(x, y, a[0], a[1], b[0], b[1]).d; })));
+    const dir = kier != null ? (dirs.find((d) => (d.kier ?? 0) === kier) || dirs[0])
+      : x == null ? dirs[0] : dirs.map((d) => [d, distTo(d)]).sort((a, b) => a[1] - b[1])[0][0];
+    const m = matchPath(dir.parts);
+    if (!m.path.length) { flash(`Nie udało się odtworzyć przebiegu linii ${ref} na mapie ulic.`); return false; }
+    if (mode !== "edit") setMode("edit");
+    const len = m.path.reduce((a, ei) => a + G.edges[ei].len, 0), kursy = dir.kursy || 0;
+    history.length = 0;
+    LE = { ref, nazwa: dir.nazwa || "", kier: dir.kier ?? 0, kierunek: dir.kierunek || "", ndirs: dirs.length, poly: dir.parts,
+           headway: kursy ? Math.min(60, Math.max(2, Math.round(1140 / kursy))) : 10, quality: m.polyLen ? Math.abs(len / m.polyLen - 1) : 0,
+           path: m.path, old: lineStops(ref, dir.parts), added: [], draft: null, tool: "draw", hist: [] };
+    LE.orig = leSnap();
+    LE.base = { path: LE.path.slice(), stops: leStops().sandbox };
+    $("headway").value = LE.headway;   // domyślnie jak w rozkładzie; można zmienić w „Parametry linii”
+    leSync(); applyBusnet();
+    if (map?.getLayer("hex")) applyLayers();
+    const b = new maplibregl.LngLatBounds(); LE.poly.flat().forEach((c) => b.extend(c)); if (also) b.extend(also);
+    if (map && !b.isEmpty()) map.fitBounds(b, { padding: 60, maxZoom: 15, duration: 600 });
+    return true;
+  }
+  function endEdit() {
+    if (!LE) return;
+    LE = null; route.wps = []; route.legs = []; stops = []; history.length = 0;
+    renderLeLayers(); renderLeUi(); applyBusnet(); changed();
+    if (map?.getLayer("hex")) applyLayers();
+  }
+  function editFromProp(r, ref) {
+    if (startEdit(ref, ...toXY(+r.lon, +r.lat), undefined, [+r.lon, +r.lat])) flash(`Linia ${ref} wczytana. Znacznik pokazuje proponowany przystanek — dociągnij do niego linię przedłużeniem albo objazdem albo dodaj przystanek.`, true);
+  }
+  function hidePick() { $("line-pick").hidden = true; }
+  // Klik na mapie w trybie „Edytuj linię”.
+  function editClick(e) {
+    const [x, y] = toXY(e.lngLat.lng, e.lngLat.lat), r = LINE_PX * metersPerPx();
+    if (!LE) return pickLine(e, x, y, r);
+    if (LE.tool === "draw") leDrawClick(x, y, r);
+    else if (LE.tool === "stop") leStopClick(x, y);
+    else openCluster(hexAt(e.lngLat.lng, e.lngLat.lat));
+  }
+  function pickLine(e, x, y, r) {
     const lines = busLinesNear(x, y, r);
-    if (!lines.length) { hideExtPick(); return flash(EXT_SEL ? `Kliknij przystanek linii ${EXT_SEL.ref} albo inną linię autobusową.` : "Tu nie jedzie żadna linia autobusowa — kliknij bliżej jej przebiegu."); }
-    if (lines.length === 1) return selectExtLine(lines[0].ref);
-    const box = $("ext-pick"), W = $("mapwrap").clientWidth, H = $("mapwrap").clientHeight;
+    if (!lines.length) { hidePick(); return flash("Tu nie jedzie żadna linia autobusowa — kliknij bliżej jej przebiegu."); }
+    if (lines.length === 1) return startEdit(lines[0].ref, x, y);
+    const box = $("line-pick"), W = $("mapwrap").clientWidth, H = $("mapwrap").clientHeight;
     box.innerHTML = `<div class="k">Kilka linii w tym miejscu</div>` + lines.map((l) => `<button type="button" role="option" data-ref="${esc(l.ref)}"><b>${esc(l.ref)}</b>${esc(l.nazwa)}</button>`).join("");
     box.hidden = false;
     box.style.left = `${Math.min(e.point.x + 10, W - box.offsetWidth - 8)}px`; box.style.top = `${Math.min(e.point.y + 10, H - box.offsetHeight - 8)}px`;
-    box.querySelectorAll("button").forEach((b) => (b.onclick = () => selectExtLine(b.dataset.ref)));
+    box.querySelectorAll("button").forEach((b) => (b.onclick = () => startEdit(b.dataset.ref, x, y)));
     box.querySelector("button")?.focus();
   }
-  // Odtworzenie przedłużenia z JSON: linia + przystanek najbliższy zapisanemu punktowi.
-  function restoreExtension(p) {
-    if (!p?.linia || !Array.isArray(p.przystanek)) return null;
-    const line = lineInfo(String(p.linia));
-    if (!line.dirs.length || !line.stops.length) return null;
-    const [x, y] = toXY(+p.przystanek[0], +p.przystanek[1]);
-    const stop = line.stops.reduce((b, s) => { const d = Math.hypot(s.x - x, s.y - y); return d < b.d ? { s, d } : b; }, { d: Infinity }).s;
-    return { line, stop, end: line.ends.has(lineStopKey(stop)) };
+  const nearestOld = (x, y, r, ok = () => true) => LE.old.reduce((b, s) => { const d = Math.hypot(s.x - x, s.y - y); return ok(s) && d <= r && d < b.d ? { s, d } : b; }, { s: null, d: Infinity }).s;
+
+  // „Przedłuż / objazd”: pierwszy klik — przystanek linii, od którego zaczyna się nowy odcinek.
+  function leDrawClick(x, y, r) {
+    const hit = nearestOld(x, y, Math.max(r, 25), (s) => s.st === "on"), d = LE.draft;
+    if (!d) return hit ? leBegin(hit) : flash("Najpierw kliknij przystanek linii, od którego zaczyna się nowy odcinek.");
+    if (d.kind === "detour" && hit && hit.key !== d.from) return leCloseDetour(hit);
+    leAddPoint(x, y);
+  }
+  // Ostatni przystanek → przedłużenie za nim, pierwszy → przed nim (trasa od razu obcięta w tym przystanku), środek → objazd.
+  function leBegin(s) {
+    const { on } = leStops(), i = on.indexOf(s);
+    const kind = on.length < 2 || i === on.length - 1 ? "end" : i === 0 ? "start" : "detour";
+    lePush();
+    if (kind === "end") { LE.path = LE.path.slice(0, s.k + 1); LE.draft = { kind, from: s.key, nodes: [G.edges[LE.path[LE.path.length - 1]].v], legs: [], base: LE.path.slice() }; }
+    else if (kind === "start") { LE.path = LE.path.slice(s.k); LE.draft = { kind, from: s.key, nodes: [G.edges[LE.path[0]].u], legs: [], base: LE.path.slice() }; }
+    else LE.draft = { kind, from: s.key, k: s.k, nodes: [G.edges[LE.path[s.k]].v], legs: [] };
+    leSync();
+  }
+  function leAddPoint(x, y) {
+    const d = LE.draft;
+    if (d.kind === "start") {
+      // Przedłużenie od początku: klikamy w stronę nowej pętli, a autobus jedzie od niej do pierwszego przystanku.
+      const s = stepTo(-1, x, y); if (s.err) return flash(s.err);
+      const n = s.nodes[0], from = s.legs.length ? G.edges[s.legs[0][0]].v : n, to = shortest(from, d.nodes[d.nodes.length - 1]);
+      if (!to) return flash("Stąd nie da się dojechać do początku linii (ulice jednokierunkowe albo zakaz dla autobusów).");
+      lePush(); d.nodes.push(n); d.legs.push([...(s.legs[0] || []), ...to]);
+      LE.path = [...d.legs].reverse().flat().concat(d.base);
+    } else {
+      const s = stepTo(d.nodes[d.nodes.length - 1], x, y); if (s.err) return flash(s.err);
+      lePush(); d.nodes.push(...s.nodes); d.legs.push(...s.legs);
+      if (d.kind === "end") LE.path = d.base.concat(d.legs.flat());
+    }
+    leSync();
+  }
+  // Objazd zamknięty przystankiem dalej na trasie: zastępuje fragment trasy między przystankiem startowym a tym.
+  function leCloseDetour(s) {
+    const d = LE.draft;
+    if (s.k <= d.k) return flash("Objazd musi wrócić do przystanku dalej w kierunku jazdy.");
+    const back = shortest(d.nodes[d.nodes.length - 1], G.edges[LE.path[s.k]].u);
+    if (!back) return flash("Z ostatniego punktu objazdu nie da się dojechać do tego przystanku.");
+    lePush();
+    const before = leStops().on.length;
+    LE.path = LE.path.slice(0, d.k + 1).concat(d.legs.flat(), back, LE.path.slice(s.k));
+    LE.draft = null;
+    leSync();
+    const lost = before - leStops().on.length;
+    flash(`Objazd zamknięty na przystanku ${s.name}${lost > 0 ? ` — ${lost} przyst. poza nową trasą` : ""}.`, true);
+  }
+  function leFinish() {
+    const d = LE?.draft; if (!d) return;
+    lePush(); LE.draft = null; leSync();
+    if (d.kind === "detour") flash("Objazd porzucony — trasa bez zmian.", true);
+  }
+  // „Przystanki”: klik w przystanek linii usuwa / przywraca, w nowy — usuwa, przy trasie — dodaje nowy.
+  function leStopClick(x, y) {
+    const R = Math.max(30, 9 * metersPerPx()), o = nearestOld(x, y, R);
+    if (o) {
+      if (o.st === "skip") return flash(`Przystanek ${o.name} nie leży na nowej trasie linii.`);
+      lePush(); o.removed = !o.removed; leSync();
+      return flash(`${o.removed ? "Usunięto" : "Przywrócono"} przystanek ${o.name}.`, true);
+    }
+    const ai = LE.added.findIndex((s) => Math.hypot(s.x - x, s.y - y) <= R);
+    if (ai >= 0) { lePush(); LE.added.splice(ai, 1); return leSync(); }
+    const s = makeStop(x, y); if (s.err) return flash(s.err);
+    lePush(); LE.added.push(s); leSync();
+  }
+  function leSetTool(t) {
+    if (t !== "draw" && LE.draft) leFinish();
+    LE.tool = t; applyBusnet(); renderLeUi();
+  }
+  const leStopTip = (p) => LE.tool === "stop" ? (p.st === "skip" ? "Nie leży na nowej trasie." : p.st === "off" ? "Kliknij, aby przywrócić." : "Kliknij, aby usunąć.")
+    : LE.tool !== "draw" || p.st !== "on" ? "" : !LE.draft ? "Kliknij, aby zacząć tu nowy odcinek." : LE.draft.kind === "detour" ? "Kliknij, aby zamknąć tu objazd." : "";
+  function leHint() {
+    if (LE.tool === "stop") return "Kliknij przystanek linii, żeby go usunąć albo przywrócić. Kliknij przy trasie (do 80 m), żeby dodać nowy; kliknij nowy, żeby go usunąć.";
+    if (LE.tool === "view") return "Podgląd: najedź na przystanek albo kliknij klaster. Wybierz „Przedłuż / objazd” lub „Przystanki”, żeby zmieniać linię.";
+    const d = LE.draft;
+    if (!d) return "Kliknij przystanek linii: pierwszy lub ostatni = przedłużenie, przystanek w środku = objazd.";
+    if (d.kind === "detour") return "Klikaj ulice objazdu, a na koniec przystanek linii dalej w kierunku jazdy — objazd zastąpi odcinek między przystankami.";
+    return `Klikaj kolejne ulice — linia ${d.kind === "end" ? "wydłuża się za ostatnim przystankiem" : "zaczyna się przed pierwszym przystankiem"}. Gotowe? „Zakończ odcinek”.`;
+  }
+  function renderLeLayers() {
+    if (!map?.getSource("le-orig")) return;
+    const line = (c) => ({ type: "Feature", properties: {}, geometry: { type: "LineString", coordinates: c } });
+    const d = LE?.draft;
+    map.getSource("le-orig").setData(fc(LE ? LE.poly.map(line) : []));
+    map.getSource("le-stops").setData(fc(LE ? LE.old.map((s, i) => ({ type: "Feature", properties: { i, n: s.name, st: s.st || "on", sel: s.key === d?.from }, geometry: { type: "Point", coordinates: [s.lon, s.lat] } })) : []));
+    map.getSource("le-draft").setData(fc(d ? [...(d.kind === "detour" ? d.legs.flat().map((ei) => line(G.edges[ei].coords)) : []),
+      ...d.nodes.map((n) => ({ type: "Feature", properties: {}, geometry: { type: "Point", coordinates: toLL(G.nx[n], G.ny[n]) } }))] : []));
+  }
+  function renderLeUi() {
+    const on = !!LE;
+    $("le-panel").hidden = !on; $("tools").hidden = on; $("hint").hidden = on; $("draw-row").hidden = on;
+    $("modebar").textContent = modebarText();
+    if (!on) return;
+    $("le-ref").textContent = LE.ref;
+    $("le-name").textContent = `→ ${LE.kierunek || LE.nazwa}`;
+    $("le-dir").hidden = LE.ndirs < 2;
+    const rough = LE.quality > 0.1, pct = Math.round(LE.quality * 100), q = $("le-quality");
+    q.className = rough ? "muted warn" : "muted";
+    q.textContent = `${rough ? `Przebieg odtworzony w przybliżeniu — długość różni się o ${pct}% od przebiegu ZTM.` : `Przebieg odtworzony na mapie ulic (różnica długości ${pct}%).`} ${LE.old.length} przystanków, kursy co ${LE.headway} min wg rozkładu.`;
+    $("le-tools").querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.t === LE.tool));
+    $("le-finish").hidden = !LE.draft;
+    $("le-finish").textContent = LE.draft?.kind === "detour" ? "Porzuć objazd" : "Zakończ odcinek";
+    $("le-undo").disabled = !LE.hist.length;
+    if (!flashing) $("le-hint").textContent = leHint();
+  }
+  // Tabela „przed / po” dla całej linii (ten sam rok i parametry); efektywność = mieszkańcy w zasięgu na km trasy.
+  function renderLeCmp(r) {
+    const b = LE.baseEval = evaluate(LE.base.path, LE.base.stops), perKm = (x) => (x.len ? x.all / (x.len / 1000) : 0);
+    const n = (v) => fmt.format(v), km = (v) => `${fmt1.format(v)} km`, min = (v) => `${v} min`, r1 = (v) => Math.round(v * 10) / 10;
+    // [nazwa, przed, po, format, zaokrąglenie, kierunek: 1 — więcej znaczy lepiej, −1 — gorzej, 0 — obojętnie]
+    const rows = [["Długość trasy", b.len / 1000, r.len / 1000, km, r1, 0], ["Czas w szczycie", b.tPeak / 60, r.tPeak / 60, min, Math.round, -1],
+                  ["Przystanki", b.nStops, r.nStops, n, Math.round, 0], ["Mieszkańcy ≤ 400 m", b.all, r.all, n, Math.round, 1], ["Nowy popyt", b.demand, r.demand, n, Math.round, 1],
+                  ["Pojazdy w szczycie", b.fleet, r.fleet, n, Math.round, -1], ["Efektywność: mieszkańcy na km", perKm(b), perKm(r), n, Math.round, 1]];
+    $("le-cmp").innerHTML = `<thead><tr><th></th><th>Przed</th><th>Po</th><th>Zmiana</th></tr></thead><tbody>` + rows.map(([name, a0, c0, f, rd, good]) => {
+      const a = rd(a0), c = rd(c0), dv = rd(c - a), s = Math.sign(dv) * good, cls = !dv ? "same" : s > 0 ? "up" : s < 0 ? "down" : "";
+      return `<tr><td>${name}</td><td>${f(a)}</td><td>${f(c)}</td><td class="${cls}">${dv ? `${dv > 0 ? "+" : "−"}${f(Math.abs(dv))}` : "bez zmian"}</td></tr>`;
+    }).join("") + "</tbody>";
+    const cnt = (st) => LE.old.filter((s) => s.st === st).length, added = r.nStops - cnt("on");
+    $("le-cmp-note").textContent = `Jeden kierunek linii, rok ${year}, kursy co ${r.headway} min; pojazdy na pełny obieg z postojem na pętli.`
+      + [cnt("off") && ` Usunięte przystanki: ${cnt("off")}.`, cnt("skip") && ` Poza nową trasą: ${cnt("skip")}.`, added > 0 && ` Nowe: ${added}.`].filter(Boolean).join("");
+  }
+  // Odtworzenie edycji z JSON: linia i kierunek, trasa z krawędzi, usunięte (po nazwie) i dodane przystanki.
+  function restoreEdit(obj) {
+    const p = obj.edycja_linii;
+    if (!startEdit(String(p.linia), null, null, p.kierunek != null ? +p.kierunek : undefined)) throw new Error(`Nie znaleziono linii autobusowej ${p.linia}.`);
+    let skipped = 0;
+    const idx = (Array.isArray(obj.krawedzie) ? obj.krawedzie : []).map((id) => G.byId.get(id));
+    if (idx.length && idx.every((i) => i !== undefined)) LE.path = idx; else if (idx.length) skipped++;
+    const rm = new Set(p.usuniete || []); LE.old.forEach((s) => (s.removed = rm.has(s.key)));
+    leSync();
+    for (const [lon, lat] of Array.isArray(p.dodane) ? p.dodane : []) { const s = makeStop(...toXY(lon, lat)); if (s.err) skipped++; else LE.added.push(s); }
+    LE.hist = []; leSync();
+    return skipped;
   }
 
   // ---------- zakładki panelu: Problem · Projektuj · Mapa · Symulacja ----------
@@ -1322,24 +1655,31 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
   }
 
   function setMode(m) {
-    if (m !== "view") showTab("design");   // rysowanie i przystanki są w zakładce „Projektuj”
+    if (m !== "view") showTab("design");   // rysowanie, przystanki i edycja linii są w zakładce „Projektuj”
+    if (m !== "edit" && LE) endEdit();
     mode = m;
     $("tools").querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.mode === m));
-    if (m !== "extend" && EXT_SEL) { EXT_SEL = null; renderExtLayers(); }
-    hideExtPick();
+    hidePick();
     $("hint").textContent = hintText();
     $("mapwrap").classList.toggle("drawing", m !== "view");
     $("modebar").hidden = m === "view";
-    if (map?.getLayer("busnet")) map.setLayoutProperty("busnet", "visibility", m === "route" ? "visible" : "none");
-    $("modebar").textContent = { route: "Rysowanie trasy — klikaj kolejne punkty", stop: "Stawianie przystanków — klik dodaje, klik na przystanku usuwa",
-                                 extend: "Przedłużanie linii — kliknij linię autobusową, potem jej przystanek" }[m] || "";
-    if (map?.getLayer("hex")) applyLayers();   // w trybie „Przedłuż linię” pokazujemy linie autobusowe
+    $("modebar").textContent = modebarText();
+    applyBusnet();
+    if (map?.getLayer("hex")) applyLayers();   // przy wyborze linii do edycji pokazujemy linie autobusowe
   }
-  const hintText = () => mode === "extend" && EXT_SEL
-    ? `Linia ${EXT_SEL.ref}: kliknij przystanek, od którego ma pojechać nowym odcinkiem (końcówka = przedłużenie, przystanek w środku = odgałęzienie).`
-    : HINTS[mode];
-  let flashT;
-  function flash(msg) { const h = $("hint"); h.textContent = msg; h.style.color = css("--crit"); clearTimeout(flashT); flashT = setTimeout(() => { h.style.color = ""; h.textContent = hintText(); }, 3500); }
+  const modebarText = () => LE ? `Edycja linii ${LE.ref} — ${{ draw: "przedłużenie lub objazd", stop: "przystanki", view: "podgląd" }[LE.tool]}`
+    : { route: "Rysowanie trasy — klikaj kolejne punkty", stop: "Stawianie przystanków — klik dodaje, klik na przystanku usuwa",
+        edit: "Edycja linii — kliknij linię autobusową na mapie" }[mode] || "";
+  // Ulice dostępne dla autobusu podświetlone przy rysowaniu trasy i przy przedłużaniu / objeździe edytowanej linii.
+  function applyBusnet() { if (map?.getLayer("busnet")) map.setLayoutProperty("busnet", "visibility", mode === "route" || LE?.tool === "draw" ? "visible" : "none"); }
+  const hintText = () => (LE ? leHint() : HINTS[mode]);
+  let flashT = 0, flashing = false;
+  // Komunikat w podpowiedzi (w menu edycji linii, gdy jest otwarte); info = zwykły kolor zamiast czerwonego.
+  function flash(msg, info) {
+    const h = LE ? $("le-hint") : $("hint");
+    h.textContent = msg; h.style.color = info ? "" : css("--crit"); flashing = true;
+    clearTimeout(flashT); flashT = setTimeout(() => { flashing = false; h.style.color = ""; h.textContent = hintText(); }, 3500);
+  }
 
   let raf = 0;
   function changed() { cancelAnimationFrame(raf); raf = requestAnimationFrame(() => { updateMapSources(); renderEval(); if (SIM.data) { simExtraTrips(); simFrame(); } }); }
@@ -1359,7 +1699,8 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     for (const [id, v] of Object.entries(DEFAULTS)) $(id).value = v;
     $("line-filter").value = "";
     for (const k of Object.keys(LAYERS)) $(`lay-${k}`).checked = k !== "bus";
-    $("prop-on").checked = true; $("lay-prop").checked = true; $("propl-on").checked = false;
+    for (const [k, P] of Object.entries(PSETS)) $(P.chk).checked = $(P.lay).checked = k === "st";   // domyślnie tylko Przystanki AI
+    clearPropSel();
     for (const k of Object.keys(INFRA)) $(`inf-${k}`).checked = INFRA_ON.has(k);
     $("pmetro-layers").querySelectorAll("input").forEach((i) => (i.checked = PM_ON.has(i.dataset.ref)));
     applyPlannedMetro();
@@ -1395,14 +1736,16 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     g.fillText(String(n), S / 2, S / 2 + 1);
     return g.getImageData(0, 0, S, S);
   }
-  // Znacznik proponowanego przystanku: duży romb (jedyny taki kształt na mapie) z numerem propozycji w klastrze.
-  const PROP_COLOR = "#e8175d";
-  function propIcon(n) {
+  // Znacznik propozycji przystanku z numerem: romb (Przystanki AI, priorytet) albo kwadrat (top 30 poza trasą, nr w klastrze).
+  const PROP_COLOR = "#e8175d", TOP_STOP_COLOR = "#7048e8";
+  function propIcon(n, square = false, color = PROP_COLOR) {
     const S = 60, c = document.createElement("canvas"); c.width = c.height = S;
-    const g = c.getContext("2d"), m = S / 2, r = 23;
+    const g = c.getContext("2d"), m = S / 2, r = square ? 17 : 23;
     g.shadowColor = "rgba(0,0,0,0.45)"; g.shadowBlur = 6; g.shadowOffsetY = 1;
-    g.beginPath(); g.moveTo(m, m - r); g.lineTo(m + r, m); g.lineTo(m, m + r); g.lineTo(m - r, m); g.closePath();
-    g.fillStyle = PROP_COLOR; g.fill();
+    g.beginPath();
+    if (square) g.roundRect(m - r, m - r, 2 * r, 2 * r, 5);
+    else { g.moveTo(m, m - r); g.lineTo(m + r, m); g.lineTo(m, m + r); g.lineTo(m - r, m); g.closePath(); }
+    g.fillStyle = color; g.fill();
     g.shadowColor = "transparent"; g.lineWidth = 4; g.strokeStyle = "#ffffff"; g.stroke();
     g.fillStyle = "#ffffff"; g.font = "700 22px Barlow, system-ui, sans-serif"; g.textAlign = "center"; g.textBaseline = "middle";
     g.fillText(String(n), m, m + 1);
@@ -1423,26 +1766,104 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     g.fillStyle = "#ffffff"; g.fill(new Path2D(PLANE_PATH));
     return g.getImageData(0, 0, S, S);
   }
-  // ---------- proponowane przystanki w 30 klastrach priorytetowych (mapping/przystanki_top30.py) ----------
-  const PROP = { st: [], ln: [] };
+  // ---------- propozycje przystanków: Przystanki AI i przystanki top 30 ----------
+  // st: Przystanki AI (dane/propozycje_przystankow.geojson; etap A — słupki na trasie, B — zmiana trasy / przedłużenie linii),
+  // ln: top 30 na trasie istniejących linii (dane/przystanki_top30_na_liniach.csv),
+  // top: top 30 poza trasą (dane/przystanki_top30.csv) — oba tylko w 30 klastrach priorytetowych modelu ML.
+  // Każdy zbiór: znaczniki na mapie, przełącznik w „Problem” i w „Mapa”, lista, karta wybranego punktu, „Edytuj linię”.
+  const PROP = { st: [], ln: [], top: [], sel: null };
   const MPP_KAT = { school: "szkoły", hospital: "szpitale", town_hall: "urzędy", mall: "centra handlowe", marketplace: "targowiska",
                     cinema: "kina", theatre: "teatry", museum: "muzea", park: "parki", religious: "miejsca kultu" };
-  const isTrue = (v) => String(v).toLowerCase() === "true";
   const n0 = (x) => fmt.format(Math.round(+x || 0));
-  const propFeatures = () => PROP.st.map((r, i) => ({ type: "Feature", properties: { i, nr: Math.min(3, Math.max(1, +r.nr || 1)) }, geometry: { type: "Point", coordinates: [+r.lon, +r.lat] } }));
-  const propLineFeatures = () => PROP.ln.map((r, i) => ({ type: "Feature", properties: { i, l: String(r.linia).toUpperCase() }, geometry: { type: "Point", coordinates: [+r.lon, +r.lat] } }));
-  function propHTML(r) {
-    const extra = [isTrue(r.przesiadka_kolej) && "przesiadka na kolej / metro", isTrue(r.przy_veturilo) && "przy stacji Veturilo",
-                   r.linie_ztm_na_ulicy && `linie ZTM na ulicy: ${esc(r.linie_ztm_na_ulicy)}`].filter(Boolean);
-    return `<b>${esc(r.ulica || "ulica bez nazwy")}</b> · propozycja ${esc(r.nr)} w klastrze<br>nowo obsłużeni: <b>${n0(r.nowo_obsluzeni)}</b> os. (ocena ${n0(r.ocena)})`
-      + `<br><span style="opacity:0.8">Dlaczego tutaj: w zasięgu ~400 m pieszo jest tu najwięcej mieszkańców, miejsc pracy i celów podróży bez dojścia do przystanku ZTM.</span>`
-      + `<br>mieszkańcy ${n0(r.mieszkancy_2025)} · nowi do 2036 ${n0(r.nowi_2036)} · miejsca pracy ${n0(r.miejsca_pracy)}`
-      + `<br>najbliższy przystanek ZTM: ${n0(r.odl_do_przystanku_ztm_m)} m` + (extra.length ? `<br>${extra.join(" · ")}` : "");
+  const isTrue = (v) => String(v).toLowerCase() === "true";
+  const propPrio = (r) => Math.min(3, Math.max(1, +r.priorytet || 3));
+  const topNr = (r) => Math.min(3, Math.max(1, +r.nr || 1));
+  const propWalk = (r) => r.dojscie_dzis_m ? `dojście dziś ${n0(r.dojscie_dzis_m)} m → po zmianie ${n0(r.dojscie_po_m)} m` : "";
+  const isBusLine = (ref) => ref && (D.routes || []).some((x) => x.ref === ref && x.typ === "autobus");
+  const refsOf = (s) => String(s || "").split(/[\s,;]+/).filter(isBusLine);
+  // Najbliższe linie autobusowe (do r m) — gdy przystanek leży poza trasą, którą linię do niego dociągnąć.
+  function nearBusLines(lon, lat, r = 800, n = 3) {
+    const [x, y] = toXY(lon, lat), best = new Map();
+    for (const rt of D.routes || []) {
+      if (rt.typ !== "autobus") continue;
+      for (const p of rt.parts) for (let k = 1; k < p.length; k++) {
+        const a = toXY(...p[k - 1]), b = toXY(...p[k]), d = segProject(x, y, a[0], a[1], b[0], b[1]).d;
+        if (d <= r && d < (best.get(rt.ref) ?? Infinity)) best.set(rt.ref, d);
+      }
+    }
+    return [...best.entries()].sort((a, b) => a[1] - b[1]).slice(0, n).map(([ref]) => ref);
   }
-  function renderPropNote() {
-    $("prop-note").textContent = PROP.st.length
-      ? `${PROP.st.length} lokalizacji w ${new Set(PROP.st.map((r) => r.h3)).size} klastrach: tam nowy przystanek obsłuży najwięcej osób bez dojścia do ZTM. Na liniach: ${PROP.ln.length} punktów (${new Set(PROP.ln.map((r) => r.linia)).size} linii).`
-      : "Brak pliku dane/przystanki_top30.csv.";
+  const PSETS = {
+    st: { list: "prop-list", card: "prop-detail", note: "prop-note", layer: "prop-st", lay: "lay-prop", chk: "prop-on", color: () => PROP_COLOR,
+      badge: (r) => `<span class="rk dia"><b>${propPrio(r)}</b></span>`,
+      item: (r) => [r.nazwa_robocza || "bez nazwy", `${r.dzielnica} · ${r.typ === "A" ? "od razu" : "zmiana trasy"}`, `+${n0(r.zysk_dostepnosci)}`],
+      lines: (r) => refsOf(r.linia_rekomendowana),
+      tip: (r) => `<div class="k">Przystanek AI ${esc(r.id)} · priorytet ${propPrio(r)} · etap ${esc(r.typ)}</div><b>${esc(r.nazwa_robocza || "bez nazwy")}</b> · ${esc(r.dzielnica)}<br>${esc(r.rodzaj)}`
+        + `<br>zysk dostępności: <b>+${n0(r.zysk_dostepnosci)}</b> os.${propWalk(r) ? ` · ${propWalk(r)}` : ""}`
+        + (r.uzasadnienie ? `<br><span style="opacity:0.85">Dlaczego tutaj: ${esc(r.uzasadnienie)}</span>` : ""),
+      html: (r) => `<div class="k">${esc(r.id)} · priorytet ${propPrio(r)} · etap ${esc(r.typ)}</div><b>${esc(r.nazwa_robocza)}</b> · ${esc(r.dzielnica)}`
+        + `<p>${esc(r.rodzaj)}. Zysk dostępności: <b>+${n0(r.zysk_dostepnosci)}</b> os.${propWalk(r) ? `; ${propWalk(r)}` : ""}.</p>`
+        + (r.uzasadnienie ? `<p>${esc(r.uzasadnienie)}</p>` : "")
+        + (r.propozycja_obslugi && !String(r.uzasadnienie || "").includes(r.propozycja_obslugi) ? `<p><b>Obsługa:</b> ${esc(r.propozycja_obslugi)}</p>` : ""),
+      noteText: (rows) => { const a = rows.filter((r) => r.typ === "A").length;
+        return rows.length ? `${rows.length} propozycji algorytmu: ${a} od razu (słupki na trasie istniejącej linii), ${rows.length - a} ze zmianą trasy lub przedłużeniem linii. Romb = priorytet 1–3. Kliknij, aby zobaczyć uzasadnienie.`
+          : "Brak pliku dane/propozycje_przystankow.geojson."; } },
+    ln: { list: "propl-list", card: "propl-detail", note: "propl-note", layer: "prop-line", lay: "lay-propl", chk: "propl-on", color: () => css("--accent"),
+      badge: (r) => `<span class="rk ln">${esc(r.linia)}</span>`,
+      item: (r) => [r.ulica || "ulica bez nazwy", `${r.dzielnica} · klaster #${r.rank}`, n0(r.ocena)],
+      lines: (r) => refsOf(r.linia),
+      tip: (r) => `<div class="k">Top 30 · na trasie linii ${esc(r.linia)}</div><b>${esc(r.ulica || "ulica bez nazwy")}</b> · ${esc(r.dzielnica)} (klaster #${esc(r.rank)})`
+        + `<br>ocena ${n0(r.ocena)} · ${n0(r.odl_do_przystanku_ztm_m)} m od najbliższego przystanku ZTM`,
+      html: (r) => `<div class="k">Na trasie linii ${esc(r.linia)} · klaster #${esc(r.rank)}</div><b>${esc(r.ulica || "ulica bez nazwy")}</b> · ${esc(r.dzielnica)}`
+        + `<p>Nowy przystanek na trasie istniejącej linii ${esc(r.linia)} — wystarczy dostawić słupki. Ocena (popyt w zasięgu ok. 400 m pieszo): <b>${n0(r.ocena)}</b>; najbliższy przystanek ZTM ${n0(r.odl_do_przystanku_ztm_m)} m.</p>`,
+      noteText: (rows) => rows.length ? `${rows.length} miejsc w 30 klastrach priorytetowych (${new Set(rows.map((r) => r.linia)).size} linii): gdzie dołożyć przystanek na trasie istniejącej linii. Liczba = ocena (popyt w zasięgu).`
+        : "Brak pliku dane/przystanki_top30_na_liniach.csv." },
+    top: { list: "propt-list", card: "propt-detail", note: "propt-note", layer: "prop-top", lay: "lay-propt", chk: "propt-on", color: () => TOP_STOP_COLOR,
+      badge: (r) => `<span class="rk sq">${topNr(r)}</span>`,
+      item: (r) => [r.ulica || "ulica bez nazwy", `${r.dzielnica} · klaster #${r.rank}`, `+${n0(r.nowo_obsluzeni)}`],
+      lines: (r) => { const own = refsOf(r.linie_ztm_na_ulicy); return own.length ? own : nearBusLines(+r.lon, +r.lat); },
+      tip: (r) => `<div class="k">Top 30 · poza trasą · klaster #${esc(r.rank)}</div><b>${esc(r.ulica || "ulica bez nazwy")}</b> · ${esc(r.dzielnica)} · propozycja ${topNr(r)} w klastrze`
+        + `<br>nowo obsłużeni: <b>${n0(r.nowo_obsluzeni)}</b> os. · ${n0(r.odl_do_przystanku_ztm_m)} m od najbliższego przystanku ZTM`,
+      html: (r) => { const extra = [isTrue(r.przesiadka_kolej) && "przesiadka na kolej / metro", isTrue(r.przy_veturilo) && "przy stacji Veturilo",
+                                     r.linie_ztm_na_ulicy && `ulicą jeżdżą: ${esc(r.linie_ztm_na_ulicy)}`].filter(Boolean);
+        return `<div class="k">Poza trasą · klaster #${esc(r.rank)} · propozycja ${topNr(r)}</div><b>${esc(r.ulica || "ulica bez nazwy")}</b> · ${esc(r.dzielnica)}`
+          + `<p>Nowo obsłużeni: <b>${n0(r.nowo_obsluzeni)}</b> os. (ocena ${n0(r.ocena)}). Mieszkańcy ${n0(r.mieszkancy_2025)}, nowi do 2036 ${n0(r.nowi_2036)}, miejsca pracy ${n0(r.miejsca_pracy)}; najbliższy przystanek ZTM ${n0(r.odl_do_przystanku_ztm_m)} m.</p>`
+          + (extra.length ? `<p>${extra.join(" · ")}</p>` : "") + (r.uwaga ? `<p>${esc(r.uwaga)}</p>` : "")
+          + (refsOf(r.linie_ztm_na_ulicy).length ? "" : `<p>Żadna linia tędy nie jedzie — najbliższe linie autobusowe można przedłużyć albo poprowadzić objazdem:</p>`); },
+      noteText: (rows) => rows.length ? `${rows.length} nowych przystanków (1–3 na klaster) w 30 klastrach priorytetowych. Kwadrat = numer propozycji w klastrze, liczba = nowo obsłużeni.`
+        : "Brak pliku dane/przystanki_top30.csv." },
+  };
+  const propFeatures = (k) => PROP[k].map((r, i) => ({ type: "Feature", properties: { i, nr: k === "st" ? propPrio(r) : topNr(r), l: String(r.linia || "").toUpperCase() }, geometry: { type: "Point", coordinates: [+r.lon, +r.lat] } }));
+  const propTip = (k, i) => PSETS[k].tip(PROP[k][i]);
+  function renderPropLists() {
+    for (const [k, P] of Object.entries(PSETS)) {
+      $(P.note).textContent = P.noteText(PROP[k]);
+      $(P.list).innerHTML = PROP[k].map((r, i) => { const [title, sub, val] = P.item(r);
+        return `<li><button data-i="${i}"${PROP.sel?.k === k && PROP.sel.i === i ? ' aria-current="true"' : ""}>${P.badge(r)}<span>${esc(title)} <small>· ${esc(sub)}</small></span><span style="font-weight:600">${val}</span></button></li>`; }).join("");
+      $(P.list).querySelectorAll("button").forEach((b) => (b.onclick = () => selectProp(k, +b.dataset.i)));
+    }
+  }
+  // Wybór punktu (z listy albo kliknięciem znacznika): przybliżenie, obwódka na mapie i karta z opisem + „Edytuj linię”.
+  function selectProp(k, i, { fly = true } = {}) {
+    const P = PSETS[k], r = PROP[k]?.[i]; if (!r) return;
+    PROP.sel = { k, i };
+    if (!$(P.lay).checked) { $(P.lay).checked = true; applyLayers(); }
+    renderPropLists();
+    $(P.list).querySelector(`[data-i="${i}"]`)?.scrollIntoView({ block: "nearest" });
+    for (const Q of Object.values(PSETS)) $(Q.card).hidden = Q !== P;
+    const lines = P.lines(r), card = $(P.card);
+    card.innerHTML = P.html(r) + (lines.length ? `<div class="row">${lines.slice(0, 3).map((l) => `<button class="btn small" type="button" data-l="${esc(l)}">Edytuj linię ${esc(l)}</button>`).join("")}</div>` : "");
+    card.querySelectorAll("[data-l]").forEach((b) => (b.onclick = () => editFromProp(r, b.dataset.l)));
+    if (map?.getSource("prop-sel")) {
+      map.getSource("prop-sel").setData(fc([{ type: "Feature", properties: {}, geometry: { type: "Point", coordinates: [+r.lon, +r.lat] } }]));
+      map.setPaintProperty("prop-sel", "circle-stroke-color", P.color());
+      applyLayers();
+    }
+    if (fly && map) map.flyTo({ center: [+r.lon, +r.lat], zoom: Math.max(map.getZoom(), 15), duration: 600 });
+  }
+  function clearPropSel() {
+    PROP.sel = null; for (const P of Object.values(PSETS)) $(P.card).hidden = true;
+    renderPropLists(); map?.getSource("prop-sel")?.setData(fc([]));
   }
 
   // ---------- wsiadający na przystankach w szczycie (dane/symulacja/przystanki_wsiadania.csv) ----------
@@ -1780,9 +2201,9 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     const sel = lineFilter(), vis = (on) => (on ? "visible" : "none");
     for (const [k, ids] of Object.entries(LAYERS)) for (const id of ids) map.setLayoutProperty(id, "visibility", vis($(`lay-${k}`).checked));
     if (map.getLayer("prop-st")) {
-      $("prop-on").checked = $("lay-prop").checked;   // przełącznik w „Mapa” (też przez Zaznacz/Odznacz wszystko) jest źródłem prawdy
-      map.setLayoutProperty("prop-st", "visibility", vis($("lay-prop").checked));
-      map.setLayoutProperty("prop-line", "visibility", vis($("propl-on").checked));
+      // Przełączniki w „Mapa” (też przez Zaznacz/Odznacz wszystko) są źródłem prawdy; te w „Problem” tylko je odbijają.
+      for (const P of Object.values(PSETS)) { $(P.chk).checked = $(P.lay).checked; map.setLayoutProperty(P.layer, "visibility", vis($(P.lay).checked)); }
+      map.setLayoutProperty("prop-sel", "visibility", vis(!!PROP.sel && $(PSETS[PROP.sel.k].lay).checked));
       map.setFilter("prop-line", sel.length ? ["in", ["get", "l"], ["literal", sel]] : null);   // filtr linii: tylko punkty wybranych linii
     }
     if (map.getLayer("heat")) {
@@ -1829,7 +2250,7 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     applyPlannedMetro();
     renderLive();
     renderBoard();
-    if (mode === "extend" && map.getLayer("routes-bus")) map.setLayoutProperty("routes-bus", "visibility", "visible");
+    if (mode === "edit" && !LE && map.getLayer("routes-bus")) map.setLayoutProperty("routes-bus", "visibility", "visible");
     ensureVeturilo();
     if (SIM.data) simFrame();
     renderLoad();
@@ -1887,14 +2308,14 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     return { wps, legs };
   }
   function loadProposal(obj) {
+    if (obj?.edycja_linii) return restoreEdit(obj);   // zmiana istniejącej linii (z „Kopiuj obecną” w trybie edycji)
     const pts = (a) => Array.isArray(a) ? a.filter((p) => Array.isArray(p) && p.length >= 2 && isFinite(p[0]) && isFinite(p[1])) : [];
     const auto = obj.przystanki === "auto";
     const st = auto ? [] : pts(obj.przystanki || obj.stops), tr = pts(obj.trasa || obj.route);
     if (!st.length && !tr.length) throw new Error("Brak punktów: oczekuję pól „trasa” i/lub „przystanki” jako list [lon, lat].");
+    if (LE) setMode("view");   // zwykła propozycja kończy edycję linii
     history.push({ t: "all", wps: route.wps, legs: route.legs, stops });
     route.wps = []; route.legs = []; stops = [];
-    EXT = restoreExtension(obj.przedluzenie); EXT_SEL = null;   // propozycja bez „przedluzenie” kończy przedłużanie
-    renderExtLayers(); renderExtUi();
     let skipped = 0;
     const exact = routeFromEdges(obj.krawedzie, tr);
     if (exact) { route.wps = exact.wps; route.legs = exact.legs; }
@@ -1942,7 +2363,8 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
       trasa: route.wps.map((n) => toLL(G.nx[n], G.ny[n]).map((v) => +v.toFixed(5))),
       przystanki: stops.map((s) => [+s.lon.toFixed(5), +s.lat.toFixed(5)]),
       krawedzie: routeEdges().map((i) => G.edges[i].id),
-      ...(EXT ? { przedluzenie: { linia: EXT.line.ref, przystanek: [+EXT.stop.lon.toFixed(5), +EXT.stop.lat.toFixed(5)], nazwa_przystanku: `${EXT.stop.name} ${EXT.stop.nr}` } } : {}) };
+      ...(LE ? { edycja_linii: { linia: LE.ref, kierunek: LE.kier, usuniete: LE.old.filter((s) => s.removed).map((s) => s.key),
+                                 dodane: LE.added.map((s) => [+s.lon.toFixed(5), +s.lat.toFixed(5)]) } } : {}) };
   }
 
   // Przykład: dowóz z nowych osiedli Ursusa Północnego do stacji M2 Karolin i Chrzanów (otwarcie 2027).
@@ -1953,7 +2375,10 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
   function describe(r) {
     return {
       rok: year, scenariusz: scenario, dlugosc_km: +(r.len / 1000).toFixed(1), przystanki: r.nStops,
-      przedluzenie_linii: EXT ? { linia: EXT.line.ref, od_przystanku: `${EXT.stop.name} ${EXT.stop.nr}`, rodzaj: EXT.end ? "przedłużenie" : "odgałęzienie", liczony: "tylko nowy odcinek" } : null,
+      edycja_linii: LE ? { linia: LE.ref, kierunek: LE.kierunek, uwaga: "zmiana istniejącej linii; liczona cała linia w jednym kierunku",
+        przed: LE.baseEval && lineSummary(LE.baseEval), po: lineSummary(r),
+        usuniete_przystanki: LE.old.filter((s) => s.st === "off").map((s) => s.name), poza_nowa_trasa: LE.old.filter((s) => s.st === "skip").map((s) => s.name),
+        nowe_przystanki: LE.added.length } : null,
       czas_szczyt_min: Math.round(r.tPeak / 60), czas_bez_korkow_min: Math.round(r.tFree / 60),
       nowy_popyt_w_zasiegu: Math.round(r.demand), mieszkancy_nowych_osiedli_w_zasiegu: Math.round(r.nbAll),
       bez_przystanku_ztm_dzis: Math.round(r.fresh), w_zasiegu_lacznie: Math.round(r.all),
@@ -1965,8 +2390,11 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
       ulice_trasy: [...new Set(routeEdges().map((i) => G.edges[i].name).filter(Boolean))].slice(0, 15),
     };
   }
+  const lineSummary = (x) => ({ dlugosc_km: +(x.len / 1000).toFixed(1), czas_szczyt_min: Math.round(x.tPeak / 60), przystanki: x.nStops,
+                                mieszkancy_w_zasiegu: Math.round(x.all), nowy_popyt: Math.round(x.demand), pojazdy: x.fleet });
   function templateComment(r) {
-    const out = [];
+    const out = [], b = LE?.baseEval;
+    if (b) out.push(`Linia ${LE.ref} po zmianach: ${fmt1.format(b.len / 1000)} → ${fmt1.format(r.len / 1000)} km, mieszkańcy w zasięgu ${fmt.format(Math.round(b.all))} → ${fmt.format(Math.round(r.all))}, pojazdy w szczycie ${b.fleet} → ${r.fleet}.`);
     out.push(r.demand > 3000 ? `W zasięgu linii jest ${fmt.format(Math.round(r.demand))} osób nowego popytu (w tym ${fmt.format(Math.round(r.nbAll))} mieszkańców nowych osiedli) — obecne linie nie są pod nich zaplanowane, więc linia ma mocne uzasadnienie.` :
       r.demand > 500 ? `Nowy popyt w zasięgu to ${fmt.format(Math.round(r.demand))} osób; reszta z ${fmt.format(Math.round(r.all))} mieszkańców w zasięgu ma już obsługę ZTM.` :
       `Nowego popytu w zasięgu jest mało (${fmt.format(Math.round(r.demand))} os.) — linia głównie dubluje istniejącą obsługę.`);
@@ -1986,7 +2414,7 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     if (!sample) { out.textContent = templateComment(r); note.textContent = "Opis automatyczny z wyliczeń. Asystent AI działa w opublikowanej wersji aplikacji."; return; }
     aiCtl = new AbortController(); $("ai-stop").hidden = false; $("ai-btn").disabled = true;
     out.textContent = "Asystent analizuje propozycję…"; note.textContent = "";
-    const prompt = `Jesteś planistą transportu w Warszawie (ZTM). Oceń propozycję nowej linii autobusowej na podstawie wyliczeń symulatora (rok prognozy ${year}).
+    const prompt = `Jesteś planistą transportu w Warszawie (ZTM). ${LE ? `Oceń zmianę istniejącej linii autobusowej ${LE.ref} (porównanie przed/po w polu edycja_linii)` : "Oceń propozycję nowej linii autobusowej"} na podstawie wyliczeń symulatora (rok prognozy ${year}).
 Napisz po polsku, zwięźle (maks. 170 słów), bez nagłówków markdown:
 1) jednym zdaniem: czy linia ma sens i dlaczego,
 2) 2–3 konkretne ryzyka (korki na nazwanych ulicach, obciążenie, brak przesiadki),
@@ -2016,14 +2444,18 @@ ${JSON.stringify(describe(r), null, 1)}`;
     $("live-kind").onchange = renderLive;
     $("top-on").onchange = applyTop;
     // Ten sam przełącznik w zakładkach „Problem” i „Mapa”.
-    for (const [a, b] of [["prop-on", "lay-prop"], ["lay-prop", "prop-on"]]) $(a).addEventListener("change", () => { $(b).checked = $(a).checked; applyLayers(); });
-    $("propl-on").onchange = applyLayers;
+    // Ten sam przełącznik propozycji przystanków w zakładkach „Problem” i „Mapa”.
+    for (const P of Object.values(PSETS)) for (const [a, b] of [[P.chk, P.lay], [P.lay, P.chk]]) $(a).addEventListener("change", () => { $(b).checked = $(a).checked; applyLayers(); });
     $("board-on").onchange = (e) => setBoard(e.target.checked);
     $("board-year").querySelectorAll("button").forEach((b) => (b.onclick = () => { BOARD.year = +b.dataset.y; $("board-year").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x === b)); renderBoard(); }));
     $("heat-btn").onclick = toggleHeat;
     $("sim-play").onclick = simToggle;
     $("sim-reset").onclick = simReset;
-    $("ext-cancel").onclick = cancelExtension;
+    $("le-tools").querySelectorAll("button").forEach((b) => (b.onclick = () => leSetTool(b.dataset.t)));
+    $("le-finish").onclick = leFinish; $("le-undo").onclick = leUndo; $("le-reset").onclick = leRestoreOrig;
+    $("le-close").onclick = () => setMode("view");
+    $("le-dir").onclick = () => { const o = LE, other = (D.routes || []).find((r) => r.ref === o.ref && r.typ === "autobus" && (r.kier ?? 0) !== o.kier);
+      if (other && startEdit(o.ref, null, null, other.kier ?? 0) && o.hist.length) flash("Wczytano drugi kierunek — zmiany w poprzednim zostały odrzucone.", true); };
     $("sim-time").oninput = async (e) => { SIM.t = +e.target.value; SIM.on = true; $("sim-clock").textContent = fmtClock(SIM.t); if (!SIM.data) { await simLoad(); simExtraTrips(); } simFrame(); };
     $("sim-speed").querySelectorAll("button").forEach((b) => (b.onclick = () => { SIM.speed = +b.dataset.v; $("sim-speed").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x === b)); }));
     $("load-on").onchange = (e) => setLoad(e.target.checked);
@@ -2041,7 +2473,7 @@ ${JSON.stringify(describe(r), null, 1)}`;
       const txt = JSON.stringify(currentProposal()); $("json").value = txt;
       try { await navigator.clipboard.writeText(txt); $("json-msg").textContent = "Skopiowano do schowka."; } catch { $("json").select(); $("json-msg").textContent = "Zaznaczono tekst w polu — skopiuj go ręcznie."; }
     };
-    window.addEventListener("keydown", (e) => { if ((e.metaKey || e.ctrlKey) && e.key === "z") { e.preventDefault(); undo(); } if (e.key === "Escape") { if (!$("ext-pick").hidden) hideExtPick(); else if (mode === "view" && CL.i >= 0) closeCluster(); else setMode("view"); } });
+    window.addEventListener("keydown", (e) => { if ((e.metaKey || e.ctrlKey) && e.key === "z") { e.preventDefault(); undo(); } if (e.key === "Escape") { if (!$("line-pick").hidden) hidePick(); else if (LE?.draft) leFinish(); else if (CL.i >= 0 && (mode === "view" || LE)) closeCluster(); else if (!LE) setMode("view"); } });
   }
 
   function applyTheme() {
@@ -2062,9 +2494,11 @@ ${JSON.stringify(describe(r), null, 1)}`;
     set("ztm", "circle-color", css("--paper")); set("ztm", "circle-stroke-color", css("--ink-3"));
     set("nb", "circle-color", css("--sel")); set("nb", "circle-stroke-color", css("--paper"));
     set("veturilo", "circle-color", css("--bike")); set("veturilo", "circle-stroke-color", css("--paper"));
-    set("prop-line", "circle-color", css("--accent")); set("prop-line", "circle-stroke-color", css("--paper"));
+    set("prop-line", "circle-color", css("--accent")); if (PROP.sel) set("prop-sel", "circle-stroke-color", PSETS[PROP.sel.k].color());
     set("board", "circle-color", css("--board")); set("board", "circle-stroke-color", css("--paper"));
-    set("ext-line", "line-color", css("--bus")); set("ext-stops", "circle-color", css("--paper")); set("ext-stops", "circle-stroke-color", css("--bus"));
+    set("le-orig", "line-color", css("--bus")); set("le-draft", "line-color", css("--ink")); set("le-draft-pt", "circle-color", css("--ink")); set("le-draft-pt", "circle-stroke-color", css("--paper"));
+    set("le-stops", "circle-color", ["match", ["get", "st"], "off", css("--crit"), css("--paper")]);
+    set("le-stops", "circle-stroke-color", ["match", ["get", "st"], "on", css("--bus"), "off", css("--paper"), css("--ink-3")]);
     for (const l of ["stations-metro", "stations-kolej"]) set(l, "circle-color", css("--paper"));
     set("stations-metro", "circle-stroke-color", css("--metro")); set("stations-kolej", "circle-stroke-color", css("--rail"));
     set("planned", "circle-color", ["case", ["get", "tram"], css("--tram"), css("--metro")]); set("planned", "circle-stroke-color", css("--paper"));
@@ -2228,12 +2662,13 @@ ${JSON.stringify(describe(r), null, 1)}`;
       row("Kursy do dołożenia do 2036", def36 != null ? sgn(def36) : null, defCls(def36)) +
       (v(pt, "metro_nowe_2036") === "True" ? `<div class="cp-note">Do 2036 r. w pobliżu otworzy się stacja metra — model zakłada mniejszą potrzebę autobusów.</div>` : ""));
 
-    // Proponowane przystanki (tylko 30 klastrów priorytetowych)
-    const props = PROP.st.filter((r) => r.h3 === id).sort((a, b) => +a.nr - +b.nr), propLines = PROP.ln.filter((r) => r.h3 === id);
-    html += sec("Proponowane przystanki · algorytm",
-      props.map((r) => row(`${esc(r.nr)}. ${esc(r.ulica || "ulica bez nazwy")}`, `${n0(r.nowo_obsluzeni)} nowo obsłużonych`)).join("") +
-      (props.length ? `<div class="cp-note">Najbliższy istniejący przystanek ZTM: ${props.map((r) => `${n0(r.odl_do_przystanku_ztm_m)} m`).join(" · ")}.</div>` : "") +
-      (propLines.length ? `<div class="cp-note">Najlepsze miejsca na istniejących liniach: ${propLines.slice(0, 6).map((r) => `${esc(r.linia)} (${esc(r.ulica || "—")})`).join(", ")}${propLines.length > 6 ? "…" : ""}</div>` : ""));
+    // Przystanki AI w klastrze + przystanki top 30 na trasie i poza trasą (tylko 30 klastrów priorytetowych)
+    const props = PROP.st.filter((r) => r.h3 === id), onLines = PROP.ln.filter((r) => r.h3 === id), offRoute = PROP.top.filter((r) => r.h3 === id).sort((a, b) => topNr(a) - topNr(b));
+    html += sec("Przystanki AI · algorytm",
+      props.map((r) => row(`${esc(r.id)} ${esc(r.nazwa_robocza || "bez nazwy")}`, `+${n0(r.zysk_dostepnosci)} os. · prio ${propPrio(r)}`)).join("") +
+      props.map((r) => propWalk(r) && `<div class="cp-note">${esc(r.id)}: ${propWalk(r)}; ${esc(r.propozycja_obslugi || r.rodzaj)}.</div>`).join("") +
+      (offRoute.length ? `<div class="cp-note">Top 30 poza trasą: ${offRoute.map((r) => `${topNr(r)}. ${esc(r.ulica || "—")} (+${n0(r.nowo_obsluzeni)} os.)`).join(", ")}</div>` : "") +
+      (onLines.length ? `<div class="cp-note">Top 30 na trasie linii: ${onLines.slice(0, 6).map((r) => `${esc(r.linia)} (${esc(r.ulica || "—")})`).join(", ")}${onLines.length > 6 ? "…" : ""}</div>` : ""));
 
     // Komunikacja dziś
     const lines = new Set(), stopNames = new Set();
