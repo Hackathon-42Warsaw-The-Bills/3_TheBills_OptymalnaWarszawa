@@ -1712,11 +1712,12 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     map?.fitBounds(WARSAW, { padding: 24 });
   }
 
-  // ---------- priorytety z modelu ML (dane/lista_heksagonow_top30.csv) ----------
+  // ---------- priorytety z modelu ML (ML_DIR/lista_heksagonow_top30.csv) ----------
+  const ML_DIR = "dane/wskaznik_wykluczenia/output_run3";   // wyniki modelu wskaźnika wykluczenia (lista top 30 + heatmapa)
   const TOP = { rows: [], byRank: new Map() };
   async function loadTop() {
     try {
-      const txt = await fetch("dane/lista_heksagonow_top30.csv", { cache: "no-cache" }).then((r) => (r.ok ? r.text() : ""));
+      const txt = await fetch(`${ML_DIR}/lista_heksagonow_top30.csv`, { cache: "no-cache" }).then((r) => (r.ok ? r.text() : ""));
       const [head, ...lines] = txt.trim().split(/\r?\n/);
       const cols = head.split(",");
       const hexBy = new Map(D.hexes.map((h) => [h.h3, h]));
@@ -1907,13 +1908,13 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     renderBoard();
   }
 
-  // ---------- heatmapa wykluczenia (dane/heatmapa_wykluczenia.geojson, model ML) ----------
+  // ---------- heatmapa wykluczenia (ML_DIR/heatmapa_wykluczenia.geojson, model ML) ----------
   // Plik (~0,5 MB) wczytywany dopiero przy pierwszym włączeniu; włączona heatmapa zastępuje kolory klastrów.
   const HEAT = { on: false, loaded: false, n: 0 };
   const heatColor = () => ["interpolate", ["linear"], ["get", "p"], 0, css("--h1"), 0.25, css("--h2"), 0.5, css("--h3"), 0.75, css("--h4"), 1, css("--h5")];
   // Jedno pobranie pliku dla heatmapy i panelu klastra (po błędzie można spróbować ponownie).
   let heatJSON = null;
-  const fetchHeat = () => heatJSON || (heatJSON = fetch("dane/heatmapa_wykluczenia.geojson", { cache: "no-cache" })
+  const fetchHeat = () => heatJSON || (heatJSON = fetch(`${ML_DIR}/heatmapa_wykluczenia.geojson`, { cache: "no-cache" })
     .then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
     .catch((e) => { heatJSON = null; throw e; }));
   async function loadHeat() {
@@ -1930,7 +1931,7 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     if (!HEAT.loaded) {
       b.disabled = true; b.textContent = "Wczytywanie heatmapy…";
       try { await loadHeat(); }
-      catch (e) { console.warn(e); return flash("Nie udało się wczytać dane/heatmapa_wykluczenia.geojson."); }
+      catch (e) { console.warn(e); return flash(`Nie udało się wczytać ${ML_DIR}/heatmapa_wykluczenia.geojson.`); }
       finally { b.disabled = false; b.textContent = "Pokaż heatmapę wykluczenia"; }
     }
     HEAT.on = !HEAT.on;
@@ -1946,7 +1947,7 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     renderTopList();
   }
   function renderTopList() {
-    if (!TOP.rows.length) { $("top-note").textContent = "Brak pliku dane/lista_heksagonow_top30.csv."; $("top-list").innerHTML = ""; return; }
+    if (!TOP.rows.length) { $("top-note").textContent = `Brak pliku ${ML_DIR}/lista_heksagonow_top30.csv.`; $("top-list").innerHTML = ""; return; }
     const total25 = TOP.rows.reduce((a, t) => a + (t.hex ? t.hex.pop[0] : 0), 0), totalY = TOP.rows.reduce((a, t) => a + (t.hex ? hexPop(t.hex) : 0), 0);
     $("top-note").textContent = `Klastry wskazane przez model ML (wskaźnik wykluczenia komunikacyjnego ${Math.round(TOP.rows.at(-1).pred * 100)}–${Math.round(TOP.rows[0].pred * 100)}%). Mieszka w nich ${fmt.format(total25)} osób, w ${year} r. ${fmt.format(totalY)}.`;
     $("top-list").innerHTML = TOP.rows.map((t) => {

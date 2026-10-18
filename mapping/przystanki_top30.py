@@ -1,4 +1,4 @@
-"""Gdzie dokładnie w klastrze postawić przystanek — 30 klastrów priorytetowych z modelu ML (lista_heksagonow_top30.csv).
+"""Gdzie dokładnie w klastrze postawić przystanek — 30 klastrów priorytetowych z modelu ML (dane/wskaznik_wykluczenia/output_run3/lista_heksagonow_top30.csv).
 
 1. Popyt w punktach (nie w całym heksagonie):
    - mieszkańcy 2025: ludność klastra (prognoza_ludnosci.csv) rozłożona na budynki mieszkalne z OSM
@@ -47,6 +47,7 @@ from cechy_klastrow import PBF, WORK_BUILDINGS  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 DANE, DATA = ROOT / "dane", ROOT / "data"
+ML_DIR = DANE / "wskaznik_wykluczenia" / "output_run3"   # wyniki modelu wskaźnika wykluczenia (lista top 30)
 CRS = "EPSG:2180"
 CACHE = DATA / "cache" / "budynki_mieszkalne.parquet"
 
@@ -219,7 +220,7 @@ def weight(d: np.ndarray) -> np.ndarray:
 
 
 def main() -> None:
-    top = pd.read_csv(DANE / "lista_heksagonow_top30.csv")
+    top = pd.read_csv(ML_DIR / "lista_heksagonow_top30.csv")
     hexes = gpd.read_file(DANE / "kontury_400m" / "warszawa_h3_400m_pelna.geojson")[["h3", "dzielnica", "geometry"]]
     polys = hexes[hexes["h3"].isin(top["h3"])].to_crs(CRS)
     # popyt także z sąsiednich klastrów — zasięg dojścia wychodzi poza heksagon
