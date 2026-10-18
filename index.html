@@ -1712,11 +1712,12 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     map?.fitBounds(WARSAW, { padding: 24 });
   }
 
-  // ---------- priorytety z modelu ML (dane/lista_heksagonow_top30.csv) ----------
+  // ---------- priorytety z modelu ML (ML_DIR/lista_heksagonow_top30.csv) ----------
+  const ML_DIR = "dane/wskaznik_wykluczenia/output_run3";   // wyniki modelu wskaźnika wykluczenia (lista top 30 + heatmapa)
   const TOP = { rows: [], byRank: new Map() };
   async function loadTop() {
     try {
-      const txt = await fetch("dane/lista_heksagonow_top30.csv", { cache: "no-cache" }).then((r) => (r.ok ? r.text() : ""));
+      const txt = await fetch(`${ML_DIR}/lista_heksagonow_top30.csv`, { cache: "no-cache" }).then((r) => (r.ok ? r.text() : ""));
       const [head, ...lines] = txt.trim().split(/\r?\n/);
       const cols = head.split(",");
       const hexBy = new Map(D.hexes.map((h) => [h.h3, h]));
@@ -1907,18 +1908,19 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     renderBoard();
   }
 
-  // ---------- heatmapa wykluczenia (dane/heatmapa_wykluczenia.geojson, model ML) ----------
+  // ---------- heatmapa wykluczenia (ML_DIR/heatmapa_wykluczenia.geojson, model ML) ----------
   // Plik (~0,5 MB) wczytywany dopiero przy pierwszym włączeniu; włączona heatmapa zastępuje kolory klastrów.
-  const HEAT = { on: false, loaded: false, n: 0 };
+  const HEAT = { on: false, loaded: false, n: 0, analyzed: 0 };   // analyzed: klastry objęte modelem (pred ≥ 0)
   const heatColor = () => ["interpolate", ["linear"], ["get", "p"], 0, css("--h1"), 0.25, css("--h2"), 0.5, css("--h3"), 0.75, css("--h4"), 1, css("--h5")];
   // Jedno pobranie pliku dla heatmapy i panelu klastra (po błędzie można spróbować ponownie).
   let heatJSON = null;
-  const fetchHeat = () => heatJSON || (heatJSON = fetch("dane/heatmapa_wykluczenia.geojson", { cache: "no-cache" })
+  const fetchHeat = () => heatJSON || (heatJSON = fetch(`${ML_DIR}/heatmapa_wykluczenia.geojson`, { cache: "no-cache" })
     .then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
     .catch((e) => { heatJSON = null; throw e; }));
   async function loadHeat() {
     const g = await fetchHeat();
-    const feats = g.features.filter((f) => f.geometry && Number.isFinite(+f.properties.pred))
+    // pred = −1: klaster poza analizą modelu (status „poza analiza”, zwykle bez mieszkańców) — bez koloru na heatmapie.
+    const feats = g.features.filter((f) => f.geometry && Number.isFinite(+f.properties.pred) && +f.properties.pred >= 0)
       .map((f) => ({ type: "Feature", properties: { p: +f.properties.pred, rank: +f.properties.rank, d: f.properties.dzielnica }, geometry: f.geometry }));
     map.addSource("heat", { type: "geojson", data: fc(feats) });
     map.addLayer({ id: "heat", type: "fill", source: "heat", layout: { visibility: "none" }, paint: { "fill-color": heatColor(), "fill-opacity": 0.75 } }, "parks");
@@ -1930,7 +1932,7 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     if (!HEAT.loaded) {
       b.disabled = true; b.textContent = "Wczytywanie heatmapy…";
       try { await loadHeat(); }
-      catch (e) { console.warn(e); return flash("Nie udało się wczytać dane/heatmapa_wykluczenia.geojson."); }
+      catch (e) { console.warn(e); return flash(`Nie udało się wczytać ${ML_DIR}/heatmapa_wykluczenia.geojson.`); }
       finally { b.disabled = false; b.textContent = "Pokaż heatmapę wykluczenia"; }
     }
     HEAT.on = !HEAT.on;
@@ -1946,7 +1948,7 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     renderTopList();
   }
   function renderTopList() {
-    if (!TOP.rows.length) { $("top-note").textContent = "Brak pliku dane/lista_heksagonow_top30.csv."; $("top-list").innerHTML = ""; return; }
+    if (!TOP.rows.length) { $("top-note").textContent = `Brak pliku ${ML_DIR}/lista_heksagonow_top30.csv.`; $("top-list").innerHTML = ""; return; }
     const total25 = TOP.rows.reduce((a, t) => a + (t.hex ? t.hex.pop[0] : 0), 0), totalY = TOP.rows.reduce((a, t) => a + (t.hex ? hexPop(t.hex) : 0), 0);
     $("top-note").textContent = `Klastry wskazane przez model ML (wskaźnik wykluczenia komunikacyjnego ${Math.round(TOP.rows.at(-1).pred * 100)}–${Math.round(TOP.rows[0].pred * 100)}%). Mieszka w nich ${fmt.format(total25)} osób, w ${year} r. ${fmt.format(totalY)}.`;
     $("top-list").innerHTML = TOP.rows.map((t) => {
@@ -2559,7 +2561,7 @@ ${JSON.stringify(describe(r), null, 1)}`;
   function loadClusterData() {
     if (CL.loading) return CL.loading;
     const csv = (p) => fetch(p, { cache: "no-cache" }).then((r) => (r.ok ? r.text() : "")).then(parseCSV).catch(() => new Map());
-    const ml = fetchHeat().then((g) => new Map(g.features.map((f) => [f.properties.h3, f.properties]))).catch(() => new Map());
+    const ml = fetchHeat().then((g) => { HEAT.analyzed = g.features.filter((f) => +f.properties.pred >= 0).length; return new Map(g.features.map((f) => [f.properties.h3, f.properties])); }).catch(() => new Map());
     CL.loading = Promise.all([csv("dane/cechy_klastrow.csv"), csv("dane/potrzeba_komunikacji.csv"), csv("dane/symulacja/klastry_podroze.csv"),
                               csv("dane/historia_ludnosci.csv"), csv("dane/kolej/klastry_kolej.csv"), ml])
       .then(([cechy, potrzeba, podroze, historia, kolej, ml]) => (CL.data = { cechy, potrzeba, podroze, historia, kolej, ml }));
@@ -2616,7 +2618,7 @@ ${JSON.stringify(describe(r), null, 1)}`;
     const loading = !d ? `<div class="cp-note">Wczytywanie szczegółów…</div>` : "";
 
     // Nagłówek
-    const top = TOP.rows.find((t) => t.h3 === id), pred = v(ml, "pred"), planYear = v(kol, "metro_plan_rok");
+    const top = TOP.rows.find((t) => t.h3 === id), pred = v(ml, "pred") >= 0 ? v(ml, "pred") : null, planYear = v(kol, "metro_plan_rok");
     $("cp-title").textContent = `Klaster · ${h.d}`;
     $("cp-id").textContent = `H3 ${id}`;
     $("cp-badges").innerHTML = [top && `<span class="cp-badge top">Top 30 · #${top.rank}</span>`,
@@ -2653,7 +2655,7 @@ ${JSON.stringify(describe(r), null, 1)}`;
     const roz = v(pt, "roznica_dzis"), def31 = v(pt, "deficyt_2031"), def36 = v(pt, "deficyt_2036");
     const defCls = (x) => x > 0 ? "neg" : x < 0 ? "pos" : "";
     html += sec("Wykluczenie i potrzeba komunikacji · model ML",
-      row("Wskaźnik wykluczenia", pred != null ? `${pct(pred)} · miejsce ${n(v(ml, "rank"))} z ${n(D.hexes.length)}` : null, pred >= 0.5 ? "neg" : "") +
+      row("Wskaźnik wykluczenia", pred != null ? `${pct(pred)} · miejsce ${n(v(ml, "rank"))} z ${n(HEAT.analyzed || D.hexes.length)}` : v(ml, "pred") != null ? "poza analizą modelu" : null, pred >= 0.5 ? "neg" : "") +
       row("Kursy ZTM dziś (autobus + tramwaj, doba)", v(pt, "kursy_dzis") != null ? n(v(pt, "kursy_dzis")) : null) +
       row("Typowa obsługa takiego klastra", v(pt, "potrzeba_dzis") != null ? n(v(pt, "potrzeba_dzis")) : null) +
       row("Obsługa względem typowej", roz != null ? `${sgn(roz)} kursów` : null, roz < 0 ? "neg" : roz > 0 ? "pos" : "") +

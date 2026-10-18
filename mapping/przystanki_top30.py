@@ -1,4 +1,4 @@
-"""Gdzie dokładnie w klastrze postawić przystanek — 30 klastrów priorytetowych z modelu ML (lista_heksagonow_top30.csv).
+"""Gdzie dokładnie w klastrze postawić przystanek — 30 klastrów priorytetowych z modelu ML (dane/wskaznik_wykluczenia/output_run3/lista_heksagonow_top30.csv).
 
 1. Popyt w punktach (nie w całym heksagonie):
    - mieszkańcy 2025: ludność klastra (prognoza_ludnosci.csv) rozłożona na budynki mieszkalne z OSM
@@ -9,7 +9,9 @@
    - cele podróży z warszawa_infrastruktura (szkoły, szpitale, handel…) jako równoważnik osób.
    Popyt w zasięgu istniejącego przystanku ZTM (≤ 300 m) liczy się tylko w 30% — i tak ma już dojście.
 2. Kandydaci: punkty co 25 m wzdłuż ulic przejezdnych dla autobusu i dopuszczonych pod przystanek
-   (graf symulatora, stop_ok), ≥ 30 m od skrzyżowania, wewnątrz klastra. Każdy kandydat wie, które
+   (graf symulatora, stop_ok), ≥ 30 m od skrzyżowania, wewnątrz klastra — tylko na głównej sieci drogowej
+   bez ślepych odnóg (drogi_przejezdne: 2-rdzeń grafu ulic + największa spójna składowa); na drodze,
+   która się kończy, autobus musiałby zawracać. Każdy kandydat wie, które
    linie ZTM jadą już tą ulicą (≤ 15 m od trasy).
 3. Ocena kandydata = popyt w zasięgu dojścia: 300 m w linii prostej ≈ 400 m pieszo (współczynnik krętości 1,33),
    waga 1 do 150 m, potem liniowo do 0,4 na 300 m; premia za przesiadkę na kolej/metro (≤ 250 m)
@@ -33,6 +35,7 @@ from pathlib import Path
 
 import geopandas as gpd
 import h3
+import networkx as nx
 import numpy as np
 import osmium
 import pandas as pd
@@ -44,6 +47,7 @@ from cechy_klastrow import PBF, WORK_BUILDINGS  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 DANE, DATA = ROOT / "dane", ROOT / "data"
+ML_DIR = DANE / "wskaznik_wykluczenia" / "output_run3"   # wyniki modelu wskaźnika wykluczenia (lista top 30)
 CRS = "EPSG:2180"
 CACHE = DATA / "cache" / "budynki_mieszkalne.parquet"
 
@@ -61,6 +65,11 @@ ON_ROUTE_M = 15
 BONUS_RAIL, BONUS_RAIL_R = 500, 250
 BONUS_BIKE, BONUS_BIKE_R = 100, 150
 MIN_SPACING, MIN_GAIN, MAX_STOPS = 350, 0.4, 3
+# sieć do wykrywania ślepych odnóg: ulice, po których może jechać autobus, + trunk/busway jako łączniki
+# (bez nich część dzielnic połączonych tylko drogą krajową wypadłaby z głównej spójnej sieci)
+THROUGH_HIGHWAYS = {"primary", "secondary", "tertiary", "unclassified", "residential", "primary_link", "secondary_link",
+                    "tertiary_link", "trunk", "trunk_link", "busway"}
+BORDER_M = 150   # węzeł grafu tak blisko granicy miasta = droga jedzie dalej poza Warszawę
 
 
 def levels(tags, default: float) -> float:
@@ -142,13 +151,51 @@ def demand_points(hexes: gpd.GeoDataFrame, area_hex: set) -> gpd.GeoDataFrame:
     return gpd.GeoDataFrame(d, geometry=gpd.points_from_xy(d["lon"], d["lat"]), crs=4326).to_crs(CRS)
 
 
+def drogi_przejezdne(app: dict) -> set:
+    """edge_id krawędzi głównej, spójnej sieci drogowej bez ślepych odnóg.
+
+    Sieć: krawędzie grafu symulatora z ulic klas THROUGH_HIGHWAYS albo z bus/psv=yes|designated (tagi OSM
+    z data/roads_edges.parquet); bez access=no|private (chyba że wolno autobusom) i bez bus=no. Graf nieskierowany
+    bez dubli i pętli → 2-rdzeń (znikają wszystkie drogi, które się kończą, razem z całymi ślepymi „drzewkami”
+    osiedlowymi) → największa spójna składowa (bez odciętych kawałków sieci). Graf symulatora jest przycięty do
+    granicy Warszawy, więc węzły ≤ BORDER_M od granicy łączymy z wirtualnym węzłem „poza miastem” — inaczej drogi
+    wylotowe (np. Radiowa, Chełmżyńska) kończyłyby się sztucznie na granicy."""
+    g = app["graph"]
+    f = {k: i for i, k in enumerate(g["fields"])}
+    ed = pd.DataFrame({"u": [e[f["u"]] for e in g["edges"]], "v": [e[f["v"]] for e in g["edges"]],
+                       "len_m": [e[f["len_m"]] for e in g["edges"]], "edge_id": [e[f["edge_id"]] for e in g["edges"]]})
+    osm = pd.read_parquet(DATA / "roads_edges.parquet", columns=["edge_id", "highway", "access", "bus", "psv"])
+    ed = ed.merge(osm, on="edge_id", how="left")
+    tok = lambda v: set() if pd.isna(v) else set(str(v).split(";"))  # noqa: E731
+    psv_ok = ed["bus"].astype(str).isin(["yes", "designated"]) | ed["psv"].astype(str).isin(["yes", "designated"])
+    closed = ed["access"].map(lambda v: bool(tok(v) & {"no", "private"})) & ~psv_ok
+    siec = (ed["highway"].map(lambda v: bool(tok(v) & THROUGH_HIGHWAYS)) | psv_ok) & ~closed & ~ed["bus"].astype(str).eq("no")
+    und = nx.Graph()
+    und.add_edges_from(zip(ed.loc[siec, "u"], ed.loc[siec, "v"]))
+    und.remove_edges_from(nx.selfloop_edges(und))
+    nodes = np.array(list(und.nodes))
+    pts = gpd.GeoSeries(gpd.points_from_xy(*np.array(g["nodes"])[nodes].T), crs=4326).to_crs(CRS)
+    for ring in app.get("boundary") or []:
+        border = gpd.GeoSeries([shapely.LineString(ring)], crs=4326).to_crs(CRS).iloc[0]
+        und.add_edges_from((n, "poza_miastem") for n in nodes[pts.distance(border).values <= BORDER_M])
+    core = nx.k_core(und, 2)
+    main = max(nx.connected_components(core), key=len)
+    ok = {frozenset(e) for e in core.subgraph(main).edges() if "poza_miastem" not in e}
+    przejezdna = siec & pd.Series([frozenset((u, v)) in ok for u, v in zip(ed["u"], ed["v"])], index=ed.index)
+    km = lambda m: f"{ed.loc[m, 'len_m'].sum() / 2000:.0f} km"  # noqa: E731 — oba kierunki jezdni → /2
+    print(f"   drogi przejezdne: {km(przejezdna)} z {km(siec)} sieci ulic dla autobusu; "
+          f"odrzucone ślepe odnogi i odcięte kawałki: {km(siec & ~przejezdna)}")
+    return set(ed.loc[przejezdna, "edge_id"])
+
+
 def candidates(app: dict, polys: gpd.GeoDataFrame, routes: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
-    """Punkty co 25 m na ulicach dopuszczonych pod przystanek, wewnątrz klastrów top 30."""
+    """Punkty co 25 m na ulicach dopuszczonych pod przystanek i przejezdnych (bez ślepych odnóg), w klastrach top 30."""
     g = app["graph"]
     f = {k: i for i, k in enumerate(g["fields"])}
     names = g["names"]
+    ok = drogi_przejezdne(app)
     rows = [(e[f["edge_id"]], names[e[f["name"]]] if e[f["name"]] is not None and e[f["name"]] >= 0 else "",
-             shapely.LineString(e[f["coords"]])) for e in g["edges"] if e[f["stop_ok"]]]
+             shapely.LineString(e[f["coords"]])) for e in g["edges"] if e[f["stop_ok"]] and e[f["edge_id"]] in ok]
     e = gpd.GeoDataFrame(rows, columns=["edge_id", "ulica", "geometry"], crs=4326).to_crs(CRS)
     e = e[e.intersects(polys.union_all())]
     pts = []
@@ -173,7 +220,7 @@ def weight(d: np.ndarray) -> np.ndarray:
 
 
 def main() -> None:
-    top = pd.read_csv(DANE / "lista_heksagonow_top30.csv")
+    top = pd.read_csv(ML_DIR / "lista_heksagonow_top30.csv")
     hexes = gpd.read_file(DANE / "kontury_400m" / "warszawa_h3_400m_pelna.geojson")[["h3", "dzielnica", "geometry"]]
     polys = hexes[hexes["h3"].isin(top["h3"])].to_crs(CRS)
     # popyt także z sąsiednich klastrów — zasięg dojścia wychodzi poza heksagon

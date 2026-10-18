@@ -2,7 +2,7 @@
 
 Łączy wszystkie pliki z dane/ z kolumną h3 (jeden wiersz na klaster), a z plików z wieloma wierszami
 na klaster (przystanki top 30, przystanki ZTM, wsiadający) robi podsumowania. Wskaźnik wykluczenia
-komunikacyjnego (pred_wykluczenie, rank_wykluczenie, top30) pochodzi z dane/heatmapa_wykluczenia.geojson. Same statystyki: listy
+komunikacyjnego (pred_wykluczenie, rank_wykluczenie, top30) pochodzi z ML_DIR/heatmapa_wykluczenia.geojson. Same statystyki: listy
 (np. linie, stacje) zamienione na liczbę elementów, tak/nie na 1/0; z tekstu zostaje tylko dzielnica.
 Kolumna o tej samej nazwie w kilku plikach: jeśli wartości są takie same — zostaje jedna, jeśli różne —
 druga dostaje przyrostek ze źródłem (np. population__cechy). Brak obiektów w klastrze = 0 (liczniki).
@@ -23,6 +23,7 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parent.parent
 DANE = ROOT / "dane"
+ML_DIR = DANE / "wskaznik_wykluczenia" / "output_run3"   # wyniki modelu wskaźnika wykluczenia (heatmapa + lista top 30)
 OUT, OUT_COLS = DANE / "clastry_all.csv", DANE / "clastry_all_kolumny.csv"
 
 # (plik, krótka nazwa źródła, kolumny do pominięcia, czy brak wiersza = 0)
@@ -56,9 +57,10 @@ def derived() -> list[tuple[str, pd.DataFrame]]:
     """Podsumowania z plików, w których klaster ma wiele wierszy."""
     out = []
     # wskaźnik wykluczenia komunikacyjnego (model MLP) dla wszystkich klastrów — z heatmapy (gałąź main)
-    heat = gpd.read_file(DANE / "heatmapa_wykluczenia.geojson").set_index("h3")
-    top = read("lista_heksagonow_top30.csv").set_index("h3")
-    out.append(("wykluczenie", pd.DataFrame({"pred_wykluczenie": heat["pred"], "rank_wykluczenie": heat["rank"],
+    heat = gpd.read_file(ML_DIR / "heatmapa_wykluczenia.geojson").set_index("h3")
+    top = read(ML_DIR / "lista_heksagonow_top30.csv").set_index("h3")
+    analiza = heat["pred"] >= 0   # pred = rank = −1: klaster poza analizą modelu → brak wartości
+    out.append(("wykluczenie", pd.DataFrame({"pred_wykluczenie": heat["pred"].where(analiza), "rank_wykluczenie": heat["rank"].where(analiza),
                                              "top30": heat["top30"], "top30_etykieta": top["etykieta_final"]})))
 
     p = read("przystanki_top30.csv")
