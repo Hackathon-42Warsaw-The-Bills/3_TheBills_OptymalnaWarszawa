@@ -374,9 +374,8 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
           <button class="tool" data-mode="stop" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="10" r="5"/><path d="M12 15v6"/></svg>Przystanki</button>
           <button class="tool" data-mode="edit" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18h9"/><circle cx="12" cy="18" r="2"/><path d="M14 17c3-1 4-5 7-9"/><path d="M17 8h4v4"/></svg>Edytuj linię</button>
         </div>
-        <div id="auto-box" style="margin-top:10px">
-          <label class="check" for="auto-stops"><input type="checkbox" id="auto-stops">Auto przystanki</label>
-          <div class="muted" id="auto-note" style="margin-top:4px"></div>
+        <div class="row" id="auto-box" style="margin-top:8px">
+          <button class="btn" type="button" id="auto-stops" title="Najpierw istniejące przystanki ZTM leżące na trasie, potem Przystanki AI i top 30 z klastrów, a na koniec miejsca, gdzie według analizy otoczenia przystanek się opłaca — tylko na ulicach trasy, nie obok.">Dodaj przystanki automatycznie</button>
         </div>
         <div class="hint" id="hint" style="margin-top:8px"></div>
         <!-- Menu trybu edycji istniejącej linii (zastępuje narzędzia, gdy linia jest wczytana) -->
@@ -874,46 +873,48 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
   }
   function addStop(x, y) {
     const hit = stops.findIndex((s) => Math.hypot(s.x - x, s.y - y) < 40);
-    if (hit >= 0) {
-      const s = stops[hit];
-      if (s.auto) AUTO.blocked.add(s.key);   // usunięty auto przystanek nie wraca przy kolejnym dobieraniu
-      history.push({ t: "rmstop", s, i: hit }); stops.splice(hit, 1); return changed();
-    }
+    if (hit >= 0) { history.push({ t: "rmstop", s: stops[hit], i: hit }); stops.splice(hit, 1); return changed(); }
     const s = makeStop(x, y);
     if (s.err) return flash(s.err);
     stops.push(s);
-    history.push({ t: "stop", s });
+    history.push({ t: "stop" });
     changed();
   }
   function undo() {
     if (LE) return leUndo();
     const h = history.pop(); if (!h) return;
     if (h.t === "wp") { route.wps.length -= Math.min(h.n || 1, route.wps.length); route.legs.length = Math.max(0, route.wps.length - 1); }
-    else if (h.t === "stop") { const i = stops.indexOf(h.s); if (i >= 0) stops.splice(i, 1); }   // po dobraniu auto przystanków nie musi być ostatni
-    else if (h.t === "rmstop") { stops.splice(h.i, 0, h.s); if (h.s.auto) AUTO.blocked.delete(h.s.key); }
+    else if (h.t === "stop") stops.pop();
+    else if (h.t === "rmstop") stops.splice(h.i, 0, h.s);
     else if (h.t === "all") { route.wps = h.wps; route.legs = h.legs; stops = h.stops; }
     changed();
   }
   function clearAll() {
     if (LE) return endEdit();
-    hidePick(); AUTO.blocked.clear();
+    hidePick();
     if (!route.wps.length && !stops.length) return;
     history.push({ t: "all", wps: route.wps, legs: route.legs, stops });
     route.wps = []; route.legs = []; stops = [];
     changed();
   }
 
-  // ---------- auto przystanki: istniejące przystanki ZTM na trasie, potem przystanki z klastrów ----------
-  // Z zaznaczonym „Auto przystanki” przystanki dobierają się same przy każdej zmianie trasy (postawione ręcznie zostają):
+  // ---------- auto przystanki: istniejące przystanki ZTM na trasie, potem z klastrów i z analizy otoczenia ----------
+  // „Dodaj przystanki automatycznie” dokłada do narysowanej trasy (postawione wcześniej przystanki zostają):
   //   1) istniejące słupki autobusowe ZTM leżące na trasie — jeden na zespół (nazwę), po prawej stronie jezdni, gdy taki jest;
-  //   2) Przystanki AI (priorytet, zysk), potem top 30 (ocena) z klastrów — też tylko na trasie, ≥ AUTO_GAP_M od już wybranych.
+  //   2) Przystanki AI (priorytet, zysk), potem top 30 (ocena) z klastrów — też tylko na trasie, ≥ AUTO_GAP_M od już wybranych;
+  //   3) miejsca, gdzie według analizy otoczenia przystanek się opłaca (dane/przystanki/potencjal_przystankow.csv
+  //      z mapping/potencjal_przystankow.py: zysk dostępności ≥ 100 os.) — na trasie, od największego zysku,
+  //      ≥ AUTO_POT_GAP_M od innych przystanków. Gdzie wokół nic nie ma, przystanku nie będzie.
   // „Na trasie” = do AUTO_ON_M od trasy, a trasa jest najbliższą ulicą (albo drugą jezdnią tej samej ulicy):
   // punkt przy przecznicy albo przy równoległej ulicy odpada, nawet gdy leży blisko trasy.
-  const AUTO_ON_M = 35, AUTO_GAP_M = 150, AUTO_DUP_M = 60, AUTO_SAME_M = 800;
-  const AUTO = { on: false, sig: null, blocked: new Set() };   // sig: trasa, dla której dobrano; blocked: auto przystanki usunięte ręcznie
-  const AUTO_SRC = { ztm: "Istniejący przystanek ZTM", ai: "Przystanek AI", top: "Przystanek top 30" };
-  const AUTO_HELP = "Przystanki dobiorą się same przy rysowaniu trasy: najpierw istniejące przystanki ZTM leżące na trasie, potem Przystanki AI i top 30 z klastrów — tylko na ulicach trasy, nie obok.";
-  const nstopStroke = () => ["match", ["get", "src"], "ai", PROP_COLOR, "top", TOP_STOP_COLOR, css("--accent")];
+  const AUTO_ON_M = 35, AUTO_GAP_M = 150, AUTO_POT_GAP_M = 350, AUTO_DUP_M = 60, AUTO_SAME_M = 800;
+  const AUTO_SRC = { ztm: "Istniejący przystanek ZTM", ai: "Przystanek AI", top: "Przystanek top 30", pot: "Przystanek z analizy otoczenia" };
+  const nstopStroke = () => ["match", ["get", "src"], "ai", PROP_COLOR, "top", TOP_STOP_COLOR, "pot", css("--good"), css("--accent")];
+  // Analiza otoczenia — wczytywana przy pierwszym użyciu, malejąco po zysku.
+  let potPromise = null, potRows = [];
+  const potLoad = () => potPromise ||= fetch("dane/przystanki/potencjal_przystankow.csv", { cache: "no-cache" }).then((r) => (r.ok ? r.text() : "")).catch(() => "")
+    .then((t) => (potRows = parseRows(t).map((r) => ({ lon: +r.lon, lat: +r.lat, zysk: +r.zysk_dostepnosci || 0, why: r.uzasadnienie || "" }))
+      .filter((r) => Number.isFinite(r.lon) && Number.isFinite(r.lat)).sort((a, b) => b.zysk - a.zysk)));
   let autoZtmCache = null;
   // Słupki ZTM, przy których zatrzymuje się choć jedna linia autobusowa (bez samych tramwajowych).
   const autoZtm = () => autoZtmCache ||= (() => {
@@ -948,14 +949,14 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     return { s, q, at: s.at + q.t * s.L, right: (s.b[0] - s.a[0]) * (y - s.a[1]) - (s.b[1] - s.a[1]) * (x - s.a[0]) < 0 };
   }
   // Przystanki dobrane do trasy `path` (krawędzie), po kolei wzdłuż trasy; `taken` — przystanki już postawione.
-  function autoStopsFor(path, taken = [], blocked = AUTO.blocked) {
+  function autoStopsFor(path, taken = []) {
     if (!path.length) return [];
     const R = routeIndex(path), out = [], picked = [...taken];
     const far = (q, r) => picked.every((s) => Math.hypot(s.x - q.x, s.y - q.y) >= r);
     // Na trasie po prawej stronie jezdni (4 m od osi), jak przystanek postawiony ręcznie.
     const place = (m, extra) => {
       const { a, b, L, ei } = m.s, e = G.edges[ei], x = m.q.x + (b[1] - a[1]) / (L || 1) * 4, y = m.q.y - (b[0] - a[0]) / (L || 1) * 4;
-      const [lon, lat] = toLL(x, y), s = { x, y, lon, lat, edge: e.id, street: e.name, auto: true, at: m.at, ...extra };
+      const [lon, lat] = toLL(x, y), s = { x, y, lon, lat, edge: e.id, street: e.name, at: m.at, ...extra };
       out.push(s); picked.push(s);
     };
     // 1) Istniejące przystanki: najbliższy trasie słupek, najlepiej po prawej stronie; zespół o tej samej nazwie raz na AUTO_SAME_M trasy
@@ -968,43 +969,34 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
       const at = seen.get(p.name) || [];
       if (at.some((v) => Math.abs(v - m.at) < AUTO_SAME_M)) continue;
       seen.set(p.name, [...at, m.at]);
-      const key = `ztm:${p.name}`;
-      if (!blocked.has(key) && far(m.q, AUTO_DUP_M)) place(m, { key, src: "ztm", name: `${p.name} ${p.nr}` });
+      if (far(m.q, AUTO_DUP_M)) place(m, { src: "ztm", name: `${p.name} ${p.nr}` });
     }
     // 2) Przystanki z klastrów — tylko tam, gdzie wolno postawić przystanek (bez wiaduktów, tuneli, łącznic i ekspresówek).
-    const cands = [...PROP.st.map((r) => ({ r, key: `ai:${r.id}`, src: "ai", name: `${r.id} ${r.nazwa_robocza || ""}`.trim() })),
-                   ...[...PROP.top, ...PROP.ln].sort((a, b) => (+b.ocena || 0) - (+a.ocena || 0))
-                     .map((r) => ({ r, key: `top:${r.lon},${r.lat}`, src: "top", name: r.ulica || "" }))];
+    const cands = [...PROP.st.map((r) => ({ r, src: "ai", name: `${r.id} ${r.nazwa_robocza || ""}`.trim() })),
+                   ...[...PROP.top, ...PROP.ln].sort((a, b) => (+b.ocena || 0) - (+a.ocena || 0)).map((r) => ({ r, src: "top", name: r.ulica || "" }))];
     for (const c of cands) {
-      if (blocked.has(c.key)) continue;
       const m = onRoute(R, ...toXY(+c.r.lon, +c.r.lat));
-      if (m && G.edges[m.s.ei].stopOk && far(m.q, AUTO_GAP_M)) place(m, { key: c.key, src: c.src, name: c.name });
+      if (m && G.edges[m.s.ei].stopOk && far(m.q, AUTO_GAP_M)) place(m, { src: c.src, name: c.name });
+    }
+    // 3) Z analizy otoczenia — od największego zysku dostępności, z odstępem jak między przystankami.
+    for (const p of potRows) {
+      const m = onRoute(R, ...toXY(p.lon, p.lat));
+      if (m && G.edges[m.s.ei].stopOk && far(m.q, AUTO_POT_GAP_M)) place(m, { src: "pot", name: `zysk dostępności +${n0(p.zysk)} os.`, why: p.why });
     }
     return out.sort((a, b) => a.at - b.at);
   }
-  // Po zmianie trasy auto przystanki dobierane od nowa; ręcznie postawione zostają.
-  function autoRefresh() {
-    if (!AUTO.on || LE) return;
-    const path = routeEdges(), sig = path.join(",");
-    if (sig === AUTO.sig) return;
-    AUTO.sig = sig;
-    const manual = stops.filter((s) => !s.auto);
-    stops = [...manual, ...autoStopsFor(path, manual)];
-  }
-  function renderAutoNote() {
-    const el = $("auto-note"), path = routeEdges();
-    if (LE) return;
-    if (!AUTO.on) { el.textContent = AUTO_HELP; return; }
-    if (!path.length) { el.textContent = "Narysuj trasę — przystanki dobiorą się same."; return; }
-    // Liczone po źródle, więc obejmują też przystanki z „przystanki”: "auto" w JSON (np. „Przykładowa linia”).
-    const auto = stops.filter((s) => s.src), n = (src) => auto.filter((s) => s.src === src).length, ai = n("ai"), top = n("top");
-    const loc = pathLocator(path), len = path.reduce((a, ei) => a + G.edges[ei].len, 0);
-    const at = [0, ...stops.map((s) => loc(s.x, s.y).at).sort((a, b) => a - b), len];
-    const gap = Math.max(...at.slice(1).map((v, i) => v - at[i]));
+  // Przycisk „Dodaj przystanki automatycznie”: jeden krok, który „Cofnij” cofa w całości. Ponowne kliknięcie nie dubluje
+  // przystanków — dokłada tylko te, których jeszcze nie ma (np. po przedłużeniu trasy).
+  async function addAutoStops() {
+    if (!routeEdges().length) return flash("Najpierw narysuj trasę — przystanki dobieramy tylko na niej.");
+    await potLoad();
+    const added = autoStopsFor(routeEdges(), stops), n = (src) => added.filter((s) => s.src === src).length, ai = n("ai"), top = n("top");
+    if (!added.length) return flash("Na tej trasie nie ma więcej miejsc, gdzie warto dołożyć przystanek.", true);
+    history.push({ t: "all", wps: route.wps, legs: route.legs, stops });
+    stops = [...stops, ...added];
     const from = [ai && `Przystanki AI: ${ai}`, top && `top 30: ${top}`].filter(Boolean).join(", ");
-    el.textContent = (auto.length ? `Dobrane przystanki — istniejące ZTM: ${n("ztm")}, z klastrów: ${ai + top}${from ? ` (${from})` : ""}.`
-      : "Na tej trasie nie ma istniejących przystanków ZTM ani przystanków z klastrów.")
-      + (gap > 1000 ? ` Najdłuższy odcinek bez przystanku: ${fmt1.format(gap / 1000)} km — dostaw przystanek narzędziem „Przystanki”.` : "");
+    flash(`Dodane przystanki — istniejące ZTM: ${n("ztm")}, z klastrów: ${ai + top}${from ? ` (${from})` : ""}, z analizy otoczenia: ${n("pot")}.`, true);
+    changed();
   }
 
   // ---------- ocena ----------
@@ -1150,7 +1142,7 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     map.getSource("route").setData(fc(routeFeatures()));
     map.getSource("wps").setData(fc(route.wps.map((n, i) => ({ type: "Feature", properties: { end: i === 0 || i === route.wps.length - 1 }, geometry: { type: "Point", coordinates: toLL(G.nx[n], G.ny[n]) } }))));
     // Przystanki edytowanej linii (old) rysuje warstwa le-stops — tu tylko nowe.
-    map.getSource("nstops").setData(fc(stops.filter((s) => !s.old).map((s) => ({ type: "Feature", properties: { street: s.street || "", n: s.name || "", src: s.src || "" }, geometry: { type: "Point", coordinates: [s.lon, s.lat] } }))));
+    map.getSource("nstops").setData(fc(stops.filter((s) => !s.old).map((s) => ({ type: "Feature", properties: { street: s.street || "", n: s.name || "", src: s.src || "", w: s.why || "" }, geometry: { type: "Point", coordinates: [s.lon, s.lat] } }))));
     map.getSource("catch").setData(fc(stops.map((s) => ({ type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [circle(s.x, s.y, WALK)] } }))));
     renderLeLayers();
   }
@@ -1326,7 +1318,8 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     const ld = uniq(by((id) => id === "load"), (f) => f.properties.i).sort((a, b) => b.properties.u - a.properties.u);
     if (ld.length) groups.push(`<div class="k">Obciążenie w szczycie · ${LOAD.year}</div>` + ld.slice(0, 4).map((f) => `<b>${esc(f.properties.l)}</b> ${esc(f.properties.z)} → ${esc(f.properties.d)} · ${fmt.format(f.properties.p)} pas./h · <b>${Math.round(f.properties.u * 100)}%</b> pojemności`).join("<br>") + (ld.length > 4 ? `<br>…i ${ld.length - 4} więcej` : ""));
     const ns = by((id) => id === "nstops"), nsp = ns[0]?.properties;
-    if (ns.length) groups.push(`<div class="k">${nsp.src ? `${AUTO_SRC[nsp.src]} · dobrany automatycznie` : "Nowy przystanek"}</div>${nsp.n ? `<b>${esc(nsp.n)}</b> · ` : ""}${esc(nsp.street || "ulica bez nazwy")}`);
+    if (ns.length) groups.push(`<div class="k">${nsp.src ? `${AUTO_SRC[nsp.src]} · dobrany automatycznie` : "Nowy przystanek"}</div>${nsp.n ? `<b>${esc(nsp.n)}</b> · ` : ""}${esc(nsp.street || "ulica bez nazwy")}`
+      + (nsp.w ? `<br><span style="opacity:0.85">Dlaczego tutaj: ${esc(nsp.w)}</span>` : ""));
     const pms = uniq(by((id) => id === "pmetro-st"), (f) => f.properties.ref + f.properties.name);
     const pml = uniq(by((id) => id === "pmetro-open" || id === "pmetro-future"), (f) => f.properties.ref);
     if (pms.length || pml.length) {
@@ -1795,7 +1788,7 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
   }
 
   let raf = 0;
-  function changed() { autoRefresh(); renderAutoNote(); cancelAnimationFrame(raf); raf = requestAnimationFrame(() => { updateMapSources(); renderEval(); if (SIM.data) { simExtraTrips(); simFrame(); } }); }
+  function changed() { cancelAnimationFrame(raf); raf = requestAnimationFrame(() => { updateMapSources(); renderEval(); if (SIM.data) { simExtraTrips(); simFrame(); } }); }
   function yearChanged() {
     if (TOP.rows.length) renderTopList();
     $("year-label").textContent = year;
@@ -1805,7 +1798,6 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
   // Resetuj: usuwa linię i przywraca domyślny rok, scenariusz, warstwę, parametry i widok mapy.
   const DEFAULTS = { headway: 10, vehicle: 150, dwell: 25, layover: 6, trips: 2.0, share: 45 };
   function resetAll() {
-    $("auto-stops").checked = AUTO.on = false;
     clearAll(); closeCluster(); clearDistrict();
     year = 2036; $("year").value = 2036; scenario = "base"; metric = "growth";
     $("scenario").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x.dataset.s === "base"));
@@ -2444,7 +2436,7 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
       if (route.wps.length === before) skipped++;
     }
     for (const [lon, lat] of st) { const [x, y] = toXY(lon, lat); const n = stops.length; addStopSilent(x, y); if (stops.length === n) skipped++; }
-    if (auto) stops.push(...autoStopsFor(routeEdges(), stops, new Set()).map((s) => ({ ...s, auto: false })));   // jak „Auto przystanki”, ale jednorazowo
+    if (auto) stops.push(...autoStopsFor(routeEdges(), stops));   // jak „Dodaj przystanki automatycznie”
     changed();
     const b = new maplibregl.LngLatBounds(); [...tr, ...st].forEach((p) => b.extend(p));
     map.fitBounds(b, { padding: 60, maxZoom: 15 });
@@ -2538,8 +2530,7 @@ ${JSON.stringify(describe(r), null, 1)}`;
     $("metric").querySelectorAll("button").forEach((b) => (b.onclick = () => { metric = b.dataset.m; $("metric").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x === b)); renderLegend(); if (map?.getLayer("hex")) { map.setPaintProperty("hex", "fill-color", hexColorExpr()); updateYearLayers(); } }));
     $("tools").querySelectorAll("button").forEach((b) => (b.onclick = () => setMode(b.dataset.mode)));
     $("undo").onclick = undo; $("clear").onclick = clearAll; $("reset").onclick = resetAll;
-    $("auto-stops").onchange = (e) => { AUTO.on = e.target.checked; AUTO.sig = null; if (!AUTO.on) stops = stops.filter((s) => !s.auto); changed(); };
-    renderAutoNote();
+    $("auto-stops").onclick = addAutoStops;
     $("live").onchange = (e) => setLive(e.target.checked);
     $("live-kind").onchange = renderLive;
     $("top-on").onchange = applyTop;
@@ -2563,11 +2554,11 @@ ${JSON.stringify(describe(r), null, 1)}`;
     let filterT; $("line-filter").oninput = () => { clearTimeout(filterT); filterT = setTimeout(applyLayers, 200); };
     $("line-filter").onchange = () => { applyLayers(); fitToFilter(); };
     $("layers").querySelectorAll("input").forEach((i) => (i.onchange = applyLayers));
-    $("sample-line").onclick = () => { loadProposal(SAMPLE); };
+    $("sample-line").onclick = async () => { await potLoad(); loadProposal(SAMPLE); };   // "przystanki": "auto" korzysta z analizy otoczenia
     ["headway", "vehicle", "dwell", "layover", "trips", "share"].forEach((id) => ($(id).oninput = () => { renderEval(); if (id === "trips" || id === "share") { renderCluster(); if (metric === "trips") updateYearLayers(); } }));
     $("ai-btn").onclick = askAI;
     $("ai-stop").onclick = () => aiCtl?.abort();
-    $("json-load").onclick = () => { try { const n = loadProposal(JSON.parse($("json").value)); $("json-msg").textContent = n ? `Wczytano; pominięto ${n} punktów za daleko od ulic lub przystanków poza trasą linii.` : "Wczytano propozycję."; } catch (e) { $("json-msg").textContent = `Nie udało się wczytać: ${e.message}`; } };
+    $("json-load").onclick = async () => { await potLoad(); try { const n = loadProposal(JSON.parse($("json").value)); $("json-msg").textContent = n ? `Wczytano; pominięto ${n} punktów za daleko od ulic lub przystanków poza trasą linii.` : "Wczytano propozycję."; } catch (e) { $("json-msg").textContent = `Nie udało się wczytać: ${e.message}`; } };
     $("json-file").onchange = (e) => { const f = e.target.files[0]; if (!f) return; const rd = new FileReader(); rd.onload = () => { $("json").value = rd.result; $("json-load").click(); }; rd.readAsText(f); };
     $("json-copy").onclick = async () => {
       const txt = JSON.stringify(currentProposal()); $("json").value = txt;

@@ -45,7 +45,7 @@ Po zmianie samego grafu ulic (np. filtra przejezdności dla autobusu) wystarczy:
 | `komunikacja/` | przystanki ZTM z liniami, trasy linii, potrzeba komunikacji, ranking linii |
 | `kolej/` | stacje i linie metra/SKM/KM/WKD, metro w klastrach, dane o pasażerach metra |
 | `infrastruktura/` | cele podróży (szkoły, szpitale, handel…), miejsca pożytku publicznego, stacje Veturilo |
-| `przystanki/` | propozycje nowych przystanków (cała Warszawa) i przystanki w 30 klastrach priorytetowych |
+| `przystanki/` | propozycje nowych przystanków (cała Warszawa), przystanki w 30 klastrach priorytetowych i potencjał przystanków wzdłuż ulic (`mapping/potencjal_przystankow.py`, przycisk „Dodaj przystanki automatycznie”) |
 | `symulacja/` | symulacja pasażerów w szczycie: obciążenie odcinków i linii, wsiadający, walidacja metra |
 | `wskaznik_wykluczenia/` | model wskaźnika wykluczenia: dane wejściowe i wyniki przebiegów (`output_run3/` używa aplikacja) |
 | `dokumentacja/` | źródła danych zewnętrznych i pochodzenie informacji w panelu klastra |
