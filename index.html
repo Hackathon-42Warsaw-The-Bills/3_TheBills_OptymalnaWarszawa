@@ -304,7 +304,7 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
         <label class="check" for="top-on"><input type="checkbox" id="top-on" checked>30 klastrów o najwyższym wskaźniku wykluczenia</label>
         <div class="muted" id="top-note" style="margin-top:6px"></div>
         <ul class="list toplist" id="top-list" style="max-height:290px;overflow-y:auto"></ul>
-        <label class="check" for="prop-on" style="margin-top:10px"><input type="checkbox" id="prop-on" checked><i class="sw" style="height:9px;width:9px;border-radius:50%;border:2.5px solid var(--top);background:var(--paper)"></i>Proponowane lokalizacje przystanków</label>
+        <label class="check" for="prop-on" style="margin-top:10px"><input type="checkbox" id="prop-on" checked><svg class="sw" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M8 1.5 14.5 8 8 14.5 1.5 8z" fill="#e8175d" stroke="#fff" stroke-width="1.5"/></svg>Proponowane lokalizacje przystanków</label>
         <label class="check" for="propl-on"><input type="checkbox" id="propl-on"><i class="sw" style="height:8px;width:8px;border-radius:50%;background:var(--accent)"></i>Najlepsze miejsca na istniejących liniach</label>
         <div class="muted" id="prop-note" style="margin-top:4px"></div>
         <button class="btn" id="heat-btn" type="button" aria-pressed="false" style="margin-top:12px">Pokaż heatmapę wykluczenia</button>
@@ -437,6 +437,7 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
           <label class="check" for="lay-ztm"><input type="checkbox" id="lay-ztm" checked>Przystanki ZTM</label>
           <label class="check" for="lay-nb"><input type="checkbox" id="lay-nb" checked><i class="sw" style="height:9px;width:9px;border-radius:50%;background:var(--sel)"></i>Nowe osiedla</label>
           <label class="check" for="lay-veturilo"><input type="checkbox" id="lay-veturilo" checked><i class="sw" style="height:9px;width:9px;border-radius:50%;background:var(--bike)"></i>Stacje Veturilo</label>
+          <label class="check" for="lay-prop"><input type="checkbox" id="lay-prop" checked><svg class="sw" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M8 1.5 14.5 8 8 14.5 1.5 8z" fill="#e8175d" stroke="#fff" stroke-width="1.5"/></svg>Proponowane przystanki</label>
           <label class="check" for="lay-planned"><input type="checkbox" id="lay-planned" checked>Planowane tramwaje i kolej</label>
         </div>
         <div class="subh"><label class="check" for="sec-pmetro"><input type="checkbox" id="sec-pmetro">Planowane metro</label><span class="note">linia przerywana = jeszcze nieotwarta w wybranym roku</span></div>
@@ -1048,7 +1049,9 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
       map.addSource("prop-line", { type: "geojson", data: fc(propLineFeatures()) });
       map.addSource("prop-st", { type: "geojson", data: fc(propFeatures()) });
       map.addLayer({ id: "prop-line", type: "circle", source: "prop-line", layout: { visibility: "none" }, paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 3, 15, 6], "circle-color": css("--accent"), "circle-stroke-width": 1.5, "circle-stroke-color": css("--paper") } });
-      map.addLayer({ id: "prop-st", type: "circle", source: "prop-st", paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 4, 15, 8], "circle-color": css("--paper"), "circle-stroke-width": 3, "circle-stroke-color": css("--top") } });
+      for (const k of [1, 2, 3]) map.addImage(`prop-${k}`, propIcon(k), { pixelRatio: 2 });
+      map.addLayer({ id: "prop-st", type: "symbol", source: "prop-st", layout: { "icon-image": ["concat", "prop-", ["to-string", ["get", "nr"]]],
+        "icon-size": ["interpolate", ["linear"], ["zoom"], 10, 0.7, 13, 0.9, 16, 1.15], "icon-allow-overlap": true, "icon-ignore-placement": true, "symbol-sort-key": ["get", "nr"] } });
       map.addLayer({ id: "mask", type: "fill", source: "mask", paint: { "fill-color": css("--ground"), "fill-opacity": 0.92 } });
       map.addLayer({ id: "catch", type: "fill", source: "catch", paint: { "fill-color": css("--accent"), "fill-opacity": 0.12 } });
       map.addLayer({ id: "catch-line", type: "line", source: "catch", paint: { "line-color": css("--accent"), "line-width": 1, "line-opacity": 0.6 } });
@@ -1352,7 +1355,7 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     for (const [id, v] of Object.entries(DEFAULTS)) $(id).value = v;
     $("line-filter").value = "";
     for (const k of Object.keys(LAYERS)) $(`lay-${k}`).checked = k !== "bus";
-    $("prop-on").checked = true; $("propl-on").checked = false;
+    $("prop-on").checked = true; $("lay-prop").checked = true; $("propl-on").checked = false;
     for (const k of Object.keys(INFRA)) $(`inf-${k}`).checked = INFRA_ON.has(k);
     $("pmetro-layers").querySelectorAll("input").forEach((i) => (i.checked = PM_ON.has(i.dataset.ref)));
     applyPlannedMetro();
@@ -1388,18 +1391,32 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     g.fillText(String(n), S / 2, S / 2 + 1);
     return g.getImageData(0, 0, S, S);
   }
+  // Znacznik proponowanego przystanku: duży romb (jedyny taki kształt na mapie) z numerem propozycji w klastrze.
+  const PROP_COLOR = "#e8175d";
+  function propIcon(n) {
+    const S = 60, c = document.createElement("canvas"); c.width = c.height = S;
+    const g = c.getContext("2d"), m = S / 2, r = 23;
+    g.shadowColor = "rgba(0,0,0,0.45)"; g.shadowBlur = 6; g.shadowOffsetY = 1;
+    g.beginPath(); g.moveTo(m, m - r); g.lineTo(m + r, m); g.lineTo(m, m + r); g.lineTo(m - r, m); g.closePath();
+    g.fillStyle = PROP_COLOR; g.fill();
+    g.shadowColor = "transparent"; g.lineWidth = 4; g.strokeStyle = "#ffffff"; g.stroke();
+    g.fillStyle = "#ffffff"; g.font = "700 22px Barlow, system-ui, sans-serif"; g.textAlign = "center"; g.textBaseline = "middle";
+    g.fillText(String(n), m, m + 1);
+    return g.getImageData(0, 0, S, S);
+  }
   // ---------- proponowane przystanki w 30 klastrach priorytetowych (mapping/przystanki_top30.py) ----------
   const PROP = { st: [], ln: [] };
   const MPP_KAT = { school: "szkoły", hospital: "szpitale", town_hall: "urzędy", mall: "centra handlowe", marketplace: "targowiska",
                     cinema: "kina", theatre: "teatry", museum: "muzea", park: "parki", religious: "miejsca kultu" };
   const isTrue = (v) => String(v).toLowerCase() === "true";
   const n0 = (x) => fmt.format(Math.round(+x || 0));
-  const propFeatures = () => PROP.st.map((r, i) => ({ type: "Feature", properties: { i }, geometry: { type: "Point", coordinates: [+r.lon, +r.lat] } }));
+  const propFeatures = () => PROP.st.map((r, i) => ({ type: "Feature", properties: { i, nr: Math.min(3, Math.max(1, +r.nr || 1)) }, geometry: { type: "Point", coordinates: [+r.lon, +r.lat] } }));
   const propLineFeatures = () => PROP.ln.map((r, i) => ({ type: "Feature", properties: { i, l: String(r.linia).toUpperCase() }, geometry: { type: "Point", coordinates: [+r.lon, +r.lat] } }));
   function propHTML(r) {
     const extra = [isTrue(r.przesiadka_kolej) && "przesiadka na kolej / metro", isTrue(r.przy_veturilo) && "przy stacji Veturilo",
                    r.linie_ztm_na_ulicy && `linie ZTM na ulicy: ${esc(r.linie_ztm_na_ulicy)}`].filter(Boolean);
     return `<b>${esc(r.ulica || "ulica bez nazwy")}</b> · propozycja ${esc(r.nr)} w klastrze<br>nowo obsłużeni: <b>${n0(r.nowo_obsluzeni)}</b> os. (ocena ${n0(r.ocena)})`
+      + `<br><span style="opacity:0.8">Dlaczego tutaj: w zasięgu ~400 m pieszo jest tu najwięcej mieszkańców, miejsc pracy i celów podróży bez dojścia do przystanku ZTM.</span>`
       + `<br>mieszkańcy ${n0(r.mieszkancy_2025)} · nowi do 2036 ${n0(r.nowi_2036)} · miejsca pracy ${n0(r.miejsca_pracy)}`
       + `<br>najbliższy przystanek ZTM: ${n0(r.odl_do_przystanku_ztm_m)} m` + (extra.length ? `<br>${extra.join(" · ")}` : "");
   }
@@ -1744,7 +1761,8 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     const sel = lineFilter(), vis = (on) => (on ? "visible" : "none");
     for (const [k, ids] of Object.entries(LAYERS)) for (const id of ids) map.setLayoutProperty(id, "visibility", vis($(`lay-${k}`).checked));
     if (map.getLayer("prop-st")) {
-      map.setLayoutProperty("prop-st", "visibility", vis($("prop-on").checked));
+      $("prop-on").checked = $("lay-prop").checked;   // przełącznik w „Mapa” (też przez Zaznacz/Odznacz wszystko) jest źródłem prawdy
+      map.setLayoutProperty("prop-st", "visibility", vis($("lay-prop").checked));
       map.setLayoutProperty("prop-line", "visibility", vis($("propl-on").checked));
       map.setFilter("prop-line", sel.length ? ["in", ["get", "l"], ["literal", sel]] : null);   // filtr linii: tylko punkty wybranych linii
     }
@@ -1978,7 +1996,9 @@ ${JSON.stringify(describe(r), null, 1)}`;
     $("live").onchange = (e) => setLive(e.target.checked);
     $("live-kind").onchange = renderLive;
     $("top-on").onchange = applyTop;
-    $("prop-on").onchange = applyLayers; $("propl-on").onchange = applyLayers;
+    // Ten sam przełącznik w zakładkach „Problem” i „Mapa”.
+    for (const [a, b] of [["prop-on", "lay-prop"], ["lay-prop", "prop-on"]]) $(a).addEventListener("change", () => { $(b).checked = $(a).checked; applyLayers(); });
+    $("propl-on").onchange = applyLayers;
     $("board-on").onchange = (e) => setBoard(e.target.checked);
     $("board-year").querySelectorAll("button").forEach((b) => (b.onclick = () => { BOARD.year = +b.dataset.y; $("board-year").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x === b)); renderBoard(); }));
     $("heat-btn").onclick = toggleHeat;
@@ -2023,7 +2043,6 @@ ${JSON.stringify(describe(r), null, 1)}`;
     set("ztm", "circle-color", css("--paper")); set("ztm", "circle-stroke-color", css("--ink-3"));
     set("nb", "circle-color", css("--sel")); set("nb", "circle-stroke-color", css("--paper"));
     set("veturilo", "circle-color", css("--bike")); set("veturilo", "circle-stroke-color", css("--paper"));
-    set("prop-st", "circle-color", css("--paper")); set("prop-st", "circle-stroke-color", css("--top"));
     set("prop-line", "circle-color", css("--accent")); set("prop-line", "circle-stroke-color", css("--paper"));
     set("board", "circle-color", css("--board")); set("board", "circle-stroke-color", css("--paper"));
     set("ext-line", "line-color", css("--bus")); set("ext-stops", "circle-color", css("--paper")); set("ext-stops", "circle-stroke-color", css("--bus"));
