@@ -6,7 +6,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: pulpit planisty — panel decyzyjny po lewej (horyzont, narzędzia, ocena na żywo), mapa heksów i sieci po prawej; na telefonie mapa nad panelem. */
+/* Układ: panel po lewej (nagłówek z rokiem i scenariuszem + 4 zakładki: Problem, Projektuj, Mapa, Symulacja), mapa po prawej; na telefonie mapa nad panelem. */
+/* ===== Kolory i motyw (jasny / ciemny) ===== */
+
 :root {
   --paper: #fbfcfb; --ground: #eceeed; --ink: #15201b; --ink-2: #46534d; --ink-3: #6f7b76;
   --rule: #d8dddb; --chip: #e5e9e7; --road: #c9d0cd; --water: #bcd6e8; --district: #000000;
@@ -55,19 +57,40 @@
   color-scheme: dark;
 }
 
+/* ===== Układ strony i panel z zakładkami ===== */
 html, body { height: 100%; margin: 0; }
 [hidden] { display: none !important; }
 body { background: var(--paper); color: var(--ink); font: 15px/1.45 var(--f-body); }
 .app { display: grid; grid-template-columns: 420px 1fr; height: 100%; }
 .panel {
   overflow-y: auto; border-right: 1px solid var(--rule); background: var(--paper);
-  padding-block: 18px 28px; padding-left: max(18px, env(safe-area-inset-left, 0px)); padding-right: 18px;
+  --pad-l: max(18px, env(safe-area-inset-left, 0px)); --pad-r: 18px;
+  padding-block: 18px 28px; padding-left: var(--pad-l); padding-right: var(--pad-r);
   display: flex; flex-direction: column; gap: 20px; min-width: 0;
 }
 .panel > * { flex-shrink: 0; }
+/* Nagłówek panelu (tytuł, rok, scenariusz, zakładki) przyklejony u góry; ujemne marginesy kryją odstępy panelu. */
+.head { position: sticky; top: -10px; z-index: 3; background: var(--paper); margin: -18px calc(-1 * var(--pad-r)) 0 calc(-1 * var(--pad-l));
+        padding: 18px var(--pad-r) 0 var(--pad-l); border-bottom: 1px solid var(--rule); }
+.head .sub a { color: var(--accent); font-weight: 500; white-space: nowrap; }
+.horizon { display: grid; gap: 8px; margin-top: 12px; }
+.tabs { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; margin-top: 12px; }
+.tabs button { font: 600 13.5px/1 var(--f-body); color: var(--ink-3); background: transparent; border: 0; border-bottom: 2.5px solid transparent; padding: 10px 4px 9px; cursor: pointer; }
+.tabs button:hover { color: var(--ink); }
+.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+.tabpanel { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.tabpanel[hidden] { display: none; }
+/* Zwijane „Więcej”: parametry, JSON, model pasażerów, pojazdy na żywo, o danych. */
+.more { display: flex; flex-direction: column; gap: 8px; }
+.more > details { border: 1px solid var(--rule); border-radius: 8px; padding: 10px 12px; }
+.more > details > summary { font: 600 13px/1.2 var(--f-body); color: var(--ink-2); }
+.more > details[open] > summary { margin-bottom: 10px; }
+details.how { margin-top: 10px; }
+details.how p { margin: 6px 0 0; }
 .mapwrap { position: relative; min-width: 0; background: var(--ground); overflow: hidden; }
 #map { position: absolute; inset: 0; }
 
+/* ===== Typografia ===== */
 h1 { font: 600 28px/1.05 var(--f-display); margin: 0; text-wrap: balance; }
 .sub { color: var(--ink-3); font-size: 13px; margin-top: 6px; }
 h2 { font: 600 13px/1 var(--f-display); text-transform: uppercase; letter-spacing: 0.09em; color: var(--ink-2); margin: 0 0 10px; }
@@ -75,6 +98,7 @@ section { min-width: 0; }
 .muted { color: var(--ink-3); font-size: 12.5px; }
 .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 
+/* ===== Kontrolki: przełączniki, przyciski, pola ===== */
 .seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; background: var(--chip); border-radius: 7px; padding: 3px; gap: 3px; }
 .seg button { font: 500 13.5px/1 var(--f-body); color: var(--ink-2); background: transparent; border: 0; border-radius: 5px; padding: 8px 4px; cursor: pointer; }
 .seg button[aria-pressed="true"] { background: var(--paper); color: var(--ink); box-shadow: 0 1px 2px rgb(0 0 0 / 0.12); }
@@ -104,6 +128,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
 .params label { display: flex; flex-direction: column; gap: 4px; font-size: 12.5px; color: var(--ink-3); }
 .params input, .params select { font: 500 14px var(--f-body); color: var(--ink); background: var(--chip); border: 1px solid transparent; border-radius: 6px; padding: 7px 8px; width: 100%; box-sizing: border-box; font-variant-numeric: tabular-nums; }
 
+/* ===== Ocena linii, listy, asystent ===== */
 .score { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; }
 .score > div { background: var(--paper); padding: 10px 12px; min-width: 0; }
 .score b { display: block; font: 600 24px/1.1 var(--f-display); font-variant-numeric: tabular-nums; }
@@ -122,6 +147,7 @@ textarea { width: 100%; box-sizing: border-box; min-height: 90px; font: 12px/1.4
 details summary { cursor: pointer; font-size: 13px; color: var(--ink-2); }
 code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; border-radius: 3px; }
 
+/* ===== Warstwy mapy, legenda, symulacja ===== */
 .layers { display: grid; grid-template-columns: 1fr 1fr; gap: 7px 10px; margin-top: 10px; }
 .layers .check { font-size: 13.5px; }
 .sw { display: inline-block; width: 16px; flex: none; }
@@ -148,15 +174,15 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
 .ramp-l { display: grid; grid-template-columns: repeat(5, 1fr); font: 11px var(--f-mono); color: var(--ink-3); }
 .keys { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12.5px; color: var(--ink-2); }
 .keys i { display: inline-block; width: 18px; vertical-align: middle; margin-right: 5px; }
-footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
 
+/* ===== Mapa i nakładki: powiększanie, lista dzielnic, panel klastra, podpowiedź ===== */
 .zoom { position: absolute; top: calc(12px + env(safe-area-inset-top, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; background: var(--paper); border: 1px solid var(--rule); border-radius: 7px; overflow: hidden; z-index: 2; }
 .zoom button { font: 500 18px/1 var(--f-body); width: 44px; height: 36px; padding: 0; border: 0; background: transparent; color: var(--ink); cursor: pointer; display: grid; place-items: center; }
 .zoom button + button { border-top: 1px solid var(--rule); }
 /* text-indent równoważy odstęp po ostatniej literze (letter-spacing), żeby napis był na środku. */
 .zoom .all { font-size: 11px; font-family: var(--f-display); letter-spacing: 0.05em; text-indent: 0.05em; text-transform: uppercase; }
-.panel header { position: relative; padding-right: 48px; }
-.theme-btn { position: absolute; top: 0; right: 0; width: 36px; height: 36px; padding: 0; display: grid; place-items: center; border: 1px solid var(--rule); border-radius: 7px; background: var(--paper); color: var(--ink); cursor: pointer; }
+.head h1 { padding-right: 48px; }
+.theme-btn { position: absolute; top: 18px; right: var(--pad-r); width: 36px; height: 36px; padding: 0; display: grid; place-items: center; border: 1px solid var(--rule); border-radius: 7px; background: var(--paper); color: var(--ink); cursor: pointer; }
 .theme-btn:hover { background: var(--chip); }
 .theme-btn svg { width: 18px; height: 18px; }
 .tip { position: absolute; left: 0; top: 0; pointer-events: none; z-index: 3; background: var(--ink); color: var(--paper); font-size: 13px; line-height: 1.4; padding: 7px 10px; border-radius: 6px; max-width: min(340px, calc(100% - 24px)); box-shadow: 0 2px 10px rgb(0 0 0 / 0.18); }
@@ -208,238 +234,260 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
 .maplibregl-ctrl-attrib, .maplibregl-ctrl-logo { display: none; }
 .drawing .maplibregl-canvas-container.maplibregl-interactive { cursor: crosshair; }
 
+/* ===== Telefon ===== */
 @media (max-width: 760px) {
   html, body { height: auto; }
   .app { grid-template-columns: 1fr; grid-template-rows: 60vh auto; height: auto; }
   .mapwrap { order: -1; height: 60vh; }
   .dpick { width: min(190px, calc(100% - 90px)); }
   .modebar { top: calc(56px + env(safe-area-inset-top, 0px)); max-width: calc(100% - 90px); }
-  .panel { border-right: 0; overflow: visible; padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-left: max(16px, env(safe-area-inset-left, 0px)); }
+  .panel { border-right: 0; overflow: visible; --pad-r: max(16px, env(safe-area-inset-right, 0px)); --pad-l: max(16px, env(safe-area-inset-left, 0px)); }
+  .head { position: relative; top: 0; }   /* na telefonie nie przyklejamy — zająłby pół ekranu */
 }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } .live-dot { animation: none; } }
 </style>
 
 <div class="app">
   <aside class="panel">
-    <header>
+    <header class="head">
       <button class="theme-btn" id="theme" type="button"></button>
       <h1>Symulator linii Warszawa 2036</h1>
-      <div class="sub">Narysuj linię autobusową lub wczytaj propozycję algorytmu i zobacz, kogo obsłuży, gdzie utknie w korku i ile pojazdów potrzebuje.</div>
-      <div class="sub"><a href="linie.html" style="color:var(--accent);font-weight:500">Ranking linii ZTM: najlepsze i najgorsze →</a></div>
-    </header>
-
-    <section>
-      <h2>Horyzont prognozy</h2>
-      <div class="year"><b id="year-label">2036</b><input type="range" id="year" min="2025" max="2036" step="1" value="2036" aria-label="Rok prognozy"></div>
-      <div class="seg" id="scenario" style="margin-top:10px">
+      <div class="sub">Zobacz, gdzie brakuje komunikacji, narysuj nową linię i sprawdź, kogo obsłuży. <a href="linie.html">Ranking linii ZTM →</a></div>
+      <div class="horizon">
+        <div class="year"><b id="year-label">2036</b><input type="range" id="year" min="2025" max="2036" step="1" value="2036" aria-label="Rok prognozy"></div>
+        <div class="seg" id="scenario">
         <button data-s="lo" aria-pressed="false">Niski</button>
         <button data-s="base" aria-pressed="true">Bazowy</button>
         <button data-s="hi" aria-pressed="false">Wysoki</button>
       </div>
-    </section>
-
-    <section>
-      <h2>Warstwa klastrów</h2>
-      <div class="seg" id="metric">
-        <button data-m="pop" aria-pressed="false">Mieszkańcy</button>
-        <button data-m="growth" aria-pressed="true">Przyrost</button>
-        <button data-m="trips" aria-pressed="false">Podróże ZTM</button>
-        <button data-m="mpp" aria-pressed="false">Cele (MPP)</button>
       </div>
-      <div class="legend">
-        <div class="ramp" id="ramp"></div>
-        <div class="ramp-l" id="ramp-l"></div>
-        <div class="muted" id="ramp-note"></div>
-        <div class="keys">
-          <span id="live-key" hidden><i style="height:10px;width:10px;border-radius:50%;background:var(--ink);box-shadow:0 0 0 2px var(--bus)"></i>autobus / <i style="height:10px;width:10px;border-radius:50%;background:var(--ink);box-shadow:0 0 0 2px var(--tram);margin-left:4px"></i>tramwaj na żywo</span>
+      <div class="tabs" role="tablist" aria-label="Sekcje panelu">
+        <button type="button" role="tab" id="t-problem" aria-controls="tab-problem" data-tab="problem">Problem</button>
+        <button type="button" role="tab" id="t-design" aria-controls="tab-design" data-tab="design">Projektuj</button>
+        <button type="button" role="tab" id="t-map" aria-controls="tab-map" data-tab="map">Mapa</button>
+        <button type="button" role="tab" id="t-sim" aria-controls="tab-sim" data-tab="sim">Symulacja</button>
+      </div>
+    </header>
+
+    <!-- ===== Zakładka 1: Problem — gdzie brakuje komunikacji ===== -->
+    <div class="tabpanel" role="tabpanel" id="tab-problem" aria-labelledby="t-problem">
+      <section>
+        <h2>Co pokazują klastry</h2>
+        <div class="seg" id="metric">
+          <button data-m="pop" aria-pressed="false">Mieszkańcy</button>
+          <button data-m="growth" aria-pressed="true">Przyrost</button>
+          <button data-m="trips" aria-pressed="false">Podróże ZTM</button>
+          <button data-m="mpp" aria-pressed="false">Cele (MPP)</button>
         </div>
-      </div>
-    </section>
-
-    <section>
-      <h2>Priorytety · model ML</h2>
-      <label class="check" for="top-on"><input type="checkbox" id="top-on" checked>Pokaż 30 klastrów, gdzie komunikacja jest najbardziej potrzebna</label>
-      <div class="muted" id="top-note" style="margin-top:6px"></div>
-      <ul class="list toplist" id="top-list" style="max-height:290px;overflow-y:auto"></ul>
-      <label class="check" for="prop-on" style="margin-top:10px"><input type="checkbox" id="prop-on" checked><i class="sw" style="height:9px;width:9px;border-radius:50%;border:2.5px solid var(--top);background:var(--paper)"></i>Proponowane lokalizacje przystanków</label>
-      <label class="check" for="propl-on"><input type="checkbox" id="propl-on"><i class="sw" style="height:8px;width:8px;border-radius:50%;background:var(--accent)"></i>Najlepsze miejsca na istniejących liniach</label>
-      <div class="muted" id="prop-note" style="margin-top:4px"></div>
-      <button class="btn" id="heat-btn" type="button" aria-pressed="false" style="margin-top:12px">Pokaż heatmapę wykluczenia</button>
-      <div id="heat-legend" hidden style="margin-top:10px">
-        <div class="ramp"><i style="background:var(--h1)"></i><i style="background:var(--h2)"></i><i style="background:var(--h3)"></i><i style="background:var(--h4)"></i><i style="background:var(--h5)"></i></div>
-        <div class="ramp-l"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div>
-        <div class="muted" id="heat-note">Prawdopodobieństwo wykluczenia komunikacyjnego klastra wg modelu ML.</div>
-      </div>
-    </section>
-
-    <section>
-      <h2>Warstwy i filtr linii</h2>
-      <div class="params" style="grid-template-columns:1fr">
-        <label for="line-filter">Pokaż tylko linie (np. 523, 17, M1, S2, M3) — trasa, przystanki, stacje i pojazdy<input id="line-filter" type="text" placeholder="wszystkie linie" autocomplete="off" spellcheck="false"></label>
-      </div>
-      <div class="muted" id="filter-note" style="margin-top:6px"></div>
-      <div class="row" style="margin-top:10px">
-        <button class="btn small" id="layers-all">Zaznacz wszystko</button>
-        <button class="btn small" id="layers-none">Odznacz wszystko</button>
-      </div>
-      <div class="subh"><label class="check" for="sec-layers"><input type="checkbox" id="sec-layers">Sieć i dane</label></div>
-      <div class="layers" id="layers">
-        <label class="check" for="lay-hex"><input type="checkbox" id="lay-hex" checked>Klastry (prognoza)</label>
-        <label class="check" for="lay-roads"><input type="checkbox" id="lay-roads" checked>Ulice</label>
-        <label class="check" for="lay-bus"><input type="checkbox" id="lay-bus"><i class="sw" style="border-top:2px solid var(--bus)"></i>Linie autobusowe</label>
-        <label class="check" for="lay-tram"><input type="checkbox" id="lay-tram" checked><i class="sw" style="border-top:2px solid var(--tram)"></i>Linie tramwajowe</label>
-        <label class="check" for="lay-metro"><input type="checkbox" id="lay-metro" checked><i class="sw" style="border-top:3px solid var(--metro)"></i>Metro</label>
-        <label class="check" for="lay-kolej"><input type="checkbox" id="lay-kolej" checked><i class="sw" style="border-top:3px solid var(--rail)"></i>SKM / KM / WKD</label>
-        <label class="check" for="lay-ztm"><input type="checkbox" id="lay-ztm" checked>Przystanki ZTM</label>
-        <label class="check" for="lay-nb"><input type="checkbox" id="lay-nb" checked><i class="sw" style="height:9px;width:9px;border-radius:50%;background:var(--sel)"></i>Nowe osiedla</label>
-        <label class="check" for="lay-veturilo"><input type="checkbox" id="lay-veturilo" checked><i class="sw" style="height:9px;width:9px;border-radius:50%;background:var(--bike)"></i>Stacje Veturilo</label>
-        <label class="check" for="lay-planned"><input type="checkbox" id="lay-planned" checked>Planowane tramwaje i kolej</label>
-      </div>
-      <div class="subh"><label class="check" for="sec-pmetro"><input type="checkbox" id="sec-pmetro">Planowane metro</label><span class="note">linia przerywana = jeszcze nieotwarta w wybranym roku</span></div>
-      <div class="layers" id="pmetro-layers"></div>
-      <div class="subh"><label class="check" for="sec-infra"><input type="checkbox" id="sec-infra">Cele podróży</label></div>
-      <div class="layers" id="infra-layers"></div>
-    </section>
-
-    <section>
-      <h2>Symulacja ruchu</h2>
-      <div class="clock"><b id="sim-clock">7:00</b><input type="range" id="sim-time" min="14400" max="88200" step="60" value="25200" aria-label="Godzina symulacji"></div>
-      <div class="row" style="margin-top:8px">
-        <button class="btn primary" id="sim-play">▶ Start</button>
-        <div class="seg" id="sim-speed" style="flex:1">
-          <button data-v="30" aria-pressed="false">×30</button>
-          <button data-v="120" aria-pressed="true">×120</button>
-          <button data-v="600" aria-pressed="false">×600</button>
-        </div>
-      </div>
-      <div class="muted" id="sim-status" style="margin-top:6px">Autobusy, tramwaje, metro i SKM jadą według rozkładu ZTM (dzień roboczy). Linia z piaskownicy jeździ z ustawioną częstotliwością. Widać tylko pojazdy w granicach Warszawy. Filtr linii działa też tutaj, a dzielnica wybrana w prawym górnym rogu mapy zawęża symulację do swoich granic.</div>
-
-      <div class="subh" style="margin-top:16px"><label class="check" for="load-on"><input type="checkbox" id="load-on">Obciążenie linii w szczycie</label><span class="note">model pasażerów 7–8</span></div>
-      <div id="load-opts" hidden>
-        <div class="seg" id="load-year" style="margin-top:8px">
-          <button data-y="2025" aria-pressed="false">2025</button>
-          <button data-y="2036" aria-pressed="true">2036</button>
-        </div>
-        <div class="loadkey" id="load-key"></div>
-        <div class="loadkey-l"><span>&lt; 50%</span><span>50–80%</span><span>80–100%</span><span>&gt; 100%</span></div>
-        <div class="muted" id="load-sum" style="margin-top:6px"></div>
-        <ul class="list overlist" id="load-list"></ul>
-        <div class="muted" style="margin-top:4px">Model: podróże z domu w porannym szczycie (grawitacyjny), przypisane najszybszą trasą; 2036 = ludność 2036 + metro M2 zachód i M3, reszta sieci jak dziś. Porównania 2025↔2036 są wiarygodne, dokładne liczby pasażerów — orientacyjne (metro niedoszacowane).</div>
-      </div>
-
-      <div class="subh" style="margin-top:16px"><label class="check" for="board-on"><input type="checkbox" id="board-on"><i class="sw" style="height:9px;width:9px;border-radius:50%;background:var(--board)"></i>Wsiadający na przystankach</label><span class="note">model pasażerów 7–8</span></div>
-      <div id="board-opts" hidden>
-        <div class="seg" id="board-year" style="margin-top:8px">
-          <button data-y="2025" aria-pressed="false">2025</button>
-          <button data-y="2036" aria-pressed="true">2036</button>
-        </div>
-        <div class="muted" id="board-sum" style="margin-top:6px"></div>
-      </div>
-    </section>
-
-    <section>
-      <h2>Na żywo</h2>
-      <label class="check" for="live"><input type="checkbox" id="live"> Autobusy i tramwaje ZTM na mapie</label>
-      <div class="params" style="margin-top:8px;grid-template-columns:1fr" id="live-opts" hidden>
-        <label for="live-kind">Pokaż<select id="live-kind"><option value="0">autobusy i tramwaje</option><option value="1">tylko autobusy</option><option value="2">tylko tramwaje</option></select></label>
-      </div>
-      <div class="muted" id="live-status" style="margin-top:6px">Pozycje z API miasta (dane.um.warszawa.pl), odświeżane co 15 s. Filtr linii działa też tutaj.</div>
-    </section>
-
-    <section>
-      <h2>Piaskownica</h2>
-      <div class="tools" id="tools">
-        <button class="tool" data-mode="view" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l14 9-6 1-3 6z"/></svg>Przeglądaj</button>
-        <button class="tool" data-mode="route" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19c4-1 3-8 8-8s4 7 8-6"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="5" r="2"/></svg>Rysuj trasę</button>
-        <button class="tool" data-mode="stop" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="10" r="5"/><path d="M12 15v6"/></svg>Przystanki</button>
-      </div>
-      <div class="hint" id="hint" style="margin-top:8px"></div>
-      <div class="row" style="margin-top:8px">
-        <button class="btn" id="undo">Cofnij</button>
-        <button class="btn danger" id="clear">Usuń linię</button>
-        <button class="btn" id="reset">Resetuj</button>
-        <button class="btn" id="sample-line">Przykładowa linia</button>
-      </div>
-    </section>
-
-    <section>
-      <h2>Parametry linii</h2>
-      <div class="params">
-        <label for="headway">Kursy co [min] w szczycie<input id="headway" type="number" min="2" max="60" value="10"></label>
-        <label for="vehicle">Tabor<select id="vehicle"><option value="90">12 m (90 miejsc)</option><option value="150" selected>18 m przegubowy (150)</option></select></label>
-        <label for="dwell">Postój na przystanku [s]<input id="dwell" type="number" min="5" max="120" value="25"></label>
-        <label for="layover">Postój na pętli [min]<input id="layover" type="number" min="0" max="30" value="6"></label>
-        <label for="trips">Podróży na osobę dziennie<input id="trips" type="number" min="0.5" max="4" step="0.1" value="2.0"></label>
-        <label for="share">Udział komunikacji miejskiej [%]<input id="share" type="number" min="5" max="90" value="45"></label>
-      </div>
-      <div class="muted" style="margin-top:6px">Podróże i udział ZTM: wartości orientacyjne dla Warszawy (Warszawskie Badanie Ruchu) — do zmiany.</div>
-    </section>
-
-    <section>
-      <h2>Ocena propozycji <span class="muted" id="eval-year"></span></h2>
-      <div id="eval-empty" class="empty">Narysuj trasę albo postaw przystanki — ocena przelicza się przy każdej zmianie. Możesz też kliknąć „Przykładowa linia”.</div>
-      <div id="eval" hidden>
-        <div class="score">
-          <div><b id="e-new">–</b><span>nowy popyt w zasięgu 400 m (mieszkańcy)</span></div>
-          <div><b id="e-pax">–</b><span>pasażerów dziennie z nowego popytu</span></div>
-          <div><b id="e-all">–</b><span>wszyscy mieszkańcy w zasięgu 400 m</span></div>
-          <div><b id="e-fresh">–</b><span>w tym bez przystanku ZTM dziś</span></div>
-          <div><b id="e-fleet">–</b><span>pojazdów w szczycie</span></div>
-          <div><b id="e-len">–</b><span>długość trasy</span></div>
-          <div><b id="e-time">–</b><span>czas przejazdu w szczycie</span></div>
-          <div class="wide">
-            <div class="row" style="justify-content:space-between"><span style="font-size:13.5px;color:var(--ink-2)">Ryzyko korków</span><span class="pill none" id="e-risk">brak trasy</span></div>
-            <ul class="list" id="e-jams"></ul>
-            <div class="muted" id="e-speed-src" style="margin-top:6px"></div>
-          </div>
-          <div class="wide">
-            <span style="font-size:13.5px;color:var(--ink-2)">Obciążenie w szczycie</span>
-            <div id="e-load" style="font-size:14px;margin-top:4px"></div>
-          </div>
-          <div class="wide">
-            <span style="font-size:13.5px;color:var(--ink-2)">Przesiadki na kolej i metro</span>
-            <ul class="list" id="e-rail"></ul>
-          </div>
-          <div class="wide">
-            <span style="font-size:13.5px;color:var(--ink-2)">Cele podróży w zasięgu 400 m</span>
-            <ul class="list" id="e-infra"></ul>
-          </div>
-          <div class="wide">
-            <span style="font-size:13.5px;color:var(--ink-2)">Nowe osiedla w zasięgu</span>
-            <ul class="list" id="e-new-list"></ul>
+        <div class="legend">
+          <div class="ramp" id="ramp"></div>
+          <div class="ramp-l" id="ramp-l"></div>
+          <div class="muted" id="ramp-note"></div>
+          <div class="keys">
+            <span id="live-key" hidden><i style="height:10px;width:10px;border-radius:50%;background:var(--ink);box-shadow:0 0 0 2px var(--bus)"></i>autobus / <i style="height:10px;width:10px;border-radius:50%;background:var(--ink);box-shadow:0 0 0 2px var(--tram);margin-left:4px"></i>tramwaj na żywo</span>
           </div>
         </div>
-      </div>
-    </section>
-
-    <section>
-      <h2>Asystent</h2>
-      <div class="ai">
-        <div class="row"><button class="btn primary" id="ai-btn" disabled>Oceń propozycję</button><button class="btn" id="ai-stop" hidden>Zatrzymaj</button></div>
-        <div class="ai-out" id="ai-out"><span class="muted">Asystent opisze mocne i słabe strony narysowanej linii oraz zaproponuje, co poprawić.</span></div>
-        <div class="muted" id="ai-note"></div>
-      </div>
-    </section>
-
-    <section>
-      <h2>Wymiana z algorytmem</h2>
-      <details>
-        <summary>Wczytaj lub skopiuj propozycję (JSON)</summary>
-        <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
-          <div class="muted">Format: <code>{"nazwa": "N01", "trasa": [[lon, lat], …], "przystanki": [[lon, lat], …]}</code>. <code>trasa</code> to punkty, przez które linia ma przejść (przyciągane do ulic); bez niej trasa prowadzi przez przystanki w podanej kolejności.</div>
-          <textarea id="json" spellcheck="false" aria-label="Propozycja w formacie JSON"></textarea>
-          <div class="row">
-            <button class="btn" id="json-load">Wczytaj z pola</button>
-            <label class="btn" for="json-file" style="display:inline-block">Wczytaj plik</label>
-            <input type="file" id="json-file" accept=".json,application/json" hidden>
-            <button class="btn" id="json-copy">Kopiuj obecną</button>
-          </div>
-          <div class="muted" id="json-msg"></div>
+      </section>
+      <section>
+        <h2>Gdzie komunikacja jest najbardziej potrzebna</h2>
+        <label class="check" for="top-on"><input type="checkbox" id="top-on" checked>30 klastrów o najwyższym wskaźniku wykluczenia</label>
+        <div class="muted" id="top-note" style="margin-top:6px"></div>
+        <ul class="list toplist" id="top-list" style="max-height:290px;overflow-y:auto"></ul>
+        <label class="check" for="prop-on" style="margin-top:10px"><input type="checkbox" id="prop-on" checked><i class="sw" style="height:9px;width:9px;border-radius:50%;border:2.5px solid var(--top);background:var(--paper)"></i>Proponowane lokalizacje przystanków</label>
+        <label class="check" for="propl-on"><input type="checkbox" id="propl-on"><i class="sw" style="height:8px;width:8px;border-radius:50%;background:var(--accent)"></i>Najlepsze miejsca na istniejących liniach</label>
+        <div class="muted" id="prop-note" style="margin-top:4px"></div>
+        <button class="btn" id="heat-btn" type="button" aria-pressed="false" style="margin-top:12px">Pokaż heatmapę wykluczenia</button>
+        <div id="heat-legend" hidden style="margin-top:10px">
+          <div class="ramp"><i style="background:var(--h1)"></i><i style="background:var(--h2)"></i><i style="background:var(--h3)"></i><i style="background:var(--h4)"></i><i style="background:var(--h5)"></i></div>
+          <div class="ramp-l"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div>
+          <div class="muted" id="heat-note">Wskaźnik wykluczenia komunikacyjnego (0–100%) z modelu ML.</div>
         </div>
-      </details>
-    </section>
+        <details class="how">
+          <summary>Jak to liczymy?</summary>
+          <p class="muted">Wskaźnik (0–100%) pochodzi z modelu ML zespołu: wysoki tam, gdzie mieszka i pracuje dużo osób, przybywa mieszkańców, a przystanków ZTM i metra jest mało. To ranking potrzeb, a nie szansa, że ktoś zostanie wykluczony. Proponowane przystanki to miejsca, gdzie nowy przystanek obejmie najwięcej osób bez dojścia do ZTM.</p>
+        </details>
+      </section>
+    </div>
 
-    <footer>Dane: prognoza ludności klastrów (GUS NSP 2011/2021, BDL, pozwolenia GUNB), prędkości autobusów z rozkładu ZTM (GTFS, środa, szczyt 7–9 vs 20–22), sieć ulic OpenStreetMap (ODbL), kolej i metro OSM, stacje Veturilo (Nextbike GBFS, CC0). Prototyp hackathonowy.</footer>
+    <!-- ===== Zakładka 2: Projektuj — narysuj linię i oceń ===== -->
+    <div class="tabpanel" role="tabpanel" id="tab-design" aria-labelledby="t-design" hidden>
+      <section>
+        <h2>Narysuj linię</h2>
+        <div class="tools" id="tools">
+          <button class="tool" data-mode="view" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l14 9-6 1-3 6z"/></svg>Przeglądaj</button>
+          <button class="tool" data-mode="route" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19c4-1 3-8 8-8s4 7 8-6"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="5" r="2"/></svg>Rysuj trasę</button>
+          <button class="tool" data-mode="stop" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="10" r="5"/><path d="M12 15v6"/></svg>Przystanki</button>
+        </div>
+        <div class="hint" id="hint" style="margin-top:8px"></div>
+        <div class="row" style="margin-top:8px">
+          <button class="btn" id="undo">Cofnij</button>
+          <button class="btn danger" id="clear">Usuń linię</button>
+          <button class="btn" id="reset">Resetuj</button>
+          <button class="btn" id="sample-line">Przykładowa linia</button>
+        </div>
+      </section>
+      <section>
+        <h2>Ocena linii <span class="muted" id="eval-year"></span></h2>
+        <div id="eval-empty" class="empty">Narysuj trasę albo postaw przystanki — ocena przelicza się przy każdej zmianie. Możesz też kliknąć „Przykładowa linia”.</div>
+        <div id="eval" hidden>
+          <div class="score">
+            <div><b id="e-new">–</b><span>nowy popyt w zasięgu 400 m (mieszkańcy)</span></div>
+            <div><b id="e-pax">–</b><span>pasażerów dziennie z nowego popytu</span></div>
+            <div><b id="e-all">–</b><span>wszyscy mieszkańcy w zasięgu 400 m</span></div>
+            <div><b id="e-fresh">–</b><span>w tym bez przystanku ZTM dziś</span></div>
+            <div><b id="e-fleet">–</b><span>pojazdów w szczycie</span></div>
+            <div><b id="e-len">–</b><span>długość trasy</span></div>
+            <div><b id="e-time">–</b><span>czas przejazdu w szczycie</span></div>
+            <div class="wide">
+              <div class="row" style="justify-content:space-between"><span style="font-size:13.5px;color:var(--ink-2)">Ryzyko korków</span><span class="pill none" id="e-risk">brak trasy</span></div>
+              <ul class="list" id="e-jams"></ul>
+              <div class="muted" id="e-speed-src" style="margin-top:6px"></div>
+            </div>
+            <div class="wide">
+              <span style="font-size:13.5px;color:var(--ink-2)">Obciążenie w szczycie</span>
+              <div id="e-load" style="font-size:14px;margin-top:4px"></div>
+            </div>
+            <div class="wide">
+              <span style="font-size:13.5px;color:var(--ink-2)">Przesiadki na kolej i metro</span>
+              <ul class="list" id="e-rail"></ul>
+            </div>
+            <div class="wide">
+              <span style="font-size:13.5px;color:var(--ink-2)">Cele podróży w zasięgu 400 m</span>
+              <ul class="list" id="e-infra"></ul>
+            </div>
+            <div class="wide">
+              <span style="font-size:13.5px;color:var(--ink-2)">Nowe osiedla w zasięgu</span>
+              <ul class="list" id="e-new-list"></ul>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section>
+        <h2>Asystent</h2>
+        <div class="ai">
+          <div class="row"><button class="btn primary" id="ai-btn" disabled>Oceń propozycję</button><button class="btn" id="ai-stop" hidden>Zatrzymaj</button></div>
+          <div class="ai-out" id="ai-out"><span class="muted">Asystent opisze mocne i słabe strony narysowanej linii oraz zaproponuje, co poprawić.</span></div>
+          <div class="muted" id="ai-note"></div>
+        </div>
+      </section>
+      <section class="more">
+        <details>
+          <summary>Parametry linii</summary>
+          <div class="params">
+            <label for="headway">Kursy co [min] w szczycie<input id="headway" type="number" min="2" max="60" value="10"></label>
+            <label for="vehicle">Tabor<select id="vehicle"><option value="90">12 m (90 miejsc)</option><option value="150" selected>18 m przegubowy (150)</option></select></label>
+            <label for="dwell">Postój na przystanku [s]<input id="dwell" type="number" min="5" max="120" value="25"></label>
+            <label for="layover">Postój na pętli [min]<input id="layover" type="number" min="0" max="30" value="6"></label>
+            <label for="trips">Podróży na osobę dziennie<input id="trips" type="number" min="0.5" max="4" step="0.1" value="2.0"></label>
+            <label for="share">Udział komunikacji miejskiej [%]<input id="share" type="number" min="5" max="90" value="45"></label>
+          </div>
+          <div class="muted" style="margin-top:6px">Podróże i udział ZTM: wartości orientacyjne dla Warszawy (Warszawskie Badanie Ruchu) — do zmiany.</div>
+        </details>
+        <details>
+          <summary>Dla zespołu: wymiana JSON z algorytmem</summary>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+            <div class="muted">Format: <code>{"nazwa": "N01", "trasa": [[lon, lat], …], "przystanki": [[lon, lat], …]}</code>. <code>trasa</code> to punkty, przez które linia ma przejść (przyciągane do ulic); bez niej trasa prowadzi przez przystanki w podanej kolejności.</div>
+            <textarea id="json" spellcheck="false" aria-label="Propozycja w formacie JSON"></textarea>
+            <div class="row">
+              <button class="btn" id="json-load">Wczytaj z pola</button>
+              <label class="btn" for="json-file" style="display:inline-block">Wczytaj plik</label>
+              <input type="file" id="json-file" accept=".json,application/json" hidden>
+              <button class="btn" id="json-copy">Kopiuj obecną</button>
+            </div>
+            <div class="muted" id="json-msg"></div>
+          </div>
+        </details>
+      </section>
+    </div>
+
+    <!-- ===== Zakładka 3: Mapa — co widać na mapie ===== -->
+    <div class="tabpanel" role="tabpanel" id="tab-map" aria-labelledby="t-map" hidden>
+      <section>
+        <h2>Co widać na mapie</h2>
+        <div class="params" style="grid-template-columns:1fr">
+          <label for="line-filter">Pokaż tylko wybrane linie (np. 523, 17, M1, S2)<input id="line-filter" type="text" placeholder="wszystkie linie" autocomplete="off" spellcheck="false"></label>
+        </div>
+        <div class="muted" id="filter-note" style="margin-top:6px"></div>
+        <div class="row" style="margin-top:10px">
+          <button class="btn small" id="layers-all">Zaznacz wszystko</button>
+          <button class="btn small" id="layers-none">Odznacz wszystko</button>
+        </div>
+        <div class="subh"><label class="check" for="sec-layers"><input type="checkbox" id="sec-layers">Sieć i dane</label></div>
+        <div class="layers" id="layers">
+          <label class="check" for="lay-hex"><input type="checkbox" id="lay-hex" checked>Klastry (prognoza)</label>
+          <label class="check" for="lay-roads"><input type="checkbox" id="lay-roads" checked>Ulice</label>
+          <label class="check" for="lay-bus"><input type="checkbox" id="lay-bus"><i class="sw" style="border-top:2px solid var(--bus)"></i>Linie autobusowe</label>
+          <label class="check" for="lay-tram"><input type="checkbox" id="lay-tram" checked><i class="sw" style="border-top:2px solid var(--tram)"></i>Linie tramwajowe</label>
+          <label class="check" for="lay-metro"><input type="checkbox" id="lay-metro" checked><i class="sw" style="border-top:3px solid var(--metro)"></i>Metro</label>
+          <label class="check" for="lay-kolej"><input type="checkbox" id="lay-kolej" checked><i class="sw" style="border-top:3px solid var(--rail)"></i>SKM / KM / WKD</label>
+          <label class="check" for="lay-ztm"><input type="checkbox" id="lay-ztm" checked>Przystanki ZTM</label>
+          <label class="check" for="lay-nb"><input type="checkbox" id="lay-nb" checked><i class="sw" style="height:9px;width:9px;border-radius:50%;background:var(--sel)"></i>Nowe osiedla</label>
+          <label class="check" for="lay-veturilo"><input type="checkbox" id="lay-veturilo" checked><i class="sw" style="height:9px;width:9px;border-radius:50%;background:var(--bike)"></i>Stacje Veturilo</label>
+          <label class="check" for="lay-planned"><input type="checkbox" id="lay-planned" checked>Planowane tramwaje i kolej</label>
+        </div>
+        <div class="subh"><label class="check" for="sec-pmetro"><input type="checkbox" id="sec-pmetro">Planowane metro</label><span class="note">linia przerywana = jeszcze nieotwarta w wybranym roku</span></div>
+        <div class="layers" id="pmetro-layers"></div>
+        <div class="subh"><label class="check" for="sec-infra"><input type="checkbox" id="sec-infra">Cele podróży</label></div>
+        <div class="layers" id="infra-layers"></div>
+      </section>
+      <section class="more">
+        <details>
+          <summary>O danych</summary>
+          <p class="muted">Dane: prognoza ludności klastrów (GUS NSP 2011/2021, BDL, pozwolenia GUNB), prędkości autobusów z rozkładu ZTM (GTFS, środa, szczyt 7–9 vs 20–22), sieć ulic OpenStreetMap (ODbL), kolej i metro OSM, stacje Veturilo (Nextbike GBFS, CC0). Prototyp hackathonowy.</p>
+        </details>
+      </section>
+    </div>
+
+    <!-- ===== Zakładka 4: Symulacja — ruch w ciągu dnia ===== -->
+    <div class="tabpanel" role="tabpanel" id="tab-sim" aria-labelledby="t-sim" hidden>
+      <section>
+        <h2>Ruch w ciągu dnia</h2>
+        <div class="clock"><b id="sim-clock">7:00</b><input type="range" id="sim-time" min="14400" max="88200" step="60" value="25200" aria-label="Godzina symulacji"></div>
+        <div class="row" style="margin-top:8px">
+          <button class="btn primary" id="sim-play">▶ Start</button>
+          <div class="seg" id="sim-speed" style="flex:1">
+            <button data-v="30" aria-pressed="false">×30</button>
+            <button data-v="120" aria-pressed="true">×120</button>
+            <button data-v="600" aria-pressed="false">×600</button>
+          </div>
+        </div>
+        <div class="muted" id="sim-status" style="margin-top:6px">Pojazdy według rozkładu ZTM (dzień roboczy), tylko w granicach Warszawy. Filtr linii (zakładka „Mapa”) i wybrana dzielnica działają też tutaj.</div>
+      </section>
+      <section class="more">
+        <details>
+          <summary>Model pasażerów (szczyt 7–8)</summary>
+          <div class="subh"><label class="check" for="load-on"><input type="checkbox" id="load-on">Obciążenie linii w szczycie</label><span class="note">model pasażerów 7–8</span></div>
+          <div id="load-opts" hidden>
+            <div class="seg" id="load-year" style="margin-top:8px">
+              <button data-y="2025" aria-pressed="false">2025</button>
+              <button data-y="2036" aria-pressed="true">2036</button>
+            </div>
+            <div class="loadkey" id="load-key"></div>
+            <div class="loadkey-l"><span>&lt; 50%</span><span>50–80%</span><span>80–100%</span><span>&gt; 100%</span></div>
+            <div class="muted" id="load-sum" style="margin-top:6px"></div>
+            <ul class="list overlist" id="load-list"></ul>
+            <div class="muted" style="margin-top:4px">Model: podróże z domu w porannym szczycie (grawitacyjny), przypisane najszybszą trasą; 2036 = ludność 2036 + metro M2 zachód i M3, reszta sieci jak dziś. Porównania 2025↔2036 są wiarygodne, dokładne liczby pasażerów — orientacyjne (metro niedoszacowane).</div>
+          </div>
+
+          <div class="subh" style="margin-top:16px"><label class="check" for="board-on"><input type="checkbox" id="board-on"><i class="sw" style="height:9px;width:9px;border-radius:50%;background:var(--board)"></i>Wsiadający na przystankach</label><span class="note">model pasażerów 7–8</span></div>
+          <div id="board-opts" hidden>
+            <div class="seg" id="board-year" style="margin-top:8px">
+              <button data-y="2025" aria-pressed="false">2025</button>
+              <button data-y="2036" aria-pressed="true">2036</button>
+            </div>
+            <div class="muted" id="board-sum" style="margin-top:6px"></div>
+          </div>
+        </details>
+        <details>
+          <summary>Pojazdy na żywo</summary>
+          <label class="check" for="live"><input type="checkbox" id="live"> Autobusy i tramwaje ZTM na mapie</label>
+          <div class="params" style="margin-top:8px;grid-template-columns:1fr" id="live-opts" hidden>
+            <label for="live-kind">Pokaż<select id="live-kind"><option value="0">autobusy i tramwaje</option><option value="1">tylko autobusy</option><option value="2">tylko tramwaje</option></select></label>
+          </div>
+          <div class="muted" id="live-status" style="margin-top:6px">Pozycje z API miasta co 15 s. Działa tylko lokalnie, przez frontend/serwer.py z kluczem API.</div>
+        </details>
+      </section>
+    </div>
   </aside>
 
   <div class="mapwrap" id="mapwrap">
@@ -471,6 +519,32 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
 <script>
 (() => {
   "use strict";
+  // Spis treści skryptu (sekcje w kolejności występowania, szukaj „// ---------- nazwa”):
+  //    1. geometria: lokalny układ metryczny
+  //    2. stan
+  //    3. dane
+  //    4. routing
+  //    5. ocena
+  //    6. mapa
+  //    7. UI
+  //    8. zakładki panelu: Problem · Projektuj · Mapa · Symulacja
+  //    9. priorytety z modelu ML
+  //   10. proponowane przystanki w 30 klastrach priorytetowych
+  //   11. wsiadający na przystankach w szczycie
+  //   12. heatmapa wykluczenia
+  //   13. symulacja ruchu według rozkładu
+  //   14. obciążenie linii w szczycie
+  //   15. pojazdy na żywo
+  //   16. cele podróży
+  //   17. sekcje warstw: zaznacz/odznacz całą grupę lub wszystko
+  //   18. planowane metro
+  //   19. warstwy i filtr linii
+  //   20. propozycje JSON
+  //   21. asystent
+  //   22. stacje Veturilo + stan na żywo z GBFS Nextbike
+  //   23. panel statystyk klastra
+  //   24. lista dzielnic: filtrowanie po wpisanych literach, wybór przybliża mapę
+
   const WARSAW = [[20.85, 52.095], [21.275, 52.37]];
   const WALK = 400, RAIL_WALK = 800, PEAK_SHARE = 0.10;   // 10% podróży dnia w godzinie szczytu
   const fmt = new Intl.NumberFormat("pl-PL");
@@ -1056,9 +1130,9 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     if (bd.length) groups.push(`<div class="k">Wsiadający w szczycie 7–8 · model</div>` + bd.slice(0, 3).map((f) => { const p = f.properties;
       return `<b>${esc(p.n)}${p.nr ? " " + esc(p.nr) : ""}</b> · 2025: ${n0(p.b25)}/h → 2036: ${n0(p.b36)}/h`; }).join("<br>"));
     const tp = by((id) => id === "top-fill" || id === "top-pt");
-    if (tp.length) { const t = TOP.byRank.get(tp[0].properties.rank); groups.push(`<div class="k">Priorytet ML · #${t.rank}</div><b>${esc(t.dzielnica)}</b> · prawdopodobieństwo wykluczenia komunikacyjnego <b>${Math.round(t.pred * 100)}%</b>`); }
+    if (tp.length) { const t = TOP.byRank.get(tp[0].properties.rank); groups.push(`<div class="k">Priorytet ML · #${t.rank}</div><b>${esc(t.dzielnica)}</b> · wskaźnik wykluczenia komunikacyjnego <b>${Math.round(t.pred * 100)}%</b>`); }
     const ht = by((id) => id === "heat");
-    if (ht.length) { const p = ht[0].properties; groups.push(`<div class="k">Wykluczenie komunikacyjne · model ML</div><b>${esc(p.d)}</b> · prawdopodobieństwo <b>${Math.round(p.p * 100)}%</b> · miejsce ${p.rank} z ${HEAT.n}`); }
+    if (ht.length) { const p = ht[0].properties; groups.push(`<div class="k">Wykluczenie komunikacyjne · model ML</div><b>${esc(p.d)}</b> · wskaźnik wykluczenia <b>${Math.round(p.p * 100)}%</b> · miejsce ${p.rank} z ${HEAT.n}`); }
     const hx = by((id) => id === "hex");
     if (hx.length && mode === "view") { const h = D.hexes[hx[0].properties.i]; groups.push(`<div class="k">Klaster · ${esc(h.d)}</div>${fmt.format(hexPop(h))} mieszkańców w ${year} (${hexPop(h) - h.pop[0] >= 0 ? "+" : ""}${fmt.format(hexPop(h) - h.pop[0])} vs 2025)` + (metric === "mpp" ? `<br>${fmt.format(h.mpp || 0)} miejsc pożytku publicznego` : "")); }
     return groups.map((g) => `<div class="g">${g}</div>`).join("");
@@ -1093,7 +1167,32 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     route: "Klikaj kolejne ulice na mapie — trasa przejedzie przez kliknięty odcinek (np. wybraną łącznicę węzła). Niebieskie są ulice, którymi może jechać autobus (wysokość, szerokość, kierunek ruchu); klik przy skrzyżowaniu wybiera skrzyżowanie.",
     stop: "Kliknij przy narysowanej trasie (do 80 m od niej), żeby postawić przystanek po prawej stronie jezdni. Poza trasą linii przystanku nie postawisz. Kliknij istniejący nowy przystanek, żeby go usunąć.",
   };
+  // ---------- zakładki panelu: Problem · Projektuj · Mapa · Symulacja ----------
+  const TAB_KEY = "zakladka", TABS = ["problem", "design", "map", "sim"];
+  function showTab(name, { focus = false } = {}) {
+    if (!TABS.includes(name)) name = "problem";
+    for (const t of TABS) {
+      const on = t === name, b = $(`t-${t}`);
+      b.setAttribute("aria-selected", on); b.tabIndex = on ? 0 : -1; $(`tab-${t}`).hidden = !on;
+      if (on && focus) b.focus();
+    }
+    try { localStorage.setItem(TAB_KEY, name); } catch {}
+  }
+  function wireTabs() {
+    const list = document.querySelector('[role="tablist"]');
+    list.addEventListener("click", (e) => { const b = e.target.closest("[data-tab]"); if (b) showTab(b.dataset.tab); });
+    list.addEventListener("keydown", (e) => {
+      const i = TABS.indexOf(e.target.dataset?.tab); if (i < 0) return;
+      const j = { ArrowRight: (i + 1) % TABS.length, ArrowLeft: (i + TABS.length - 1) % TABS.length, Home: 0, End: TABS.length - 1 }[e.key];
+      if (j === undefined) return;
+      e.preventDefault(); showTab(TABS[j], { focus: true });
+    });
+    let saved = null; try { saved = localStorage.getItem(TAB_KEY); } catch {}
+    showTab(location.hash === "#przyklad" ? "design" : location.hash.startsWith("#linia-") ? "map" : saved);
+  }
+
   function setMode(m) {
+    if (m !== "view") showTab("design");   // rysowanie i przystanki są w zakładce „Projektuj”
     mode = m;
     $("tools").querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.mode === m));
     $("hint").textContent = HINTS[m];
@@ -1262,7 +1361,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
   function renderTopList() {
     if (!TOP.rows.length) { $("top-note").textContent = "Brak pliku dane/lista_heksagonow_top30.csv."; $("top-list").innerHTML = ""; return; }
     const total25 = TOP.rows.reduce((a, t) => a + (t.hex ? t.hex.pop[0] : 0), 0), totalY = TOP.rows.reduce((a, t) => a + (t.hex ? hexPop(t.hex) : 0), 0);
-    $("top-note").textContent = `Klastry wskazane przez model ML (prawdopodobieństwo wykluczenia komunikacyjnego ${Math.round(TOP.rows.at(-1).pred * 100)}–${Math.round(TOP.rows[0].pred * 100)}%). Mieszka w nich ${fmt.format(total25)} osób, w ${year} r. ${fmt.format(totalY)}.`;
+    $("top-note").textContent = `Klastry wskazane przez model ML (wskaźnik wykluczenia komunikacyjnego ${Math.round(TOP.rows.at(-1).pred * 100)}–${Math.round(TOP.rows[0].pred * 100)}%). Mieszka w nich ${fmt.format(total25)} osób, w ${year} r. ${fmt.format(totalY)}.`;
     $("top-list").innerHTML = TOP.rows.map((t) => {
       const p0 = t.hex ? t.hex.pop[0] : null, p1 = t.hex ? hexPop(t.hex) : null;
       return `<li><button data-r="${t.rank}"><span class="rk">${t.rank}</span><span>${esc(t.dzielnica)} <small>${p0 == null ? "" : `· ${fmt.format(p0)} → ${fmt.format(p1)} mieszk. (${year})`}</small></span><span style="font-weight:600">${Math.round(t.pred * 100)}%</span></button></li>`;
@@ -1404,7 +1503,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
   async function setLive(on) {
     liveOn = on; clearTimeout(liveTimer);
     $("live-opts").hidden = !on; $("live-key").hidden = !on;
-    if (!on) { liveData = null; renderLive(); $("live-status").textContent = "Pozycje z API miasta (dane.um.warszawa.pl), odświeżane co 15 s. Filtr linii działa też tutaj."; return; }
+    if (!on) { liveData = null; renderLive(); $("live-status").textContent = "Pozycje z API miasta co 15 s. Działa tylko lokalnie, przez frontend/serwer.py z kluczem API."; return; }
     const ok = await liveAvailable();
     if (ok === null) { $("live-status").textContent = "Pojazdy na żywo działają tylko w wersji uruchomionej lokalnie (.venv/bin/python frontend/serwer.py z kluczem w .env) — strona statyczna (GitHub Pages) nie może łączyć się z API ZTM."; $("live").checked = false; liveOn = false; $("live-opts").hidden = true; $("live-key").hidden = true; return; }
     if (!ok) { $("live-status").textContent = "Serwer działa bez klucza API. Uruchom go z ZTM_API_KEY=twój-klucz (darmowa rejestracja na api.um.warszawa.pl)."; $("live").checked = false; liveOn = false; $("live-opts").hidden = true; $("live-key").hidden = true; return; }
@@ -1429,7 +1528,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     kultura: ["Kultura", "#7048e8", "K"], urzad: ["Urzędy dzielnic", "#495057", "U"], targowisko: ["Targowiska", "#a77a00", "T"],
     park: ["Parki", "#2f8a3f", "P"], kult: ["Miejsca kultu", "#8c6d46", "†"],
   };
-  const INFRA_ON = new Set(["szpital", "szkola", "handel", "kultura", "urzad", "targowisko", "park"]);
+  const INFRA_ON = new Set();   // cele podróży domyślnie wyłączone — włączane w zakładce „Mapa”
   const KAT = { szpital: "szpital", szkola: "szkoła", centrum_handlowe: "centrum handlowe", park: "park", kino: "kino", teatr: "teatr",
                 muzeum: "muzeum", urzad_dzielnicy: "urząd dzielnicy", targowisko: "targowisko", miejsce_kultu: "miejsce kultu" };
   function infraIcon(color, glyph) {
@@ -1934,7 +2033,7 @@ ${JSON.stringify(describe(r), null, 1)}`;
     const roz = v(pt, "roznica_dzis"), def31 = v(pt, "deficyt_2031"), def36 = v(pt, "deficyt_2036");
     const defCls = (x) => x > 0 ? "neg" : x < 0 ? "pos" : "";
     html += sec("Wykluczenie i potrzeba komunikacji · model ML",
-      row("Prawdopodobieństwo wykluczenia", pred != null ? `${pct(pred)} · miejsce ${n(v(ml, "rank"))} z ${n(D.hexes.length)}` : null, pred >= 0.5 ? "neg" : "") +
+      row("Wskaźnik wykluczenia", pred != null ? `${pct(pred)} · miejsce ${n(v(ml, "rank"))} z ${n(D.hexes.length)}` : null, pred >= 0.5 ? "neg" : "") +
       row("Kursy ZTM dziś (autobus + tramwaj, doba)", v(pt, "kursy_dzis") != null ? n(v(pt, "kursy_dzis")) : null) +
       row("Typowa obsługa takiego klastra", v(pt, "potrzeba_dzis") != null ? n(v(pt, "potrzeba_dzis")) : null) +
       row("Obsługa względem typowej", roz != null ? `${sgn(roz)} kursów` : null, roz < 0 ? "neg" : roz > 0 ? "pos" : "") +
@@ -2113,7 +2212,7 @@ ${JSON.stringify(describe(r), null, 1)}`;
   // API dla algorytmu zespołu i testów: window.symulator.wczytaj({...}), .propozycja(), .ocena()
   window.symulator = { wczytaj: loadProposal, propozycja: currentProposal, ocena: () => lastEval, _G: () => G, _route: () => route, _map: () => map };
 
-  renderLoadKey(); renderInfraToggles(); wireUI(); wireSections(); syncSections(); setMode("view"); renderLegend();
+  renderLoadKey(); renderInfraToggles(); wireUI(); wireTabs(); wireSections(); syncSections(); setMode("view"); renderLegend();
   load().then(() => {
     buildMap();
     matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applyTheme);
