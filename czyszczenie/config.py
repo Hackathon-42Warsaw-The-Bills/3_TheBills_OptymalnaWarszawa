@@ -1,8 +1,8 @@
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-INPUT_DIR = ROOT / "dane" / "kontury_400m"
-OUTPUT_DIR = ROOT / "dane" / "kontury_400m_clean"
+INPUT_DIR = ROOT / "dane" / "klastry" / "kontury_400m"
+OUTPUT_DIR = ROOT / "dane" / "klastry" / "kontury_400m_clean"
 FILE_NAME = "warszawa_h3_400m_pelna"
 
 H3_RESOLUTION = 8

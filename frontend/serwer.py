@@ -133,7 +133,7 @@ class Handler(SimpleHTTPRequestHandler):
 def main() -> None:
     port = int(sys.argv[1]) if len(sys.argv) > 1 else 8765
     server = ThreadingHTTPServer(("127.0.0.1", port), partial(Handler, directory=str(SITE)))
-    print(f"Aplikacja: http://localhost:{port}/   (mapa ulic: /frontend/index.html)")
+    print(f"Aplikacja: http://localhost:{port}/")
     print("Pojazdy na żywo: " + (("włączone (" + ("dane.um.warszawa.pl" if NEW_API else "api.um.warszawa.pl") + ")")
                                  if API_KEY else "wyłączone — ustaw ZTM_API_KEY w .env"))
     server.serve_forever()

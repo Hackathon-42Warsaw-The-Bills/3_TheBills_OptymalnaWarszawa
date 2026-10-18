@@ -21,8 +21,8 @@ Prognoza GUS (P4359) służy jako kontrola sumy miasta, nie jako cel kalibracji.
 Wariant porównawczy A (forecast_top_down): przyrost z prognozy GUS rozłożony na klastry
 proporcjonalnie do nowych mieszkań.
 
-Uruchomienie:  .venv/bin/python mapping/prognoza_ludnosci.py   (notebook: przewidywania-ludnosci.ipynb)
-Wynik:         dane/prognoza_ludnosci.csv (z dP_2031_norm, dP_2036_norm: przyrost znormalizowany do 0–1)
+Uruchomienie:  .venv/bin/python mapping/prognoza_ludnosci.py   (notebook: notebooki/przewidywania-ludnosci.ipynb)
+Wynik:         dane/ludnosc/prognoza_ludnosci.csv (z dP_2031_norm, dP_2036_norm: przyrost znormalizowany do 0–1)
 """
 
 import json
@@ -37,11 +37,11 @@ import requests
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
-HEX_PATH = ROOT / "dane" / "kontury_400m" / "warszawa_h3_400m_pelna.csv"
-HIST_PATH = ROOT / "dane" / "historia_ludnosci.csv"
+HEX_PATH = ROOT / "dane" / "klastry" / "kontury_400m" / "warszawa_h3_400m_pelna.csv"
+HIST_PATH = ROOT / "dane" / "ludnosc" / "historia_ludnosci.csv"
 PERMITS_PATH = DATA_DIR / "gunb_permits.parquet"
 GUS_CACHE = DATA_DIR / "gus_bdl_cache.json"
-OUT = ROOT / "dane" / "prognoza_ludnosci.csv"
+OUT = ROOT / "dane" / "ludnosc" / "prognoza_ludnosci.csv"
 EXTERNAL_DIR = Path(os.environ.get("DANE_WARSZAWA", Path.home() / "Downloads" / "dane_warszawa"))
 
 BASE_YEAR = 2025
@@ -148,7 +148,7 @@ def load_inputs() -> dict:
 
 def census_table(inputs: dict) -> pd.DataFrame:
     """Dzielnice: ludność NSP 2011 i 2021 (z klastrów) i mieszkania oddane między spisami."""
-    path = ROOT / "dane" / "historia_dzielnice.csv"   # spisy wg prawdziwych granic (historia_ludnosci.py)
+    path = ROOT / "dane" / "ludnosc" / "historia_dzielnice.csv"   # spisy wg prawdziwych granic (historia_ludnosci.py)
     c = (pd.read_csv(path, encoding="utf-8-sig").set_index("dzielnica") if path.exists()
          else inputs["hexes"].groupby("dzielnica")[["gus_2011", "gus_2021"]].sum())
     o = inputs["completed"]

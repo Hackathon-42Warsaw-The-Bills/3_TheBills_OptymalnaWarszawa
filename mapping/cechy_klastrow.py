@@ -1,6 +1,6 @@
 """Cechy klastrów H3 do modelu „ile komunikacji potrzebuje klaster”.
 
-Wynik: dane/cechy_klastrow.csv — jeden wiersz na klaster (h3), kolumny w grupach:
+Wynik: dane/klastry/cechy_klastrow.csv — jeden wiersz na klaster (h3), kolumny w grupach:
 
   CEL (y) — dzisiejsza obsługa ZTM z rozkładu GTFS (dzień roboczy, środa):
     kursy_dzien_bus_tram    różne kursy autobusów i tramwajów zatrzymujące się w klastrze, doba
@@ -44,7 +44,7 @@ DANE = ROOT / "dane"
 GTFS = DATA_DIR / "gtfs" / "warsaw"
 PBF = DATA_DIR / "osm" / "mazowieckie-latest.osm.pbf"
 EXTERNAL_DIR = Path(os.environ.get("DANE_WARSZAWA", Path.home() / "Downloads" / "dane_warszawa"))
-OUT = DANE / "cechy_klastrow.csv"
+OUT = DANE / "klastry" / "cechy_klastrow.csv"
 CRS = "EPSG:2180"
 RES = 8
 CENTRUM = (21.0067, 52.2318)                 # Pałac Kultury i Nauki
@@ -204,7 +204,7 @@ def bus_speed(hex_ids: set) -> pd.DataFrame:
 
 
 def infra_counts(hex_ids: set) -> pd.DataFrame:
-    inf = pd.read_csv(DANE / "warszawa_infrastruktura.csv")
+    inf = pd.read_csv(DANE / "infrastruktura" / "warszawa_infrastruktura.csv")
     inf["grupa"] = inf["kategoria"].map(INFRA_GROUPS).fillna("inne")
     t = pd.crosstab(inf["h3"], inf["grupa"])
     t.columns = [f"infra_{c}" for c in t.columns]
@@ -212,9 +212,9 @@ def infra_counts(hex_ids: set) -> pd.DataFrame:
 
 
 def main() -> None:
-    hexes = gpd.read_file(DANE / "kontury_400m" / "warszawa_h3_400m_pelna.geojson")
+    hexes = gpd.read_file(DANE / "klastry" / "kontury_400m" / "warszawa_h3_400m_pelna.geojson")
     ids = set(hexes["h3"])
-    base = pd.read_csv(DANE / "kontury_400m" / "warszawa_h3_400m_pelna.csv")[
+    base = pd.read_csv(DANE / "klastry" / "kontury_400m" / "warszawa_h3_400m_pelna.csv")[
         ["h3", "dzielnica", "population", "gestosc_os_km2", "pow_km2", "lon", "lat"]].set_index("h3")
 
     print("== obsługa ZTM (GTFS)")
@@ -224,7 +224,7 @@ def main() -> None:
     print("== struktura wieku (NSP 2021)")
     ages = age_shares(hexes)
     print("== prognoza, kolej, prędkości, infrastruktura")
-    prog = pd.read_csv(DANE / "prognoza_ludnosci.csv").set_index("h3")[["pop_2031", "pop_2036", "mieszkania_w_budowie"]]
+    prog = pd.read_csv(DANE / "ludnosc" / "prognoza_ludnosci.csv").set_index("h3")[["pop_2031", "pop_2036", "mieszkania_w_budowie"]]
     kolej = pd.read_csv(DANE / "kolej" / "klastry_kolej.csv").set_index("h3")[
         ["ma_metro", "ma_kolej", "dist_metro_m", "dist_kolej_m", "metro_plan_rok"]]
 

@@ -1,6 +1,6 @@
 """Metro i kolej w klastrach H3: czy w klastrze jest stacja i jak daleko do najbliższej.
 
-Wejście:  dane/kontury_400m/warszawa_h3_400m_pelna.geojson (mapping/h3_siatka.py)
+Wejście:  dane/klastry/kontury_400m/warszawa_h3_400m_pelna.geojson (mapping/h3_siatka.py)
           dane/kolej/stacje.geojson (mapping/kolej.py)
           data/hubs.parquet — planowane stacje z rokiem otwarcia (opcjonalnie, rail_plans.py)
 Wynik:    dane/kolej/klastry_kolej.csv — jeden wiersz na klaster (klucz h3)
@@ -23,7 +23,7 @@ import numpy as np
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parent.parent
-HEX_PATH = ROOT / "dane" / "kontury_400m" / "warszawa_h3_400m_pelna.geojson"
+HEX_PATH = ROOT / "dane" / "klastry" / "kontury_400m" / "warszawa_h3_400m_pelna.geojson"
 STATIONS_PATH = ROOT / "dane" / "kolej" / "stacje.geojson"
 PLANNED_PATH = ROOT / "data" / "hubs.parquet"
 OUT = ROOT / "dane" / "kolej" / "klastry_kolej.csv"

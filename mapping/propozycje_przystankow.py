@@ -1,4 +1,4 @@
-"""Propozycje nowych przystanków ZTM dla całej Warszawy (848 klastrów H3 z dane/clastry_all.csv).
+"""Propozycje nowych przystanków ZTM dla całej Warszawy (848 klastrów H3 z dane/klastry/clastry_all.csv).
 
 Model — wszystkie odległości to dojście piesze po sieci chodników i ulic z OSM (bariery: tory, Wisła, trasy
 ekspresowe, tereny zamknięte), a nie okręgi:
@@ -23,7 +23,7 @@ ekspresowe, tereny zamknięte), a nie okręgi:
                zawracania; ≤ 3 km na kurs) albo przedłużenie od pętli (≤ 5 km); rekomendowana linia całodzienna
                z ≥ 2 kursami/h i najmniejszą liczbą dodatkowych wozokilometrów na dobę.
 
-Wynik (dane/):
+Wynik (dane/przystanki/):
   propozycje_przystankow.csv             — przystanki: punkt (lon/lat, WKT, GeoJSON), liczby, linie, uzasadnienie,
                                            zasięg dojścia (GeoJSON wielokąta)
   propozycje_przystankow.geojson         — te same przystanki jako punkty (do mapy)
@@ -62,7 +62,7 @@ PBF = DATA / "osm" / "mazowieckie-latest.osm.pbf"
 GTFS = DATA / "gtfs" / "warsaw"
 WALK, POI_CACHE = CACHE / "przystanki_siec_piesza.npz", CACHE / "przystanki_cele_osm.parquet"
 STOPS_CACHE, LINES_CACHE = CACHE / "przystanki_slupki.parquet", CACHE / "przystanki_linie_slupki.parquet"
-OUT = DANE / "propozycje_przystankow"
+OUT = DANE / "przystanki" / "propozycje_przystankow"
 TO_PL = Transformer.from_crs(4326, 2180, always_xy=True)
 TO_WGS = Transformer.from_crs(2180, 4326, always_xy=True)
 
@@ -317,7 +317,7 @@ def build_gtfs_stops() -> None:
 
 # ---------------------------------------------------------------- klastry, popyt, obsługa
 def clusters():
-    df = pd.read_csv(DANE / "clastry_all.csv").copy()
+    df = pd.read_csv(DANE / "klastry" / "clastry_all.csv").copy()
     dens = df["pop_2025"] / df["area_km2"].clip(lower=0.05)
     df["strefa"] = np.where((df["dzielnica"] == "Śródmieście") | (df["odl_centrum_km"] <= 3.0), "śródmiejska",
                             np.where((dens >= 2500) | (df["odl_centrum_km"] <= 7.0), "miejska", "przedmieścia"))
@@ -326,7 +326,7 @@ def clusters():
 
 
 def destinations() -> pd.DataFrame:
-    inf = gpd.read_file(DANE / "warszawa_infrastruktura.geojson")
+    inf = gpd.read_file(DANE / "infrastruktura" / "warszawa_infrastruktura.geojson")
     a = pd.DataFrame({"lon": inf["lon"], "lat": inf["lat"], "cel_typ": inf["kategoria"], "cel_nazwa": inf["nazwa"]})
     px = gpd.read_parquet(POI_CACHE)
     b = pd.DataFrame({"lon": px["lon"], "lat": px["lat"], "cel_typ": px["rodzaj"], "cel_nazwa": px["nazwa"]})
@@ -432,7 +432,7 @@ def access(G, tree, ids, d, s, rail, plan):
 
 # ---------------------------------------------------------------- graf autobusowy, trasy linii, obsługa B
 def route_segments():
-    routes = gpd.read_file(DANE / "warszawa_linie_trasy.geojson")
+    routes = gpd.read_file(DANE / "komunikacja" / "warszawa_linie_trasy.geojson")
     routes = routes[routes["typ"].isin(["autobus", "tram"])].reset_index(drop=True)
     seg = shapely.segmentize(routes.to_crs(2180).geometry.values, 50)
     xy, own = shapely.get_coordinates(seg, return_index=True)
@@ -829,9 +829,9 @@ def main() -> None:
     zas = [{"type": "Feature", "geometry": json.loads(r["zasieg_geojson"]),
             "properties": {k: r[k] for k in ("id", "typ", "nazwa_robocza", "prog_dojscia_m")}} for r in out.to_dict("records")]
     OUT.with_suffix(".geojson").write_text(json.dumps({"type": "FeatureCollection", "features": pts}, ensure_ascii=False), encoding="utf-8")
-    (DANE / "propozycje_przystankow_zasiegi.geojson").write_text(
+    (DANE / "przystanki" / "propozycje_przystankow_zasiegi.geojson").write_text(
         json.dumps({"type": "FeatureCollection", "features": zas}, ensure_ascii=False), encoding="utf-8")
-    klastry.to_csv(DANE / "propozycje_przystankow_klastry.csv", index=False, encoding="utf-8")
+    klastry.to_csv(DANE / "przystanki" / "propozycje_przystankow_klastry.csv", index=False, encoding="utf-8")
     log(f"== {OUT.relative_to(ROOT)}.csv: {len(out)} propozycji (A: {(out['typ'] == 'A').sum()}, B: {(out['typ'] == 'B').sum()}); "
         f"+ .geojson, _zasiegi.geojson, _klastry.csv")
 

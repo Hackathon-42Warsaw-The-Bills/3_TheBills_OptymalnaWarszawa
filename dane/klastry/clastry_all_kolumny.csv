@@ -1,0 +1,166 @@
+kolumna,zrodlo
+population,klastry/kontury_400m/warszawa_h3_400m_pelna.csv
+population_2021,klastry/kontury_400m/warszawa_h3_400m_pelna.csv
+population_kontur,klastry/kontury_400m/warszawa_h3_400m_pelna.csv
+gestosc_os_km2,klastry/kontury_400m/warszawa_h3_400m_pelna.csv
+pow_km2,klastry/kontury_400m/warszawa_h3_400m_pelna.csv
+dzielnica,klastry/kontury_400m/warszawa_h3_400m_pelna.csv
+lon,klastry/kontury_400m/warszawa_h3_400m_pelna.csv
+lat,klastry/kontury_400m/warszawa_h3_400m_pelna.csv
+poi_biznes,klastry/kontury_400m/warszawa_h3_400m_pelna.csv
+firmy_szac,klastry/kontury_400m/warszawa_h3_400m_pelna.csv
+pracownicy_szac,klastry/kontury_400m/warszawa_h3_400m_pelna.csv
+przystanki_tramwajowe,klastry/kontury_400m/warszawa_h3_400m_pelna.csv
+przystanki_autobusowe,klastry/kontury_400m/warszawa_h3_400m_pelna.csv
+czy_metro,klastry/kontury_400m/warszawa_h3_400m_pelna.csv
+district_teryt,klastry/kontury_400m_clean/warszawa_h3_400m_pelna_clean.csv
+population_share_district,klastry/kontury_400m_clean/warszawa_h3_400m_pelna_clean.csv
+area_km2,klastry/kontury_400m_clean/warszawa_h3_400m_pelna_clean.csv
+area_src_km2,klastry/kontury_400m_clean/warszawa_h3_400m_pelna_clean.csv
+hex_area_km2,klastry/kontury_400m_clean/warszawa_h3_400m_pelna_clean.csv
+coverage_ratio,klastry/kontury_400m_clean/warszawa_h3_400m_pelna_clean.csv
+is_clipped,klastry/kontury_400m_clean/warszawa_h3_400m_pelna_clean.csv
+density_per_km2,klastry/kontury_400m_clean/warszawa_h3_400m_pelna_clean.csv
+density_src_per_km2,klastry/kontury_400m_clean/warszawa_h3_400m_pelna_clean.csv
+density_quintile,klastry/kontury_400m_clean/warszawa_h3_400m_pelna_clean.csv
+low_population,klastry/kontury_400m_clean/warszawa_h3_400m_pelna_clean.csv
+density_outlier,klastry/kontury_400m_clean/warszawa_h3_400m_pelna_clean.csv
+hex_lon,klastry/kontury_400m_clean/warszawa_h3_400m_pelna_clean.csv
+hex_lat,klastry/kontury_400m_clean/warszawa_h3_400m_pelna_clean.csv
+gus_2011,ludnosc/historia_ludnosci.csv
+gus_2021,ludnosc/historia_ludnosci.csv
+ghsl_2000,ludnosc/historia_ludnosci.csv
+ghsl_2005,ludnosc/historia_ludnosci.csv
+ghsl_2010,ludnosc/historia_ludnosci.csv
+ghsl_2015,ludnosc/historia_ludnosci.csv
+ghsl_2020,ludnosc/historia_ludnosci.csv
+ghsl_2025,ludnosc/historia_ludnosci.csv
+ghsl_2030,ludnosc/historia_ludnosci.csv
+zmiana_2011_2021,ludnosc/historia_ludnosci.csv
+zmiana_2011_2021_proc,ludnosc/historia_ludnosci.csv
+ghsl_zmiana_2010_2020,ludnosc/historia_ludnosci.csv
+ghsl_zmiana_2020_2030,ludnosc/historia_ludnosci.csv
+pop_2025,ludnosc/prognoza_ludnosci.csv
+pop_2026_niski,ludnosc/prognoza_ludnosci.csv
+pop_2027_niski,ludnosc/prognoza_ludnosci.csv
+pop_2028_niski,ludnosc/prognoza_ludnosci.csv
+pop_2029_niski,ludnosc/prognoza_ludnosci.csv
+pop_2030_niski,ludnosc/prognoza_ludnosci.csv
+pop_2031_niski,ludnosc/prognoza_ludnosci.csv
+pop_2032_niski,ludnosc/prognoza_ludnosci.csv
+pop_2033_niski,ludnosc/prognoza_ludnosci.csv
+pop_2034_niski,ludnosc/prognoza_ludnosci.csv
+pop_2035_niski,ludnosc/prognoza_ludnosci.csv
+pop_2036_niski,ludnosc/prognoza_ludnosci.csv
+pop_2026,ludnosc/prognoza_ludnosci.csv
+pop_2027,ludnosc/prognoza_ludnosci.csv
+pop_2028,ludnosc/prognoza_ludnosci.csv
+pop_2029,ludnosc/prognoza_ludnosci.csv
+pop_2030,ludnosc/prognoza_ludnosci.csv
+pop_2031,ludnosc/prognoza_ludnosci.csv
+pop_2032,ludnosc/prognoza_ludnosci.csv
+pop_2033,ludnosc/prognoza_ludnosci.csv
+pop_2034,ludnosc/prognoza_ludnosci.csv
+pop_2035,ludnosc/prognoza_ludnosci.csv
+pop_2036,ludnosc/prognoza_ludnosci.csv
+pop_2026_wysoki,ludnosc/prognoza_ludnosci.csv
+pop_2027_wysoki,ludnosc/prognoza_ludnosci.csv
+pop_2028_wysoki,ludnosc/prognoza_ludnosci.csv
+pop_2029_wysoki,ludnosc/prognoza_ludnosci.csv
+pop_2030_wysoki,ludnosc/prognoza_ludnosci.csv
+pop_2031_wysoki,ludnosc/prognoza_ludnosci.csv
+pop_2032_wysoki,ludnosc/prognoza_ludnosci.csv
+pop_2033_wysoki,ludnosc/prognoza_ludnosci.csv
+pop_2034_wysoki,ludnosc/prognoza_ludnosci.csv
+pop_2035_wysoki,ludnosc/prognoza_ludnosci.csv
+pop_2036_wysoki,ludnosc/prognoza_ludnosci.csv
+pop_2036_wariant_gus,ludnosc/prognoza_ludnosci.csv
+mieszkania_w_budowie,ludnosc/prognoza_ludnosci.csv
+dryf_roczny_proc,ludnosc/prognoza_ludnosci.csv
+dP_2031,ludnosc/prognoza_ludnosci.csv
+dP_2036,ludnosc/prognoza_ludnosci.csv
+dP_2031_norm,ludnosc/prognoza_ludnosci.csv
+dP_2036_norm,ludnosc/prognoza_ludnosci.csv
+wspolczynnik przyrostu,ludnosc/wspolczynnik_przyrostu_ludnosci.csv
+ma_metro,kolej/klastry_kolej.csv
+ma_kolej,kolej/klastry_kolej.csv
+dist_metro_m,kolej/klastry_kolej.csv
+metro_800m,kolej/klastry_kolej.csv
+dist_kolej_m,kolej/klastry_kolej.csv
+kolej_800m,kolej/klastry_kolej.csv
+metro_plan_rok,kolej/klastry_kolej.csv
+kursy_dzien_autobus,klastry/cechy_klastrow.csv
+kursy_dzien_kolej,klastry/cechy_klastrow.csv
+kursy_dzien_metro,klastry/cechy_klastrow.csv
+kursy_dzien_tramwaj,klastry/cechy_klastrow.csv
+kursy_szczyt_bus_tram,klastry/cechy_klastrow.csv
+kursy_dzien_bus_tram,klastry/cechy_klastrow.csv
+linie_ztm,klastry/cechy_klastrow.csv
+przystanki_ztm,klastry/cechy_klastrow.csv
+praca_biura_uslugi_m2,klastry/cechy_klastrow.csv
+praca_przemysl_m2,klastry/cechy_klastrow.csv
+punkty_uslug,klastry/cechy_klastrow.csv
+udzial_0_14,klastry/cechy_klastrow.csv
+udzial_65_,klastry/cechy_klastrow.csv
+v_autobus_szczyt_kmh,klastry/cechy_klastrow.csv
+korek,klastry/cechy_klastrow.csv
+infra_handel,klastry/cechy_klastrow.csv
+infra_kult,klastry/cechy_klastrow.csv
+infra_kultura,klastry/cechy_klastrow.csv
+infra_park,klastry/cechy_klastrow.csv
+infra_szkola,klastry/cechy_klastrow.csv
+infra_szpital,klastry/cechy_klastrow.csv
+infra_targowisko,klastry/cechy_klastrow.csv
+infra_urzad,klastry/cechy_klastrow.csv
+odl_centrum_km,klastry/cechy_klastrow.csv
+cinema,infrastruktura/infrastruktura_w_klastrach.csv
+hospital,infrastruktura/infrastruktura_w_klastrach.csv
+mall,infrastruktura/infrastruktura_w_klastrach.csv
+marketplace,infrastruktura/infrastruktura_w_klastrach.csv
+museum,infrastruktura/infrastruktura_w_klastrach.csv
+park,infrastruktura/infrastruktura_w_klastrach.csv
+religious,infrastruktura/infrastruktura_w_klastrach.csv
+school,infrastruktura/infrastruktura_w_klastrach.csv
+theatre,infrastruktura/infrastruktura_w_klastrach.csv
+town_hall,infrastruktura/infrastruktura_w_klastrach.csv
+liczba_mpp,infrastruktura/infrastruktura_w_klastrach.csv
+stacje_veturilo,infrastruktura/veturilo_w_klastrach.csv
+stojaki_veturilo,infrastruktura/veturilo_w_klastrach.csv
+rowery_teraz,infrastruktura/veturilo_w_klastrach.csv
+ma_veturilo,infrastruktura/veturilo_w_klastrach.csv
+odl_do_veturilo_m,infrastruktura/veturilo_w_klastrach.csv
+kursy_dzis,komunikacja/potrzeba_komunikacji.csv
+potrzeba_dzis,komunikacja/potrzeba_komunikacji.csv
+roznica_dzis,komunikacja/potrzeba_komunikacji.csv
+potrzeba_model_dzis,komunikacja/potrzeba_komunikacji.csv
+potrzeba_2031,komunikacja/potrzeba_komunikacji.csv
+potrzeba_2036,komunikacja/potrzeba_komunikacji.csv
+deficyt_2031,komunikacja/potrzeba_komunikacji.csv
+deficyt_2036,komunikacja/potrzeba_komunikacji.csv
+metro_nowe_2036,komunikacja/potrzeba_komunikacji.csv
+podroze_wyjazd_h_2025,symulacja/klastry_podroze.csv
+podroze_przyjazd_h_2025,symulacja/klastry_podroze.csv
+podroze_wyjazd_h_2036,symulacja/klastry_podroze.csv
+podroze_przyjazd_h_2036,symulacja/klastry_podroze.csv
+czas_do_centrum_min_2025,symulacja/klastry_podroze.csv
+czas_do_centrum_min_2036,symulacja/klastry_podroze.csv
+cele_w_45min_2025,symulacja/klastry_podroze.csv
+cele_w_45min_2036,symulacja/klastry_podroze.csv
+pred_wykluczenie,(wyliczone) wykluczenie
+rank_wykluczenie,(wyliczone) wykluczenie
+top30,(wyliczone) wykluczenie
+top30_etykieta,(wyliczone) wykluczenie
+nowe_przystanki_liczba,(wyliczone) przystanki_top30
+nowe_przystanki_obsluzeni,(wyliczone) przystanki_top30
+nowy_przystanek_lon,(wyliczone) przystanki_top30
+nowy_przystanek_lat,(wyliczone) przystanki_top30
+nowy_przystanek_ocena,(wyliczone) przystanki_top30
+nowy_przystanek_odl_ztm_m,(wyliczone) przystanki_top30
+linie_ztm_do_dolozenia_przystanku,(wyliczone) przystanki_top30
+wsiadajacy_h_2025,(wyliczone) symulacja_wsiadania
+wsiadajacy_h_2036,(wyliczone) symulacja_wsiadania
+slupki_ztm,(wyliczone) symulacja_wsiadania
+linie_ztm_na_przystankach,(wyliczone) symulacja_wsiadania
+stacje_metro_liczba,kolej/klastry_kolej.csv
+stacje_kolej_liczba,kolej/klastry_kolej.csv
+linie_kolej_metro_liczba,kolej/klastry_kolej.csv

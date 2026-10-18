@@ -1,7 +1,7 @@
 """Historia ludności klastrów H3: spisy GUS 2011 i 2021 oraz GHSL 2000–2030.
 
 Wejście:
-  - dane/kontury_400m/warszawa_h3_400m_pelna.geojson   — siatka klastrów (mapping/h3_siatka.py)
+  - dane/klastry/kontury_400m/warszawa_h3_400m_pelna.geojson   — siatka klastrów (mapping/h3_siatka.py)
   - GUS NSP 2011, siatka 1 km (INSPIRE, EPSG:3035)      — pobierana do data/gus2011/
   - GUS NSP 2021, siatka 1 km (dane_warszawa)
   - GHSL GHS-POP R2023A, 100 m, epoki 2000–2030         — czytane zdalnie z mirrora COG
@@ -16,7 +16,7 @@ Metoda (na pikselach GHSL 100 m):
 Uwaga: NSP 2011 to ludność wg definicji krajowej, NSP 2021 — rezydenci. Dla Warszawy
 różnica definicji jest mała w sumie, ale porównując klastry patrzymy głównie na zmiany względne.
 
-Wynik: dane/historia_ludnosci.csv — h3, gus_2011, gus_2021, ghsl_<rok>, zmiany.
+Wynik: dane/ludnosc/historia_ludnosci.csv — h3, gus_2011, gus_2021, ghsl_<rok>, zmiany.
 
 Uruchomienie (po h3_siatka.py):  .venv/bin/python mapping/historia_ludnosci.py
 """
@@ -39,9 +39,9 @@ from rasterio.windows import from_bounds
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
 GUS2011_DIR = DATA_DIR / "gus2011"
-HEX_PATH = ROOT / "dane" / "kontury_400m" / "warszawa_h3_400m_pelna.geojson"
-OUT = ROOT / "dane" / "historia_ludnosci.csv"
-OUT_DISTRICTS = ROOT / "dane" / "historia_dzielnice.csv"   # spisy wg prawdziwych granic dzielnic
+HEX_PATH = ROOT / "dane" / "klastry" / "kontury_400m" / "warszawa_h3_400m_pelna.geojson"
+OUT = ROOT / "dane" / "ludnosc" / "historia_ludnosci.csv"
+OUT_DISTRICTS = ROOT / "dane" / "ludnosc" / "historia_dzielnice.csv"   # spisy wg prawdziwych granic dzielnic
 EXTERNAL_DIR = Path(os.environ.get("DANE_WARSZAWA", Path.home() / "Downloads" / "dane_warszawa"))
 
 GUS2011_TILES = {  # kafelki 100 km (N) × 1000 km (E) z usługi ATOM GUS, PD.GRID.2011

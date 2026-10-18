@@ -51,7 +51,8 @@ def fnum(v, default=0.0):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--input", default=os.path.join(os.path.dirname(os.path.abspath(__file__)), "h3_merged_clean.csv"))
+    ap.add_argument("--input", default=os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                                                    "dane", "wskaznik_wykluczenia", "h3_merged_clean.csv"))
     ap.add_argument("--output", default=None, help="domyslnie nadpisuje --input")
     ap.add_argument("--target-col", default="etykieta_target")
     ap.add_argument("--alpha", type=float, default=0.3)

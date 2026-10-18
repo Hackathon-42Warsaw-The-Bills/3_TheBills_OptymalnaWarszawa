@@ -11,7 +11,7 @@ Wskaźniki na linię (wszystkie rodzaje: autobus, tramwaj, metro, SKM):
   wynik 0–100 (najlepsze ogólnie) = WAGI: wypełnienie (percentyl wśród linii), brak przepełnienia (kara od 90%
     pojemności, pełna przy 150%), prędkość i brak korków (percentyl w obrębie rodzaju: autobus z autobusem…).
 
-Wynik: dane/ranking_linii.csv, frontend/ranking_linii.json (z odcinkami do mapki linii, granicą i Wisłą)
+Wynik: dane/komunikacja/ranking_linii.csv, frontend/ranking_linii.json (z odcinkami do mapki linii, granicą i Wisłą)
 Uruchomienie (po symulacja_pasazerow.py):  .venv/bin/python mapping/ranking_linii.py
 """
 
@@ -25,7 +25,7 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parent.parent
 GTFS = ROOT / "data" / "gtfs" / "warsaw"
 DANE = ROOT / "dane"
-OUT_CSV = DANE / "ranking_linii.csv"
+OUT_CSV = DANE / "komunikacja" / "ranking_linii.csv"
 OUT_JSON = ROOT / "frontend" / "ranking_linii.json"
 SERVICE_SUFFIX = ":PcS"
 MODE = {"3": "autobus", "0": "tramwaj", "1": "metro", "2": "kolej"}
