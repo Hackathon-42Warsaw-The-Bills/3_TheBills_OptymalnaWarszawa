@@ -190,7 +190,7 @@ def main() -> None:
         "source": "OpenStreetMap (Geofabrik, mazowieckie)",
     }
     out = OUT_DIR / "warszawa.json"
-    out.write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")))
+    out.write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     print(f"== {out}: {out.stat().st_size / 1e6:.1f} MB, "
           f"{len(data['roads']['edges'])} linii ulic, {len(data['trams']['edges'])} linii torów")
 

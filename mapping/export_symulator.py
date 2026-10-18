@@ -18,6 +18,7 @@ Wynik: viz/symulator_dane.json
 
 Uruchomienie (po build_graph.py, gtfs_predkosci.py, prognoza_ludnosci.py, kolej.py):
   .venv/bin/python mapping/export_symulator.py
+  .venv/bin/python mapping/export_symulator.py --tylko-graf   # tylko graf ulic (wystarczy build_graph.py)
 """
 
 import json
@@ -30,6 +31,7 @@ import h3
 import networkx as nx
 import numpy as np
 import pandas as pd
+import shapely
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import historia_ludnosci as hl  # noqa: E402
@@ -43,7 +45,11 @@ CRS = "EPSG:2180"
 R5 = lambda x: round(float(x), 5)  # noqa: E731
 
 # Autobus 12–18 m: filtr techniczny ulic (jak w model/routes.py z gałęzi mapowanie_ulic).
-BUS_WEIGHT_T, BUS_HEIGHT_M, MIN_WIDTH_M = 18, 3.6, 5.5
+# Bez maxweight: w Warszawie ograniczenia tonażu (np. Puławska 16 t, KEN 3,5 t, Niepodległości 5 t)
+# dotyczą ciężarówek, a komunikacja miejska jest z nich zwolniona — OSM zwykle tego nie taguje.
+BUS_HEIGHT_M, MIN_WIDTH_M, MIN_WIDTH_ONEWAY_M = 3.6, 5.5, 3.0
+# Odcinek, którym jeździ dziś linia autobusowa ZTM, jest przejezdny niezależnie od tagów OSM.
+ZTM_ROUTE_BUFFER_M, ZTM_ROUTE_SHARE = 12, 0.8
 ALWAYS_OK = {"yes", "designated"}
 BUS_HIGHWAYS = {"motorway", "trunk", "primary", "secondary", "tertiary", "unclassified", "residential", "busway",
                 "motorway_link", "trunk_link", "primary_link", "secondary_link", "tertiary_link"}
@@ -65,8 +71,9 @@ def bus_ok(r) -> bool:
         return True
     if not kinds & BUS_HIGHWAYS:
         return False
-    w, mw, mh = num(r.get("width")), num(r.get("maxweight")), num(r.get("maxheight"))
-    if (w is not None and w < MIN_WIDTH_M) or (mw is not None and mw < BUS_WEIGHT_T):
+    w, mh = num(r.get("width")), num(r.get("maxheight"))
+    oneway = str(r.get("oneway")) in ("True", "yes", "1", "-1")
+    if w is not None and w < (MIN_WIDTH_ONEWAY_M if oneway else MIN_WIDTH_M):
         return False
     if str(r.get("maxheight")) == "below_default":
         return False
@@ -82,13 +89,40 @@ def road_class(highway: str) -> str:
     return "service"
 
 
+def on_bus_routes(e: gpd.GeoDataFrame) -> np.ndarray:
+    """Czy odcinek leży (w ZTM_ROUTE_SHARE długości) w korytarzu obecnej linii autobusowej ZTM."""
+    path = DANE / "warszawa_linie_trasy.geojson"
+    if not path.exists():
+        return np.zeros(len(e), dtype=bool)
+    routes = gpd.read_file(path)
+    lines = shapely.segmentize(routes[routes["typ"] == "autobus"].to_crs(CRS).geometry.values, 50)
+    # Trasy pocięte na kawałki ≤ 50 m — indeks przestrzenny jest wtedy szybki (długie linie mają ogromne bboxy).
+    pts, owner_line = shapely.get_coordinates(lines, return_index=True)
+    same = owner_line[1:] == owner_line[:-1]
+    tree = shapely.STRtree(shapely.linestrings(np.stack([pts[:-1][same], pts[1:][same]], axis=1)))
+    # Punkty co ~10 m wzdłuż każdego odcinka ulicy; udział punktów w korytarzu ≈ udział długości.
+    geom = e.geometry.to_crs(CRS).values
+    n = np.maximum(2, np.ceil(shapely.length(geom) / 10).astype(int) + 1)
+    owner = np.repeat(np.arange(len(geom)), n)
+    frac = np.concatenate([np.linspace(0, 1, k) for k in n])
+    samples = shapely.line_interpolate_point(geom[owner], frac, normalized=True)
+    hit = np.zeros(len(samples))
+    hit[np.unique(tree.query(samples, predicate="dwithin", distance=ZTM_ROUTE_BUFFER_M)[0])] = 1
+    return np.bincount(owner, weights=hit, minlength=len(geom)) / n >= ZTM_ROUTE_SHARE
+
+
 def export_graph() -> dict:
     e = gpd.read_parquet(DATA_DIR / "roads_edges.parquet")
-    e = e[e.apply(bus_ok, axis=1)].copy()
-    # Tylko największa silnie spójna część sieci — autobus musi móc dojechać i wrócić.
+    by_tags, by_ztm = e.apply(bus_ok, axis=1).values, on_bus_routes(e)
+    print(f"   przejezdne wg tagów OSM: {by_tags.sum()}, dodatkowo z tras ZTM: {(by_ztm & ~by_tags).sum()} odcinków")
+    e = e[by_tags | by_ztm].copy()
+    # Największa silnie spójna część sieci oraz wszystko, do czego z niej dojedziemy albo skąd do niej
+    # dojedziemy. Sama silna spójność wycinała jezdnie jednokierunkowe obcięte na granicy miasta razem
+    # z łącznicami węzłów, które na nie prowadzą; ślepe końcówki frontend zgłasza jako „nie da się dojechać”.
     g = nx.DiGraph(list(zip(e["u"], e["v"])))
-    core = max(nx.strongly_connected_components(g), key=len)
-    e = e[e["u"].isin(core) & e["v"].isin(core)].copy()
+    seed = next(iter(max(nx.strongly_connected_components(g), key=len)))
+    keep = nx.descendants(g, seed) | nx.ancestors(g, seed) | {seed}
+    e = e[e["u"].isin(keep) & e["v"].isin(keep)].copy()
     speeds_path = DATA_DIR / "predkosci_ulic.parquet"
     sp = pd.read_parquet(speeds_path).set_index("edge_id") if speeds_path.exists() else pd.DataFrame()
     e["cls"] = e["highway"].map(road_class)
@@ -334,6 +368,14 @@ def export_boundary(boundary) -> list:
 
 
 def main() -> None:
+    if "--tylko-graf" in sys.argv:
+        # Szybka ścieżka: podmiana samego grafu ulic w istniejącym pliku (potrzebny tylko build_graph.py).
+        data = json.loads(OUT.read_text(encoding="utf-8"))
+        print("== graf ulic")
+        data["graph"] = export_graph()
+        OUT.write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+        print(f"== {OUT.relative_to(ROOT)}: {OUT.stat().st_size / 1e6:.1f} MB")
+        return
     hexes = gpd.read_file(DANE / "kontury_400m" / "warszawa_h3_400m_pelna.geojson")
     inputs = pl.load_inputs()
     print("== graf ulic")
@@ -346,7 +388,7 @@ def main() -> None:
             "newbuild": newbuild, "stops": export_stops(boundary), "rail": export_rail_lines(boundary),
             "routes": export_routes(boundary), "boundary": export_boundary(boundary), "infra": export_infra(boundary),
             "planned_metro": export_planned_metro()}
-    OUT.write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")))
+    OUT.write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     print(f"== {OUT.relative_to(ROOT)}: {OUT.stat().st_size / 1e6:.1f} MB")
 
 

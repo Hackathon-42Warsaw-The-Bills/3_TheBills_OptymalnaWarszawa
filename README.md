@@ -26,4 +26,12 @@ echo "ZTM_API_KEY=token-z-dane.um.warszawa.pl" > .env                 # .env jes
 .venv/bin/python mapping/gtfs_predkosci.py     # prędkości autobusów z rozkładu ZTM
 .venv/bin/python mapping/prognoza_ludnosci.py  # prognoza ludności klastrów
 .venv/bin/python mapping/export_symulator.py   # -> frontend/symulator_dane.json
+.venv/bin/python mapping/veturilo.py           # -> dane/veturilo_stacje.csv, veturilo_w_klastrach.csv (GBFS Nextbike)
+```
+
+Po zmianie samego grafu ulic (np. filtra przejezdności dla autobusu) wystarczy:
+
+```bash
+.venv/bin/python mapping/build_graph.py
+.venv/bin/python mapping/export_symulator.py --tylko-graf   # podmienia tylko "graph" w symulator_dane.json
 ```

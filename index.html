@@ -1,5 +1,6 @@
 <meta charset="utf-8">
 <title>Symulator linii Warszawa 2036</title>
+<script>try { const t = localStorage.getItem("motyw"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch {}</script>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -8,9 +9,12 @@
 /* Layout: pulpit planisty — panel decyzyjny po lewej (horyzont, narzędzia, ocena na żywo), mapa heksów i sieci po prawej; na telefonie mapa nad panelem. */
 :root {
   --paper: #fbfcfb; --ground: #eceeed; --ink: #15201b; --ink-2: #46534d; --ink-3: #6f7b76;
-  --rule: #d8dddb; --chip: #e5e9e7; --road: #c9d0cd; --water: #bcd6e8; --district: #97a39e;
+  --rule: #d8dddb; --chip: #e5e9e7; --road: #c9d0cd; --water: #bcd6e8; --district: #000000;
   --tram: #b0307a; --rail: #3d4a8f; --metro: #c02a2a; --accent: #256abf; --sel: #f0b400;
-  --good: #0f8a3c; --warn: #c98500; --crit: #d03b3b; --bus: #d9631e; --park: #3f9a4f;
+  --m3: #0fa85a; --m4: #d4a000;   /* planowane metro: M3 zielona (#19e17d), M4 żółta — ciemniej dla kontrastu na jasnym tle */
+  --good: #0f8a3c; --warn: #c98500; --crit: #d03b3b; --bus: #d9631e; --top: #c2255c; --park: #3f9a4f;
+  --bike: #0a7f9e;   /* stacje Veturilo */
+  --h1: #fff1c1; --h2: #fdc46a; --h3: #f78c3b; --h4: #dc4a2c; --h5: #9c1b26;   /* heatmapa wykluczenia: niskie → wysokie */
   --s1: #e3eefb; --s2: #b7d3f6; --s3: #6da7ec; --s4: #2a78d6; --s5: #184f95;
   --p1: #eeeafc; --p2: #cbc0f3; --p3: #9d8be6; --p4: #6b53cf; --p5: #44309b;
   --t1: #e1f4ee; --t2: #a9e0cf; --t3: #5fc0a6; --t4: #1f9a7b; --t5: #0f6a54;
@@ -23,7 +27,10 @@
   --paper: #161b19; --ground: #0f1312; --ink: #e6ebe8; --ink-2: #a9b4af; --ink-3: #7d8984;
   --rule: #2b3330; --chip: #222a27; --road: #2a322f; --water: #1d3546; --district: #56615c;
   --tram: #e163a8; --rail: #8f9cf0; --metro: #ff6b6b; --accent: #6da7ec; --sel: #f5c22b;
-  --good: #3fc16b; --warn: #f0b429; --crit: #f06464; --bus: #ff9a4d; --park: #58b86a;
+  --m3: #19e17d; --m4: #ffd21f;
+  --good: #3fc16b; --warn: #f0b429; --crit: #f06464; --bus: #ff9a4d; --top: #f06595; --park: #58b86a;
+  --h1: #ffe9a8; --h2: #fdbb5a; --h3: #f78433; --h4: #e2492c; --h5: #b8202c;
+  --bike: #4cc3e0;
   --s1: #1a2a3d; --s2: #1f4677; --s3: #2a6bb8; --s4: #5a9bea; --s5: #a7cbf6;
   --p1: #231d3a; --p2: #3c2f70; --p3: #5e48b6; --p4: #9483ec; --p5: #cdc1fa;
   --t1: #13271f; --t2: #1b4a3c; --t3: #237a62; --t4: #43b392; --t5: #a0e4ce;
@@ -34,7 +41,10 @@
   --paper: #161b19; --ground: #0f1312; --ink: #e6ebe8; --ink-2: #a9b4af; --ink-3: #7d8984;
   --rule: #2b3330; --chip: #222a27; --road: #2a322f; --water: #1d3546; --district: #56615c;
   --tram: #e163a8; --rail: #8f9cf0; --metro: #ff6b6b; --accent: #6da7ec; --sel: #f5c22b;
-  --good: #3fc16b; --warn: #f0b429; --crit: #f06464; --bus: #ff9a4d; --park: #58b86a;
+  --m3: #19e17d; --m4: #ffd21f;
+  --good: #3fc16b; --warn: #f0b429; --crit: #f06464; --bus: #ff9a4d; --top: #f06595; --park: #58b86a;
+  --h1: #ffe9a8; --h2: #fdbb5a; --h3: #f78433; --h4: #e2492c; --h5: #b8202c;
+  --bike: #4cc3e0;
   --s1: #1a2a3d; --s2: #1f4677; --s3: #2a6bb8; --s4: #5a9bea; --s5: #a7cbf6;
   --p1: #231d3a; --p2: #3c2f70; --p3: #5e48b6; --p4: #9483ec; --p5: #cdc1fa;
   --t1: #13271f; --t2: #1b4a3c; --t3: #237a62; --t4: #43b392; --t5: #a0e4ce;
@@ -76,6 +86,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
 .tool svg { width: 18px; height: 18px; }
 .tool[aria-pressed="true"] { border-color: var(--accent); background: var(--paper); color: var(--accent); }
 .btn { font: 500 13px/1 var(--f-body); color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 8px 10px; cursor: pointer; }
+.btn[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 .btn:hover { background: var(--chip); }
 .btn.danger { color: var(--crit); }
 .check { display: flex; align-items: center; gap: 9px; font-size: 14px; cursor: pointer; }
@@ -115,6 +126,18 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
 .subh { font: 600 12px/1 var(--f-display); text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); margin: 14px 0 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .subh .check { font: inherit; letter-spacing: inherit; color: var(--ink-2); gap: 7px; }
 .subh .note { text-transform: none; letter-spacing: 0; font: 400 12px/1.3 var(--f-body); color: var(--ink-3); }
+.clock { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: center; }
+.clock b { font: 600 34px/1 var(--f-display); font-variant-numeric: tabular-nums; min-width: 2.6em; }
+.loadkey { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; margin-top: 8px; }
+.loadkey i { height: 6px; border-radius: 2px; }
+.loadkey-l { display: grid; grid-template-columns: repeat(4, 1fr); font: 11px var(--f-mono); color: var(--ink-3); }
+.overlist button { all: unset; box-sizing: border-box; width: 100%; cursor: pointer; display: flex; justify-content: space-between; gap: 8px; padding: 5px 6px; border-radius: 5px; font-size: 13.5px; }
+.overlist button:hover, .overlist button:focus-visible { background: var(--chip); }
+.overlist small { color: var(--ink-3); }
+.toplist button { all: unset; box-sizing: border-box; width: 100%; cursor: pointer; display: grid; grid-template-columns: 26px 1fr auto; gap: 8px; align-items: center; padding: 5px 6px; border-radius: 5px; font-size: 13.5px; }
+.toplist button:hover, .toplist button:focus-visible { background: var(--chip); }
+.toplist .rk { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--top); color: #fff; font: 600 11.5px/1 var(--f-body); }
+.toplist small { color: var(--ink-3); }
 .btn.small { padding: 6px 9px; font-size: 12.5px; }
 .legend { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
 .ramp { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; }
@@ -125,15 +148,56 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
 footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
 
 .zoom { position: absolute; top: calc(12px + env(safe-area-inset-top, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; background: var(--paper); border: 1px solid var(--rule); border-radius: 7px; overflow: hidden; z-index: 2; }
-.zoom button { font: 500 18px/1 var(--f-body); width: 38px; height: 36px; border: 0; background: transparent; color: var(--ink); cursor: pointer; }
+.zoom button { font: 500 18px/1 var(--f-body); width: 44px; height: 36px; padding: 0; border: 0; background: transparent; color: var(--ink); cursor: pointer; display: grid; place-items: center; }
 .zoom button + button { border-top: 1px solid var(--rule); }
-.zoom .all { font-size: 11px; font-family: var(--f-display); letter-spacing: 0.05em; text-transform: uppercase; }
+/* text-indent równoważy odstęp po ostatniej literze (letter-spacing), żeby napis był na środku. */
+.zoom .all { font-size: 11px; font-family: var(--f-display); letter-spacing: 0.05em; text-indent: 0.05em; text-transform: uppercase; }
+.panel header { position: relative; padding-right: 48px; }
+.theme-btn { position: absolute; top: 0; right: 0; width: 36px; height: 36px; padding: 0; display: grid; place-items: center; border: 1px solid var(--rule); border-radius: 7px; background: var(--paper); color: var(--ink); cursor: pointer; }
+.theme-btn:hover { background: var(--chip); }
+.theme-btn svg { width: 18px; height: 18px; }
 .tip { position: absolute; left: 0; top: 0; pointer-events: none; z-index: 3; background: var(--ink); color: var(--paper); font-size: 13px; line-height: 1.4; padding: 7px 10px; border-radius: 6px; max-width: min(340px, calc(100% - 24px)); box-shadow: 0 2px 10px rgb(0 0 0 / 0.18); }
 .tip b { font-weight: 600; }
 .tip .g + .g { margin-top: 5px; padding-top: 5px; border-top: 1px solid color-mix(in srgb, var(--paper) 25%, transparent); }
 .tip .k { opacity: 0.7; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
 .loading { position: absolute; inset: 0; display: grid; place-items: center; color: var(--ink-3); font-size: 14px; z-index: 1; }
-.modebar { position: absolute; left: 12px; top: calc(12px + env(safe-area-inset-top, 0px)); z-index: 2; background: var(--paper); border: 1px solid var(--rule); border-radius: 7px; padding: 7px 10px; font-size: 13px; color: var(--ink-2); max-width: min(420px, calc(100% - 90px)); }
+.modebar { position: absolute; left: 12px; top: calc(12px + env(safe-area-inset-top, 0px)); z-index: 2; background: var(--paper); border: 1px solid var(--rule); border-radius: 7px; padding: 7px 10px; font-size: 13px; color: var(--ink-2); max-width: min(420px, calc(100% - 300px)); }
+/* Lista dzielnic: pole z filtrowaniem, na lewo od przycisków powiększania. */
+.dpick { position: absolute; top: calc(12px + env(safe-area-inset-top, 0px)); right: calc(max(12px, env(safe-area-inset-right, 0px)) + 54px); width: 210px; z-index: 3; }
+.dpick input { width: 100%; height: 36px; padding: 0 34px 0 10px; font: 500 14px var(--f-body); color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 7px; }
+.dpick input::placeholder { color: var(--ink-3); }
+.dpick .dpick-btn { position: absolute; right: 3px; top: 3px; width: 30px; height: 30px; padding: 0; border: 0; border-radius: 5px; background: transparent; color: var(--ink-3); font-size: 15px; cursor: pointer; display: grid; place-items: center; }
+.dpick .dpick-btn:hover { background: var(--chip); color: var(--ink); }
+.dpick ul { position: absolute; top: 40px; left: 0; right: 0; margin: 0; padding: 4px 0; list-style: none; background: var(--paper); border: 1px solid var(--rule); border-radius: 7px; max-height: min(340px, 50vh); overflow-y: auto; box-shadow: 0 4px 14px rgb(0 0 0 / 0.16); }
+.dpick li { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; padding: 7px 10px; font-size: 14px; color: var(--ink); cursor: pointer; }
+.dpick li small { color: var(--ink-3); font-size: 12px; white-space: nowrap; }
+.dpick li[aria-selected="true"] { background: var(--chip); }
+.dpick li.empty { color: var(--ink-3); cursor: default; }
+/* Panel statystyk klastra: prawy dolny róg mapy, pod przyciskami powiększania. */
+.cpanel { position: absolute; right: max(12px, env(safe-area-inset-right, 0px)); bottom: max(12px, env(safe-area-inset-bottom, 0px)); width: min(360px, calc(100% - 24px)); max-height: calc(100% - 170px); display: flex; flex-direction: column; background: var(--paper); border: 1px solid var(--rule); border-radius: 9px; box-shadow: 0 6px 22px rgb(0 0 0 / 0.18); z-index: 2; overflow: hidden; }
+.cpanel[hidden] { display: none; }
+.cp-head { display: flex; align-items: flex-start; gap: 8px; padding: 12px 10px 10px 14px; border-bottom: 1px solid var(--rule); }
+.cp-head h3 { font: 600 21px/1.1 var(--f-display); margin: 0; }
+.cp-id { font: 11px var(--f-mono); color: var(--ink-3); margin-top: 3px; }
+.cp-badges { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 7px; }
+.cp-badge { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--chip); color: var(--ink-2); }
+.cp-badge.top { background: var(--top); color: var(--paper); }
+.cp-close { margin-left: auto; flex: none; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 6px; background: transparent; color: var(--ink-2); font-size: 22px; line-height: 1; cursor: pointer; display: grid; place-items: center; }
+.cp-close:hover { background: var(--chip); color: var(--ink); }
+.cp-body { overflow-y: auto; padding: 0 14px 12px; overscroll-behavior: contain; }
+.cp-sec { padding-top: 10px; }
+.cp-sec + .cp-sec { border-top: 1px solid var(--rule); margin-top: 10px; }
+.cp-sec h4 { font: 600 12px/1 var(--f-display); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 6px; }
+.cp-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 13px; padding: 2px 0; }
+.cp-row > span { color: var(--ink-2); min-width: 0; }
+.cp-row > b { font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+.cp-row .pos { color: var(--good); }
+.cp-row .neg { color: var(--crit); }
+.cp-chips { display: flex; flex-wrap: wrap; gap: 3px; margin: 4px 0 2px; }
+.cp-chips i { font: 500 11px var(--f-mono); font-style: normal; padding: 1px 5px; border-radius: 4px; background: var(--chip); color: var(--ink-2); }
+.cp-note { font-size: 12px; color: var(--ink-3); margin-top: 4px; }
+.cp-spark { display: block; width: 100%; height: 64px; margin: 6px 0 2px; overflow: visible; }
+.cp-spark text { font: 10px var(--f-mono); fill: var(--ink-3); }
 
 .maplibregl-map { overflow: hidden; position: relative; -webkit-tap-highlight-color: transparent; }
 .maplibregl-canvas { position: absolute; left: 0; top: 0; }
@@ -145,6 +209,8 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
   html, body { height: auto; }
   .app { grid-template-columns: 1fr; grid-template-rows: 60vh auto; height: auto; }
   .mapwrap { order: -1; height: 60vh; }
+  .dpick { width: min(190px, calc(100% - 90px)); }
+  .modebar { top: calc(56px + env(safe-area-inset-top, 0px)); max-width: calc(100% - 90px); }
   .panel { border-right: 0; overflow: visible; padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-left: max(16px, env(safe-area-inset-left, 0px)); }
 }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } .live-dot { animation: none; } }
@@ -153,8 +219,10 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
 <div class="app">
   <aside class="panel">
     <header>
+      <button class="theme-btn" id="theme" type="button"></button>
       <h1>Symulator linii Warszawa 2036</h1>
       <div class="sub">Narysuj linię autobusową lub wczytaj propozycję algorytmu i zobacz, kogo obsłuży, gdzie utknie w korku i ile pojazdów potrzebuje.</div>
+      <div class="sub"><a href="linie.html" style="color:var(--accent);font-weight:500">Ranking linii ZTM: najlepsze i najgorsze →</a></div>
     </header>
 
     <section>
@@ -185,9 +253,22 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     </section>
 
     <section>
+      <h2>Priorytety · model ML</h2>
+      <label class="check" for="top-on"><input type="checkbox" id="top-on" checked>Pokaż 30 klastrów, gdzie komunikacja jest najbardziej potrzebna</label>
+      <div class="muted" id="top-note" style="margin-top:6px"></div>
+      <ul class="list toplist" id="top-list" style="max-height:290px;overflow-y:auto"></ul>
+      <button class="btn" id="heat-btn" type="button" aria-pressed="false" style="margin-top:12px">Pokaż heatmapę wykluczenia</button>
+      <div id="heat-legend" hidden style="margin-top:10px">
+        <div class="ramp"><i style="background:var(--h1)"></i><i style="background:var(--h2)"></i><i style="background:var(--h3)"></i><i style="background:var(--h4)"></i><i style="background:var(--h5)"></i></div>
+        <div class="ramp-l"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div>
+        <div class="muted" id="heat-note">Prawdopodobieństwo wykluczenia komunikacyjnego klastra wg modelu ML.</div>
+      </div>
+    </section>
+
+    <section>
       <h2>Warstwy i filtr linii</h2>
       <div class="params" style="grid-template-columns:1fr">
-        <label for="line-filter">Pokaż tylko linie (np. 523, 189, 17) — trasa, przystanki i pojazdy<input id="line-filter" type="text" placeholder="wszystkie linie" autocomplete="off" spellcheck="false"></label>
+        <label for="line-filter">Pokaż tylko linie (np. 523, 17, M1, S2, M3) — trasa, przystanki, stacje i pojazdy<input id="line-filter" type="text" placeholder="wszystkie linie" autocomplete="off" spellcheck="false"></label>
       </div>
       <div class="muted" id="filter-note" style="margin-top:6px"></div>
       <div class="row" style="margin-top:10px">
@@ -204,12 +285,40 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
         <label class="check" for="lay-kolej"><input type="checkbox" id="lay-kolej" checked><i class="sw" style="border-top:3px solid var(--rail)"></i>SKM / KM / WKD</label>
         <label class="check" for="lay-ztm"><input type="checkbox" id="lay-ztm" checked>Przystanki ZTM</label>
         <label class="check" for="lay-nb"><input type="checkbox" id="lay-nb" checked><i class="sw" style="height:9px;width:9px;border-radius:50%;background:var(--sel)"></i>Nowe osiedla</label>
+        <label class="check" for="lay-veturilo"><input type="checkbox" id="lay-veturilo" checked><i class="sw" style="height:9px;width:9px;border-radius:50%;background:var(--bike)"></i>Stacje Veturilo</label>
         <label class="check" for="lay-planned"><input type="checkbox" id="lay-planned" checked>Planowane tramwaje i kolej</label>
       </div>
       <div class="subh"><label class="check" for="sec-pmetro"><input type="checkbox" id="sec-pmetro">Planowane metro</label><span class="note">linia przerywana = jeszcze nieotwarta w wybranym roku</span></div>
       <div class="layers" id="pmetro-layers"></div>
       <div class="subh"><label class="check" for="sec-infra"><input type="checkbox" id="sec-infra">Cele podróży</label></div>
       <div class="layers" id="infra-layers"></div>
+    </section>
+
+    <section>
+      <h2>Symulacja ruchu</h2>
+      <div class="clock"><b id="sim-clock">7:00</b><input type="range" id="sim-time" min="14400" max="88200" step="60" value="25200" aria-label="Godzina symulacji"></div>
+      <div class="row" style="margin-top:8px">
+        <button class="btn primary" id="sim-play">▶ Start</button>
+        <div class="seg" id="sim-speed" style="flex:1">
+          <button data-v="30" aria-pressed="false">×30</button>
+          <button data-v="120" aria-pressed="true">×120</button>
+          <button data-v="600" aria-pressed="false">×600</button>
+        </div>
+      </div>
+      <div class="muted" id="sim-status" style="margin-top:6px">Autobusy, tramwaje, metro i SKM jadą według rozkładu ZTM (dzień roboczy). Linia z piaskownicy jeździ z ustawioną częstotliwością. Filtr linii działa też tutaj, a dzielnica wybrana w prawym górnym rogu mapy zawęża symulację do swoich granic.</div>
+
+      <div class="subh" style="margin-top:16px"><label class="check" for="load-on"><input type="checkbox" id="load-on">Obciążenie linii w szczycie</label><span class="note">model pasażerów 7–8</span></div>
+      <div id="load-opts" hidden>
+        <div class="seg" id="load-year" style="margin-top:8px">
+          <button data-y="2025" aria-pressed="false">2025</button>
+          <button data-y="2036" aria-pressed="true">2036</button>
+        </div>
+        <div class="loadkey" id="load-key"></div>
+        <div class="loadkey-l"><span>&lt; 50%</span><span>50–80%</span><span>80–100%</span><span>&gt; 100%</span></div>
+        <div class="muted" id="load-sum" style="margin-top:6px"></div>
+        <ul class="list overlist" id="load-list"></ul>
+        <div class="muted" style="margin-top:4px">Model: podróże z domu w porannym szczycie (grawitacyjny), przypisane najszybszą trasą; 2036 = ludność 2036 + metro M2 zachód i M3, reszta sieci jak dziś. Porównania 2025↔2036 są wiarygodne, dokładne liczby pasażerów — orientacyjne (metro niedoszacowane).</div>
+      </div>
     </section>
 
     <section>
@@ -314,18 +423,30 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       </details>
     </section>
 
-    <footer>Dane: prognoza ludności klastrów (GUS NSP 2011/2021, BDL, pozwolenia GUNB), prędkości autobusów z rozkładu ZTM (GTFS, środa, szczyt 7–9 vs 20–22), sieć ulic OpenStreetMap (ODbL), kolej i metro OSM. Prototyp hackathonowy.</footer>
+    <footer>Dane: prognoza ludności klastrów (GUS NSP 2011/2021, BDL, pozwolenia GUNB), prędkości autobusów z rozkładu ZTM (GTFS, środa, szczyt 7–9 vs 20–22), sieć ulic OpenStreetMap (ODbL), kolej i metro OSM, stacje Veturilo (Nextbike GBFS, CC0). Prototyp hackathonowy.</footer>
   </aside>
 
   <div class="mapwrap" id="mapwrap">
     <div id="map"></div>
     <div class="modebar" id="modebar" hidden></div>
+    <div class="dpick" id="dpick">
+      <input id="dpick-in" type="text" role="combobox" aria-expanded="false" aria-controls="dpick-list" aria-autocomplete="list" aria-label="Przybliż do dzielnicy" placeholder="Dzielnica…" autocomplete="off" spellcheck="false">
+      <button class="dpick-btn" id="dpick-btn" type="button" tabindex="-1" aria-label="Pokaż listę dzielnic">▾</button>
+      <ul id="dpick-list" role="listbox" aria-label="Dzielnice" hidden></ul>
+    </div>
     <div class="loading" id="loading">Wczytywanie danych symulatora…</div>
     <div class="zoom">
       <button id="zin" aria-label="Przybliż">+</button>
       <button id="zout" aria-label="Oddal">−</button>
       <button id="zall" class="all" aria-label="Pokaż całą Warszawę">Całość</button>
     </div>
+    <section class="cpanel" id="cpanel" aria-labelledby="cp-title" hidden>
+      <div class="cp-head">
+        <div><h3 id="cp-title"></h3><div class="cp-id" id="cp-id"></div><div class="cp-badges" id="cp-badges"></div></div>
+        <button class="cp-close" id="cp-close" type="button" aria-label="Zamknij statystyki klastra">×</button>
+      </div>
+      <div class="cp-body" id="cp-body"></div>
+    </section>
     <div class="tip" id="tip" hidden></div>
   </div>
 </div>
@@ -381,8 +502,13 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
   // ---------- dane ----------
   async function load() {
     // cache: "no-cache" — przeglądarka zawsze sprawdza, czy dane się zmieniły (po przeliczeniu prognozy nie pokaże starej kopii).
-    [D, B] = await Promise.all([fetch("frontend/symulator_dane.json", { cache: "no-cache" }).then((r) => r.json()), fetch("frontend/warszawa.json", { cache: "no-cache" }).then((r) => r.json())]);
+    let vet;
+    [D, B, vet] = await Promise.all([fetch("frontend/symulator_dane.json", { cache: "no-cache" }).then((r) => r.json()), fetch("frontend/warszawa.json", { cache: "no-cache" }).then((r) => r.json()),
+                                     fetch("dane/veturilo_stacje.csv", { cache: "no-cache" }).then((r) => (r.ok ? r.text() : "")).catch(() => "")]);
+    VET.stations = parseRows(vet).filter((s) => Number.isFinite(+s.lon) && Number.isFinite(+s.lat))
+      .map((s) => ({ id: s.station_id, name: (s.nazwa || "").trim(), nr: s.numer, lon: +s.lon, lat: +s.lat, cap: +s.stojaki || 0, h3: s.h3 }));
     buildGraph(); buildPeople();
+    await loadTop();
   }
 
   function buildGraph() {
@@ -397,8 +523,15 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     });
     const nodeGrid = new Grid(200), edgeGrid = new Grid(150);
     for (let i = 0; i < n; i++) if (out[i].length) nodeGrid.add(i, nx[i], ny[i]);
-    edges.forEach((e, i) => { for (const [x, y] of e.xy) edgeGrid.add(i, x, y); });
-    G = { nx, ny, out, edges, nodeGrid, edgeGrid };
+    // Punkty co ≤ 100 m wzdłuż odcinka, nie tylko wierzchołki — długi prosty odcinek (np. ekspresówka
+    // z dwoma wierzchołkami co 1 km) musi być znajdowany także przy kliknięciu w jego środek.
+    edges.forEach((e, i) => e.xy.forEach(([x, y], k) => {
+      edgeGrid.add(i, x, y);
+      const nxt = e.xy[k + 1]; if (!nxt) return;
+      const steps = Math.ceil(Math.hypot(nxt[0] - x, nxt[1] - y) / 100);
+      for (let s = 1; s < steps; s++) edgeGrid.add(i, x + (nxt[0] - x) * s / steps, y + (nxt[1] - y) * s / steps);
+    }));
+    G = { nx, ny, out, edges, nodeGrid, edgeGrid, byId: new Map(edges.map((e, i) => [e.id, i])) };
   }
 
   function buildPeople() {
@@ -438,59 +571,105 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     for (const i of G.nodeGrid.near(x, y, r)) { const d = Math.hypot(G.nx[i] - x, G.ny[i] - y); if (d < bd) { bd = d; best = i; } }
     return best;
   }
-  function shortest(a, b) {
-    if (a === b) return [];
-    const dist = new Map([[a, 0]]), prev = new Map(), h = new Heap();
+  // Najkrótsze czasy z węzła `a`; liczy, aż zostaną osiągnięte wszystkie `targets`.
+  function dijkstra(a, targets) {
+    const dist = new Map([[a, 0]]), prev = new Map(), h = new Heap(), left = new Set(targets);
     h.push(0, a);
-    while (h.size) {
+    while (h.size && left.size) {
       const [d, u] = h.pop();
-      if (u === b) break;
       if (d > (dist.get(u) ?? Infinity)) continue;
+      left.delete(u);
       for (const ei of G.out[u]) {
         const e = G.edges[ei], nd = d + edgeTime(e);
         if (nd < (dist.get(e.v) ?? Infinity)) { dist.set(e.v, nd); prev.set(e.v, ei); h.push(nd, e.v); }
       }
     }
+    return { dist, prev };
+  }
+  function pathTo(prev, a, b) {
+    if (a === b) return [];
     if (!prev.has(b)) return null;
     const path = []; let cur = b;
     while (cur !== a) { const ei = prev.get(cur); path.push(ei); cur = G.edges[ei].u; }
     return path.reverse();
   }
+  const shortest = (a, b) => pathTo(dijkstra(a, [b]).prev, a, b);
   const routeEdges = () => route.legs.flat();
 
-  function addWaypoint(x, y) {
-    const n = nearestNode(x, y);
-    if (n < 0) return flash("Za daleko od ulicy, po której może jechać autobus.");
-    if (route.wps.length) {
-      const leg = shortest(route.wps[route.wps.length - 1], n);
-      if (!leg) return flash("Nie da się tu dojechać (ulice jednokierunkowe albo zakaz dla autobusów).");
-      route.legs.push(leg);
+  // Odcinki grafu w promieniu r od punktu: rzut punktu na odcinek, odległość i położenie wzdłuż odcinka.
+  function edgesAt(x, y, r) {
+    const hits = [];
+    for (const ei of new Set(G.edgeGrid.near(x, y, r))) {
+      const e = G.edges[ei];
+      let best = null, run = 0;
+      for (let k = 0; k < e.xy.length - 1; k++) {
+        const [ax, ay] = e.xy[k], [bx, by] = e.xy[k + 1], L = Math.hypot(bx - ax, by - ay);
+        const q = segProject(x, y, ax, ay, bx, by);
+        if (!best || q.d < best.d) best = { ei, d: q.d, along: run + q.t * L };
+        run += L;
+      }
+      if (best && best.d <= r) hits.push({ ...best, total: run });
     }
-    route.wps.push(n);
-    history.push({ t: "wp" });
+    return hits.sort((a, b) => a.d - b.d);
+  }
+  const metersPerPx = () => 78271.517 * Math.cos(LAT0 * Math.PI / 180) / 2 ** map.getZoom();
+  const SNAP_PX = 14, NODE_PX = 10;   // promień trafienia w ulicę i w jej koniec (skrzyżowanie), w pikselach
+
+  function pushWaypoints(nodes, legs) {
+    route.wps.push(...nodes); route.legs.push(...legs);
+    history.push({ t: "wp", n: nodes.length });
     changed();
   }
+  function addNodeWaypoint(n) {
+    if (n < 0) return flash("Za daleko od ulicy, po której może jechać autobus.");
+    if (!route.wps.length) return pushWaypoints([n], []);
+    const leg = shortest(route.wps[route.wps.length - 1], n);
+    if (!leg) return flash("Nie da się tu dojechać (ulice jednokierunkowe albo zakaz dla autobusów).");
+    pushWaypoints([n], [leg]);
+  }
+  // Klik na ulicy: trasa przejeżdża przez kliknięty odcinek (np. konkretną łącznicę węzła),
+  // a nie tylko przez najbliższe skrzyżowanie. Klik przy końcu odcinka = punkt na skrzyżowaniu.
+  function addWaypoint(x, y) {
+    const mpp = metersPerPx(), hits = edgesAt(x, y, SNAP_PX * mpp);
+    if (!hits.length) return addNodeWaypoint(nearestNode(x, y));
+    const h = hits[0], e = G.edges[h.ei], nodeR = NODE_PX * mpp;
+    if (h.along <= nodeR) return addNodeWaypoint(e.u);
+    if (h.total - h.along <= nodeR) return addNodeWaypoint(e.v);
+    // Kandydaci: ten sam odcinek w obu kierunkach i jezdnie leżące równie blisko (do 6 m dalej).
+    const near = hits.filter((c) => c.d <= h.d + 6).map((c) => c.ei);
+    if (!route.wps.length) {
+      const twoWay = near.some((ei) => G.edges[ei].u === e.v && G.edges[ei].v === e.u);
+      // Start na drodze jednokierunkowej: od początku odcinka; na dwukierunkowej — kierunek nieznany, więc bliższy koniec.
+      if (!twoWay) return pushWaypoints([e.u, e.v], [[h.ei]]);
+      return pushWaypoints([h.along < h.total / 2 ? e.u : e.v], []);
+    }
+    const last = route.wps[route.wps.length - 1];
+    const { dist, prev } = dijkstra(last, near.map((ei) => G.edges[ei].u));
+    let pick = -1, cost = Infinity;
+    for (const ei of near) { const c = (dist.get(G.edges[ei].u) ?? Infinity) + edgeTime(G.edges[ei]); if (c < cost) { cost = c; pick = ei; } }
+    if (pick < 0) return flash("Nie da się tu dojechać (ulice jednokierunkowe albo zakaz dla autobusów).");
+    pushWaypoints([G.edges[pick].v], [[...pathTo(prev, last, G.edges[pick].u), pick]]);
+  }
 
-  // Przystanek: najbliższy punkt na trasie (≤ 80 m) albo na dowolnej ulicy dopuszczonej do przystanków.
+  // Przystanek tylko na trasie linii: najbliższy punkt narysowanej trasy, nie dalej niż STOP_SNAP_M.
+  const STOP_SNAP_M = 80;
   function snapStop(x, y) {
     let best = null;
-    const consider = (ei) => {
+    for (const ei of new Set(routeEdges())) {
       const e = G.edges[ei];
       for (let k = 0; k < e.xy.length - 1; k++) {
         const q = segProject(x, y, e.xy[k][0], e.xy[k][1], e.xy[k + 1][0], e.xy[k + 1][1]);
         if (!best || q.d < best.d) best = { ...q, ei, k };
       }
-    };
-    const onRoute = routeEdges();
-    if (onRoute.length) { onRoute.forEach(consider); if (best && best.d <= 80) return best; best = null; }
-    for (const ei of new Set(G.edgeGrid.near(x, y, 150))) consider(ei);
-    return best && best.d <= 150 ? best : null;
+    }
+    return best && best.d <= STOP_SNAP_M ? best : null;
   }
   function addStop(x, y) {
     const hit = stops.findIndex((s) => Math.hypot(s.x - x, s.y - y) < 40);
     if (hit >= 0) { history.push({ t: "rmstop", s: stops[hit], i: hit }); stops.splice(hit, 1); return changed(); }
+    if (!routeEdges().length) return flash("Najpierw narysuj trasę — przystanki stawiamy tylko na linii.");
     const q = snapStop(x, y);
-    if (!q) return flash("Brak ulicy dla autobusu w promieniu 150 m.");
+    if (!q) return flash(`Przystanek musi stać przy trasie linii (do ${STOP_SNAP_M} m od niej).`);
     const e = G.edges[q.ei];
     if (!e.stopOk) return flash(`Tu nie postawimy przystanku: ${e.name || "odcinek"} to wiadukt, tunel, łącznica lub droga ekspresowa.`);
     // Przesunięcie na prawą stronę jezdni (ruch prawostronny) — 4 m od osi.
@@ -503,7 +682,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
   }
   function undo() {
     const h = history.pop(); if (!h) return;
-    if (h.t === "wp") { route.wps.pop(); route.legs.pop(); }
+    if (h.t === "wp") { route.wps.length -= Math.min(h.n || 1, route.wps.length); route.legs.length = Math.max(0, route.wps.length - 1); }
     else if (h.t === "stop") stops.pop();
     else if (h.t === "rmstop") stops.splice(h.i, 0, h.s);
     else if (h.t === "all") { route.wps = h.wps; route.legs = h.legs; stops = h.stops; }
@@ -677,10 +856,19 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       const line = (coords) => ({ type: "Feature", properties: {}, geometry: { type: "LineString", coordinates: coords } });
       map.addSource("river", { type: "geojson", data: fc(B.river.map((c) => line(decode(c, S)))) });
       map.addSource("districts", { type: "geojson", data: fc(B.districts.flatMap((d) => d.rings.map((c) => line(decode(c, S))))) });
+      map.addSource("district-sel", { type: "geojson", data: fc([]) });
+      map.addSource("hex-sel", { type: "geojson", data: fc([]) });
       map.addSource("roads", { type: "geojson", data: fc(B.roads.edges.map((e) => ({ type: "Feature", properties: { c: e[0] }, geometry: { type: "LineString", coordinates: decode(e[7], S) } }))), tolerance: 0.4 });
+      // Ulice dostępne dla autobusu (graf trasowania), jedna linia na oba kierunki — podświetlane przy rysowaniu.
+      const seenPair = new Set();
+      map.addSource("busnet", { type: "geojson", tolerance: 0.4, data: fc(G.edges.filter((e) => {
+        const k = `${Math.min(e.u, e.v)}-${Math.max(e.u, e.v)}-${Math.round(e.len)}`;
+        return !seenPair.has(k) && seenPair.add(k);
+      }).map((e) => line(e.coords))) });
       map.addSource("trams", { type: "geojson", data: fc(B.trams.edges.map((e) => line(decode(e[2], S)))) });
-      map.addSource("rail", { type: "geojson", data: fc(D.rail.flatMap((r) => r.parts.map((p) => ({ type: "Feature", properties: { m: r.system === "metro" }, geometry: { type: "LineString", coordinates: p } })))) });
-      map.addSource("stations", { type: "geojson", data: fc(D.stops.rail.map(([lon, lat, name, sys]) => ({ type: "Feature", properties: { name, sys, m: sys === "metro" }, geometry: { type: "Point", coordinates: [lon, lat] } }))) });
+      map.addSource("rail", { type: "geojson", data: fc(D.rail.flatMap((r) => r.parts.map((p) => ({ type: "Feature", properties: { m: r.system === "metro", ref: r.ref }, geometry: { type: "LineString", coordinates: p } })))) });
+      // l = ",S2,S3," — linie zatrzymujące się na stacji, do filtra linii.
+      map.addSource("stations", { type: "geojson", data: fc(D.stops.rail.map(([lon, lat, name, sys, lines]) => ({ type: "Feature", properties: { name, sys, m: sys === "metro", l: `,${(lines || "").replace(/\s/g, "").toUpperCase()},` }, geometry: { type: "Point", coordinates: [lon, lat] } }))) });
       map.addSource("plannedsrc", { type: "geojson", data: fc(D.stops.planned.map(([lon, lat, name, kind, y]) => ({ type: "Feature", properties: { name, kind, y, tram: kind === "tramwaj" }, geometry: { type: "Point", coordinates: [lon, lat] } }))) });
       map.addSource("ztm", { type: "geojson", data: fc(D.stops.ztm.map(([lon, lat, name, tram, lines, nr]) => ({ type: "Feature", properties: { name, nr, t: !!tram, lines, l: `,${lines},` }, geometry: { type: "Point", coordinates: [lon, lat] } }))) });
       map.addSource("routes", { type: "geojson", data: fc((D.routes || []).flatMap((r) => r.parts.map((p) => ({ type: "Feature", properties: { ref: r.ref, typ: r.typ, nazwa: r.nazwa, kursy: r.kursy, kier: `${r.ref}/${r.kier ?? 0}`, kierunek: r.kierunek || "" }, geometry: { type: "LineString", coordinates: p } })))) });
@@ -694,21 +882,26 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       // Nachodzące na siebie nowe osiedla łączą się w jedno kółko z sumą mieszkańców (rozdzielają się po przybliżeniu).
       map.addSource("nb", { type: "geojson", data: fc(nbFeatures()), cluster: true, clusterRadius: 22, clusterMaxZoom: 15,
                             clusterProperties: { sum: ["+", ["get", "v"]] } });
-      for (const s of ["route", "wps", "nstops", "catch", "live"]) map.addSource(s, { type: "geojson", data: fc([]) });
+      for (const s of ["route", "wps", "nstops", "catch", "live", "sim", "load"]) map.addSource(s, { type: "geojson", data: fc([]) });
 
       map.addLayer({ id: "river", type: "line", source: "river", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": css("--water"), "line-width": ["interpolate", ["exponential", 2], ["zoom"], 9, 4, 12, 22, 15, 140, 18, 1100] } });
       map.addLayer({ id: "hex", type: "fill", source: "hex", paint: { "fill-color": hexColorExpr(), "fill-opacity": 0.5 } });
       map.addLayer({ id: "parks", type: "fill", source: "parks", paint: { "fill-color": css("--park"), "fill-opacity": 0.6 } });
       map.addLayer({ id: "parks-line", type: "line", source: "parks", paint: { "line-color": css("--park"), "line-width": 1, "line-opacity": 0.7 } });
       map.addLayer({ id: "roads", type: "line", source: "roads", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": css("--road"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, ["match", ["get", "c"], 0, 1.4, 1, 1.2, 2, 0.9, 3, 0.7, 0.3], 16, ["match", ["get", "c"], 0, 8, 1, 7, 2, 5, 3, 4, 2]] } });
+      map.addLayer({ id: "busnet", type: "line", source: "busnet", layout: { "line-cap": "round", "line-join": "round", visibility: "none" }, paint: { "line-color": css("--accent"), "line-opacity": 0.45, "line-width": ["interpolate", ["linear"], ["zoom"], 10, 0.8, 16, 3.5] } });
       map.addLayer({ id: "districts", type: "line", source: "districts", paint: { "line-color": css("--district"), "line-width": 1, "line-dasharray": [3, 2] } });
+      map.addLayer({ id: "district-sel", type: "line", source: "district-sel", layout: { "line-join": "round" }, paint: { "line-color": css("--ink"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 2, 15, 4] } });
+      map.addLayer({ id: "hex-sel", type: "line", source: "hex-sel", layout: { "line-join": "round" }, paint: { "line-color": css("--ink"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 2.5, 15, 4.5] } });
       map.addLayer({ id: "trams", type: "line", source: "trams", paint: { "line-color": css("--tram"), "line-opacity": 0.6, "line-width": ["interpolate", ["linear"], ["zoom"], 10, 0.8, 16, 2.5] } });
       map.addLayer({ id: "routes-bus", type: "line", source: "routes", filter: ["==", ["get", "typ"], "autobus"], layout: { "line-cap": "round", "line-join": "round", visibility: "none" }, paint: { "line-color": css("--bus"), "line-opacity": 0.55, "line-width": routeWidth(1) } });
       map.addLayer({ id: "routes-tram", type: "line", source: "routes", filter: ["==", ["get", "typ"], "tram"], layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": css("--tram"), "line-opacity": 0.75, "line-width": routeWidth(1) } });
-      map.addLayer({ id: "rail-kolej", type: "line", source: "rail", filter: ["!", ["get", "m"]], paint: { "line-color": css("--rail"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 1.6, 16, 5] } });
-      map.addLayer({ id: "rail-metro", type: "line", source: "rail", filter: ["get", "m"], paint: { "line-color": css("--metro"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 2.6, 16, 5] } });
+      map.addLayer({ id: "rail-kolej", type: "line", source: "rail", filter: ["!", ["get", "m"]], paint: { "line-color": css("--rail"), "line-width": RAIL_WIDTH["rail-kolej"] } });
+      map.addLayer({ id: "rail-metro", type: "line", source: "rail", filter: ["get", "m"], paint: { "line-color": css("--metro"), "line-width": RAIL_WIDTH["rail-metro"] } });
       map.addLayer({ id: "ztm", type: "circle", source: "ztm", minzoom: 13.5, paint: { "circle-radius": 2.5, "circle-color": css("--paper"), "circle-stroke-width": 1, "circle-stroke-color": css("--ink-3") } });
       map.addLayer({ id: "ztm-sel", type: "circle", source: "ztm", filter: ["==", ["get", "l"], "-"], layout: { visibility: "none" }, paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 3, 15, 5.5], "circle-color": css("--paper"), "circle-stroke-width": 2, "circle-stroke-color": ["case", ["get", "t"], css("--tram"), css("--bus")] } });
+      map.addSource("veturilo", { type: "geojson", data: fc(vetFeatures()) });
+      map.addLayer({ id: "veturilo", type: "circle", source: "veturilo", minzoom: 10.5, paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10.5, 2, 13, 4, 16, 7], "circle-color": css("--bike"), "circle-stroke-width": 1.5, "circle-stroke-color": css("--paper") } });
       map.addLayer({ id: "nb", type: "circle", source: "nb", paint: { "circle-radius": ["interpolate", ["linear"], ["coalesce", ["get", "sum"], ["get", "v"]], 30, 2.5, 1000, 6, 4000, 11, 15000, 17], "circle-color": css("--sel"), "circle-opacity": 0.85, "circle-stroke-width": 1, "circle-stroke-color": css("--paper") } });
       map.addLayer({ id: "stations-kolej", type: "circle", source: "stations", filter: ["!", ["get", "m"]], paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 3, 15, 6], "circle-color": css("--paper"), "circle-stroke-width": 2, "circle-stroke-color": css("--rail") } });
       map.addLayer({ id: "stations-metro", type: "circle", source: "stations", filter: ["get", "m"], paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 3, 15, 6], "circle-color": css("--paper"), "circle-stroke-width": 2, "circle-stroke-color": css("--metro") } });
@@ -716,23 +909,37 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       map.addSource("pmetro", { type: "geojson", data: fc(PM.map((m) => ({ type: "Feature", properties: { ref: m.ref, opis: m.opis, rok: m.rok, n: m.stacje.length }, geometry: { type: "LineString", coordinates: m.stacje.map((s) => [s[0], s[1]]) } }))) });
       map.addSource("pmetro-st", { type: "geojson", data: fc(PM.flatMap((m) => m.stacje.map(([lon, lat, name, ex]) => ({ type: "Feature", properties: { ref: m.ref, rok: m.rok, name, ex }, geometry: { type: "Point", coordinates: [lon, lat] } })))) });
       map.addLayer({ id: "pmetro-casing", type: "line", source: "pmetro", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": css("--paper"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 5, 16, 10] } });
-      map.addLayer({ id: "pmetro-future", type: "line", source: "pmetro", layout: { "line-cap": "butt", "line-join": "round" }, paint: { "line-color": css("--metro"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 2.6, 16, 5], "line-dasharray": [2, 1.6], "line-opacity": 0.85 } });
-      map.addLayer({ id: "pmetro-open", type: "line", source: "pmetro", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": css("--metro"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 2.6, 16, 5] } });
-      map.addLayer({ id: "pmetro-st", type: "circle", source: "pmetro-st", paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 3.5, 15, 7], "circle-color": ["case", [">", ["get", "rok"], year], css("--paper"), css("--metro")], "circle-stroke-width": 2, "circle-stroke-color": ["case", ["==", ["get", "ex"], 1], css("--ink"), css("--metro")] } });
+      map.addLayer({ id: "pmetro-future", type: "line", source: "pmetro", layout: { "line-cap": "butt", "line-join": "round" }, paint: { "line-color": pmColor(), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 2.6, 16, 5], "line-dasharray": [2, 1.6], "line-opacity": 0.85 } });
+      map.addLayer({ id: "pmetro-open", type: "line", source: "pmetro", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": pmColor(), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 2.6, 16, 5] } });
+      map.addLayer({ id: "pmetro-st", type: "circle", source: "pmetro-st", paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 3.5, 15, 7], "circle-color": ["case", [">", ["get", "rok"], year], css("--paper"), pmColor()], "circle-stroke-width": 2, "circle-stroke-color": ["case", ["==", ["get", "ex"], 1], css("--ink"), pmColor()] } });
       map.addLayer({ id: "planned-future", type: "circle", source: "plannedsrc", filter: ["all", [">", ["get", "y"], year], ["!=", ["get", "kind"], "metro"]], paint: { "circle-radius": ["case", ["get", "tram"], 2.5, 5], "circle-color": "rgba(0,0,0,0)", "circle-stroke-width": 1.5, "circle-stroke-color": ["case", ["get", "tram"], css("--tram"), css("--metro")], "circle-stroke-opacity": 0.6 } });
       map.addLayer({ id: "planned", type: "circle", source: "plannedsrc", filter: ["all", ["<=", ["get", "y"], year], ["!=", ["get", "kind"], "metro"]], paint: { "circle-radius": ["case", ["get", "tram"], 3, 6], "circle-color": ["case", ["get", "tram"], css("--tram"), css("--metro")], "circle-stroke-width": 1.5, "circle-stroke-color": css("--paper") } });
       map.addLayer({ id: "infra", type: "symbol", source: "infra", minzoom: 10.5,
         layout: { "icon-image": ["concat", "infra-", ["get", "g"]], "icon-size": ["interpolate", ["linear"], ["zoom"], 10.5, 0.55, 13, 0.75, 16, 1], "icon-allow-overlap": true,
                   "symbol-sort-key": ["match", ["get", "g"], "szpital", 0, "handel", 1, "urzad", 2, "kultura", 3, "szkola", 4, 5] } });
+      map.addSource("top", { type: "geojson", data: fc(TOP.rows.filter((t) => t.hex).map((t) => ({ type: "Feature", properties: { rank: t.rank }, geometry: { type: "MultiPolygon", coordinates: t.hex.rings.map((r) => [r]) } }))) });
+      map.addSource("top-pt", { type: "geojson", data: fc(TOP.rows.map((t) => ({ type: "Feature", properties: { rank: t.rank }, geometry: { type: "Point", coordinates: [t.lon, t.lat] } }))) });
+      for (const t of TOP.rows) map.addImage(`rank-${t.rank}`, rankIcon(t.rank), { pixelRatio: 2 });
+      map.addLayer({ id: "top-fill", type: "fill", source: "top", paint: { "fill-color": css("--top"), "fill-opacity": 0.14 } });
+      map.addLayer({ id: "top-line", type: "line", source: "top", paint: { "line-color": css("--top"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 2, 15, 4] } });
+      map.addLayer({ id: "top-pt", type: "symbol", source: "top-pt", layout: { "icon-image": ["concat", "rank-", ["to-string", ["get", "rank"]]], "icon-size": ["interpolate", ["linear"], ["zoom"], 10, 0.75, 14, 1], "icon-allow-overlap": true, "symbol-sort-key": ["get", "rank"] } });
       map.addLayer({ id: "mask", type: "fill", source: "mask", paint: { "fill-color": css("--ground"), "fill-opacity": 0.92 } });
       map.addLayer({ id: "catch", type: "fill", source: "catch", paint: { "fill-color": css("--accent"), "fill-opacity": 0.12 } });
       map.addLayer({ id: "catch-line", type: "line", source: "catch", paint: { "line-color": css("--accent"), "line-width": 1, "line-opacity": 0.6 } });
       map.addLayer({ id: "route-casing", type: "line", source: "route", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": css("--ink"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 6, 16, 12] } });
       map.addLayer({ id: "route", type: "line", source: "route", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": ["match", ["get", "j"], 2, css("--crit"), 1, css("--warn"), css("--good")], "line-width": ["interpolate", ["linear"], ["zoom"], 10, 3.5, 16, 8] } });
       map.addLayer({ id: "wps", type: "circle", source: "wps", paint: { "circle-radius": ["case", ["get", "end"], 6, 3.5], "circle-color": css("--ink"), "circle-stroke-width": 2, "circle-stroke-color": css("--paper") } });
+      map.addLayer({ id: "load", type: "line", source: "load", layout: { "line-cap": "round", visibility: "none" }, paint: {
+        // Lekko obciążone odcinki cienkie i przejrzyste, pełne i przepełnione — grube i wyraźne.
+        "line-color": loadColorExpr(), "line-opacity": ["interpolate", ["linear"], ["get", "u"], 0, 0.18, 0.5, 0.35, 0.8, 0.85, 1, 1],
+        "line-width": ["interpolate", ["linear"], ["zoom"], 10, ["interpolate", ["linear"], ["get", "u"], 0, 0.6, 0.5, 1, 0.8, 2.5, 1, 3.5, 2, 6], 15, ["interpolate", ["linear"], ["get", "u"], 0, 1.5, 0.5, 3, 0.8, 7, 1, 10, 2, 16]] } });
+      map.addLayer({ id: "sim", type: "circle", source: "sim", paint: {
+        "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, ["match", ["get", "k"], "metro", 4.5, "kolej", 4, "nowa", 4.5, 3], 15, ["match", ["get", "k"], "metro", 10, "kolej", 9, "nowa", 9, 7]],
+        "circle-color": simColorExpr(), "circle-stroke-width": 1.4, "circle-stroke-color": css("--ink") } });
       map.addLayer({ id: "live", type: "circle", source: "live", paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 2.5, 14, 5, 17, 8], "circle-color": css("--ink"), "circle-stroke-width": 2.2, "circle-stroke-color": ["case", ["==", ["get", "typ"], 2], css("--tram"), css("--bus")], "circle-opacity": ["interpolate", ["linear"], ["get", "age"], 0, 1, 180, 0.35], "circle-stroke-opacity": ["interpolate", ["linear"], ["get", "age"], 0, 1, 180, 0.35] } });
       map.addLayer({ id: "nstops", type: "circle", source: "nstops", paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 5, 16, 8], "circle-color": css("--paper"), "circle-stroke-width": 3, "circle-stroke-color": css("--accent") } });
       wireMap();
+      applyTop();
       renderPlannedMetroToggles();
       applyLayers();
       applyPlannedMetro();
@@ -740,6 +947,9 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       changed();
       // Link z #przyklad otwiera symulator od razu z przykładową linią (np. na prezentacji).
       if (location.hash === "#przyklad") loadProposal(SAMPLE);
+      // Link z rankingu linii: index.html#linia-523 -> filtr na tę linię (trasa, przystanki, pojazdy)
+      const hashLine = (location.hash.match(/^#linia-(.+)$/) || [])[1];
+      if (hashLine) { $("line-filter").value = decodeURIComponent(hashLine); applyLayers(); fitToFilter(); }
     });
   }
 
@@ -761,6 +971,10 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     if (inf.length) groups.push(`<div class="k">Cele podróży</div>` + inf.slice(0, 5).map((f) => `<span class="ico" style="background:${INFRA[f.properties.g]?.[1] || "#666"};margin-right:5px;vertical-align:-3px">${INFRA[f.properties.g]?.[2] || ""}</span><b>${esc(f.properties.nazwa || KAT[f.properties.kat] || "")}</b> · ${esc(KAT[f.properties.kat] || f.properties.kat)}`).join("<br>") + (inf.length > 5 ? `<br>…i ${inf.length - 5} więcej` : ""));
     const pk = by((id) => id === "parks");
     if (pk.length && !inf.some((f) => f.properties.g === "park")) groups.push(`<div class="k">Park</div><b>${esc(pk[0].properties.nazwa)}</b> · ${fmt1.format(pk[0].properties.ha)} ha`);
+    const sv = uniq(by((id) => id === "sim"), (f) => f.properties.id);
+    if (sv.length) groups.push(`<div class="k">Symulacja · ${fmtClock(SIM.t)}</div>` + sv.slice(0, 5).map((f) => `${SIM_LABEL[f.properties.k]} <b>${esc(f.properties.r)}</b>`).join("<br>") + (sv.length > 5 ? `<br>…i ${sv.length - 5} więcej` : ""));
+    const ld = uniq(by((id) => id === "load"), (f) => f.properties.i).sort((a, b) => b.properties.u - a.properties.u);
+    if (ld.length) groups.push(`<div class="k">Obciążenie w szczycie · ${LOAD.year}</div>` + ld.slice(0, 4).map((f) => `<b>${esc(f.properties.l)}</b> ${esc(f.properties.z)} → ${esc(f.properties.d)} · ${fmt.format(f.properties.p)} pas./h · <b>${Math.round(f.properties.u * 100)}%</b> pojemności`).join("<br>") + (ld.length > 4 ? `<br>…i ${ld.length - 4} więcej` : ""));
     const ns = by((id) => id === "nstops");
     if (ns.length) groups.push(`<div class="k">Nowy przystanek</div>${esc(ns[0].properties.street || "ulica bez nazwy")}`);
     const pms = uniq(by((id) => id === "pmetro-st"), (f) => f.properties.ref + f.properties.name);
@@ -774,6 +988,13 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     }
     const st = uniq(by((id) => id.startsWith("stations") || id === "planned"), (f) => f.properties.name);
     if (st.length) groups.push(`<div class="k">Stacje</div>` + st.map((f) => f.layer.id === "planned" ? `<b>${esc(f.properties.name)}</b> · planowana, ${f.properties.y}` : `<b>${esc(f.properties.name)}</b> · ${esc(f.properties.sys)}`).join("<br>"));
+    const vt = uniq(by((id) => id === "veturilo"), (f) => f.properties.id);
+    if (vt.length) {
+      const live = vt.some((f) => f.properties.bikes >= 0), hm = VET.updated?.toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit" });
+      groups.push(`<div class="k">Veturilo</div>` + vt.slice(0, 3).map((f) => { const p = f.properties;
+        return `<b>${esc(p.name)}</b> · nr ${esc(p.nr)} · ${fmt.format(p.cap)} stojaków` + (p.bikes >= 0 ? `<br>teraz: ${fmt.format(p.bikes)} rowerów, ${fmt.format(p.docks)} wolnych stojaków` : ""); }).join("<br>")
+        + (live && hm ? `<br><span style="opacity:0.7">stan na żywo z ${hm}</span>` : ""));
+    }
     const zs = uniq(by((id) => id.startsWith("ztm")), (f) => f.properties.name + f.properties.nr);
     if (zs.length) groups.push(`<div class="k">Przystanki ZTM</div>` + zs.slice(0, 4).map((f) => `<b>${esc(f.properties.name)} ${esc(f.properties.nr)}</b> · ${esc(f.properties.lines.split(",").join(", "))}`).join("<br>") + (zs.length > 4 ? `<br>…i ${zs.length - 4} więcej` : ""));
     const rsDir = uniq(by((id) => id.startsWith("routes")), (f) => f.properties.kier);   // linia + kierunek
@@ -794,6 +1015,10 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       if (f.properties.cluster) groups.push(`<div class="k">Nowe osiedla</div>${f.properties.point_count} inwestycji · <b>+${fmt.format(Math.round(f.properties.sum))} os.</b> w ${year} (przybliż, aby rozdzielić)`);
       else { const b = P.nb[f.properties.i]; groups.push(`<div class="k">Nowe osiedle</div><b>${esc(b.adres || "pozwolenie GUNB")}</b> (pozwolenie ${b.rok}) · +${fmt.format(Math.round(nbPop(b)))} os. w ${year}`); }
     }
+    const tp = by((id) => id === "top-fill" || id === "top-pt");
+    if (tp.length) { const t = TOP.byRank.get(tp[0].properties.rank); groups.push(`<div class="k">Priorytet ML · #${t.rank}</div><b>${esc(t.dzielnica)}</b> · prawdopodobieństwo wykluczenia komunikacyjnego <b>${Math.round(t.pred * 100)}%</b>`); }
+    const ht = by((id) => id === "heat");
+    if (ht.length) { const p = ht[0].properties; groups.push(`<div class="k">Wykluczenie komunikacyjne · model ML</div><b>${esc(p.d)}</b> · prawdopodobieństwo <b>${Math.round(p.p * 100)}%</b> · miejsce ${p.rank} z ${HEAT.n}`); }
     const hx = by((id) => id === "hex");
     if (hx.length && mode === "view") { const h = D.hexes[hx[0].properties.i]; groups.push(`<div class="k">Klaster · ${esc(h.d)}</div>${fmt.format(hexPop(h))} mieszkańców w ${year} (${hexPop(h) - h.pop[0] >= 0 ? "+" : ""}${fmt.format(hexPop(h) - h.pop[0])} vs 2025)`); }
     return groups.map((g) => `<div class="g">${g}</div>`).join("");
@@ -801,7 +1026,7 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
 
   function wireMap() {
     const tip = $("tip");
-    const HIT = ["live", "infra", "parks", "nstops", "pmetro-st", "pmetro-open", "pmetro-future", "stations-metro", "stations-kolej", "planned", "ztm-sel", "ztm", "nb", "routes-bus", "routes-tram", "hex"];
+    const HIT = ["top-pt", "top-fill", "sim", "load", "live", "infra", "parks", "nstops", "pmetro-st", "pmetro-open", "pmetro-future", "stations-metro", "stations-kolej", "planned", "veturilo", "ztm-sel", "ztm", "nb", "routes-bus", "routes-tram", "heat", "hex"];
     map.on("mousemove", (e) => {
       const r = 6, layers = HIT.filter((l) => map.getLayoutProperty(l, "visibility") !== "none");
       const fs = map.queryRenderedFeatures([[e.point.x - r, e.point.y - r], [e.point.x + r, e.point.y + r]], { layers });
@@ -815,17 +1040,18 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
       const [x, y] = toXY(e.lngLat.lng, e.lngLat.lat);
       if (mode === "route") addWaypoint(x, y);
       else if (mode === "stop") addStop(x, y);
+      else openCluster(hexAt(e.lngLat.lng, e.lngLat.lat));   // przeglądanie: statystyki klikniętego klastra
     });
     $("zin").onclick = () => map.zoomIn();
     $("zout").onclick = () => map.zoomOut();
-    $("zall").onclick = () => map.fitBounds(WARSAW, { padding: 24 });
+    $("zall").onclick = () => { clearDistrict(); map.fitBounds(WARSAW, { padding: 24 }); };
   }
 
   // ---------- UI ----------
   const HINTS = {
     view: "Najedź na klaster, żeby zobaczyć prognozę. Wybierz „Rysuj trasę” albo „Przystanki”, żeby testować pomysł.",
-    route: "Klikaj kolejne punkty na mapie — trasa sama przyciągnie się do ulic, którymi może jechać autobus (masa, wysokość, szerokość, kierunek ruchu).",
-    stop: "Kliknij przy trasie lub ulicy, żeby postawić przystanek (po prawej stronie jezdni). Kliknij istniejący nowy przystanek, żeby go usunąć.",
+    route: "Klikaj kolejne ulice na mapie — trasa przejedzie przez kliknięty odcinek (np. wybraną łącznicę węzła). Niebieskie są ulice, którymi może jechać autobus (wysokość, szerokość, kierunek ruchu); klik przy skrzyżowaniu wybiera skrzyżowanie.",
+    stop: "Kliknij przy narysowanej trasie (do 80 m od niej), żeby postawić przystanek po prawej stronie jezdni. Poza trasą linii przystanku nie postawisz. Kliknij istniejący nowy przystanek, żeby go usunąć.",
   };
   function setMode(m) {
     mode = m;
@@ -833,22 +1059,24 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     $("hint").textContent = HINTS[m];
     $("mapwrap").classList.toggle("drawing", m !== "view");
     $("modebar").hidden = m === "view";
+    if (map?.getLayer("busnet")) map.setLayoutProperty("busnet", "visibility", m === "route" ? "visible" : "none");
     $("modebar").textContent = m === "route" ? "Rysowanie trasy — klikaj kolejne punkty" : "Stawianie przystanków — klik dodaje, klik na przystanku usuwa";
   }
   let flashT;
   function flash(msg) { const h = $("hint"); h.textContent = msg; h.style.color = css("--crit"); clearTimeout(flashT); flashT = setTimeout(() => { h.style.color = ""; h.textContent = HINTS[mode]; }, 3500); }
 
   let raf = 0;
-  function changed() { cancelAnimationFrame(raf); raf = requestAnimationFrame(() => { updateMapSources(); renderEval(); }); }
+  function changed() { cancelAnimationFrame(raf); raf = requestAnimationFrame(() => { updateMapSources(); renderEval(); if (SIM.data) { simExtraTrips(); simFrame(); } }); }
   function yearChanged() {
+    if (TOP.rows.length) renderTopList();
     $("year-label").textContent = year;
-    renderLegend(); updateYearLayers(); renderEval();
+    renderLegend(); updateYearLayers(); renderEval(); renderCluster();
   }
 
   // Resetuj: usuwa linię i przywraca domyślny rok, scenariusz, warstwę, parametry i widok mapy.
   const DEFAULTS = { headway: 10, vehicle: 150, dwell: 25, layover: 6, trips: 2.0, share: 45 };
   function resetAll() {
-    clearAll();
+    clearAll(); closeCluster(); clearDistrict();
     year = 2036; $("year").value = 2036; scenario = "base"; metric = "growth";
     $("scenario").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x.dataset.s === "base"));
     $("metric").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x.dataset.m === "growth"));
@@ -864,6 +1092,204 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     if (map?.getLayer("hex")) map.setPaintProperty("hex", "fill-color", hexColorExpr());
     yearChanged();
     map?.fitBounds(WARSAW, { padding: 24 });
+  }
+
+  // ---------- priorytety z modelu ML (dane/lista_heksagonow_top30.csv) ----------
+  const TOP = { rows: [], byRank: new Map() };
+  async function loadTop() {
+    try {
+      const txt = await fetch("dane/lista_heksagonow_top30.csv", { cache: "no-cache" }).then((r) => (r.ok ? r.text() : ""));
+      const [head, ...lines] = txt.trim().split(/\r?\n/);
+      const cols = head.split(",");
+      const hexBy = new Map(D.hexes.map((h) => [h.h3, h]));
+      TOP.rows = lines.filter(Boolean).map((l) => {
+        const v = Object.fromEntries(l.split(",").map((x, i) => [cols[i], x]));
+        return { h3: v.h3, dzielnica: v.dzielnica, lon: +v.lon, lat: +v.lat, rank: +v.rank, pred: +v.pred_wykluczenie, etykieta: +v.etykieta_final, hex: hexBy.get(v.h3) };
+      }).sort((a, b) => a.rank - b.rank);
+      TOP.byRank = new Map(TOP.rows.map((t) => [t.rank, t]));
+    } catch (e) { console.warn("brak listy top 30", e); TOP.rows = []; }
+  }
+  function rankIcon(n) {
+    const S = 44, c = document.createElement("canvas"); c.width = c.height = S;
+    const g = c.getContext("2d");
+    g.beginPath(); g.arc(S / 2, S / 2, S / 2 - 3, 0, 2 * Math.PI); g.fillStyle = css("--top"); g.fill();
+    g.lineWidth = 3; g.strokeStyle = "#ffffff"; g.stroke();
+    g.fillStyle = "#ffffff"; g.font = `700 ${n > 9 ? 17 : 20}px Barlow, system-ui, sans-serif`; g.textAlign = "center"; g.textBaseline = "middle";
+    g.fillText(String(n), S / 2, S / 2 + 1);
+    return g.getImageData(0, 0, S, S);
+  }
+  // ---------- heatmapa wykluczenia (dane/heatmapa_wykluczenia.geojson, model ML) ----------
+  // Plik (~0,5 MB) wczytywany dopiero przy pierwszym włączeniu; włączona heatmapa zastępuje kolory klastrów.
+  const HEAT = { on: false, loaded: false, n: 0 };
+  const heatColor = () => ["interpolate", ["linear"], ["get", "p"], 0, css("--h1"), 0.25, css("--h2"), 0.5, css("--h3"), 0.75, css("--h4"), 1, css("--h5")];
+  // Jedno pobranie pliku dla heatmapy i panelu klastra (po błędzie można spróbować ponownie).
+  let heatJSON = null;
+  const fetchHeat = () => heatJSON || (heatJSON = fetch("dane/heatmapa_wykluczenia.geojson", { cache: "no-cache" })
+    .then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+    .catch((e) => { heatJSON = null; throw e; }));
+  async function loadHeat() {
+    const g = await fetchHeat();
+    const feats = g.features.filter((f) => f.geometry && Number.isFinite(+f.properties.pred))
+      .map((f) => ({ type: "Feature", properties: { p: +f.properties.pred, rank: +f.properties.rank, d: f.properties.dzielnica }, geometry: f.geometry }));
+    map.addSource("heat", { type: "geojson", data: fc(feats) });
+    map.addLayer({ id: "heat", type: "fill", source: "heat", layout: { visibility: "none" }, paint: { "fill-color": heatColor(), "fill-opacity": 0.75 } }, "parks");
+    HEAT.loaded = true; HEAT.n = feats.length;
+  }
+  async function toggleHeat() {
+    const b = $("heat-btn");
+    if (!map?.getLayer("hex")) return;
+    if (!HEAT.loaded) {
+      b.disabled = true; b.textContent = "Wczytywanie heatmapy…";
+      try { await loadHeat(); }
+      catch (e) { console.warn(e); return flash("Nie udało się wczytać dane/heatmapa_wykluczenia.geojson."); }
+      finally { b.disabled = false; b.textContent = "Pokaż heatmapę wykluczenia"; }
+    }
+    HEAT.on = !HEAT.on;
+    b.setAttribute("aria-pressed", HEAT.on);
+    b.textContent = HEAT.on ? "Ukryj heatmapę wykluczenia" : "Pokaż heatmapę wykluczenia";
+    $("heat-legend").hidden = !HEAT.on;
+    applyLayers();
+  }
+
+  function applyTop() {
+    const on = $("top-on").checked && TOP.rows.length > 0;
+    if (map?.getLayer("top-fill")) for (const id of ["top-fill", "top-line", "top-pt"]) map.setLayoutProperty(id, "visibility", on ? "visible" : "none");
+    renderTopList();
+  }
+  function renderTopList() {
+    if (!TOP.rows.length) { $("top-note").textContent = "Brak pliku dane/lista_heksagonow_top30.csv."; $("top-list").innerHTML = ""; return; }
+    const total25 = TOP.rows.reduce((a, t) => a + (t.hex ? t.hex.pop[0] : 0), 0), totalY = TOP.rows.reduce((a, t) => a + (t.hex ? hexPop(t.hex) : 0), 0);
+    $("top-note").textContent = `Klastry wskazane przez model ML (prawdopodobieństwo wykluczenia komunikacyjnego ${Math.round(TOP.rows.at(-1).pred * 100)}–${Math.round(TOP.rows[0].pred * 100)}%). Mieszka w nich ${fmt.format(total25)} osób, w ${year} r. ${fmt.format(totalY)}.`;
+    $("top-list").innerHTML = TOP.rows.map((t) => {
+      const p0 = t.hex ? t.hex.pop[0] : null, p1 = t.hex ? hexPop(t.hex) : null;
+      return `<li><button data-r="${t.rank}"><span class="rk">${t.rank}</span><span>${esc(t.dzielnica)} <small>${p0 == null ? "" : `· ${fmt.format(p0)} → ${fmt.format(p1)} mieszk. (${year})`}</small></span><span style="font-weight:600">${Math.round(t.pred * 100)}%</span></button></li>`;
+    }).join("");
+    $("top-list").querySelectorAll("button").forEach((b) => (b.onclick = () => {
+      const t = TOP.byRank.get(+b.dataset.r); if (!map) return;
+      const bb = new maplibregl.LngLatBounds(); (t.hex ? t.hex.rings.flat() : [[t.lon, t.lat]]).forEach((c) => bb.extend(c));
+      map.fitBounds(bb, { padding: 120, maxZoom: 15, duration: 600 });
+      if (t.hex) openCluster(D.hexes.indexOf(t.hex));
+    }));
+  }
+
+  // ---------- symulacja ruchu według rozkładu (frontend/symulacja_dane.json) ----------
+  const SIM = { data: null, t: 7 * 3600, playing: false, speed: 120, last: 0, drawn: 0, extra: [], loading: null };
+  const SIM_LABEL = { autobus: "Autobus", tramwaj: "Tramwaj", metro: "Metro", kolej: "SKM", nowa: "Nowa linia" };
+  const simColorExpr = () => ["match", ["get", "k"], "tramwaj", css("--tram"), "metro", css("--metro"), "kolej", css("--rail"), "nowa", css("--accent"), css("--bus")];
+  const fmtClock = (t) => { const m = Math.floor(t / 60) % 1440; return `${Math.floor(m / 60)}:${String(m % 60).padStart(2, "0")}`; };
+  async function simLoad() {
+    if (SIM.data) return SIM.data;
+    SIM.loading ||= fetch("frontend/symulacja_dane.json", { cache: "no-cache" }).then((r) => r.json()).then((d) => {
+      d.ends = d.trips.map(([, pi, s]) => s + d.profiles[pi][d.profiles[pi].length - 1]);
+      d.maxDur = Math.max(...d.trips.map(([, pi]) => d.profiles[pi][d.profiles[pi].length - 1]));
+      d.starts = d.trips.map((t) => t[2]);
+      d.shapeBox = d.shapes.map((s) => { const xs = s.c.map((p) => p[0]), ys = s.c.map((p) => p[1]); return [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)]; });
+      return (SIM.data = d);
+    });
+    return SIM.loading;
+  }
+  const lowerBound = (arr, v) => { let lo = 0, hi = arr.length; while (lo < hi) { const m = (lo + hi) >> 1; if (arr[m] < v) lo = m + 1; else hi = m; } return lo; };
+  // Punkt na przebiegu w odległości d [m]
+  function pointAt(shape, d) {
+    const D = shape.d; if (d <= 0) return shape.c[0]; if (d >= D[D.length - 1]) return shape.c[shape.c.length - 1];
+    const i = Math.max(1, lowerBound(D, d)), f = (d - D[i - 1]) / ((D[i] - D[i - 1]) || 1), a = shape.c[i - 1], b = shape.c[i];
+    return [a[0] + f * (b[0] - a[0]), a[1] + f * (b[1] - a[1])];
+  }
+  // Odległość wzdłuż przebiegu po czasie rel [s] od startu (profil: d0,t0,d1,t1,…)
+  function distAt(prof, rel) {
+    for (let k = 2; k < prof.length; k += 2) if (prof[k + 1] >= rel) {
+      const t0 = prof[k - 1], t1 = prof[k + 1], f = t1 > t0 ? (rel - t0) / (t1 - t0) : 1;
+      return prof[k - 2] + f * (prof[k] - prof[k - 2]);
+    }
+    return prof[prof.length - 2];
+  }
+  // Linia z piaskownicy w symulacji: kursy w obie strony co `headway` min, 5:00–23:00, stała prędkość z oceny.
+  function simExtraTrips() {
+    const r = lastEval; SIM.extra = [];
+    if (!r || !r.len || route.wps.length < 2) return;
+    const coords = routeEdges().flatMap((ei, i) => (i ? G.edges[ei].coords.slice(1) : G.edges[ei].coords));
+    const xy = coords.map(([lo, la]) => toXY(lo, la)); const d = [0];
+    for (let i = 1; i < xy.length; i++) d.push(d[i - 1] + Math.hypot(xy[i][0] - xy[i - 1][0], xy[i][1] - xy[i - 1][1]));
+    const fwd = { c: coords, d }, back = { c: [...coords].reverse(), d: d.map((v) => d[d.length - 1] - v).reverse() };
+    const dur = r.tPeak, head = r.headway * 60;
+    for (let s0 = 5 * 3600; s0 <= 23 * 3600; s0 += head) for (const sh of [fwd, back]) SIM.extra.push({ sh, s: s0, dur });
+  }
+  function simFrame() {
+    const d = SIM.data; if (!d || !map?.getSource("sim")) return;
+    const t = SIM.t, sel = new Set(lineFilter()), feats = [], counts = { autobus: 0, tramwaj: 0, metro: 0, kolej: 0, nowa: 0 };
+    const from = lowerBound(d.starts, t - d.maxDur), to = lowerBound(d.starts, t + 1);
+    for (let i = from; i < to; i++) {
+      if (d.ends[i] < t) continue;
+      const [si, pi, s0, ri] = d.trips[i], ref = d.routes[ri];
+      if (sel.size && !sel.has(ref.toUpperCase())) continue;
+      if (DSEL && !boxesTouch(d.shapeBox[si], DSEL.box)) continue;   // przebieg w całości poza wybraną dzielnicą
+      const pos = pointAt(d.shapes[si], distAt(d.profiles[pi], t - s0));
+      if (!inSelDistrict(pos)) continue;
+      const k = d.route_typ[ri]; counts[k]++;
+      feats.push({ type: "Feature", properties: { k, r: ref, id: i }, geometry: { type: "Point", coordinates: pos } });
+    }
+    SIM.extra.forEach((x, j) => {
+      if (t < x.s || t > x.s + x.dur) return;
+      const pos = pointAt(x.sh, (t - x.s) / x.dur * x.sh.d[x.sh.d.length - 1]);
+      if (!inSelDistrict(pos)) return;
+      counts.nowa++;
+      feats.push({ type: "Feature", properties: { k: "nowa", r: "nowa", id: -1 - j }, geometry: { type: "Point", coordinates: pos } });
+    });
+    map.getSource("sim").setData(fc(feats));
+    $("sim-clock").textContent = fmtClock(t); $("sim-time").value = Math.round(t);
+    $("sim-status").textContent = `W ruchu${DSEL ? ` (${DSEL.name})` : ""}: ${fmt.format(counts.autobus)} autobusów, ${fmt.format(counts.tramwaj)} tramwajów, ${fmt.format(counts.metro)} pociągów metra, ${fmt.format(counts.kolej)} SKM` + (counts.nowa ? `, ${counts.nowa} na nowej linii` : "");
+  }
+  function simTick(ts) {
+    if (!SIM.playing) return;
+    if (SIM.last) SIM.t += ((ts - SIM.last) / 1000) * SIM.speed;
+    if (SIM.t > 88200) SIM.t = 4 * 3600;   // po 24:30 od nowa od 4:00
+    SIM.last = ts;
+    if (ts - SIM.drawn > 70) { simFrame(); SIM.drawn = ts; }   // ~14 klatek/s wystarcza
+    requestAnimationFrame(simTick);
+  }
+  async function simToggle() {
+    if (SIM.playing) { SIM.playing = false; $("sim-play").textContent = "▶ Start"; return; }
+    $("sim-play").textContent = "Wczytywanie…"; await simLoad();
+    simExtraTrips();
+    SIM.playing = true; SIM.last = 0; $("sim-play").textContent = "❚❚ Pauza";
+    requestAnimationFrame(simTick);
+  }
+
+  // ---------- obciążenie linii w szczycie (frontend/pasazerowie_dane.json) ----------
+  const LOAD = { data: null, year: 2036, on: false };
+  const LOAD_BINS = [0.5, 0.8, 1.0];
+  const loadColorExpr = () => ["step", ["get", "u"], css("--good"), LOAD_BINS[0], css("--warn"), LOAD_BINS[1], css("--bus"), LOAD_BINS[2], css("--crit")];
+  function renderLoadKey() { $("load-key").innerHTML = ["--good", "--warn", "--bus", "--crit"].map((c) => `<i style="background:var(${c})"></i>`).join(""); }
+  async function loadLoad() {
+    if (LOAD.data) return LOAD.data;
+    const d = await fetch("frontend/pasazerowie_dane.json", { cache: "no-cache" }).then((r) => r.json());
+    return (LOAD.data = d);
+  }
+  function renderLoad() {
+    if (!map?.getSource("load")) return;
+    map.setLayoutProperty("load", "visibility", LOAD.on ? "visible" : "none");
+    if (!LOAD.on || !LOAD.data) return;
+    const sel = new Set(lineFilter()), ki = LOAD.year === 2025 ? 9 : 10, feats = [], perLine = new Map();
+    LOAD.data.odcinki.forEach((o, i) => {
+      const [l, typ, , x0, y0, x1, y1, , cap, p25, p36, z, d] = o, p = ki === 9 ? p25 : p36;
+      if (p == null || (sel.size && !sel.has(l.toUpperCase()))) return;
+      if (DSEL && !inSelDistrict([x0, y0]) && !inSelDistrict([x1, y1])) return;   // odcinek poza wybraną dzielnicą
+      const u = cap > 0 ? p / cap : 0;
+      if (p > 0) feats.push({ type: "Feature", properties: { i, l, p, u, z, d }, geometry: { type: "LineString", coordinates: [[x0, y0], [x1, y1]] } });
+      const m = perLine.get(l); if (!m || u > m.u) perLine.set(l, { l, typ, u, p, z, d });
+    });
+    feats.sort((a, b) => a.properties.u - b.properties.u);   // najbardziej obciążone rysowane na wierzchu
+    map.getSource("load").setData(fc(feats));
+    const over = feats.filter((f) => f.properties.u > 1).length;
+    $("load-sum").textContent = `${LOAD.year}${DSEL ? ` · ${DSEL.name}` : ""}: ${fmt.format(over)} odcinków przepełnionych (> 100% pojemności w godzinie szczytu).`;
+    const top = [...perLine.values()].sort((a, b) => b.u - a.u).slice(0, 8);
+    $("load-list").innerHTML = top.map((m) => `<li><button data-l="${esc(m.l)}"><span><b>${esc(m.l)}</b> <small>${esc(m.z)} → ${esc(m.d)}</small></span><span style="color:var(--${m.u > 1 ? "crit" : m.u > 0.8 ? "warn" : "ink-3"});font-weight:600">${Math.round(m.u * 100)}%</span></button></li>`).join("");
+    $("load-list").querySelectorAll("button").forEach((b) => (b.onclick = () => { $("line-filter").value = b.dataset.l; applyLayers(); fitToFilter(); }));
+  }
+  async function setLoad(on) {
+    LOAD.on = on; $("load-opts").hidden = !on;
+    if (on) await loadLoad();
+    renderLoad();
   }
 
   // ---------- pojazdy na żywo (przez frontend/serwer.py — API ZTM nie pozwala na zapytania z przeglądarki;
@@ -941,61 +1367,94 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
   const PM_ON = new Set(["M2 zachód", "M3"]);
   function renderPlannedMetroToggles() {
     $("pmetro-layers").innerHTML = (D?.planned_metro || []).map((m, i) =>
-      `<label class="check" for="pm-${i}"><input type="checkbox" id="pm-${i}" data-ref="${esc(m.ref)}" ${PM_ON.has(m.ref) ? "checked" : ""}><i class="sw" style="border-top:3px dashed var(--metro)"></i>${esc(m.ref)} · ${m.rok > 2036 ? "po 2036" : m.rok}</label>`).join("");
+      `<label class="check" for="pm-${i}"><input type="checkbox" id="pm-${i}" data-ref="${esc(m.ref)}" ${PM_ON.has(m.ref) ? "checked" : ""}><i class="sw" style="border-top:3px dashed var(${pmVar(m.ref)})"></i>${esc(m.ref)} · ${m.rok > 2036 ? "po 2036" : m.rok}</label>`).join("");
     $("pmetro-layers").querySelectorAll("input").forEach((i) => (i.onchange = applyPlannedMetro));
   }
   function applyPlannedMetro() {
     if (!map?.getLayer("pmetro-open")) return;
-    const on = [...$("pmetro-layers").querySelectorAll("input:checked")].map((i) => i.dataset.ref);
+    // Przy filtrze linii widać tylko planowane linie z filtra (np. „M3”), niezależnie od przełączników.
+    const fsel = lineFilter();
+    const on = fsel.length ? plannedInFilter(fsel) : [...$("pmetro-layers").querySelectorAll("input:checked")].map((i) => i.dataset.ref);
     const sel = ["in", ["get", "ref"], ["literal", on]];
     map.setFilter("pmetro-casing", sel);
     map.setFilter("pmetro-open", ["all", sel, ["<=", ["get", "rok"], year]]);
     map.setFilter("pmetro-future", ["all", sel, [">", ["get", "rok"], year]]);
     map.setFilter("pmetro-st", sel);
-    map.setPaintProperty("pmetro-st", "circle-color", ["case", [">", ["get", "rok"], year], css("--paper"), css("--metro")]);
+    map.setPaintProperty("pmetro-st", "circle-color", ["case", [">", ["get", "rok"], year], css("--paper"), pmColor()]);
     syncSections();
   }
 
   // ---------- warstwy i filtr linii ----------
+  // Kolory planowanych linii metra: M3 zielona, M4 żółta, przedłużenie M2 — kolor metra (czerwony).
+  const pmVar = (ref) => ({ M3: "--m3", M4: "--m4" })[ref] || "--metro";
+  const pmColor = () => ["match", ["get", "ref"], "M3", css("--m3"), "M4", css("--m4"), css("--metro")];
   const LAYERS = { hex: ["hex"], roads: ["roads"], bus: ["routes-bus"], tram: ["routes-tram", "trams"], metro: ["rail-metro", "stations-metro"],
-                   kolej: ["rail-kolej", "stations-kolej"], ztm: ["ztm"], nb: ["nb"], planned: ["planned", "planned-future"] };
+                   kolej: ["rail-kolej", "stations-kolej"], ztm: ["ztm"], nb: ["nb"], veturilo: ["veturilo"], planned: ["planned", "planned-future"] };
   const routeWidth = (k) => ["interpolate", ["linear"], ["zoom"], 10, ["*", k, ["interpolate", ["linear"], ["get", "kursy"], 20, 0.5, 120, 1.3, 300, 2.6]], 16, ["*", k, ["interpolate", ["linear"], ["get", "kursy"], 20, 1.5, 120, 3.5, 300, 6]]];
+  const SEL_WIDTH = ["interpolate", ["linear"], ["zoom"], 10, 3, 16, 7];   // grubość linii wybranych filtrem
+  const RAIL_WIDTH = { "rail-kolej": ["interpolate", ["linear"], ["zoom"], 10, 1.6, 16, 5], "rail-metro": ["interpolate", ["linear"], ["zoom"], 10, 2.6, 16, 5] };
+  const RAIL_KIND = { "rail-kolej": ["!", ["get", "m"]], "rail-metro": ["get", "m"], "stations-kolej": ["!", ["get", "m"]], "stations-metro": ["get", "m"] };
+  // Planowane linie metra pasujące do filtra: „M2” wybiera też „M2 zachód”.
+  const plannedInFilter = (sel) => (D.planned_metro || []).map((m) => m.ref).filter((r) => sel.includes(r.toUpperCase()) || sel.includes(r.split(" ")[0].toUpperCase()));
   const lineFilter = () => [...new Set($("line-filter").value.split(/[\s,;]+/).map((x) => x.trim().toUpperCase()).filter(Boolean))];
   function applyLayers() {
     if (!map?.getLayer("hex")) return;
     const sel = lineFilter(), vis = (on) => (on ? "visible" : "none");
     for (const [k, ids] of Object.entries(LAYERS)) for (const id of ids) map.setLayoutProperty(id, "visibility", vis($(`lay-${k}`).checked));
+    if (map.getLayer("heat")) {
+      map.setLayoutProperty("heat", "visibility", vis(HEAT.on));
+      if (HEAT.on) map.setLayoutProperty("hex", "visibility", "none");
+    }
     const groups = Object.keys(INFRA).filter((k) => $(`inf-${k}`)?.checked);
     map.setFilter("infra", ["in", ["get", "g"], ["literal", groups]]);
     for (const id of ["parks", "parks-line"]) map.setLayoutProperty(id, "visibility", vis(groups.includes("park")));
-    const known = new Set((D.routes || []).map((r) => r.ref.toUpperCase()));
+    const known = new Set([...(D.routes || []), ...(D.rail || [])].map((r) => r.ref.toUpperCase()));
+    plannedInFilter(sel).forEach((r) => { known.add(r.toUpperCase()); known.add(r.split(" ")[0].toUpperCase()); });
     if (sel.length) {
-      // Filtr linii: wybrane trasy zawsze widoczne i grubsze, przystanki tylko tych linii (przy każdym zoomie).
+      // Filtr linii — wszystkie środki transportu tak samo (autobus, tramwaj, metro, SKM/KM/WKD, planowane metro):
+      // widoczne tylko wybrane linie i ich przystanki/stacje (reszta sieci, tory tramwajowe i planowane stacje
+      // ukryte), wszystkie wybrane linie tej samej, dużej grubości (nie zależnej od liczby kursów).
       const inSel = ["in", ["upcase", ["get", "ref"]], ["literal", sel]];
       map.setFilter("routes-bus", ["all", ["==", ["get", "typ"], "autobus"], inSel]);
       map.setFilter("routes-tram", ["all", ["==", ["get", "typ"], "tram"], inSel]);
-      map.setLayoutProperty("routes-bus", "visibility", "visible"); map.setLayoutProperty("routes-tram", "visibility", "visible");
-      for (const id of ["routes-bus", "routes-tram"]) { map.setPaintProperty(id, "line-width", routeWidth(2.2)); map.setPaintProperty(id, "line-opacity", 0.95); }
+      for (const id of ["rail-kolej", "rail-metro"]) map.setFilter(id, ["all", RAIL_KIND[id], inSel]);
+      const servesSel = ["any", ...sel.map((x) => ["in", `,${x},`, ["get", "l"]])];
+      for (const id of ["stations-kolej", "stations-metro"]) map.setFilter(id, ["all", RAIL_KIND[id], servesSel]);
+      for (const id of ["routes-bus", "routes-tram", "rail-kolej", "rail-metro", "stations-kolej", "stations-metro"]) map.setLayoutProperty(id, "visibility", "visible");
+      for (const id of ["trams", "planned", "planned-future", "veturilo"]) map.setLayoutProperty(id, "visibility", "none");
+      for (const id of ["routes-bus", "routes-tram", "rail-kolej", "rail-metro"]) map.setPaintProperty(id, "line-width", SEL_WIDTH);
+      for (const id of ["routes-bus", "routes-tram"]) map.setPaintProperty(id, "line-opacity", 0.95);
       map.setFilter("ztm-sel", ["any", ...sel.map((x) => ["in", `,${x},`, ["upcase", ["get", "l"]]])]);
       map.setLayoutProperty("ztm-sel", "visibility", "visible"); map.setLayoutProperty("ztm", "visibility", "none");
-      const nStops = D.stops.ztm.filter((z) => sel.some((x) => `,${z[4].toUpperCase()},`.includes(`,${x},`))).length;
+      const serves = (lines) => sel.some((x) => `,${(lines || "").replace(/\s/g, "").toUpperCase()},`.includes(`,${x},`));
+      const pm = plannedInFilter(sel), nPm = (D.planned_metro || []).filter((x) => pm.includes(x.ref)).reduce((a, x) => a + x.stacje.filter((s) => !s[3]).length, 0);
+      const counts = [[D.stops.ztm.filter((z) => serves(z[4])).length, "przystanków ZTM"], [D.stops.rail.filter((s) => serves(s[4])).length, "stacji"], [nPm, "planowanych stacji metra"]]
+        .filter(([n]) => n).map(([n, w]) => `${fmt.format(n)} ${w}`);
       const unknown = sel.filter((x) => !known.has(x));
-      $("filter-note").textContent = `Linie ${sel.join(", ")}: ${fmt.format(nStops)} przystanków w Warszawie.` + (unknown.length ? ` Nie znaleziono: ${unknown.join(", ")}.` : "");
+      $("filter-note").textContent = `Linie ${sel.join(", ")}: ${counts.length ? counts.join(", ") + " w Warszawie" : "brak przystanków w Warszawie"}.` + (unknown.length ? ` Nie znaleziono: ${unknown.join(", ")}.` : "");
     } else {
       map.setFilter("routes-bus", ["==", ["get", "typ"], "autobus"]); map.setFilter("routes-tram", ["==", ["get", "typ"], "tram"]);
       map.setPaintProperty("routes-bus", "line-width", routeWidth(1)); map.setPaintProperty("routes-bus", "line-opacity", 0.55);
       map.setPaintProperty("routes-tram", "line-width", routeWidth(1)); map.setPaintProperty("routes-tram", "line-opacity", 0.75);
+      for (const id of ["rail-kolej", "rail-metro"]) { map.setFilter(id, RAIL_KIND[id]); map.setPaintProperty(id, "line-width", RAIL_WIDTH[id]); }
+      for (const id of ["stations-kolej", "stations-metro"]) map.setFilter(id, RAIL_KIND[id]);
       map.setLayoutProperty("ztm-sel", "visibility", "none");
       const nRef = (t) => new Set((D.routes || []).filter((r) => r.typ === t).map((r) => r.ref)).size;
       $("filter-note").textContent = `${nRef("autobus")} linii autobusowych i ${nRef("tram")} tramwajowych w granicach Warszawy (oba kierunki); grubość linii = liczba kursów.`;
     }
+    applyPlannedMetro();
     renderLive();
+    ensureVeturilo();
+    if (SIM.data) simFrame();
+    renderLoad();
     syncSections();
   }
   function fitToFilter() {
     const sel = new Set(lineFilter()); if (!sel.size || !map) return;
     const b = new maplibregl.LngLatBounds(); let any = false;
-    for (const r of D.routes || []) if (sel.has(r.ref.toUpperCase())) for (const p of r.parts) for (const c of p) { b.extend(c); any = true; }
+    for (const r of [...(D.routes || []), ...(D.rail || [])]) if (sel.has(r.ref.toUpperCase())) for (const p of r.parts) for (const c of p) { b.extend(c); any = true; }
+    const pm = plannedInFilter([...sel]);
+    for (const m of D.planned_metro || []) if (pm.includes(m.ref)) for (const s of m.stacje) { b.extend([s[0], s[1]]); any = true; }
     if (any) map.fitBounds(b, { padding: 50, maxZoom: 14, duration: 500 });
   }
   // Czy punkt leży w granicach Warszawy (ray casting po pierścieniach granicy).
@@ -1024,6 +1483,23 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
   document.addEventListener("visibilitychange", () => { if (liveOn && document.visibilityState === "visible") { clearTimeout(liveTimer); pollLive(); } });
 
   // ---------- propozycje JSON ----------
+  // Trasa dokładnie po zapisanych krawędziach (pole „krawedzie” z „Kopiuj obecną”), podzielona na odcinki
+  // w punktach „trasa”. null, gdy krawędzi nie ma w grafie albo nie tworzą ciągłego przejazdu.
+  function routeFromEdges(ids, trasa) {
+    if (!Array.isArray(ids) || !ids.length) return null;
+    const idx = ids.map((id) => G.byId.get(id));
+    if (idx.some((i) => i === undefined)) return null;
+    for (let k = 1; k < idx.length; k++) if (G.edges[idx[k - 1]].v !== G.edges[idx[k]].u) return null;
+    const marks = trasa.map(([lon, lat]) => nearestNode(...toXY(lon, lat), 5));
+    const wps = [G.edges[idx[0]].u], legs = [];
+    let cur = [], j = marks[0] === wps[0] ? 1 : 0;
+    for (const ei of idx) {
+      cur.push(ei);
+      if (j < marks.length && G.edges[ei].v === marks[j]) { legs.push(cur); wps.push(marks[j]); cur = []; j++; }
+    }
+    if (cur.length) { legs.push(cur); wps.push(G.edges[idx[idx.length - 1]].v); }
+    return { wps, legs };
+  }
   function loadProposal(obj) {
     const pts = (a) => Array.isArray(a) ? a.filter((p) => Array.isArray(p) && p.length >= 2 && isFinite(p[0]) && isFinite(p[1])) : [];
     const auto = obj.przystanki === "auto";
@@ -1032,7 +1508,9 @@ footer { color: var(--ink-3); font-size: 12px; margin-top: auto; }
     history.push({ t: "all", wps: route.wps, legs: route.legs, stops });
     route.wps = []; route.legs = []; stops = [];
     let skipped = 0;
-    for (const [lon, lat] of (tr.length ? tr : st)) {
+    const exact = routeFromEdges(obj.krawedzie, tr);
+    if (exact) { route.wps = exact.wps; route.legs = exact.legs; }
+    else for (const [lon, lat] of (tr.length ? tr : st)) {
       const before = route.wps.length; const [x, y] = toXY(lon, lat);
       const n = nearestNode(x, y);
       if (n < 0) { skipped++; continue; }
@@ -1140,42 +1618,53 @@ ${JSON.stringify(describe(r), null, 1)}`;
 
   function wireUI() {
     $("year").oninput = (e) => { year = +e.target.value; yearChanged(); };
-    $("scenario").querySelectorAll("button").forEach((b) => (b.onclick = () => { scenario = b.dataset.s; $("scenario").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x === b)); updateYearLayers(); renderEval(); }));
+    $("scenario").querySelectorAll("button").forEach((b) => (b.onclick = () => { scenario = b.dataset.s; $("scenario").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x === b)); updateYearLayers(); renderEval(); renderCluster(); }));
     $("metric").querySelectorAll("button").forEach((b) => (b.onclick = () => { metric = b.dataset.m; $("metric").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x === b)); renderLegend(); if (map?.getLayer("hex")) { map.setPaintProperty("hex", "fill-color", hexColorExpr()); updateYearLayers(); } }));
     $("tools").querySelectorAll("button").forEach((b) => (b.onclick = () => setMode(b.dataset.mode)));
     $("undo").onclick = undo; $("clear").onclick = clearAll; $("reset").onclick = resetAll;
     $("live").onchange = (e) => setLive(e.target.checked);
     $("live-kind").onchange = renderLive;
+    $("top-on").onchange = applyTop;
+    $("heat-btn").onclick = toggleHeat;
+    $("sim-play").onclick = simToggle;
+    $("sim-time").oninput = async (e) => { SIM.t = +e.target.value; $("sim-clock").textContent = fmtClock(SIM.t); if (!SIM.data) { await simLoad(); simExtraTrips(); } simFrame(); };
+    $("sim-speed").querySelectorAll("button").forEach((b) => (b.onclick = () => { SIM.speed = +b.dataset.v; $("sim-speed").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x === b)); }));
+    $("load-on").onchange = (e) => setLoad(e.target.checked);
+    $("load-year").querySelectorAll("button").forEach((b) => (b.onclick = () => { LOAD.year = +b.dataset.y; $("load-year").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x === b)); renderLoad(); }));
     let filterT; $("line-filter").oninput = () => { clearTimeout(filterT); filterT = setTimeout(applyLayers, 200); };
     $("line-filter").onchange = () => { applyLayers(); fitToFilter(); };
     $("layers").querySelectorAll("input").forEach((i) => (i.onchange = applyLayers));
     $("sample-line").onclick = () => { loadProposal(SAMPLE); };
-    ["headway", "vehicle", "dwell", "layover", "trips", "share"].forEach((id) => ($(id).oninput = () => { renderEval(); if (metric === "trips" && (id === "trips" || id === "share")) updateYearLayers(); }));
+    ["headway", "vehicle", "dwell", "layover", "trips", "share"].forEach((id) => ($(id).oninput = () => { renderEval(); if (id === "trips" || id === "share") { renderCluster(); if (metric === "trips") updateYearLayers(); } }));
     $("ai-btn").onclick = askAI;
     $("ai-stop").onclick = () => aiCtl?.abort();
-    $("json-load").onclick = () => { try { const n = loadProposal(JSON.parse($("json").value)); $("json-msg").textContent = n ? `Wczytano; pominięto ${n} punktów za daleko od ulic.` : "Wczytano propozycję."; } catch (e) { $("json-msg").textContent = `Nie udało się wczytać: ${e.message}`; } };
+    $("json-load").onclick = () => { try { const n = loadProposal(JSON.parse($("json").value)); $("json-msg").textContent = n ? `Wczytano; pominięto ${n} punktów za daleko od ulic lub przystanków poza trasą linii.` : "Wczytano propozycję."; } catch (e) { $("json-msg").textContent = `Nie udało się wczytać: ${e.message}`; } };
     $("json-file").onchange = (e) => { const f = e.target.files[0]; if (!f) return; const rd = new FileReader(); rd.onload = () => { $("json").value = rd.result; $("json-load").click(); }; rd.readAsText(f); };
     $("json-copy").onclick = async () => {
       const txt = JSON.stringify(currentProposal()); $("json").value = txt;
       try { await navigator.clipboard.writeText(txt); $("json-msg").textContent = "Skopiowano do schowka."; } catch { $("json").select(); $("json-msg").textContent = "Zaznaczono tekst w polu — skopiuj go ręcznie."; }
     };
-    window.addEventListener("keydown", (e) => { if ((e.metaKey || e.ctrlKey) && e.key === "z") { e.preventDefault(); undo(); } if (e.key === "Escape") setMode("view"); });
+    window.addEventListener("keydown", (e) => { if ((e.metaKey || e.ctrlKey) && e.key === "z") { e.preventDefault(); undo(); } if (e.key === "Escape") { if (mode === "view" && CL.i >= 0) closeCluster(); else setMode("view"); } });
   }
 
   function applyTheme() {
     if (!map?.getLayer("hex")) return;
     const set = (l, p, v) => map.setPaintProperty(l, p, v);
     set("bg", "background-color", css("--ground")); set("river", "line-color", css("--water")); set("roads", "line-color", css("--road"));
-    set("districts", "line-color", css("--district")); set("trams", "line-color", css("--tram")); set("hex", "fill-color", hexColorExpr());
+    set("districts", "line-color", css("--district")); set("district-sel", "line-color", css("--ink")); set("hex-sel", "line-color", css("--ink")); set("trams", "line-color", css("--tram")); set("hex", "fill-color", hexColorExpr());
+    set("busnet", "line-color", css("--accent"));
     set("rail-metro", "line-color", css("--metro")); set("rail-kolej", "line-color", css("--rail"));
-    for (const l of ["pmetro-open", "pmetro-future"]) set(l, "line-color", css("--metro"));
-    set("pmetro-casing", "line-color", css("--paper")); set("pmetro-st", "circle-stroke-color", ["case", ["==", ["get", "ex"], 1], css("--ink"), css("--metro")]);
+    for (const l of ["pmetro-open", "pmetro-future"]) set(l, "line-color", pmColor());
+    set("pmetro-casing", "line-color", css("--paper")); set("pmetro-st", "circle-stroke-color", ["case", ["==", ["get", "ex"], 1], css("--ink"), pmColor()]);
     applyPlannedMetro();
+    set("top-fill", "fill-color", css("--top")); set("top-line", "line-color", css("--top"));
+    if (map.getLayer("heat")) set("heat", "fill-color", heatColor());
     set("parks", "fill-color", css("--park")); set("parks-line", "line-color", css("--park"));
     set("routes-bus", "line-color", css("--bus")); set("routes-tram", "line-color", css("--tram")); set("mask", "fill-color", css("--ground"));
     set("ztm-sel", "circle-color", css("--paper")); set("ztm-sel", "circle-stroke-color", ["case", ["get", "t"], css("--tram"), css("--bus")]);
     set("ztm", "circle-color", css("--paper")); set("ztm", "circle-stroke-color", css("--ink-3"));
     set("nb", "circle-color", css("--sel")); set("nb", "circle-stroke-color", css("--paper"));
+    set("veturilo", "circle-color", css("--bike")); set("veturilo", "circle-stroke-color", css("--paper"));
     for (const l of ["stations-metro", "stations-kolej"]) set(l, "circle-color", css("--paper"));
     set("stations-metro", "circle-stroke-color", css("--metro")); set("stations-kolej", "circle-stroke-color", css("--rail"));
     set("planned", "circle-color", ["case", ["get", "tram"], css("--tram"), css("--metro")]); set("planned", "circle-stroke-color", css("--paper"));
@@ -1184,13 +1673,314 @@ ${JSON.stringify(describe(r), null, 1)}`;
     set("route-casing", "line-color", css("--ink")); set("route", "line-color", ["match", ["get", "j"], 2, css("--crit"), 1, css("--warn"), css("--good")]);
     set("wps", "circle-color", css("--ink")); set("wps", "circle-stroke-color", css("--paper"));
     set("nstops", "circle-color", css("--paper")); set("nstops", "circle-stroke-color", css("--accent"));
+    set("sim", "circle-color", simColorExpr()); set("sim", "circle-stroke-color", css("--ink")); set("load", "line-color", loadColorExpr()); renderLoadKey();
     set("live", "circle-color", css("--ink")); set("live", "circle-stroke-color", ["case", ["==", ["get", "typ"], 2], css("--tram"), css("--bus")]);
   }
+
+  // ---------- stacje Veturilo (dane/veturilo_stacje.csv z mapping/veturilo.py) + stan na żywo z GBFS Nextbike ----------
+  // Kanał GBFS jest otwarty (CC0) i pozwala na zapytania z przeglądarki, więc działa też na GitHub Pages.
+  const VET = { stations: [], status: new Map(), updated: null, timer: 0, busy: false };
+  const VET_STATUS = "https://gbfs.nextbike.net/maps/gbfs/v2/nextbike_vw/pl/station_status.json";
+  const vetFeatures = () => VET.stations.map((s) => {
+    const st = VET.status.get(s.id);
+    return { type: "Feature", properties: { id: s.id, name: s.name, nr: s.nr, cap: s.cap, bikes: st ? st.bikes : -1, docks: st ? st.docks : -1 }, geometry: { type: "Point", coordinates: [s.lon, s.lat] } };
+  });
+  const vetVisible = () => !!map?.getLayer("veturilo") && map.getLayoutProperty("veturilo", "visibility") !== "none";
+  function ensureVeturilo() { if (!VET.timer && !VET.busy) pollVeturilo(); }
+  async function pollVeturilo() {
+    clearTimeout(VET.timer); VET.timer = 0;
+    if (!vetVisible() || document.visibilityState !== "visible") return;
+    VET.busy = true;
+    try {
+      const j = await fetch(VET_STATUS, { cache: "no-store" }).then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); });
+      VET.status = new Map(j.data.stations.map((s) => [s.station_id, { bikes: s.num_bikes_available, docks: s.num_docks_available }]));
+      VET.updated = new Date((j.last_updated || Date.now() / 1000) * 1000);
+      map.getSource("veturilo")?.setData(fc(vetFeatures()));
+    } catch (e) { console.warn("Veturilo: brak stanu na żywo", e); }
+    finally { VET.busy = false; }
+    VET.timer = setTimeout(pollVeturilo, 60000);
+  }
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") ensureVeturilo(); });
+
+  // ---------- panel statystyk klastra (prawy dolny róg mapy) ----------
+  // Dane szczegółowe wczytywane raz, przy pierwszym kliknięciu klastra; brak pliku = brak tej sekcji.
+  const CL = { i: -1, data: null, loading: null, bbox: null, pts: null };
+  const SCEN_NAME = { lo: "niski", base: "bazowy", hi: "wysoki" };
+  const parseCSV = (txt) => new Map(parseRows(txt).map((o) => [o.h3, o]));
+  function parseRows(txt) {
+    const rows = []; let row = [], f = "", q = false;
+    txt = txt.replace(/^﻿/, "");
+    for (let k = 0; k < txt.length; k++) {
+      const c = txt[k];
+      if (q) { if (c !== '"') f += c; else if (txt[k + 1] === '"') { f += '"'; k++; } else q = false; }
+      else if (c === '"') q = true;
+      else if (c === ",") { row.push(f); f = ""; }
+      else if (c === "\n") { row.push(f.replace(/\r$/, "")); rows.push(row); row = []; f = ""; }
+      else f += c;
+    }
+    if (f || row.length) { row.push(f.replace(/\r$/, "")); rows.push(row); }
+    const [head, ...body] = rows;
+    return head ? body.filter((r) => r.length > 1).map((r) => Object.fromEntries(head.map((h, k) => [h, r[k] ?? ""]))) : [];
+  }
+  function loadClusterData() {
+    if (CL.loading) return CL.loading;
+    const csv = (p) => fetch(p, { cache: "no-cache" }).then((r) => (r.ok ? r.text() : "")).then(parseCSV).catch(() => new Map());
+    const ml = fetchHeat().then((g) => new Map(g.features.map((f) => [f.properties.h3, f.properties]))).catch(() => new Map());
+    CL.loading = Promise.all([csv("dane/cechy_klastrow.csv"), csv("dane/potrzeba_komunikacji.csv"), csv("dane/symulacja/klastry_podroze.csv"),
+                              csv("dane/historia_ludnosci.csv"), csv("dane/kolej/klastry_kolej.csv"), ml])
+      .then(([cechy, potrzeba, podroze, historia, kolej, ml]) => (CL.data = { cechy, potrzeba, podroze, historia, kolej, ml }));
+    return CL.loading;
+  }
+  const inRings = (lon, lat, rings) => rings.some((ring) => {
+    let inside = false;
+    for (let a = 0, b = ring.length - 1; a < ring.length; b = a++) {
+      const [xa, ya] = ring[a], [xb, yb] = ring[b];
+      if ((ya > lat) !== (yb > lat) && lon < ((xb - xa) * (lat - ya)) / (yb - ya) + xa) inside = !inside;
+    }
+    return inside;
+  });
+  function hexAt(lon, lat) {
+    CL.bbox ||= D.hexes.map((h) => { const c = h.rings.flat(); return [Math.min(...c.map((p) => p[0])), Math.min(...c.map((p) => p[1])), Math.max(...c.map((p) => p[0])), Math.max(...c.map((p) => p[1]))]; });
+    return CL.bbox.findIndex(([x0, y0, x1, y1], i) => lon >= x0 && lon <= x1 && lat >= y0 && lat <= y1 && inRings(lon, lat, D.hexes[i].rings));
+  }
+  function openCluster(i) {
+    if (i < 0) return;
+    CL.i = i; $("cpanel").hidden = false;
+    map?.getSource("hex-sel")?.setData(fc([{ type: "Feature", properties: {}, geometry: { type: "MultiLineString", coordinates: D.hexes[i].rings } }]));
+    renderCluster();
+    loadClusterData().then(() => { if (CL.i === i) renderCluster(); });
+  }
+  function closeCluster() {
+    CL.i = -1; $("cpanel").hidden = true;
+    map?.getSource("hex-sel")?.setData(fc([]));
+  }
+  function sparkline(h) {
+    const W = 320, H = 64, P = 4, ys = D.params.years, lo = h.pop_lo, hi = h.pop_hi, mid = h.pop;
+    // Zakres osi z danych, ale nie węższy niż ±10% wartości — drobne zmiany nie wyglądają na skoki.
+    const top = Math.max(...hi, ...mid), bot = Math.min(...lo, ...mid), pad = Math.max((top - bot) * 0.15, top * 0.1, 1);
+    const max = top + pad, min = Math.max(0, bot - pad);
+    const X = (k) => P + (k / (ys.length - 1)) * (W - 2 * P), Y = (v) => H - 14 - ((v - min) / (max - min || 1)) * (H - 22);
+    const line = (a) => a.map((v, k) => `${X(k).toFixed(1)},${Y(v).toFixed(1)}`).join(" ");
+    const band = `${line(hi)} ${hi.map((_, k) => `${X(lo.length - 1 - k).toFixed(1)},${Y(lo[lo.length - 1 - k]).toFixed(1)}`).join(" ")}`;
+    const k = yi(), cur = hexPop(h);
+    return `<svg class="cp-spark" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Ludność ${ys[0]}–${ys.at(-1)}: scenariusz niski, bazowy i wysoki">
+      <polygon points="${band}" fill="var(--accent)" fill-opacity="0.14"/>
+      <polyline points="${line(mid)}" fill="none" stroke="var(--accent)" stroke-width="2" vector-effect="non-scaling-stroke"/>
+      <circle cx="${X(k)}" cy="${Y(cur)}" r="3.5" fill="var(--ink)"/>
+      <text x="${P}" y="${H - 1}">${ys[0]}</text><text x="${W - P}" y="${H - 1}" text-anchor="end">${ys.at(-1)}</text></svg>`;
+  }
+  function renderCluster() {
+    if (CL.i < 0 || !D) return;
+    const i = CL.i, h = D.hexes[i], id = h.h3, d = CL.data;
+    const c = d?.cechy.get(id), pt = d?.potrzeba.get(id), sim = d?.podroze.get(id), hist = d?.historia.get(id), kol = d?.kolej.get(id), ml = d?.ml.get(id);
+    const v = (o, k) => { const x = o?.[k]; return x === undefined || x === "" || x === null ? null : Number.isFinite(+x) ? +x : x; };
+    const n = (x) => fmt.format(Math.round(x)), pct = (x, dig = 0) => `${(x * 100).toFixed(dig).replace(".", ",")}%`;
+    const sgn = (x) => `${x > 0 ? "+" : x < 0 ? "−" : ""}${n(Math.abs(x))}`;
+    const row = (label, value, cls = "") => value == null ? "" : `<div class="cp-row"><span>${label}</span><b class="${cls}">${value}</b></div>`;
+    const sec = (title, body) => body.trim() ? `<div class="cp-sec"><h4>${title}</h4>${body}</div>` : "";
+    const arrow = (a, b, f = n) => a == null || b == null ? null : f(a) === f(b) ? f(a) : `${f(a)} → ${f(b)}`;
+    const loading = !d ? `<div class="cp-note">Wczytywanie szczegółów…</div>` : "";
+
+    // Nagłówek
+    const top = TOP.rows.find((t) => t.h3 === id), pred = v(ml, "pred"), planYear = v(kol, "metro_plan_rok");
+    $("cp-title").textContent = `Klaster · ${h.d}`;
+    $("cp-id").textContent = `H3 ${id}`;
+    $("cp-badges").innerHTML = [top && `<span class="cp-badge top">Top 30 · #${top.rank}</span>`,
+      pred != null && `<span class="cp-badge">Wykluczenie ${pct(pred)}</span>`,
+      v(ml, "zrodlo") === "dodany" && `<span class="cp-badge">dodany do siatki</span>`,
+      planYear && `<span class="cp-badge">metro w klastrze od ${planYear}</span>`].filter(Boolean).join("");
+
+    // Ludność
+    const now = hexPop(h), d25 = now - h.pop[0], last = h.pop.length - 1;
+    const pts = (CL.pts ||= P.pts.reduce((a, p) => ((a[p.h] ||= []).push(p), a), []))[i] || [];
+    const popPts = pts.reduce((a, p) => a + ptPop(p), 0);
+    const share = (pred2) => popPts > 0 ? pts.filter(pred2).reduce((a, p) => a + ptPop(p), 0) / popPts : null;
+    let html = sec("Ludność",
+      row("Mieszkańcy 2025", n(h.pop[0])) +
+      row(`Mieszkańcy ${year} · scen. ${SCEN_NAME[scenario]}`, year === D.params.years[0] ? n(now) : `${n(now)} (${sgn(d25)})`, d25 > 0 ? "pos" : d25 < 0 ? "neg" : "") +
+      sparkline(h) +
+      row(`${D.params.years[last]}: niski · bazowy · wysoki`, `${n(h.pop_lo[last])} · ${n(h.pop[last])} · ${n(h.pop_hi[last])}`) +
+      row("Spis NSP 2011 → 2021", arrow(v(hist, "gus_2011"), v(hist, "gus_2021"))) +
+      row("Kontur 2023 (przed kalibracją)", v(ml, "population_kontur") != null ? n(v(ml, "population_kontur")) : null) +
+      row("GHSL 2000 → 2020 → 2030", v(hist, "ghsl_2000") != null ? `${n(v(hist, "ghsl_2000"))} → ${n(v(hist, "ghsl_2020"))} → ${n(v(hist, "ghsl_2030"))}` : null) +
+      row("Gęstość zaludnienia", v(c, "gestosc_os_km2") != null ? `${n(v(c, "gestosc_os_km2"))} os./km²` : null) +
+      row("Powierzchnia w granicach miasta", v(c, "pow_km2") != null ? `${v(c, "pow_km2").toFixed(2).replace(".", ",")} km²` : null) +
+      row("Dzieci 0–14 · seniorzy 65+", v(c, "udzial_0_14") != null ? `${pct(v(c, "udzial_0_14"))} · ${pct(v(c, "udzial_65_"))}` : null) +
+      row("Zmiana w istniejącej zabudowie", D.params.drift?.[i] != null ? `${(D.params.drift[i] * 100).toFixed(2).replace(".", ",").replace("-", "−")}% rocznie` : null));
+
+    // Nowa zabudowa
+    const nbs = P.nb.filter((b) => b.h === i).map((b) => ({ b, v: nbPop(b) })).sort((a, b) => b.v - a.v);
+    html += sec("Nowa zabudowa",
+      row("Mieszkania w budowie (pozwolenia GUNB)", v(c, "mieszkania_w_budowie") != null ? n(v(c, "mieszkania_w_budowie")) : null) +
+      row(`Nowe osiedla · mieszkańcy w ${year}`, nbs.length ? `${nbs.length} · ${n(nbs.reduce((a, x) => a + x.v, 0))}` : "brak") +
+      nbs.slice(0, 3).map(({ b, v: p }) => `<div class="cp-note">${esc(b.adres || "pozwolenie GUNB")} (${b.rok}) · ${n(b.mieszkania)} mieszk. · ${n(p)} os.</div>`).join(""));
+
+    // Wykluczenie i potrzeba komunikacji
+    const roz = v(pt, "roznica_dzis"), def31 = v(pt, "deficyt_2031"), def36 = v(pt, "deficyt_2036");
+    const defCls = (x) => x > 0 ? "neg" : x < 0 ? "pos" : "";
+    html += sec("Wykluczenie i potrzeba komunikacji · model ML",
+      row("Prawdopodobieństwo wykluczenia", pred != null ? `${pct(pred)} · miejsce ${n(v(ml, "rank"))} z ${n(D.hexes.length)}` : null, pred >= 0.5 ? "neg" : "") +
+      row("Kursy ZTM dziś (autobus + tramwaj, doba)", v(pt, "kursy_dzis") != null ? n(v(pt, "kursy_dzis")) : null) +
+      row("Typowa obsługa takiego klastra", v(pt, "potrzeba_dzis") != null ? n(v(pt, "potrzeba_dzis")) : null) +
+      row("Obsługa względem typowej", roz != null ? `${sgn(roz)} kursów` : null, roz < 0 ? "neg" : roz > 0 ? "pos" : "") +
+      row("Prognoza potrzeby: dziś · 2031 · 2036", v(pt, "potrzeba_model_dzis") != null ? `${n(v(pt, "potrzeba_model_dzis"))} · ${n(v(pt, "potrzeba_2031"))} · ${n(v(pt, "potrzeba_2036"))}` : null) +
+      row("Kursy do dołożenia do 2031", def31 != null ? sgn(def31) : null, defCls(def31)) +
+      row("Kursy do dołożenia do 2036", def36 != null ? sgn(def36) : null, defCls(def36)) +
+      (v(pt, "metro_nowe_2036") === "True" ? `<div class="cp-note">Do 2036 r. w pobliżu otworzy się stacja metra — model zakłada mniejszą potrzebę autobusów.</div>` : ""));
+
+    // Komunikacja dziś
+    const lines = new Set(), stopNames = new Set();
+    for (const [lon, lat, name, , ls, nr] of D.stops.ztm) if (inRings(lon, lat, h.rings)) { stopNames.add(`${name} ${nr}`); (ls || "").split(",").filter(Boolean).forEach((l) => lines.add(l)); }
+    const isNight = (l) => /^N\d/.test(l);
+    const lineList = [...lines].sort((a, b) => isNight(a) - isNight(b) || a.localeCompare(b, "pl", { numeric: true }));
+    const nNight = lineList.filter(isNight).length;
+    const kursy = ["autobus", "tramwaj", "metro", "kolej"].map((k) => [k, v(c, `kursy_dzien_${k}`)]).filter(([, x]) => x);
+    const zShare = share((p) => p.ztm), rShare = share((p) => p.railFrom <= year);
+    const metro = v(kol, "ma_metro") === "True" ? `${esc(v(kol, "stacje_metro"))}` : v(kol, "dist_metro_m") != null ? `najbliższa ${n(v(kol, "dist_metro_m"))} m` : null;
+    const rail = v(kol, "ma_kolej") === "True" ? `${esc(v(kol, "stacje_kolej"))}` : v(kol, "dist_kolej_m") != null ? `najbliższa ${n(v(kol, "dist_kolej_m"))} m` : null;
+    html += sec("Komunikacja dziś",
+      row("Przystanki ZTM · linie (dzień roboczy)", v(c, "przystanki_ztm") != null ? `${n(v(c, "przystanki_ztm"))} · ${n(v(c, "linie_ztm"))}` : `${n(stopNames.size)} · ${n(lineList.length - nNight)}`) +
+      (lineList.length ? `<div class="cp-note">Linie na przystankach klastra: ${n(lineList.length)}${nNight ? `, w tym ${n(nNight)} nocne` : ""}</div><div class="cp-chips">${lineList.slice(0, 48).map((l) => `<i>${esc(l)}</i>`).join("")}${lineList.length > 48 ? `<i>+${lineList.length - 48}</i>` : ""}</div>` : "") +
+      (kursy.length ? row("Kursy na dobę", kursy.map(([k, x]) => `${k} ${n(x)}`).join(" · ")) : row("Kursy na dobę", d ? "brak" : null)) +
+      row("Kursy w szczycie 7–9 (autobus + tramwaj)", v(c, "kursy_szczyt_bus_tram") != null ? `${n(v(c, "kursy_szczyt_bus_tram"))} / h` : null) +
+      row("Prędkość autobusów w szczycie", v(c, "v_autobus_szczyt_kmh") != null ? `${String(v(c, "v_autobus_szczyt_kmh")).replace(".", ",")} km/h · wolniej o ${pct(v(c, "korek") || 0)}` : null) +
+      row("Mieszkańcy ≤ 400 m od przystanku ZTM", zShare != null ? pct(zShare) : null, zShare != null && zShare < 0.5 ? "neg" : "") +
+      row(`Mieszkańcy ≤ 800 m od stacji (w ${year})`, rShare != null ? pct(rShare) : null) +
+      row("Metro", metro) +
+      row("Kolej (SKM / KM / WKD)", rail) +
+      row("Linie kolejowe i metra w klastrze", v(kol, "linie") ? esc(v(kol, "linie")) : null));
+
+    // Podróże — symulacja porannego szczytu
+    const tc = (x) => (x == null || !Number.isFinite(+x) ? "brak połączenia" : `${n(x)} min`);
+    const t25 = v(sim, "czas_do_centrum_min_2025"), t36 = v(sim, "czas_do_centrum_min_2036");
+    html += sec("Podróże · symulacja szczytu 7–9",
+      row("Wyjazdy z klastra / h · 2025 → 2036", arrow(v(sim, "podroze_wyjazd_h_2025"), v(sim, "podroze_wyjazd_h_2036"))) +
+      row("Przyjazdy do klastra / h · 2025 → 2036", arrow(v(sim, "podroze_przyjazd_h_2025"), v(sim, "podroze_przyjazd_h_2036"))) +
+      row("Czas do centrum komunikacją", sim ? (tc(t25) === tc(t36) ? tc(t25) : `${tc(t25)} → ${tc(t36)}`) : null) +
+      row("Cele podróży w 45 min (punkty)", arrow(v(sim, "cele_w_45min_2025"), v(sim, "cele_w_45min_2036"))) +
+      row(`Podróże ZTM dziennie (start w klastrze, ${year})`, n(now * (+$("trips").value || 2) * (+$("share").value || 45) / 100)));
+
+    // Cele podróży i miejsca pracy
+    const infra = Object.entries(INFRA).map(([g, [label]]) => [label, v(c, `infra_${g}`)]).filter(([, x]) => x > 0);
+    const m2 = (x) => x == null ? null : `${n(x)} m²`;
+    html += sec("Cele podróży i miejsca pracy",
+      row("Odległość od centrum (PKiN)", v(c, "odl_centrum_km") != null ? `${String(v(c, "odl_centrum_km")).replace(".", ",")} km` : null) +
+      row("Biura, handel, usługi", m2(v(c, "praca_biura_uslugi_m2"))) +
+      row("Przemysł i magazyny", m2(v(c, "praca_przemysl_m2"))) +
+      row("Sklepy i punkty usługowe", v(c, "punkty_uslug") != null ? n(v(c, "punkty_uslug")) : null) +
+      (c ? (infra.length ? infra.map(([label, x]) => row(label, n(x))).join("") : row("Szkoły, szpitale, urzędy…", "brak w klastrze")) : ""));
+
+    $("cp-body").innerHTML = loading + html;
+  }
+  $("cp-close").onclick = closeCluster;
+
+  // ---------- lista dzielnic (prawy górny róg mapy): filtrowanie po wpisanych literach, wybór przybliża mapę ----------
+  const fold = (s) => s.toLocaleLowerCase("pl").replace(/ł/g, "l").normalize("NFD").replace(/\p{M}/gu, "");
+  let DIST = null, distShown = [], distActive = -1;
+  const districtList = () => DIST || (!B ? [] : DIST = B.districts.map((d) => {
+    const rings = d.rings.map((c) => decode(c, B.scale)), b = new maplibregl.LngLatBounds();
+    rings.flat().forEach((p) => b.extend(p));
+    return { name: d.name, pop: d.pop, rings, b, box: [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()] };
+  }).sort((a, b) => a.name.localeCompare(b.name, "pl")));
+  function renderDistList() {
+    const raw = $("dpick-in").value.trim(), q = fold(raw), list = $("dpick-list");
+    distShown = districtList().filter((d) => fold(d.name).includes(q));
+    distActive = distShown.length ? Math.min(Math.max(distActive, 0), distShown.length - 1) : -1;
+    list.innerHTML = distShown.length
+      ? distShown.map((d, i) => `<li role="option" id="dp-${i}" data-i="${i}" aria-selected="${i === distActive}">${esc(d.name)}<small>${fmt.format(d.pop)} mieszk.</small></li>`).join("")
+      : `<li class="empty" role="option" aria-disabled="true">${DIST?.length ? `Brak dzielnicy „${esc(raw)}”` : "Wczytywanie…"}</li>`;
+    $("dpick-in").setAttribute("aria-activedescendant", distActive >= 0 ? `dp-${distActive}` : "");
+    list.querySelector('[aria-selected="true"]')?.scrollIntoView({ block: "nearest" });
+  }
+  function openDist(on) {
+    $("dpick-list").hidden = !on; $("dpick-in").setAttribute("aria-expanded", on);
+    if (on) renderDistList();
+  }
+  function syncDistBtn() {
+    const has = !!$("dpick-in").value;
+    $("dpick-btn").textContent = has ? "×" : "▾";
+    $("dpick-btn").setAttribute("aria-label", has ? "Wyczyść wybór dzielnicy" : "Pokaż listę dzielnic");
+  }
+  // Wybrana dzielnica zawęża symulację ruchu i obciążenie linii do swoich granic (null = całe miasto).
+  let DSEL = null;
+  const boxesTouch = (a, b) => a[0] <= b[2] && a[2] >= b[0] && a[1] <= b[3] && a[3] >= b[1];
+  const inSelDistrict = ([lon, lat]) => !DSEL || (lon >= DSEL.box[0] && lon <= DSEL.box[2] && lat >= DSEL.box[1] && lat <= DSEL.box[3] && inRings(lon, lat, DSEL.rings));
+  function setSelDistrict(d) {
+    if (DSEL === d) return;
+    DSEL = d;
+    if (SIM.data) simFrame();
+    renderLoad();
+  }
+  function pickDistrict(d) {
+    $("dpick-in").value = d.name; openDist(false); syncDistBtn();
+    setSelDistrict(d);
+    if (!map) return;
+    map.getSource("district-sel")?.setData(fc(d.rings.map((r) => ({ type: "Feature", properties: {}, geometry: { type: "LineString", coordinates: r } }))));
+    map.fitBounds(d.b, { padding: 40, duration: 700 });
+  }
+  function clearDistrict() {
+    $("dpick-in").value = ""; distActive = 0; syncDistBtn();
+    map?.getSource("district-sel")?.setData(fc([]));
+    setSelDistrict(null);
+  }
+  (function wireDistricts() {
+    const inp = $("dpick-in"), list = $("dpick-list");
+    inp.addEventListener("focus", () => openDist(true));
+    inp.addEventListener("click", () => openDist(true));
+    inp.addEventListener("input", () => {
+      distActive = 0; syncDistBtn(); openDist(true);
+      if (!inp.value) { map?.getSource("district-sel")?.setData(fc([])); setSelDistrict(null); }
+    });
+    inp.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        e.preventDefault();
+        if (list.hidden) return openDist(true);
+        if (distShown.length) { distActive = (distActive + (e.key === "ArrowDown" ? 1 : -1) + distShown.length) % distShown.length; renderDistList(); }
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        if (distShown[distActive]) pickDistrict(distShown[distActive]);
+      } else if (e.key === "Escape") {
+        e.stopPropagation();
+        if (!list.hidden) openDist(false); else inp.blur();
+      }
+    });
+    // mousedown zamiast click: wybór zanim pole straci fokus i lista się schowa.
+    list.addEventListener("mousedown", (e) => {
+      e.preventDefault();
+      const li = e.target.closest("li[data-i]"); if (li) pickDistrict(distShown[+li.dataset.i]);
+    });
+    $("dpick-btn").addEventListener("mousedown", (e) => e.preventDefault());
+    $("dpick-btn").addEventListener("click", () => {
+      if (inp.value) { clearDistrict(); inp.focus(); return openDist(true); }
+      const wasFocused = document.activeElement === inp;
+      inp.focus();                                  // fokus sam otwiera listę
+      if (wasFocused) openDist(list.hidden);        // już aktywne pole: przycisk przełącza listę
+    });
+    inp.addEventListener("blur", () => openDist(false));
+  })();
+
+  // Tryb jasny / ciemny: domyślnie jak w systemie; wybór z przycisku zapamiętany w przeglądarce.
+  const ICON = (d) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+  const SUN = ICON('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>');
+  const MOON = ICON('<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>');
+  const darkNow = () => (document.documentElement.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")) === "dark";
+  function renderThemeBtn() {
+    const b = $("theme"), label = darkNow() ? "Przełącz na tryb jasny" : "Przełącz na tryb ciemny";
+    b.innerHTML = darkNow() ? SUN : MOON; b.title = label; b.setAttribute("aria-label", label);
+  }
+  $("theme").onclick = () => {
+    const t = darkNow() ? "light" : "dark";
+    document.documentElement.dataset.theme = t;
+    try { localStorage.setItem("motyw", t); } catch {}
+    renderThemeBtn();
+  };
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", renderThemeBtn);
+  renderThemeBtn();
 
   // API dla algorytmu zespołu i testów: window.symulator.wczytaj({...}), .propozycja(), .ocena()
   window.symulator = { wczytaj: loadProposal, propozycja: currentProposal, ocena: () => lastEval, _G: () => G, _route: () => route, _map: () => map };
 
-  renderInfraToggles(); wireUI(); wireSections(); syncSections(); setMode("view"); renderLegend();
+  renderLoadKey(); renderInfraToggles(); wireUI(); wireSections(); syncSections(); setMode("view"); renderLegend();
   load().then(() => {
     buildMap();
     matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applyTheme);
