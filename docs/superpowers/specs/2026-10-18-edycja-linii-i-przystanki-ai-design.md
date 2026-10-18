@@ -10,7 +10,11 @@ Zastępuje specyfikację `2026-10-18-przedluzanie-linii-design.md` (tryb „Prze
   pozycja: romb z priorytetem, `nazwa_robocza`, dzielnica, „+zysk os.”, `id`. Klik → przybliżenie do punktu i szczegóły:
   `rodzaj`, `uzasadnienie`, przycisk **„Edytuj linię X”** dla pierwszej linii z `linia_rekomendowana`.
 - Podpowiedź na mapie: id, nazwa, priorytet, etap, zysk, dojście dziś → po, proponowana obsługa.
-- „Najlepsze miejsca na istniejących liniach” (`przystanki_top30_na_liniach.csv`) bez zmian.
+- Sekcja „Przystanki top 30” z dwiema listami o tych samych funkcjach (znaczniki, przełączniki w „Problem” i „Mapa”,
+  podpowiedź, klik → przybliżenie + obwódka + karta, „Edytuj linię”), domyślnie wyłączone:
+  „Na trasie istniejących linii” (`przystanki_top30_na_liniach.csv`, niebieskie kółka, „Edytuj linię” = ta linia)
+  i „Poza trasą” (`przystanki_top30.csv`, fioletowe kwadraty z nr 1–3, „Edytuj linię” = linie na ulicy albo
+  3 najbliższe linie autobusowe do 800 m). Listy posortowane po ocenie.
 
 ## 2. Tryb „Edytuj linię” (`data-mode="edit"`)
 

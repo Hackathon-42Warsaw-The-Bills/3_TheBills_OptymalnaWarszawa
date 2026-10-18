@@ -189,6 +189,10 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
 .toplist .rk { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--top); color: #fff; font: 600 11.5px/1 var(--f-body); }
 .toplist small { color: var(--ink-3); }
 .toplist .rk.dia { border-radius: 3px; width: 17px; height: 17px; margin: 2px; transform: rotate(45deg); background: #e8175d; box-shadow: 0 0 0 1.5px #fff; }
+.toplist .rk.sq { border-radius: 4px; background: #7048e8; box-shadow: 0 0 0 1.5px #fff; }
+.toplist .rk.ln { width: auto; min-width: 22px; padding: 0 5px; border-radius: 5px; background: var(--accent); color: var(--paper); font-size: 11px; }
+.toplist.wide button { grid-template-columns: 38px 1fr auto; }
+.toplist.wide .rk { justify-self: start; }
 .toplist .rk.dia > b { transform: rotate(-45deg); font-weight: 600; }
 .toplist button[aria-current="true"] { background: var(--chip); box-shadow: inset 3px 0 0 #e8175d; }
 .prop-card { margin-top: 8px; padding: 10px 12px; border-radius: 8px; background: var(--chip); font-size: 13px; line-height: 1.45; color: var(--ink-2); }
@@ -339,11 +343,24 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
         <div class="muted" id="prop-note" style="margin-top:6px"></div>
         <ul class="list toplist" id="prop-list" style="max-height:290px;overflow-y:auto"></ul>
         <div class="prop-card" id="prop-detail" hidden></div>
-        <label class="check" for="propl-on" style="margin-top:10px"><input type="checkbox" id="propl-on"><i class="sw" style="height:8px;width:8px;border-radius:50%;background:var(--accent)"></i>Najlepsze miejsca na istniejących liniach</label>
         <details class="how">
           <summary>Jak to liczymy?</summary>
           <p class="muted">Algorytm szuka miejsc, gdzie nowy przystanek najbardziej skraca dojście do standardu ZTM (300, 400 lub 500 m pieszo zależnie od strefy). Etap A: wystarczy dostawić słupki na trasie istniejącej linii. Etap B: potrzebna zmiana trasy albo przedłużenie linii — przycisk „Edytuj linię” otwiera ją w edytorze.</p>
         </details>
+      </section>
+      <section>
+        <h2>Przystanki top 30</h2>
+        <div class="muted">Propozycje w 30 klastrach priorytetowych modelu ML.</div>
+        <div class="subh">Na trasie istniejących linii</div>
+        <label class="check" for="propl-on" style="margin-top:6px"><input type="checkbox" id="propl-on"><i class="sw" style="height:10px;width:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 1.5px #fff"></i>Na mapie</label>
+        <div class="muted" id="propl-note" style="margin-top:6px"></div>
+        <ul class="list toplist wide" id="propl-list" style="max-height:250px;overflow-y:auto"></ul>
+        <div class="prop-card" id="propl-detail" hidden></div>
+        <div class="subh">Poza trasą</div>
+        <label class="check" for="propt-on" style="margin-top:6px"><input type="checkbox" id="propt-on"><i class="sw" style="height:11px;width:11px;border-radius:3px;background:#7048e8;box-shadow:0 0 0 1.5px #fff"></i>Na mapie</label>
+        <div class="muted" id="propt-note" style="margin-top:6px"></div>
+        <ul class="list toplist" id="propt-list" style="max-height:250px;overflow-y:auto"></ul>
+        <div class="prop-card" id="propt-detail" hidden></div>
       </section>
     </div>
 
@@ -484,6 +501,8 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
           <label class="check" for="lay-nb"><input type="checkbox" id="lay-nb" checked><i class="sw" style="height:9px;width:9px;border-radius:50%;background:var(--sel)"></i>Nowe osiedla</label>
           <label class="check" for="lay-veturilo"><input type="checkbox" id="lay-veturilo" checked><i class="sw" style="height:9px;width:9px;border-radius:50%;background:var(--bike)"></i>Stacje Veturilo</label>
           <label class="check" for="lay-prop"><input type="checkbox" id="lay-prop" checked><svg class="sw" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M8 1.5 14.5 8 8 14.5 1.5 8z" fill="#e8175d" stroke="#fff" stroke-width="1.5"/></svg>Przystanki AI</label>
+          <label class="check" for="lay-propl"><input type="checkbox" id="lay-propl"><i class="sw" style="height:10px;width:10px;border-radius:50%;background:var(--accent)"></i>Top 30: na trasie linii</label>
+          <label class="check" for="lay-propt"><input type="checkbox" id="lay-propt"><i class="sw" style="height:10px;width:10px;border-radius:3px;background:#7048e8"></i>Top 30: poza trasą</label>
           <label class="check" for="lay-planned"><input type="checkbox" id="lay-planned" checked>Planowane tramwaje i kolej</label>
         </div>
         <div class="subh"><label class="check" for="sec-pmetro"><input type="checkbox" id="sec-pmetro">Planowane metro</label><span class="note">linia przerywana = jeszcze nieotwarta w wybranym roku</span></div>
@@ -658,9 +677,9 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     // cache: "no-cache" — przeglądarka zawsze sprawdza, czy dane się zmieniły (po przeliczeniu prognozy nie pokaże starej kopii).
     // Małe pliki z dane/ — brak któregoś nie blokuje aplikacji (pusta tabela).
     const txt = (p) => fetch(p, { cache: "no-cache" }).then((r) => (r.ok ? r.text() : "")).catch(() => "");
-    let vet, mpp, prop, propL;
-    [D, B, vet, mpp, prop, propL] = await Promise.all([fetch("frontend/symulator_dane.json", { cache: "no-cache" }).then((r) => r.json()), fetch("frontend/warszawa.json", { cache: "no-cache" }).then((r) => r.json()),
-                                     txt("dane/veturilo_stacje.csv"), txt("dane/infrastruktura_w_klastrach.csv"), txt("dane/propozycje_przystankow.geojson"), txt("dane/przystanki_top30_na_liniach.csv")]);
+    let vet, mpp, prop, propL, propT;
+    [D, B, vet, mpp, prop, propL, propT] = await Promise.all([fetch("frontend/symulator_dane.json", { cache: "no-cache" }).then((r) => r.json()), fetch("frontend/warszawa.json", { cache: "no-cache" }).then((r) => r.json()),
+                                     txt("dane/veturilo_stacje.csv"), txt("dane/infrastruktura_w_klastrach.csv"), txt("dane/propozycje_przystankow.geojson"), txt("dane/przystanki_top30_na_liniach.csv"), txt("dane/przystanki_top30.csv")]);
     const mppBy = parseCSV(mpp);
     D.hexes.forEach((h) => { const r = mppBy.get(h.h3); h.mpp = r ? +r.liczba_mpp || 0 : 0; h.mppCat = r || null; });
     const pt = (r) => Number.isFinite(+r.lon) && Number.isFinite(+r.lat) && +r.lon !== 0;
@@ -668,8 +687,10 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     // Przystanki AI: najpierw priorytet 1, w nim największy zysk dostępności.
     PROP.st = ai.map((f) => ({ ...f.properties, lon: f.geometry.coordinates[0], lat: f.geometry.coordinates[1] })).filter(pt)
       .sort((a, b) => (a.priorytet || 9) - (b.priorytet || 9) || (b.zysk_dostepnosci || 0) - (a.zysk_dostepnosci || 0));
-    PROP.ln = parseRows(propL).filter(pt);
-    renderPropNote(); renderPropList();
+    const byScore = (a, b) => (+b.ocena || 0) - (+a.ocena || 0);   // top 30: najpierw najwyżej ocenione miejsca
+    PROP.ln = parseRows(propL).filter(pt).sort(byScore);
+    PROP.top = parseRows(propT).filter(pt).filter((r) => +r.nr > 0).sort(byScore);
+    renderPropLists();
     VET.stations = parseRows(vet).filter((s) => Number.isFinite(+s.lon) && Number.isFinite(+s.lat))
       .map((s) => ({ id: s.station_id, name: (s.nazwa || "").trim(), nr: s.numer, lon: +s.lon, lat: +s.lat, cap: +s.stojaki || 0, h3: s.h3 }));
     buildGraph(); buildPeople();
@@ -1111,11 +1132,15 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
       map.addLayer({ id: "top-fill", type: "fill", source: "top", paint: { "fill-color": css("--top"), "fill-opacity": 0.14 } });
       map.addLayer({ id: "top-line", type: "line", source: "top", paint: { "line-color": css("--top"), "line-width": ["interpolate", ["linear"], ["zoom"], 10, 2, 15, 4] } });
       map.addLayer({ id: "top-pt", type: "symbol", source: "top-pt", layout: { "icon-image": ["concat", "rank-", ["to-string", ["get", "rank"]]], "icon-size": ["interpolate", ["linear"], ["zoom"], 10, 0.75, 14, 1], "icon-allow-overlap": true, "symbol-sort-key": ["get", "rank"] } });
-      map.addSource("prop-line", { type: "geojson", data: fc(propLineFeatures()) });
-      map.addSource("prop-st", { type: "geojson", data: fc(propFeatures()) });
-      map.addLayer({ id: "prop-line", type: "circle", source: "prop-line", layout: { visibility: "none" }, paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 3, 15, 6], "circle-color": css("--accent"), "circle-stroke-width": 1.5, "circle-stroke-color": css("--paper") } });
+      map.addSource("prop-line", { type: "geojson", data: fc(propFeatures("ln")) });
+      map.addSource("prop-top", { type: "geojson", data: fc(propFeatures("top")) });
+      map.addSource("prop-st", { type: "geojson", data: fc(propFeatures("st")) });
+      map.addLayer({ id: "prop-line", type: "circle", source: "prop-line", layout: { visibility: "none" }, paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 5, 15, 9], "circle-color": css("--accent"), "circle-stroke-width": 2.5, "circle-stroke-color": "#ffffff" } });
+      for (const k of [1, 2, 3]) map.addImage(`propt-${k}`, propIcon(k, true, TOP_STOP_COLOR), { pixelRatio: 2 });
+      map.addLayer({ id: "prop-top", type: "symbol", source: "prop-top", layout: { visibility: "none", "icon-image": ["concat", "propt-", ["to-string", ["get", "nr"]]],
+        "icon-size": ["interpolate", ["linear"], ["zoom"], 10, 0.6, 13, 0.8, 16, 1], "icon-allow-overlap": true, "icon-ignore-placement": true, "symbol-sort-key": ["get", "nr"] } });
       for (const k of [1, 2, 3]) map.addImage(`prop-${k}`, propIcon(k), { pixelRatio: 2 });
-      map.addSource("prop-sel", { type: "geojson", data: fc([]) });   // obwódka wybranego przystanku AI
+      map.addSource("prop-sel", { type: "geojson", data: fc([]) });   // obwódka wybranej propozycji przystanku
       map.addLayer({ id: "prop-sel", type: "circle", source: "prop-sel", paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 16, 16, 26], "circle-color": "rgba(0,0,0,0)", "circle-stroke-width": 3, "circle-stroke-color": PROP_COLOR } });
       map.addLayer({ id: "prop-st", type: "symbol", source: "prop-st", layout: { "icon-image": ["concat", "prop-", ["to-string", ["get", "nr"]]],
         "icon-size": ["interpolate", ["linear"], ["zoom"], 10, 0.7, 13, 0.9, 16, 1.15], "icon-allow-overlap": true, "icon-ignore-placement": true, "symbol-sort-key": ["get", "nr"] } });
@@ -1226,11 +1251,10 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     const es = uniq(by((id) => id === "le-stops"), (f) => f.properties.i);
     if (es.length && LE) groups.push(`<div class="k">Przystanek linii ${esc(LE.ref)}</div>` + es.slice(0, 3).map((f) => `<b>${esc(f.properties.n)}</b> · ${LE_ST[f.properties.st]}`).join("<br>")
       + `<br><span style="opacity:0.8">${esc(leStopTip(es[0].properties))}</span>`);
-    const ps = uniq(by((id) => id === "prop-st"), (f) => f.properties.i);
-    if (ps.length) { const r = PROP.st[ps[0].properties.i]; groups.push(`<div class="k">Przystanek AI ${esc(r.id)} · priorytet ${propPrio(r)} · etap ${esc(r.typ)}</div>${propHTML(r)}`); }
-    const pl = uniq(by((id) => id === "prop-line"), (f) => f.properties.i);
-    if (pl.length) groups.push(`<div class="k">Nowy przystanek na istniejącej linii</div>` + pl.slice(0, 4).map((f) => { const r = PROP.ln[f.properties.i];
-      return `Linia <b>${esc(r.linia)}</b> · ${esc(r.ulica || "ulica bez nazwy")} · ocena ${n0(r.ocena)} · ${n0(r.odl_do_przystanku_ztm_m)} m od przystanku ZTM (klaster #${esc(r.rank)})`; }).join("<br>"));
+    for (const [k, id] of [["st", "prop-st"], ["top", "prop-top"], ["ln", "prop-line"]]) {
+      const ps = uniq(by((l) => l === id), (f) => f.properties.i);
+      if (ps.length) groups.push(ps.slice(0, k === "ln" ? 3 : 1).map((f) => propTip(k, f.properties.i)).join("<br>"));
+    }
     const bd = uniq(by((id) => id === "board"), (f) => f.properties.n + f.properties.nr);
     if (bd.length) groups.push(`<div class="k">Wsiadający w szczycie 7–8 · model</div>` + bd.slice(0, 3).map((f) => { const p = f.properties;
       return `<b>${esc(p.n)}${p.nr ? " " + esc(p.nr) : ""}</b> · 2025: ${n0(p.b25)}/h → 2036: ${n0(p.b36)}/h`; }).join("<br>"));
@@ -1245,7 +1269,7 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
 
   function wireMap() {
     const tip = $("tip");
-    const HIT = ["le-stops", "prop-st", "prop-line", "top-pt", "top-fill", "board", "sim", "load", "live", "infra", "parks", "nstops", "pmetro-st", "pmetro-open", "pmetro-future", "stations-metro", "stations-kolej", "planned", "veturilo", "ztm-sel", "ztm", "nb", "routes-bus", "routes-tram", "heat", "hex"];
+    const HIT = ["le-stops", "prop-st", "prop-top", "prop-line", "top-pt", "top-fill", "board", "sim", "load", "live", "infra", "parks", "nstops", "pmetro-st", "pmetro-open", "pmetro-future", "stations-metro", "stations-kolej", "planned", "veturilo", "ztm-sel", "ztm", "nb", "routes-bus", "routes-tram", "heat", "hex"];
     map.on("mousemove", (e) => {
       const r = 6, layers = HIT.filter((l) => map.getLayoutProperty(l, "visibility") !== "none");
       const fs = map.queryRenderedFeatures([[e.point.x - r, e.point.y - r], [e.point.x + r, e.point.y + r]], { layers });
@@ -1261,9 +1285,10 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
       else if (mode === "stop") addStop(x, y);
       else if (mode === "edit") editClick(e);
       else {
-        // Przeglądanie: romb przystanku AI → karta z uzasadnieniem, inaczej statystyki klikniętego klastra.
-        const pf = map.getLayoutProperty("prop-st", "visibility") !== "none" && map.queryRenderedFeatures([[e.point.x - 6, e.point.y - 6], [e.point.x + 6, e.point.y + 6]], { layers: ["prop-st"] })[0];
-        if (pf) { showTab("problem"); selectProp(pf.properties.i, { fly: false }); }
+        // Przeglądanie: znacznik propozycji przystanku → karta z opisem, inaczej statystyki klikniętego klastra.
+        const ids = { "prop-st": "st", "prop-top": "top", "prop-line": "ln" }, layers = Object.keys(ids).filter((l) => map.getLayoutProperty(l, "visibility") !== "none");
+        const pf = layers.length && map.queryRenderedFeatures([[e.point.x - 6, e.point.y - 6], [e.point.x + 6, e.point.y + 6]], { layers })[0];
+        if (pf) { showTab("problem"); selectProp(ids[pf.layer.id], pf.properties.i, { fly: false }); }
         else openCluster(hexAt(e.lngLat.lng, e.lngLat.lat));
       }
     });
@@ -1442,7 +1467,7 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     if (map?.getLayer("hex")) applyLayers();
   }
   function editFromProp(r, ref) {
-    if (startEdit(ref, ...toXY(+r.lon, +r.lat), undefined, [+r.lon, +r.lat])) flash(`Linia ${ref} wczytana. Romb pokazuje przystanek AI — dociągnij do niego linię przedłużeniem albo objazdem.`, true);
+    if (startEdit(ref, ...toXY(+r.lon, +r.lat), undefined, [+r.lon, +r.lat])) flash(`Linia ${ref} wczytana. Znacznik pokazuje proponowany przystanek — dociągnij do niego linię przedłużeniem albo objazdem albo dodaj przystanek.`, true);
   }
   function hidePick() { $("line-pick").hidden = true; }
   // Klik na mapie w trybie „Edytuj linię”.
@@ -1670,8 +1695,8 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     for (const [id, v] of Object.entries(DEFAULTS)) $(id).value = v;
     $("line-filter").value = "";
     for (const k of Object.keys(LAYERS)) $(`lay-${k}`).checked = k !== "bus";
-    $("prop-on").checked = true; $("lay-prop").checked = true; $("propl-on").checked = false;
-    PROP.sel = -1; $("prop-detail").hidden = true; renderPropList(); map?.getSource("prop-sel")?.setData(fc([]));
+    for (const [k, P] of Object.entries(PSETS)) $(P.chk).checked = $(P.lay).checked = k === "st";   // domyślnie tylko Przystanki AI
+    clearPropSel();
     for (const k of Object.keys(INFRA)) $(`inf-${k}`).checked = INFRA_ON.has(k);
     $("pmetro-layers").querySelectorAll("input").forEach((i) => (i.checked = PM_ON.has(i.dataset.ref)));
     applyPlannedMetro();
@@ -1707,65 +1732,119 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     g.fillText(String(n), S / 2, S / 2 + 1);
     return g.getImageData(0, 0, S, S);
   }
-  // Znacznik przystanku AI: duży romb (jedyny taki kształt na mapie) z priorytetem 1–3.
-  const PROP_COLOR = "#e8175d";
-  function propIcon(n) {
+  // Znacznik propozycji przystanku z numerem: romb (Przystanki AI, priorytet) albo kwadrat (top 30 poza trasą, nr w klastrze).
+  const PROP_COLOR = "#e8175d", TOP_STOP_COLOR = "#7048e8";
+  function propIcon(n, square = false, color = PROP_COLOR) {
     const S = 60, c = document.createElement("canvas"); c.width = c.height = S;
-    const g = c.getContext("2d"), m = S / 2, r = 23;
+    const g = c.getContext("2d"), m = S / 2, r = square ? 17 : 23;
     g.shadowColor = "rgba(0,0,0,0.45)"; g.shadowBlur = 6; g.shadowOffsetY = 1;
-    g.beginPath(); g.moveTo(m, m - r); g.lineTo(m + r, m); g.lineTo(m, m + r); g.lineTo(m - r, m); g.closePath();
-    g.fillStyle = PROP_COLOR; g.fill();
+    g.beginPath();
+    if (square) g.roundRect(m - r, m - r, 2 * r, 2 * r, 5);
+    else { g.moveTo(m, m - r); g.lineTo(m + r, m); g.lineTo(m, m + r); g.lineTo(m - r, m); g.closePath(); }
+    g.fillStyle = color; g.fill();
     g.shadowColor = "transparent"; g.lineWidth = 4; g.strokeStyle = "#ffffff"; g.stroke();
     g.fillStyle = "#ffffff"; g.font = "700 22px Barlow, system-ui, sans-serif"; g.textAlign = "center"; g.textBaseline = "middle";
     g.fillText(String(n), m, m + 1);
     return g.getImageData(0, 0, S, S);
   }
-  // ---------- Przystanki AI (dane/propozycje_przystankow.geojson, mapping/propozycje_przystankow.py) ----------
-  // st: propozycje algorytmu (etap A — słupki na istniejącej trasie, B — zmiana trasy / przedłużenie linii); ln: najlepsze miejsca na liniach.
-  const PROP = { st: [], ln: [], sel: -1 };
+  // ---------- propozycje przystanków: Przystanki AI i przystanki top 30 ----------
+  // st: Przystanki AI (dane/propozycje_przystankow.geojson; etap A — słupki na trasie, B — zmiana trasy / przedłużenie linii),
+  // ln: top 30 na trasie istniejących linii (dane/przystanki_top30_na_liniach.csv),
+  // top: top 30 poza trasą (dane/przystanki_top30.csv) — oba tylko w 30 klastrach priorytetowych modelu ML.
+  // Każdy zbiór: znaczniki na mapie, przełącznik w „Problem” i w „Mapa”, lista, karta wybranego punktu, „Edytuj linię”.
+  const PROP = { st: [], ln: [], top: [], sel: null };
   const MPP_KAT = { school: "szkoły", hospital: "szpitale", town_hall: "urzędy", mall: "centra handlowe", marketplace: "targowiska",
                     cinema: "kina", theatre: "teatry", museum: "muzea", park: "parki", religious: "miejsca kultu" };
-  const n0 =(x) => fmt.format(Math.round(+x || 0));
+  const n0 = (x) => fmt.format(Math.round(+x || 0));
+  const isTrue = (v) => String(v).toLowerCase() === "true";
   const propPrio = (r) => Math.min(3, Math.max(1, +r.priorytet || 3));
-  const propFeatures = () => PROP.st.map((r, i) => ({ type: "Feature", properties: { i, nr: propPrio(r) }, geometry: { type: "Point", coordinates: [+r.lon, +r.lat] } }));
-  const propLineFeatures = () => PROP.ln.map((r, i) => ({ type: "Feature", properties: { i, l: String(r.linia).toUpperCase() }, geometry: { type: "Point", coordinates: [+r.lon, +r.lat] } }));
+  const topNr = (r) => Math.min(3, Math.max(1, +r.nr || 1));
   const propWalk = (r) => r.dojscie_dzis_m ? `dojście dziś ${n0(r.dojscie_dzis_m)} m → po zmianie ${n0(r.dojscie_po_m)} m` : "";
-  // Podpowiedź na mapie: krótko, z pełnym uzasadnieniem algorytmu.
-  function propHTML(r) {
-    return `<b>${esc(r.nazwa_robocza || "bez nazwy")}</b> · ${esc(r.dzielnica)}<br>${esc(r.rodzaj)}`
-      + `<br>zysk dostępności: <b>+${n0(r.zysk_dostepnosci)}</b> os.${propWalk(r) ? ` · ${propWalk(r)}` : ""}`
-      + (r.uzasadnienie ? `<br><span style="opacity:0.85">Dlaczego tutaj: ${esc(r.uzasadnienie)}</span>` : "");
+  const isBusLine = (ref) => ref && (D.routes || []).some((x) => x.ref === ref && x.typ === "autobus");
+  const refsOf = (s) => String(s || "").split(/[\s,;]+/).filter(isBusLine);
+  // Najbliższe linie autobusowe (do r m) — gdy przystanek leży poza trasą, którą linię do niego dociągnąć.
+  function nearBusLines(lon, lat, r = 800, n = 3) {
+    const [x, y] = toXY(lon, lat), best = new Map();
+    for (const rt of D.routes || []) {
+      if (rt.typ !== "autobus") continue;
+      for (const p of rt.parts) for (let k = 1; k < p.length; k++) {
+        const a = toXY(...p[k - 1]), b = toXY(...p[k]), d = segProject(x, y, a[0], a[1], b[0], b[1]).d;
+        if (d <= r && d < (best.get(rt.ref) ?? Infinity)) best.set(rt.ref, d);
+      }
+    }
+    return [...best.entries()].sort((a, b) => a[1] - b[1]).slice(0, n).map(([ref]) => ref);
   }
-  // Linie z „linia_rekomendowana”, które mamy na mapie (autobusowe w granicach Warszawy) — do przycisku „Edytuj linię”.
-  const propLines = (r) => String(r.linia_rekomendowana || "").split(/[\s,;]+/).filter((ref) => ref && (D.routes || []).some((x) => x.ref === ref && x.typ === "autobus"));
-  function renderPropNote() {
-    const a = PROP.st.filter((r) => r.typ === "A").length;
-    $("prop-note").textContent = PROP.st.length
-      ? `${PROP.st.length} propozycji algorytmu: ${a} od razu (słupki na trasie istniejącej linii), ${PROP.st.length - a} ze zmianą trasy lub przedłużeniem linii. Romb = priorytet 1–3. Kliknij, aby zobaczyć uzasadnienie.`
-      : "Brak pliku dane/propozycje_przystankow.geojson.";
+  const PSETS = {
+    st: { list: "prop-list", card: "prop-detail", note: "prop-note", layer: "prop-st", lay: "lay-prop", chk: "prop-on", color: () => PROP_COLOR,
+      badge: (r) => `<span class="rk dia"><b>${propPrio(r)}</b></span>`,
+      item: (r) => [r.nazwa_robocza || "bez nazwy", `${r.dzielnica} · ${r.typ === "A" ? "od razu" : "zmiana trasy"}`, `+${n0(r.zysk_dostepnosci)}`],
+      lines: (r) => refsOf(r.linia_rekomendowana),
+      tip: (r) => `<div class="k">Przystanek AI ${esc(r.id)} · priorytet ${propPrio(r)} · etap ${esc(r.typ)}</div><b>${esc(r.nazwa_robocza || "bez nazwy")}</b> · ${esc(r.dzielnica)}<br>${esc(r.rodzaj)}`
+        + `<br>zysk dostępności: <b>+${n0(r.zysk_dostepnosci)}</b> os.${propWalk(r) ? ` · ${propWalk(r)}` : ""}`
+        + (r.uzasadnienie ? `<br><span style="opacity:0.85">Dlaczego tutaj: ${esc(r.uzasadnienie)}</span>` : ""),
+      html: (r) => `<div class="k">${esc(r.id)} · priorytet ${propPrio(r)} · etap ${esc(r.typ)}</div><b>${esc(r.nazwa_robocza)}</b> · ${esc(r.dzielnica)}`
+        + `<p>${esc(r.rodzaj)}. Zysk dostępności: <b>+${n0(r.zysk_dostepnosci)}</b> os.${propWalk(r) ? `; ${propWalk(r)}` : ""}.</p>`
+        + (r.uzasadnienie ? `<p>${esc(r.uzasadnienie)}</p>` : "")
+        + (r.propozycja_obslugi && !String(r.uzasadnienie || "").includes(r.propozycja_obslugi) ? `<p><b>Obsługa:</b> ${esc(r.propozycja_obslugi)}</p>` : ""),
+      noteText: (rows) => { const a = rows.filter((r) => r.typ === "A").length;
+        return rows.length ? `${rows.length} propozycji algorytmu: ${a} od razu (słupki na trasie istniejącej linii), ${rows.length - a} ze zmianą trasy lub przedłużeniem linii. Romb = priorytet 1–3. Kliknij, aby zobaczyć uzasadnienie.`
+          : "Brak pliku dane/propozycje_przystankow.geojson."; } },
+    ln: { list: "propl-list", card: "propl-detail", note: "propl-note", layer: "prop-line", lay: "lay-propl", chk: "propl-on", color: () => css("--accent"),
+      badge: (r) => `<span class="rk ln">${esc(r.linia)}</span>`,
+      item: (r) => [r.ulica || "ulica bez nazwy", `${r.dzielnica} · klaster #${r.rank}`, n0(r.ocena)],
+      lines: (r) => refsOf(r.linia),
+      tip: (r) => `<div class="k">Top 30 · na trasie linii ${esc(r.linia)}</div><b>${esc(r.ulica || "ulica bez nazwy")}</b> · ${esc(r.dzielnica)} (klaster #${esc(r.rank)})`
+        + `<br>ocena ${n0(r.ocena)} · ${n0(r.odl_do_przystanku_ztm_m)} m od najbliższego przystanku ZTM`,
+      html: (r) => `<div class="k">Na trasie linii ${esc(r.linia)} · klaster #${esc(r.rank)}</div><b>${esc(r.ulica || "ulica bez nazwy")}</b> · ${esc(r.dzielnica)}`
+        + `<p>Nowy przystanek na trasie istniejącej linii ${esc(r.linia)} — wystarczy dostawić słupki. Ocena (popyt w zasięgu ok. 400 m pieszo): <b>${n0(r.ocena)}</b>; najbliższy przystanek ZTM ${n0(r.odl_do_przystanku_ztm_m)} m.</p>`,
+      noteText: (rows) => rows.length ? `${rows.length} miejsc w 30 klastrach priorytetowych (${new Set(rows.map((r) => r.linia)).size} linii): gdzie dołożyć przystanek na trasie istniejącej linii. Liczba = ocena (popyt w zasięgu).`
+        : "Brak pliku dane/przystanki_top30_na_liniach.csv." },
+    top: { list: "propt-list", card: "propt-detail", note: "propt-note", layer: "prop-top", lay: "lay-propt", chk: "propt-on", color: () => TOP_STOP_COLOR,
+      badge: (r) => `<span class="rk sq">${topNr(r)}</span>`,
+      item: (r) => [r.ulica || "ulica bez nazwy", `${r.dzielnica} · klaster #${r.rank}`, `+${n0(r.nowo_obsluzeni)}`],
+      lines: (r) => { const own = refsOf(r.linie_ztm_na_ulicy); return own.length ? own : nearBusLines(+r.lon, +r.lat); },
+      tip: (r) => `<div class="k">Top 30 · poza trasą · klaster #${esc(r.rank)}</div><b>${esc(r.ulica || "ulica bez nazwy")}</b> · ${esc(r.dzielnica)} · propozycja ${topNr(r)} w klastrze`
+        + `<br>nowo obsłużeni: <b>${n0(r.nowo_obsluzeni)}</b> os. · ${n0(r.odl_do_przystanku_ztm_m)} m od najbliższego przystanku ZTM`,
+      html: (r) => { const extra = [isTrue(r.przesiadka_kolej) && "przesiadka na kolej / metro", isTrue(r.przy_veturilo) && "przy stacji Veturilo",
+                                     r.linie_ztm_na_ulicy && `ulicą jeżdżą: ${esc(r.linie_ztm_na_ulicy)}`].filter(Boolean);
+        return `<div class="k">Poza trasą · klaster #${esc(r.rank)} · propozycja ${topNr(r)}</div><b>${esc(r.ulica || "ulica bez nazwy")}</b> · ${esc(r.dzielnica)}`
+          + `<p>Nowo obsłużeni: <b>${n0(r.nowo_obsluzeni)}</b> os. (ocena ${n0(r.ocena)}). Mieszkańcy ${n0(r.mieszkancy_2025)}, nowi do 2036 ${n0(r.nowi_2036)}, miejsca pracy ${n0(r.miejsca_pracy)}; najbliższy przystanek ZTM ${n0(r.odl_do_przystanku_ztm_m)} m.</p>`
+          + (extra.length ? `<p>${extra.join(" · ")}</p>` : "") + (r.uwaga ? `<p>${esc(r.uwaga)}</p>` : "")
+          + (refsOf(r.linie_ztm_na_ulicy).length ? "" : `<p>Żadna linia tędy nie jedzie — najbliższe linie autobusowe można przedłużyć albo poprowadzić objazdem:</p>`); },
+      noteText: (rows) => rows.length ? `${rows.length} nowych przystanków (1–3 na klaster) w 30 klastrach priorytetowych. Kwadrat = numer propozycji w klastrze, liczba = nowo obsłużeni.`
+        : "Brak pliku dane/przystanki_top30.csv." },
+  };
+  const propFeatures = (k) => PROP[k].map((r, i) => ({ type: "Feature", properties: { i, nr: k === "st" ? propPrio(r) : topNr(r), l: String(r.linia || "").toUpperCase() }, geometry: { type: "Point", coordinates: [+r.lon, +r.lat] } }));
+  const propTip = (k, i) => PSETS[k].tip(PROP[k][i]);
+  function renderPropLists() {
+    for (const [k, P] of Object.entries(PSETS)) {
+      $(P.note).textContent = P.noteText(PROP[k]);
+      $(P.list).innerHTML = PROP[k].map((r, i) => { const [title, sub, val] = P.item(r);
+        return `<li><button data-i="${i}"${PROP.sel?.k === k && PROP.sel.i === i ? ' aria-current="true"' : ""}>${P.badge(r)}<span>${esc(title)} <small>· ${esc(sub)}</small></span><span style="font-weight:600">${val}</span></button></li>`; }).join("");
+      $(P.list).querySelectorAll("button").forEach((b) => (b.onclick = () => selectProp(k, +b.dataset.i)));
+    }
   }
-  function renderPropList() {
-    $("prop-list").innerHTML = PROP.st.map((r, i) => `<li><button data-i="${i}"${i === PROP.sel ? ' aria-current="true"' : ""}><span class="rk dia"><b>${propPrio(r)}</b></span>`
-      + `<span>${esc(r.nazwa_robocza || "bez nazwy")} <small>· ${esc(r.dzielnica)} · ${r.typ === "A" ? "od razu" : "zmiana trasy"}</small></span><span style="font-weight:600">+${n0(r.zysk_dostepnosci)}</span></button></li>`).join("");
-    $("prop-list").querySelectorAll("button").forEach((b) => (b.onclick = () => selectProp(+b.dataset.i)));
-  }
-  // Wybór propozycji (z listy albo kliknięciem rombu): przybliżenie, obwódka na mapie i karta z uzasadnieniem.
-  function selectProp(i, { fly = true } = {}) {
-    const r = PROP.st[i]; if (!r) return;
-    PROP.sel = i;
-    if (!$("lay-prop").checked) { $("lay-prop").checked = true; applyLayers(); }
-    renderPropList();
-    $("prop-list").querySelector(`[data-i="${i}"]`)?.scrollIntoView({ block: "nearest" });
-    const lines = propLines(r);
-    const card = $("prop-detail"); card.hidden = false;
-    card.innerHTML = `<div class="k">${esc(r.id)} · priorytet ${propPrio(r)} · etap ${esc(r.typ)}</div><b>${esc(r.nazwa_robocza)}</b> · ${esc(r.dzielnica)}`
-      + `<p>${esc(r.rodzaj)}. Zysk dostępności: <b>+${n0(r.zysk_dostepnosci)}</b> os.${propWalk(r) ? `; ${propWalk(r)}` : ""}.</p>`
-      + (r.uzasadnienie ? `<p>${esc(r.uzasadnienie)}</p>` : "")
-      + (r.propozycja_obslugi && !String(r.uzasadnienie || "").includes(r.propozycja_obslugi) ? `<p><b>Obsługa:</b> ${esc(r.propozycja_obslugi)}</p>` : "")
-      + (lines.length ? `<div class="row">${lines.slice(0, 3).map((l) => `<button class="btn small" type="button" data-l="${esc(l)}">Edytuj linię ${esc(l)}</button>`).join("")}</div>` : "");
+  // Wybór punktu (z listy albo kliknięciem znacznika): przybliżenie, obwódka na mapie i karta z opisem + „Edytuj linię”.
+  function selectProp(k, i, { fly = true } = {}) {
+    const P = PSETS[k], r = PROP[k]?.[i]; if (!r) return;
+    PROP.sel = { k, i };
+    if (!$(P.lay).checked) { $(P.lay).checked = true; applyLayers(); }
+    renderPropLists();
+    $(P.list).querySelector(`[data-i="${i}"]`)?.scrollIntoView({ block: "nearest" });
+    for (const Q of Object.values(PSETS)) $(Q.card).hidden = Q !== P;
+    const lines = P.lines(r), card = $(P.card);
+    card.innerHTML = P.html(r) + (lines.length ? `<div class="row">${lines.slice(0, 3).map((l) => `<button class="btn small" type="button" data-l="${esc(l)}">Edytuj linię ${esc(l)}</button>`).join("")}</div>` : "");
     card.querySelectorAll("[data-l]").forEach((b) => (b.onclick = () => editFromProp(r, b.dataset.l)));
-    if (map?.getSource("prop-sel")) map.getSource("prop-sel").setData(fc([{ type: "Feature", properties: {}, geometry: { type: "Point", coordinates: [+r.lon, +r.lat] } }]));
+    if (map?.getSource("prop-sel")) {
+      map.getSource("prop-sel").setData(fc([{ type: "Feature", properties: {}, geometry: { type: "Point", coordinates: [+r.lon, +r.lat] } }]));
+      map.setPaintProperty("prop-sel", "circle-stroke-color", P.color());
+      applyLayers();
+    }
     if (fly && map) map.flyTo({ center: [+r.lon, +r.lat], zoom: Math.max(map.getZoom(), 15), duration: 600 });
+  }
+  function clearPropSel() {
+    PROP.sel = null; for (const P of Object.values(PSETS)) $(P.card).hidden = true;
+    renderPropLists(); map?.getSource("prop-sel")?.setData(fc([]));
   }
 
   // ---------- wsiadający na przystankach w szczycie (dane/symulacja/przystanki_wsiadania.csv) ----------
@@ -2103,9 +2182,9 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     const sel = lineFilter(), vis = (on) => (on ? "visible" : "none");
     for (const [k, ids] of Object.entries(LAYERS)) for (const id of ids) map.setLayoutProperty(id, "visibility", vis($(`lay-${k}`).checked));
     if (map.getLayer("prop-st")) {
-      $("prop-on").checked = $("lay-prop").checked;   // przełącznik w „Mapa” (też przez Zaznacz/Odznacz wszystko) jest źródłem prawdy
-      for (const id of ["prop-st", "prop-sel"]) map.setLayoutProperty(id, "visibility", vis($("lay-prop").checked));
-      map.setLayoutProperty("prop-line", "visibility", vis($("propl-on").checked));
+      // Przełączniki w „Mapa” (też przez Zaznacz/Odznacz wszystko) są źródłem prawdy; te w „Problem” tylko je odbijają.
+      for (const P of Object.values(PSETS)) { $(P.chk).checked = $(P.lay).checked; map.setLayoutProperty(P.layer, "visibility", vis($(P.lay).checked)); }
+      map.setLayoutProperty("prop-sel", "visibility", vis(!!PROP.sel && $(PSETS[PROP.sel.k].lay).checked));
       map.setFilter("prop-line", sel.length ? ["in", ["get", "l"], ["literal", sel]] : null);   // filtr linii: tylko punkty wybranych linii
     }
     if (map.getLayer("heat")) {
@@ -2346,8 +2425,8 @@ ${JSON.stringify(describe(r), null, 1)}`;
     $("live-kind").onchange = renderLive;
     $("top-on").onchange = applyTop;
     // Ten sam przełącznik w zakładkach „Problem” i „Mapa”.
-    for (const [a, b] of [["prop-on", "lay-prop"], ["lay-prop", "prop-on"]]) $(a).addEventListener("change", () => { $(b).checked = $(a).checked; applyLayers(); });
-    $("propl-on").onchange = applyLayers;
+    // Ten sam przełącznik propozycji przystanków w zakładkach „Problem” i „Mapa”.
+    for (const P of Object.values(PSETS)) for (const [a, b] of [[P.chk, P.lay], [P.lay, P.chk]]) $(a).addEventListener("change", () => { $(b).checked = $(a).checked; applyLayers(); });
     $("board-on").onchange = (e) => setBoard(e.target.checked);
     $("board-year").querySelectorAll("button").forEach((b) => (b.onclick = () => { BOARD.year = +b.dataset.y; $("board-year").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x === b)); renderBoard(); }));
     $("heat-btn").onclick = toggleHeat;
@@ -2396,7 +2475,7 @@ ${JSON.stringify(describe(r), null, 1)}`;
     set("ztm", "circle-color", css("--paper")); set("ztm", "circle-stroke-color", css("--ink-3"));
     set("nb", "circle-color", css("--sel")); set("nb", "circle-stroke-color", css("--paper"));
     set("veturilo", "circle-color", css("--bike")); set("veturilo", "circle-stroke-color", css("--paper"));
-    set("prop-line", "circle-color", css("--accent")); set("prop-line", "circle-stroke-color", css("--paper"));
+    set("prop-line", "circle-color", css("--accent")); if (PROP.sel) set("prop-sel", "circle-stroke-color", PSETS[PROP.sel.k].color());
     set("board", "circle-color", css("--board")); set("board", "circle-stroke-color", css("--paper"));
     set("le-orig", "line-color", css("--bus")); set("le-draft", "line-color", css("--ink")); set("le-draft-pt", "circle-color", css("--ink")); set("le-draft-pt", "circle-stroke-color", css("--paper"));
     set("le-stops", "circle-color", ["match", ["get", "st"], "off", css("--crit"), css("--paper")]);
@@ -2564,12 +2643,13 @@ ${JSON.stringify(describe(r), null, 1)}`;
       row("Kursy do dołożenia do 2036", def36 != null ? sgn(def36) : null, defCls(def36)) +
       (v(pt, "metro_nowe_2036") === "True" ? `<div class="cp-note">Do 2036 r. w pobliżu otworzy się stacja metra — model zakłada mniejszą potrzebę autobusów.</div>` : ""));
 
-    // Przystanki AI w klastrze + najlepsze miejsca na istniejących liniach (tylko 30 klastrów priorytetowych)
-    const props = PROP.st.filter((r) => r.h3 === id), onLines = PROP.ln.filter((r) => r.h3 === id);
+    // Przystanki AI w klastrze + przystanki top 30 na trasie i poza trasą (tylko 30 klastrów priorytetowych)
+    const props = PROP.st.filter((r) => r.h3 === id), onLines = PROP.ln.filter((r) => r.h3 === id), offRoute = PROP.top.filter((r) => r.h3 === id).sort((a, b) => topNr(a) - topNr(b));
     html += sec("Przystanki AI · algorytm",
       props.map((r) => row(`${esc(r.id)} ${esc(r.nazwa_robocza || "bez nazwy")}`, `+${n0(r.zysk_dostepnosci)} os. · prio ${propPrio(r)}`)).join("") +
       props.map((r) => propWalk(r) && `<div class="cp-note">${esc(r.id)}: ${propWalk(r)}; ${esc(r.propozycja_obslugi || r.rodzaj)}.</div>`).join("") +
-      (onLines.length ? `<div class="cp-note">Najlepsze miejsca na istniejących liniach: ${onLines.slice(0, 6).map((r) => `${esc(r.linia)} (${esc(r.ulica || "—")})`).join(", ")}${onLines.length > 6 ? "…" : ""}</div>` : ""));
+      (offRoute.length ? `<div class="cp-note">Top 30 poza trasą: ${offRoute.map((r) => `${topNr(r)}. ${esc(r.ulica || "—")} (+${n0(r.nowo_obsluzeni)} os.)`).join(", ")}</div>` : "") +
+      (onLines.length ? `<div class="cp-note">Top 30 na trasie linii: ${onLines.slice(0, 6).map((r) => `${esc(r.linia)} (${esc(r.ulica || "—")})`).join(", ")}${onLines.length > 6 ? "…" : ""}</div>` : ""));
 
     // Komunikacja dziś
     const lines = new Set(), stopNames = new Set();
