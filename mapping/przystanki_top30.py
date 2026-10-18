@@ -47,7 +47,7 @@ from cechy_klastrow import PBF, WORK_BUILDINGS  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 DANE, DATA = ROOT / "dane", ROOT / "data"
-ML_DIR = DANE / "wskaznik_wykluczenia" / "output_run3"   # wyniki modelu wskaźnika wykluczenia (lista top 30)
+ML_DIR = DANE / "wskaznik_wykluczenia" / "output_run4"   # wyniki modelu wskaźnika wykluczenia (lista top 30)
 CRS = "EPSG:2180"
 CACHE = DATA / "cache" / "budynki_mieszkalne.parquet"
 
