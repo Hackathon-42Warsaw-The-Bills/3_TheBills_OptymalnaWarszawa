@@ -59,7 +59,8 @@ def derived() -> list[tuple[str, pd.DataFrame]]:
     # wskaźnik wykluczenia komunikacyjnego (model MLP) dla wszystkich klastrów — z heatmapy (gałąź main)
     heat = gpd.read_file(ML_DIR / "heatmapa_wykluczenia.geojson").set_index("h3")
     top = read(ML_DIR / "lista_heksagonow_top30.csv").set_index("h3")
-    out.append(("wykluczenie", pd.DataFrame({"pred_wykluczenie": heat["pred"], "rank_wykluczenie": heat["rank"],
+    analiza = heat["pred"] >= 0   # pred = rank = −1: klaster poza analizą modelu → brak wartości
+    out.append(("wykluczenie", pd.DataFrame({"pred_wykluczenie": heat["pred"].where(analiza), "rank_wykluczenie": heat["rank"].where(analiza),
                                              "top30": heat["top30"], "top30_etykieta": top["etykieta_final"]})))
 
     p = read("przystanki_top30.csv")
