@@ -1,19 +1,23 @@
 """Serwer lokalny: aplikacja (index.html w katalogu repo, jak na GitHub Pages) + pośrednik do API ZTM
-(autobusy i tramwaje na żywo — tego GitHub Pages nie potrafi).
+(autobusy i tramwaje na żywo) i do API Anthropic (ocena linii przez asystenta AI) — tego GitHub Pages nie potrafi.
 
-API miasta nie pozwala na zapytania wprost z przeglądarki (brak CORS), a klucza nie wolno
-wkładać do kodu strony — dlatego zapytania idą przez ten serwer. Klucz w ZTM_API_KEY (.env):
-  - token JWT z dane.um.warszawa.pl (nowe API, get_ztm_lokalizacja_pojazdow, nagłówek Authorization),
-  - albo klucz UUID ze starego api.um.warszawa.pl (busestrams_get) — rozpoznawany automatycznie.
+API miasta nie pozwala na zapytania wprost z przeglądarki (brak CORS), a kluczy nie wolno
+wkładać do kodu strony — dlatego zapytania idą przez ten serwer. Klucze w .env:
+  ZTM_API_KEY        — token JWT z dane.um.warszawa.pl (nowe API, get_ztm_lokalizacja_pojazdow, nagłówek Authorization)
+                       albo klucz UUID ze starego api.um.warszawa.pl (busestrams_get) — rozpoznawany automatycznie;
+  ANTHROPIC_API_KEY  — klucz z console.anthropic.com do oceny przez asystenta AI; model w ANTHROPIC_MODEL
+                       (domyślnie claude-opus-5-5), adres API w ANTHROPIC_BASE_URL (domyślnie api.anthropic.com).
 
 Uruchomienie:
-    .venv/bin/python frontend/serwer.py      # http://localhost:8765/ ; klucz z .env (ZTM_API_KEY=...)
-    .venv/bin/python frontend/serwer.py 9000                            # inny port; bez klucza
-                                                                        # działa wszystko oprócz „na żywo”
+    .venv/bin/python frontend/serwer.py      # http://localhost:8765/ ; klucze z .env
+    .venv/bin/python frontend/serwer.py 9000                            # inny port; bez kluczy działa wszystko
+                                                                        # oprócz „na żywo” i asystenta AI
 Endpointy:
-    GET /api/status    -> {"live": true|false}
-    GET /api/pojazdy   -> {"czas": ..., "pojazdy": [[lon, lat, linia, brygada, nr_pojazdu, typ, sek_temu], ...]}
+    GET  /api/status   -> {"live": true|false, "ai": true|false}
+    GET  /api/pojazdy  -> {"czas": ..., "pojazdy": [[lon, lat, linia, brygada, nr_pojazdu, typ, sek_temu], ...]}
                           typ: 1 = autobus, 2 = tramwaj; odpowiedź z ZTM trzymana w pamięci CACHE_S sekund
+    POST /api/ocena    {"prompt": "..."} -> tekst odpowiedzi modelu strumieniem (text/plain, kawałek po kawałku);
+                          błąd: {"blad": "..."} z kodem 4xx/5xx
 """
 
 import json
@@ -56,6 +60,10 @@ API_KEY = os.environ.get("ZTM_API_KEY", "").strip()
 NEW_API = "." in API_KEY   # token JWT (trzy części z kropkami) -> nowe API; UUID -> stare
 CACHE_S = 10          # ZTM odświeża pozycje mniej więcej co 10 s
 MAX_AGE_S = 300       # pozycje starsze niż 5 min (pojazd zjechał, nadajnik milczy) pomijamy
+AI_KEY = os.environ.get("ANTHROPIC_API_KEY", "").strip()
+AI_MODEL = os.environ.get("ANTHROPIC_MODEL", "").strip() or "claude-opus-5-5"
+AI_URL = (os.environ.get("ANTHROPIC_BASE_URL", "").strip() or "https://api.anthropic.com").rstrip("/") + "/v1/messages"
+AI_MAX_PROMPT = 20000  # znaków — strona wysyła polecenie i kilka KB danych linii
 
 _cache = {"t": 0.0, "body": b""}
 _lock = threading.Lock()
@@ -101,7 +109,7 @@ class Handler(SimpleHTTPRequestHandler):
     def do_GET(self):
         path = self.path.split("?")[0]
         if path == "/api/status":
-            return self.send_json(200, json.dumps({"live": bool(API_KEY)}).encode())
+            return self.send_json(200, json.dumps({"live": bool(API_KEY), "ai": bool(AI_KEY)}).encode())
         if path == "/api/pojazdy":
             if not API_KEY:
                 return self.send_json(503, json.dumps({"blad": "Brak klucza ZTM_API_KEY na serwerze."}, ensure_ascii=False).encode())
@@ -117,6 +125,58 @@ class Handler(SimpleHTTPRequestHandler):
         if any(p.startswith(".") for p in parts) or (parts and parts[0] in BLOCKED_TOP) or path.endswith(".py"):
             return self.send_error(404, "File not found")
         return super().do_GET()
+
+    def do_POST(self):
+        if self.path.split("?")[0] != "/api/ocena":
+            return self.send_error(404, "File not found")
+        if not AI_KEY:
+            return self.send_json(503, json.dumps({"blad": "Brak klucza ANTHROPIC_API_KEY na serwerze."}, ensure_ascii=False).encode())
+        try:
+            body = json.loads(self.rfile.read(int(self.headers.get("Content-Length", 0))) or b"{}")
+            prompt = str(body.get("prompt", ""))[:AI_MAX_PROMPT]
+        except (ValueError, AttributeError):
+            prompt = ""
+        if not prompt.strip():
+            return self.send_json(400, json.dumps({"blad": "Oczekuję JSON-a z polem prompt."}, ensure_ascii=False).encode())
+        try:
+            r = requests.post(AI_URL, stream=True, timeout=(10, 120),
+                              headers={"x-api-key": AI_KEY, "anthropic-version": "2023-06-01", "content-type": "application/json"},
+                              json={"model": AI_MODEL, "max_tokens": 1024, "stream": True, "messages": [{"role": "user", "content": prompt}]})
+        except requests.RequestException as e:
+            return self.send_json(502, json.dumps({"blad": f"API Anthropic: {e}"}, ensure_ascii=False).encode())
+        if r.status_code != 200:
+            try:
+                msg = r.json().get("error", {}).get("message") or r.text
+            except ValueError:
+                msg = r.text
+            return self.send_json(502, json.dumps({"blad": f"API Anthropic (HTTP {r.status_code}): {msg[:300]}"}, ensure_ascii=False).encode())
+        # Odpowiedź modelu (zdarzenia SSE) przekazujemy stronie jako zwykły tekst, kawałek po kawałku — strona dopisuje
+        # go na bieżąco. Koniec tekstu = zamknięcie połączenia (HTTP/1.0, bez Content-Length).
+        self.send_response(200)
+        self.send_header("Content-Type", "text/plain; charset=utf-8")
+        self.send_header("Cache-Control", "no-store")
+        self.end_headers()
+        r.encoding = "utf-8"
+        try:
+            for line in r.iter_lines(chunk_size=64, decode_unicode=True):   # małe porcje — tekst pojawia się płynnie
+                if not line or not line.startswith("data:"):
+                    continue
+                try:
+                    ev = json.loads(line[5:])
+                except ValueError:
+                    continue
+                if ev.get("type") == "content_block_delta" and ev.get("delta", {}).get("type") == "text_delta":
+                    self.wfile.write(ev["delta"]["text"].encode("utf-8"))
+                    self.wfile.flush()
+                elif ev.get("type") == "error":
+                    self.wfile.write(f"\n\n[Błąd API Anthropic: {ev.get('error', {}).get('message', '')}]".encode("utf-8"))
+        except (BrokenPipeError, ConnectionResetError):
+            pass  # strona przerwała ocenę („Zatrzymaj”)
+        except requests.RequestException as e:
+            self.wfile.write(f"\n\n[Przerwane połączenie z API Anthropic: {e}]".encode("utf-8"))
+        finally:
+            r.close()
+            self.close_connection = True
 
     def end_headers(self):
         # Pliki danych zawsze z rewalidacją — po przeliczeniu prognozy przeglądarka nie użyje starej kopii.
@@ -136,6 +196,7 @@ def main() -> None:
     print(f"Aplikacja: http://localhost:{port}/")
     print("Pojazdy na żywo: " + (("włączone (" + ("dane.um.warszawa.pl" if NEW_API else "api.um.warszawa.pl") + ")")
                                  if API_KEY else "wyłączone — ustaw ZTM_API_KEY w .env"))
+    print("Asystent AI: " + (f"włączony ({AI_MODEL})" if AI_KEY else "wyłączony — ustaw ANTHROPIC_API_KEY w .env"))
     server.serve_forever()
 
 

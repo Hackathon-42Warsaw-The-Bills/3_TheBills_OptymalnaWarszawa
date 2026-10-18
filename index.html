@@ -374,6 +374,9 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
           <button class="tool" data-mode="stop" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="10" r="5"/><path d="M12 15v6"/></svg>Przystanki</button>
           <button class="tool" data-mode="edit" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18h9"/><circle cx="12" cy="18" r="2"/><path d="M14 17c3-1 4-5 7-9"/><path d="M17 8h4v4"/></svg>Edytuj linię</button>
         </div>
+        <div class="row" id="auto-box" style="margin-top:8px">
+          <button class="btn" type="button" id="auto-stops" title="Najpierw istniejące przystanki ZTM leżące na trasie, potem Przystanki AI i top 30 z klastrów, a na koniec miejsca, gdzie według analizy otoczenia przystanek się opłaca — tylko na ulicach trasy, nie obok.">Dodaj przystanki automatycznie</button>
+        </div>
         <div class="hint" id="hint" style="margin-top:8px"></div>
         <!-- Menu trybu edycji istniejącej linii (zastępuje narzędzia, gdy linia jest wczytana) -->
         <div class="le" id="le-panel" hidden>
@@ -606,6 +609,7 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
   //    2. stan
   //    3. dane
   //    4. routing
+  //    4a. auto przystanki: istniejące przystanki ZTM na trasie, potem przystanki z klastrów
   //    5. ocena
   //    6. mapa
   //    7. UI
@@ -894,6 +898,107 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     changed();
   }
 
+  // ---------- auto przystanki: istniejące przystanki ZTM na trasie, potem z klastrów i z analizy otoczenia ----------
+  // „Dodaj przystanki automatycznie” dokłada do narysowanej trasy (postawione wcześniej przystanki zostają):
+  //   1) istniejące słupki autobusowe ZTM leżące na trasie — jeden na zespół (nazwę), po prawej stronie jezdni, gdy taki jest;
+  //   2) Przystanki AI (priorytet, zysk), potem top 30 (ocena) z klastrów — też tylko na trasie, ≥ AUTO_GAP_M od już wybranych;
+  //   3) miejsca, gdzie według analizy otoczenia przystanek się opłaca (dane/przystanki/potencjal_przystankow.csv
+  //      z mapping/potencjal_przystankow.py: zysk dostępności ≥ 100 os.) — na trasie, od największego zysku,
+  //      ≥ AUTO_POT_GAP_M od innych przystanków. Gdzie wokół nic nie ma, przystanku nie będzie.
+  // „Na trasie” = do AUTO_ON_M od trasy, a trasa jest najbliższą ulicą (albo drugą jezdnią tej samej ulicy):
+  // punkt przy przecznicy albo przy równoległej ulicy odpada, nawet gdy leży blisko trasy.
+  const AUTO_ON_M = 35, AUTO_GAP_M = 150, AUTO_POT_GAP_M = 350, AUTO_DUP_M = 60, AUTO_SAME_M = 800;
+  const AUTO_SRC = { ztm: "Istniejący przystanek ZTM", ai: "Przystanek AI", top: "Przystanek top 30", pot: "Przystanek z analizy otoczenia" };
+  const nstopStroke = () => ["match", ["get", "src"], "ai", PROP_COLOR, "top", TOP_STOP_COLOR, "pot", css("--good"), css("--accent")];
+  // Analiza otoczenia — wczytywana przy pierwszym użyciu, malejąco po zysku.
+  let potPromise = null, potRows = [];
+  const potLoad = () => potPromise ||= fetch("dane/przystanki/potencjal_przystankow.csv", { cache: "no-cache" }).then((r) => (r.ok ? r.text() : "")).catch(() => "")
+    .then((t) => (potRows = parseRows(t).map((r) => ({ lon: +r.lon, lat: +r.lat, zysk: +r.zysk_dostepnosci || 0, why: r.uzasadnienie || "" }))
+      .filter((r) => Number.isFinite(r.lon) && Number.isFinite(r.lat)).sort((a, b) => b.zysk - a.zysk)));
+  let autoZtmCache = null;
+  // Słupki ZTM, przy których zatrzymuje się choć jedna linia autobusowa (bez samych tramwajowych).
+  const autoZtm = () => autoZtmCache ||= (() => {
+    const bus = new Set((D.routes || []).filter((r) => r.typ === "autobus").map((r) => r.ref));
+    return D.stops.ztm.filter((s) => String(s[4] || "").split(",").some((l) => bus.has(l)))
+      .map(([lon, lat, name, , , nr]) => { const [x, y] = toXY(lon, lat); return { x, y, name, nr }; });
+  })();
+  // Odcinki trasy z położeniem od jej początku i siatka do szybkiego wyszukiwania.
+  function routeIndex(path) {
+    const segs = [], grid = new Grid(100); let run = 0;
+    for (const ei of path) {
+      const xy = G.edges[ei].xy;
+      for (let j = 0; j < xy.length - 1; j++) {
+        const a = xy[j], b = xy[j + 1], L = Math.hypot(b[0] - a[0], b[1] - a[1]), n = Math.max(1, Math.ceil(L / 50));
+        for (let s = 0; s <= n; s++) grid.add(segs.length, a[0] + (b[0] - a[0]) * s / n, a[1] + (b[1] - a[1]) * s / n);
+        segs.push({ a, b, L, at: run, ei }); run += L;
+      }
+    }
+    return { segs, grid };
+  }
+  // Rzut punktu na trasę (odcinek, punkt, położenie od początku, czy punkt jest po prawej) albo null, gdy nie leży na trasie.
+  function onRoute(R, x, y) {
+    let m = null;
+    for (const i of new Set(R.grid.near(x, y, AUTO_ON_M + 50))) {
+      const s = R.segs[i], q = segProject(x, y, s.a[0], s.a[1], s.b[0], s.b[1]);
+      if (!m || q.d < m.q.d) m = { s, q };
+    }
+    if (!m || m.q.d > AUTO_ON_M) return null;
+    const near = edgesAt(x, y, 120)[0], street = G.edges[m.s.ei].name;
+    if (near && m.q.d > near.d + 3 && !(street && G.edges[near.ei].name === street)) return null;
+    const { s, q } = m;
+    return { s, q, at: s.at + q.t * s.L, right: (s.b[0] - s.a[0]) * (y - s.a[1]) - (s.b[1] - s.a[1]) * (x - s.a[0]) < 0 };
+  }
+  // Przystanki dobrane do trasy `path` (krawędzie), po kolei wzdłuż trasy; `taken` — przystanki już postawione.
+  function autoStopsFor(path, taken = []) {
+    if (!path.length) return [];
+    const R = routeIndex(path), out = [], picked = [...taken];
+    const far = (q, r) => picked.every((s) => Math.hypot(s.x - q.x, s.y - q.y) >= r);
+    // Na trasie po prawej stronie jezdni (4 m od osi), jak przystanek postawiony ręcznie.
+    const place = (m, extra) => {
+      const { a, b, L, ei } = m.s, e = G.edges[ei], x = m.q.x + (b[1] - a[1]) / (L || 1) * 4, y = m.q.y - (b[0] - a[0]) / (L || 1) * 4;
+      const [lon, lat] = toLL(x, y), s = { x, y, lon, lat, edge: e.id, street: e.name, at: m.at, ...extra };
+      out.push(s); picked.push(s);
+    };
+    // 1) Istniejące przystanki: najbliższy trasie słupek, najlepiej po prawej stronie; zespół o tej samej nazwie raz na AUTO_SAME_M trasy
+    //    (słupki jednego zespołu na dużym placu czy węźle bywają kilkaset metrów od siebie).
+    const ztm = [];
+    for (const p of autoZtm()) { const m = onRoute(R, p.x, p.y); if (m) ztm.push({ p, m, score: m.q.d + (m.right ? 0 : 1000) }); }
+    ztm.sort((u, v) => u.score - v.score);
+    const seen = new Map();
+    for (const { p, m } of ztm) {
+      const at = seen.get(p.name) || [];
+      if (at.some((v) => Math.abs(v - m.at) < AUTO_SAME_M)) continue;
+      seen.set(p.name, [...at, m.at]);
+      if (far(m.q, AUTO_DUP_M)) place(m, { src: "ztm", name: `${p.name} ${p.nr}` });
+    }
+    // 2) Przystanki z klastrów — tylko tam, gdzie wolno postawić przystanek (bez wiaduktów, tuneli, łącznic i ekspresówek).
+    const cands = [...PROP.st.map((r) => ({ r, src: "ai", name: `${r.id} ${r.nazwa_robocza || ""}`.trim() })),
+                   ...[...PROP.top, ...PROP.ln].sort((a, b) => (+b.ocena || 0) - (+a.ocena || 0)).map((r) => ({ r, src: "top", name: r.ulica || "" }))];
+    for (const c of cands) {
+      const m = onRoute(R, ...toXY(+c.r.lon, +c.r.lat));
+      if (m && G.edges[m.s.ei].stopOk && far(m.q, AUTO_GAP_M)) place(m, { src: c.src, name: c.name });
+    }
+    // 3) Z analizy otoczenia — od największego zysku dostępności, z odstępem jak między przystankami.
+    for (const p of potRows) {
+      const m = onRoute(R, ...toXY(p.lon, p.lat));
+      if (m && G.edges[m.s.ei].stopOk && far(m.q, AUTO_POT_GAP_M)) place(m, { src: "pot", name: `zysk dostępności +${n0(p.zysk)} os.`, why: p.why });
+    }
+    return out.sort((a, b) => a.at - b.at);
+  }
+  // Przycisk „Dodaj przystanki automatycznie”: jeden krok, który „Cofnij” cofa w całości. Ponowne kliknięcie nie dubluje
+  // przystanków — dokłada tylko te, których jeszcze nie ma (np. po przedłużeniu trasy).
+  async function addAutoStops() {
+    if (!routeEdges().length) return flash("Najpierw narysuj trasę — przystanki dobieramy tylko na niej.");
+    await potLoad();
+    const added = autoStopsFor(routeEdges(), stops), n = (src) => added.filter((s) => s.src === src).length, ai = n("ai"), top = n("top");
+    if (!added.length) return flash("Na tej trasie nie ma więcej miejsc, gdzie warto dołożyć przystanek.", true);
+    history.push({ t: "all", wps: route.wps, legs: route.legs, stops });
+    stops = [...stops, ...added];
+    const from = [ai && `Przystanki AI: ${ai}`, top && `top 30: ${top}`].filter(Boolean).join(", ");
+    flash(`Dodane przystanki — istniejące ZTM: ${n("ztm")}, z klastrów: ${ai + top}${from ? ` (${from})` : ""}, z analizy otoczenia: ${n("pot")}.`, true);
+    changed();
+  }
+
   // ---------- ocena ----------
   // Ocena trasy (indeksy krawędzi) z przystankami; domyślnie — linia z piaskownicy.
   function evaluate(edgeIdx = routeEdges(), st = stops) {
@@ -1037,7 +1142,7 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     map.getSource("route").setData(fc(routeFeatures()));
     map.getSource("wps").setData(fc(route.wps.map((n, i) => ({ type: "Feature", properties: { end: i === 0 || i === route.wps.length - 1 }, geometry: { type: "Point", coordinates: toLL(G.nx[n], G.ny[n]) } }))));
     // Przystanki edytowanej linii (old) rysuje warstwa le-stops — tu tylko nowe.
-    map.getSource("nstops").setData(fc(stops.filter((s) => !s.old).map((s) => ({ type: "Feature", properties: { street: s.street || "" }, geometry: { type: "Point", coordinates: [s.lon, s.lat] } }))));
+    map.getSource("nstops").setData(fc(stops.filter((s) => !s.old).map((s) => ({ type: "Feature", properties: { street: s.street || "", n: s.name || "", src: s.src || "", w: s.why || "" }, geometry: { type: "Point", coordinates: [s.lon, s.lat] } }))));
     map.getSource("catch").setData(fc(stops.map((s) => ({ type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [circle(s.x, s.y, WALK)] } }))));
     renderLeLayers();
   }
@@ -1174,7 +1279,7 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
         "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, ["match", ["get", "k"], "metro", 4.5, "kolej", 4, "nowa", 4.5, 3], 15, ["match", ["get", "k"], "metro", 10, "kolej", 9, "nowa", 9, 7]],
         "circle-color": simColorExpr(), "circle-stroke-width": 1.4, "circle-stroke-color": css("--ink") } });
       map.addLayer({ id: "live", type: "circle", source: "live", paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 2.5, 14, 5, 17, 8], "circle-color": css("--ink"), "circle-stroke-width": 2.2, "circle-stroke-color": ["case", ["==", ["get", "typ"], 2], css("--tram"), css("--bus")], "circle-opacity": ["interpolate", ["linear"], ["get", "age"], 0, 1, 180, 0.35], "circle-stroke-opacity": ["interpolate", ["linear"], ["get", "age"], 0, 1, 180, 0.35] } });
-      map.addLayer({ id: "nstops", type: "circle", source: "nstops", paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 5, 16, 8], "circle-color": css("--paper"), "circle-stroke-width": 3, "circle-stroke-color": css("--accent") } });
+      map.addLayer({ id: "nstops", type: "circle", source: "nstops", paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 5, 16, 8], "circle-color": css("--paper"), "circle-stroke-width": 3, "circle-stroke-color": nstopStroke() } });
       wireMap();
       applyTop();
       renderPlannedMetroToggles();
@@ -1212,8 +1317,9 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
     if (sv.length) groups.push(`<div class="k">Symulacja · ${fmtClock(SIM.t)}</div>` + sv.slice(0, 5).map((f) => `${SIM_LABEL[f.properties.k]} <b>${esc(f.properties.r)}</b>`).join("<br>") + (sv.length > 5 ? `<br>…i ${sv.length - 5} więcej` : ""));
     const ld = uniq(by((id) => id === "load"), (f) => f.properties.i).sort((a, b) => b.properties.u - a.properties.u);
     if (ld.length) groups.push(`<div class="k">Obciążenie w szczycie · ${LOAD.year}</div>` + ld.slice(0, 4).map((f) => `<b>${esc(f.properties.l)}</b> ${esc(f.properties.z)} → ${esc(f.properties.d)} · ${fmt.format(f.properties.p)} pas./h · <b>${Math.round(f.properties.u * 100)}%</b> pojemności`).join("<br>") + (ld.length > 4 ? `<br>…i ${ld.length - 4} więcej` : ""));
-    const ns = by((id) => id === "nstops");
-    if (ns.length) groups.push(`<div class="k">Nowy przystanek</div>${esc(ns[0].properties.street || "ulica bez nazwy")}`);
+    const ns = by((id) => id === "nstops"), nsp = ns[0]?.properties;
+    if (ns.length) groups.push(`<div class="k">${nsp.src ? `${AUTO_SRC[nsp.src]} · dobrany automatycznie` : "Nowy przystanek"}</div>${nsp.n ? `<b>${esc(nsp.n)}</b> · ` : ""}${esc(nsp.street || "ulica bez nazwy")}`
+      + (nsp.w ? `<br><span style="opacity:0.85">Dlaczego tutaj: ${esc(nsp.w)}</span>` : ""));
     const pms = uniq(by((id) => id === "pmetro-st"), (f) => f.properties.ref + f.properties.name);
     const pml = uniq(by((id) => id === "pmetro-open" || id === "pmetro-future"), (f) => f.properties.ref);
     if (pms.length || pml.length) {
@@ -1585,7 +1691,7 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
   }
   function renderLeUi() {
     const on = !!LE;
-    $("le-panel").hidden = !on; $("tools").hidden = on; $("hint").hidden = on; $("draw-row").hidden = on;
+    $("le-panel").hidden = !on; $("tools").hidden = on; $("hint").hidden = on; $("draw-row").hidden = on; $("auto-box").hidden = on;
     $("modebar").textContent = modebarText();
     if (!on) return;
     $("le-ref").textContent = LE.ref;
@@ -2330,29 +2436,11 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
       if (route.wps.length === before) skipped++;
     }
     for (const [lon, lat] of st) { const [x, y] = toXY(lon, lat); const n = stops.length; addStopSilent(x, y); if (stops.length === n) skipped++; }
-    if (auto) stopsAlongRoute(450);
+    if (auto) stops.push(...autoStopsFor(routeEdges(), stops));   // jak „Dodaj przystanki automatycznie”
     changed();
     const b = new maplibregl.LngLatBounds(); [...tr, ...st].forEach((p) => b.extend(p));
     map.fitBounds(b, { padding: 60, maxZoom: 15 });
     return skipped;
-  }
-  // Tylko dla przykładu/demo: przystanki co `spacing` m wzdłuż trasy (na odcinkach, gdzie wolno).
-  function stopsAlongRoute(spacing) {
-    let acc = spacing / 2;
-    for (const ei of routeEdges()) {
-      const e = G.edges[ei];
-      for (let k = 0; k < e.xy.length - 1; k++) {
-        const [ax, ay] = e.xy[k], [bx, by] = e.xy[k + 1], L = Math.hypot(bx - ax, by - ay);
-        let pos = 0;
-        while (e.stopOk && acc + (L - pos) >= spacing) {
-          pos += spacing - acc; acc = 0;
-          const t = pos / L, x = ax + t * (bx - ax), y = ay + t * (by - ay);
-          const sx = x + (by - ay) / L * 4, sy = y - (bx - ax) / L * 4, [lon, lat] = toLL(sx, sy);
-          stops.push({ x: sx, y: sy, lon, lat, edge: e.id, street: e.name });
-        }
-        acc += L - pos;
-      }
-    }
   }
   function addStopSilent(x, y) {
     const q = snapStop(x, y); if (!q) return;
@@ -2373,7 +2461,27 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
   const SAMPLE = { nazwa: "przykład", trasa: [[20.8770, 52.2005], [20.8897, 52.2275]], przystanki: "auto" };
 
   // ---------- asystent ----------
-  let samplePromise = window.claude?.use ? window.claude.use("sample") : Promise.resolve(null), aiCtl = null;
+  // Ocena przez asystenta AI działa tylko lokalnie: frontend/serwer.py przekazuje polecenie do API Anthropic z kluczem
+  // ANTHROPIC_API_KEY z .env (klucza nie wolno wkładać do strony). Bez serwera z kluczem — np. na GitHub Pages —
+  // „Oceń propozycję” pokazuje opis automatyczny z wyliczeń.
+  async function aiAvailable() {
+    try { const r = await fetch("api/status", { cache: "no-store" }); return r.ok && !!(await r.json()).ai; } catch { return false; }
+  }
+  // Odpowiedź modelu przychodzi kawałkami; onText dostaje cały dotychczasowy tekst.
+  async function sampleLocal(prompt, { signal, onText }) {
+    let text = "";
+    try {
+      const r = await fetch("api/ocena", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ prompt }), signal });
+      if (!r.ok) throw Object.assign(new Error((await r.json().catch(() => ({}))).blad || `HTTP ${r.status}`), { code: "server" });
+      const rd = r.body.getReader(), dec = new TextDecoder();
+      for (;;) { const { done, value } = await rd.read(); if (done) break; text += dec.decode(value, { stream: true }); onText({ text }); }
+      return text;
+    } catch (e) {
+      if (e.name === "AbortError") throw Object.assign(new Error("Zatrzymano."), { code: "cancelled", text });
+      throw e;
+    }
+  }
+  let samplePromise = aiAvailable().then((ok) => (ok ? sampleLocal : null)), aiCtl = null;
   function describe(r) {
     return {
       rok: year, scenariusz: scenario, dlugosc_km: +(r.len / 1000).toFixed(1), przystanki: r.nStops,
@@ -2413,7 +2521,7 @@ code { font: 12px var(--f-mono); background: var(--chip); padding: 1px 4px; bord
   async function askAI() {
     const r = lastEval; if (!r) return;
     const out = $("ai-out"), note = $("ai-note"), sample = await samplePromise;
-    if (!sample) { out.textContent = templateComment(r); note.textContent = "Opis automatyczny z wyliczeń. Asystent AI działa w opublikowanej wersji aplikacji."; return; }
+    if (!sample) { out.textContent = templateComment(r); note.textContent = "Opis automatyczny z wyliczeń. Ocena przez asystenta AI działa lokalnie: .venv/bin/python frontend/serwer.py z kluczem ANTHROPIC_API_KEY w .env."; return; }
     aiCtl = new AbortController(); $("ai-stop").hidden = false; $("ai-btn").disabled = true;
     out.textContent = "Asystent analizuje propozycję…"; note.textContent = "";
     const prompt = `Jesteś planistą transportu w Warszawie (ZTM). ${LE ? `Oceń zmianę istniejącej linii autobusowej ${LE.ref} (porównanie przed/po w polu edycja_linii)` : "Oceń propozycję nowej linii autobusowej"} na podstawie wyliczeń symulatora (rok prognozy ${year}).
@@ -2428,11 +2536,8 @@ ${JSON.stringify(describe(r), null, 1)}`;
     try {
       await sample(prompt, { signal: aiCtl.signal, onText: ({ text }) => { out.textContent = text; } });
     } catch (e) {
-      if (e.text) out.textContent = e.text;
-      if (["not_granted", "sampling_disabled", "not_declared", "capability_disabled", "capability_removed"].includes(e.code)) {
-        samplePromise = Promise.resolve(null); out.textContent = templateComment(r); note.textContent = "Asystent AI jest niedostępny — pokazuję opis automatyczny.";
-      } else if (e.code === "rate_limited") note.textContent = "Za dużo zapytań do asystenta. Spróbuj za chwilę.";
-      else if (e.code !== "cancelled") note.textContent = "Asystent nie odpowiedział. Spróbuj ponownie.";
+      if (e.code === "cancelled") { if (e.text) out.textContent = e.text; note.textContent = "Zatrzymano."; }
+      else { out.textContent = templateComment(r); note.textContent = `Asystent AI nie odpowiedział (${e.message}) — pokazuję opis automatyczny.`; }
     } finally { $("ai-stop").hidden = true; $("ai-btn").disabled = !lastEval; }
   }
 
@@ -2442,6 +2547,7 @@ ${JSON.stringify(describe(r), null, 1)}`;
     $("metric").querySelectorAll("button").forEach((b) => (b.onclick = () => { metric = b.dataset.m; $("metric").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x === b)); renderLegend(); if (map?.getLayer("hex")) { map.setPaintProperty("hex", "fill-color", hexColorExpr()); updateYearLayers(); } }));
     $("tools").querySelectorAll("button").forEach((b) => (b.onclick = () => setMode(b.dataset.mode)));
     $("undo").onclick = undo; $("clear").onclick = clearAll; $("reset").onclick = resetAll;
+    $("auto-stops").onclick = addAutoStops;
     $("live").onchange = (e) => setLive(e.target.checked);
     $("live-kind").onchange = renderLive;
     $("top-on").onchange = applyTop;
@@ -2465,11 +2571,11 @@ ${JSON.stringify(describe(r), null, 1)}`;
     let filterT; $("line-filter").oninput = () => { clearTimeout(filterT); filterT = setTimeout(applyLayers, 200); };
     $("line-filter").onchange = () => { applyLayers(); fitToFilter(); };
     $("layers").querySelectorAll("input").forEach((i) => (i.onchange = applyLayers));
-    $("sample-line").onclick = () => { loadProposal(SAMPLE); };
+    $("sample-line").onclick = async () => { await potLoad(); loadProposal(SAMPLE); };   // "przystanki": "auto" korzysta z analizy otoczenia
     ["headway", "vehicle", "dwell", "layover", "trips", "share"].forEach((id) => ($(id).oninput = () => { renderEval(); if (id === "trips" || id === "share") { renderCluster(); if (metric === "trips") updateYearLayers(); } }));
     $("ai-btn").onclick = askAI;
     $("ai-stop").onclick = () => aiCtl?.abort();
-    $("json-load").onclick = () => { try { const n = loadProposal(JSON.parse($("json").value)); $("json-msg").textContent = n ? `Wczytano; pominięto ${n} punktów za daleko od ulic lub przystanków poza trasą linii.` : "Wczytano propozycję."; } catch (e) { $("json-msg").textContent = `Nie udało się wczytać: ${e.message}`; } };
+    $("json-load").onclick = async () => { await potLoad(); try { const n = loadProposal(JSON.parse($("json").value)); $("json-msg").textContent = n ? `Wczytano; pominięto ${n} punktów za daleko od ulic lub przystanków poza trasą linii.` : "Wczytano propozycję."; } catch (e) { $("json-msg").textContent = `Nie udało się wczytać: ${e.message}`; } };
     $("json-file").onchange = (e) => { const f = e.target.files[0]; if (!f) return; const rd = new FileReader(); rd.onload = () => { $("json").value = rd.result; $("json-load").click(); }; rd.readAsText(f); };
     $("json-copy").onclick = async () => {
       const txt = JSON.stringify(currentProposal()); $("json").value = txt;
@@ -2508,7 +2614,7 @@ ${JSON.stringify(describe(r), null, 1)}`;
     set("catch", "fill-color", css("--accent")); set("catch-line", "line-color", css("--accent"));
     set("route-casing", "line-color", css("--ink")); set("route", "line-color", ["match", ["get", "j"], 2, css("--crit"), 1, css("--warn"), css("--good")]);
     set("wps", "circle-color", css("--ink")); set("wps", "circle-stroke-color", css("--paper"));
-    set("nstops", "circle-color", css("--paper")); set("nstops", "circle-stroke-color", css("--accent"));
+    set("nstops", "circle-color", css("--paper")); set("nstops", "circle-stroke-color", nstopStroke());
     set("sim", "circle-color", simColorExpr()); set("sim", "circle-stroke-color", css("--ink")); set("load", "line-color", loadColorExpr()); renderLoadKey();
     set("live", "circle-color", css("--ink")); set("live", "circle-stroke-color", ["case", ["==", ["get", "typ"], 2], css("--tram"), css("--bus")]);
   }
@@ -2833,7 +2939,7 @@ ${JSON.stringify(describe(r), null, 1)}`;
   renderThemeBtn();
 
   // API dla algorytmu zespołu i testów: window.symulator.wczytaj({...}), .propozycja(), .ocena()
-  window.symulator = { wczytaj: loadProposal, propozycja: currentProposal, ocena: () => lastEval, _G: () => G, _route: () => route, _map: () => map };
+  window.symulator = { wczytaj: loadProposal, propozycja: currentProposal, ocena: () => lastEval, _G: () => G, _route: () => route, _map: () => map, _stops: () => stops };
 
   renderLoadKey(); renderInfraToggles(); wireUI(); wireTabs(); wireSections(); syncSections(); setMode("view"); renderLegend();
   load().then(() => {
